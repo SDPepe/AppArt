@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "730415653123",
+    "project_id": "appart-ec344",
+    "storage_bucket": "appart-ec344.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730415653123:android:c4ee6987d560a5bd788936",
+        "android_client_info": {
+          "package_name": "ch.epfl.sdp.appart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "730415653123-rc8v6vnbhudno6abdp6n90r3effcetaa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBy5iL2cewnjeXg2_OG6IhTGfO9S5Xbx0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "730415653123-rc8v6vnbhudno6abdp6n90r3effcetaa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
