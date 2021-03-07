@@ -9,12 +9,6 @@ The main feature which distinguishes this idea from a basic apartment market pla
 ## Split app model:
 Firebase is used to store the apartments photos and information, and also for the authentication system of users that cannot use a Uni login.
 
-[![Build Status](https://api.cirrus-ci.com/github/rovati/AppArt.svg)](https://cirrus-ci.com/github/rovati/AppArt)
-[![Build Status](https://api.cirrus-ci.com/github/GrapixLeGrand/AppArt.svg)](https://cirrus-ci.com/github/GrapixLeGrand/AppArt)
-[![Build Status](https://api.cirrus-ci.com/github/CaiMusso/AppArt.svg)](https://cirrus-ci.com/github/CaiMusso/AppArt)
-[![Build Status](https://api.cirrus-ci.com/github/filippo888/AppArt.svg)](https://cirrus-ci.com/github/filippo888/AppArt)
-[![Build Status](https://api.cirrus-ci.com/github/ADGLY/AppArt.svg)](https://cirrus-ci.com/github/ADGLY/AppArt)
-[![Build Status](https://api.cirrus-ci.com/github/Hbjugo/AppArt.svg)](https://cirrus-ci.com/github/Hbjugo/AppArt)
 
 ## Badges
 [![Build Status](https://api.cirrus-ci.com/github/SDPepe/AppArt.svg)](https://cirrus-ci.com/github/SDPepe/AppArt)
