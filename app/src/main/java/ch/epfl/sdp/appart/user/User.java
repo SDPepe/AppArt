@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.user;
 
+import android.media.Image;
+
 public interface User {
 
     /**
@@ -10,40 +12,40 @@ public interface User {
     /**
      * sets the name of the user
      */
-    public void setName();
+    public void setName(String name);
 
     /**
      * getter method for ID
      * @return the unique id of the user
      */
-     public String getUserId();
+    public String getUserId();
 
     /**
      * setter method for user email
      */
-    public void setUserEmail();
+    public void setUserEmail(String email);
 
     /**
      * getter method for user email
      * @return user email as a string
      */
-     public String getUserEmail();
+    public String getUserEmail();
 
     /**
      * setter method for user phone number
      */
-    public void setPhoneNumber();
+    public void setPhoneNumber(String phoneNumber);
 
     /**
      * getter method for user phone number
      * @return user phone number as a string
      */
-     public String getPhoneNumber();
+    public String getPhoneNumber();
 
     /**
      * setter method for user profile picture
      */
-     public void setProfileImage();
+    public void setProfileImage(Image img);
 
     /**
      * getter method for user profile picture
