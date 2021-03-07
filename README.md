@@ -15,3 +15,8 @@ Firebase is used to store the apartments photos and information, and also for th
 [![Build Status](https://api.cirrus-ci.com/github/filippo888/AppArt.svg)](https://cirrus-ci.com/github/filippo888/AppArt)
 [![Build Status](https://api.cirrus-ci.com/github/ADGLY/AppArt.svg)](https://cirrus-ci.com/github/ADGLY/AppArt)
 [![Build Status](https://api.cirrus-ci.com/github/Hbjugo/AppArt.svg)](https://cirrus-ci.com/github/Hbjugo/AppArt)
+
+## Badges
+[![Build Status](https://api.cirrus-ci.com/github/SDPepe/AppArt.svg)](https://cirrus-ci.com/github/SDPepe/AppArt)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ad483ece588a128e99e3/maintainability)](https://codeclimate.com/github/SDPepe/AppArt/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ad483ece588a128e99e3/test_coverage)](https://codeclimate.com/github/SDPepe/AppArt/test_coverage)
