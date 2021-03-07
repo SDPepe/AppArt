@@ -49,13 +49,7 @@ public interface User {
      * getter method for user profile picture
      * @return the profile picture (Object type was chosen as generic, should be changed once the object Picture is identified)
      */
-    public Object getProfileImage();
-
-    /**
-     * send a verification email to the user
-     * @return true if email has been correctly sent, false otherwise
-     */
-    public boolean sendEmailVerification();
+    public Image getProfileImage();
 
     /**
      * @return true if the user is registered with a university domain, false otherwise
