@@ -1,36 +1,36 @@
 package ch.epfl.sdp.appart.scroll;
 
-import android.os.Bundle;
-
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.sdp.appart.R;
+import android.os.Bundle;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ScrollingActivity extends AppCompatActivity {
+
+    private List<ApartmentCard> cardsId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        toolBarLayout.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        cardsId = Arrays.asList(
+                new ApartmentCard(R.string.apart1),
+                new ApartmentCard(R.string.apart2),
+                new ApartmentCard(R.string.apart3),
+                new ApartmentCard(R.string.apart4),
+                new ApartmentCard(R.string.apart5),
+                new ApartmentCard(R.string.apart6)
+        );
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setAdapter(new CardAdapter(this, cardsId));
+        recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
+
     }
 }
