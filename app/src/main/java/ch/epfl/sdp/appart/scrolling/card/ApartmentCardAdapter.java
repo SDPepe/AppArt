@@ -63,11 +63,9 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         ApartmentCard card = cards.get(position);
         holder.cardImageView.setImageResource(card.getImageId());
-        holder.cardImageView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(context, AnnounceActivity.class);
-                context.startActivity(intent);
-            }
+        holder.cardImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, AnnounceActivity.class);
+            context.startActivity(intent);
         });
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(card.getPrice() + ".-/mo");
@@ -83,11 +81,11 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
         return cards.size();
     }
 
-    protected class CardViewHolder extends RecyclerView.ViewHolder {
+    protected static class CardViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView addressTextView;
-        private TextView priceTextView;
-        private ImageView cardImageView;
+        private final TextView addressTextView;
+        private final TextView priceTextView;
+        private final ImageView cardImageView;
 
         public CardViewHolder(View view) {
             super(view);

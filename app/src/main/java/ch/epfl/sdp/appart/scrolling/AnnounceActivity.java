@@ -16,12 +16,9 @@ public class AnnounceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
         ImageView backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ScrollingActivity.class);
-                startActivity(intent);
-            }
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getBaseContext(), ScrollingActivity.class);
+            startActivity(intent);
         });
 
     }

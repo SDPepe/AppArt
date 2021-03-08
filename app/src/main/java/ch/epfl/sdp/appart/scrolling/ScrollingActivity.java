@@ -15,14 +15,12 @@ import ch.epfl.sdp.appart.scrolling.card.ApartmentCardAdapter;
 
 public class ScrollingActivity extends AppCompatActivity {
 
-    private List<ApartmentCard> cardsId;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
-        cardsId = Arrays.asList(
+        List<ApartmentCard> cardsId = Arrays.asList(
                 new ApartmentCard(R.drawable.apart_fake_image_1, "Lausanne", 1000),
                 new ApartmentCard(R.drawable.apart_fake_image_2, "Ecublens", 1200),
                 new ApartmentCard(R.drawable.apart_fake_image_3, "Renens", 800),

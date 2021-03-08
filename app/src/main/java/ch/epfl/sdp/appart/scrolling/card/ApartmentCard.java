@@ -3,9 +3,9 @@ package ch.epfl.sdp.appart.scrolling.card;
 public class ApartmentCard {
 
 
-    private String city;
-    private int price;
-    private int imageId;
+    private final String city;
+    private final int price;
+    private final int imageId;
 
     public ApartmentCard(int imageId, String city, int price) {
 
