@@ -5,8 +5,11 @@ import android.content.Context;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.Executor;
 
@@ -72,47 +75,47 @@ public class FirebaseLoginService implements LoginService {
     }
 
     @Override
-    public void updateEmailAddress(User user, OnCompleteListener<Void> callback) {
-        if (user == null || callback == null) throw new IllegalArgumentException();
-        //We would need something like user.getLoginServiceUser
-        //which would return the appropriate user type for the LoginService through which the user was logged
-        //I have currently no idea on how to implement this
-        throw new UnsupportedOperationException();
+    public void updateEmailAddress(String email, OnCompleteListener<Void> callback) {
+        if (callback == null) throw new IllegalArgumentException();
+        FirebaseUser user = getCurrentFirebaseUser();
+        user.updateEmail(email).addOnCompleteListener(callback);
     }
 
     @Override
-    public void updatePassword(User user, OnCompleteListener<Void> callback) {
-        if (user == null || callback == null) throw new IllegalArgumentException();
-        //We would need something like user.getLoginServiceUser
-        //which would return the appropriate user type for the LoginService through which the user was logged
-        //I have currently no idea on how to implement this
-        throw new UnsupportedOperationException();
+    public void updatePassword(String password, OnCompleteListener<Void> callback) {
+        if (callback == null) throw new IllegalArgumentException();
+        FirebaseUser user = getCurrentFirebaseUser();
+        user.updatePassword(password).addOnCompleteListener(callback);
     }
 
     @Override
-    public void sendEmailVerification(User user, OnCompleteListener<Void> callback) {
-        if (user == null || callback == null) throw new IllegalArgumentException();
-        //We would need something like user.getLoginServiceUser
-        //which would return the appropriate user type for the LoginService through which the user was logged
-        //I have currently no idea on how to implement this
-        throw new UnsupportedOperationException();
+    public void sendEmailVerification(OnCompleteListener<Void> callback) {
+        if (callback == null) throw new IllegalArgumentException();
+        FirebaseUser user = getCurrentFirebaseUser();
+        user.sendEmailVerification().addOnCompleteListener(callback);
     }
 
     @Override
-    public void deleteUser(User user, OnCompleteListener<Void> callback) {
-        if (user == null || callback == null) throw new IllegalArgumentException();
-        //We would need something like user.getLoginServiceUser
-        //which would return the appropriate user type for the LoginService through which the user was logged
-        //I have currently no idea on how to implement this
-        throw new UnsupportedOperationException();
+    public void deleteUser(OnCompleteListener<Void> callback) {
+        if (callback == null) throw new IllegalArgumentException();
+        FirebaseUser user = getCurrentFirebaseUser();
+        user.delete().addOnCompleteListener(callback);
     }
 
     @Override
-    public void reAuthenticateUser(User user, OnCompleteListener<Void> callback) {
-        if (user == null || callback == null) throw new IllegalArgumentException();
-        //We would need something like user.getLoginServiceUser
-        //which would return the appropriate user type for the LoginService through which the user was logged
-        //I have currently no idea on how to implement this
-        throw new UnsupportedOperationException();
+    public void reAuthenticateUser(String email, String password, OnCompleteListener<Void> callback) {
+        if (callback == null) throw new IllegalArgumentException();
+        FirebaseUser user = getCurrentFirebaseUser();
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+        user.reauthenticate(credential).addOnCompleteListener(callback);
+    }
+
+    /**
+     * @return the current Firebase user, throws @{@link IllegalArgumentException} if none is set
+     */
+    private FirebaseUser getCurrentFirebaseUser() {
+        FirebaseUser user = this.mAuth.getCurrentUser();
+        if (user == null) throw new IllegalStateException("No current user set !");
+        return user;
     }
 }

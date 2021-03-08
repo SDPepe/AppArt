@@ -47,40 +47,39 @@ public interface LoginService {
     /**
      * Updates the email address of a user
      *
-     * @param user     the user who's email address mus be updated
+     * @param email    the new email to set
      * @param callback what is performed on update
      */
-    void updateEmailAddress(User user, OnCompleteListener<Void> callback);
+    void updateEmailAddress(String email, OnCompleteListener<Void> callback);
 
     /**
      * Updates the password of a user
      *
-     * @param user     the user who's email address must be updated
+     * @param password the new password to set
      * @param callback what is performed on password change if it succeeds or on failure
      */
-    void updatePassword(User user, OnCompleteListener<Void> callback);
+    void updatePassword(String password, OnCompleteListener<Void> callback);
 
     /**
      * Verifies an user's email
      *
-     * @param user     the user who's email needs to be updated
      * @param callback what is performed on send success or failure
      */
-    void sendEmailVerification(User user, OnCompleteListener<Void> callback);
+    void sendEmailVerification(OnCompleteListener<Void> callback);
 
     /**
      * Deletes a user
      *
-     * @param user     the user we want to delete
      * @param callback what is performed on deletion success or failure
      */
-    void deleteUser(User user, OnCompleteListener<Void> callback);
+    void deleteUser(OnCompleteListener<Void> callback);
 
     /**
      * Re-authenticates a user. This is needed for things like password change or critical operations
      *
-     * @param user     the user we want to re-authenticate
+     * @param email    the user's email
+     * @param password the user's password
      * @param callback what is performed on re-authentication success or failure
      */
-    void reAuthenticateUser(User user, OnCompleteListener<Void> callback);
+    void reAuthenticateUser(String email, String password, OnCompleteListener<Void> callback);
 }
