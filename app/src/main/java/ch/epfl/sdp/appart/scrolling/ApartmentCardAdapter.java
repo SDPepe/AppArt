@@ -57,6 +57,7 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         ApartmentCard card = cards.get(position);
         holder.cardImageView.setImageResource(card.getImageId());
+
         holder.addressTextView.setText(card.getCity());
         StringBuilder sb = new StringBuilder().append(card.getPrice()).append(".-/mo");
         holder.priceTextView.setText(sb.toString());
