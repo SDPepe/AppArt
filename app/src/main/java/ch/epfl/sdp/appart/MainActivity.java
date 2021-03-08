@@ -1,9 +1,9 @@
 package ch.epfl.sdp.appart;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 

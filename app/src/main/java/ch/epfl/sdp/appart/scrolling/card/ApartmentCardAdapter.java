@@ -17,7 +17,6 @@ import java.util.List;
 
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
-import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 
 /**
  * Based on the following tutorial : https://developer.android.com/codelabs/basic-android-kotlin-training-recyclerview-scrollable-list
@@ -43,7 +42,6 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     }
 
     /**
-     *
      * @param parent
      * @param viewType
      * @return
@@ -52,13 +50,14 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View adapterLayout = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_layout /*R.layout.scrolling_card_layout*/, parent, false);
+                .inflate(R.layout.card_layout, parent, false);
 
         return new CardViewHolder(adapterLayout);
     }
 
     /**
      * Replace the content of a view.
+     *
      * @param holder
      * @param position
      */
@@ -79,6 +78,7 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
 
     /**
      * Get the number of cards that can be shown.
+     *
      * @return
      */
     @Override
@@ -87,7 +87,7 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     }
 
     protected class CardViewHolder extends RecyclerView.ViewHolder {
-        //private View view;
+
         private TextView addressTextView;
         private TextView priceTextView;
         private ImageView cardImageView;
