@@ -18,6 +18,7 @@ import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
 
 /**
+ * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView
  * Based on the following tutorial : https://developer.android.com/codelabs/basic-android-kotlin-training-recyclerview-scrollable-list
  */
 public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdapter.CardViewHolder> {
@@ -40,9 +41,10 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     }
 
     /**
-     * @param parent
-     * @param viewType
-     * @return
+     * Create a new CardViewHolder based on the layout of a card.
+     * @param parent the View that will contain the ViewHolder
+     * @param viewType unknown
+     * @return the newly created CardViewHolder
      */
     @NonNull
     @Override
@@ -54,10 +56,9 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     }
 
     /**
-     * Replace the content of a view.
-     *
-     * @param holder
-     * @param position
+     * Replace the content of a view according to the card stored at position.
+     * @param holder The CardViewHolder to be overwrite.
+     * @param position The index of the card which will overwrite the CardViewHolder
      */
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
@@ -72,9 +73,8 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     }
 
     /**
-     * Get the number of cards that can be shown.
-     *
-     * @return
+     * Get the number of cards available
+     * @return the number of cards
      */
     @Override
     public int getItemCount() {

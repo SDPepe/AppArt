@@ -33,7 +33,7 @@ public class ScrollingUITest {
      *
      * @param matcher the matcher on the view
      * @param index   the index of the view we want to match
-     * @return
+     * @return a Matcher on the View
      */
     public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
         return new TypeSafeMatcher<View>() {
