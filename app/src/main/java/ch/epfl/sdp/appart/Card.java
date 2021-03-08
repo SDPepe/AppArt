@@ -10,25 +10,22 @@ public class Card {
   private String address;
   private String price;
   private Image image;
+  private boolean hidePrice;
+  private boolean hideAddress;
 
-  public Card(int id, User owner) {
-    this.id = id;
-    this.owner = owner;
+  public Card(int id, User owner, String title, String address, String price, Image image,
+              boolean hidePrice, boolean hideAddress) {
+    if (owner == null || title == null || address == null || price == null || image == null)
+      throw new IllegalArgumentException("Argument is null!");
 
-    //default parameters....
-    this.title = "APPARTAMENT";
-    this.address = "SWISS";
-    this.price = "100fr/month";
-    //this.image;
-  }
-
-  public Card(int id, User owner, String title, String address, String price, Image image) {
     this.id = id;
     this.owner = owner;
     this.title = title;
     this.address = address;
     this.price = price;
     this.image = image;
+    this.hidePrice = hidePrice;
+    this.hideAddress = hideAddress;
   }
 
   // Getter Setter
@@ -37,6 +34,7 @@ public class Card {
   }
 
   public void setTitle(String title) {
+    nullChecker(title);
     this.title = title;
   }
 
@@ -45,6 +43,7 @@ public class Card {
   }
 
   public void setAddress(String address) {
+    nullChecker(address);
     this.address = address;
   }
 
@@ -53,6 +52,7 @@ public class Card {
   }
 
   public void setPrice(String price) {
+    nullChecker(price);
     this.price = price;
   }
 
@@ -61,7 +61,20 @@ public class Card {
   }
 
   public void setImage(Image image) {
+    nullChecker(image);
     this.image = image;
   }
 
+  public Boolean hidePrice(){ return hidePrice; }
+
+  public void setHidePrice(boolean b){ this.hidePrice = b; }
+
+  public Boolean hideAddress(){ return hideAddress; }
+
+  public void setHideAddress(boolean b){ this.hideAddress = b; }
+
+  private void nullChecker(Object o){
+    if (o == null)
+      throw new IllegalArgumentException("Argument is null!");
+  }
 }
