@@ -24,10 +24,19 @@ import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
  */
 public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdapter.CardViewHolder> {
 
-    private List<ApartmentCard> cards;
-    private Context context;
+    private final List<ApartmentCard> cards;
+    private final Context context;
 
     public ApartmentCardAdapter(Activity context, List<ApartmentCard> cards) {
+
+        if (cards == null) {
+            throw new IllegalArgumentException("cards cannot be null");
+        }
+
+        if (context == null) {
+            throw new IllegalArgumentException("context cannot be null");
+        }
+
         this.cards = new ArrayList<>();
         this.cards.addAll(cards);
         this.context = context;

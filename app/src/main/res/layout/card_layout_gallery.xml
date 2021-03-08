@@ -30,7 +30,6 @@
                 android:layout_marginBottom="48dp"
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
-                android:onClick="card_on_click"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

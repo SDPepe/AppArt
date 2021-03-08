@@ -15,6 +15,14 @@ public class ApartmentCard {
 
     public ApartmentCard(int imageId, String city, int price) {
 
+        if (city == null) {
+            throw new IllegalArgumentException("city cannot be null");
+        }
+
+        if (price < 1) {
+            throw new IllegalArgumentException("price has to be grater than 0");
+        }
+
         this.imageId = imageId;
         this.city = city;
         this.price = price;
