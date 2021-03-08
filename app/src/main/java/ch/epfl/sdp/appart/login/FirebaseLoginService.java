@@ -17,7 +17,7 @@ public class FirebaseLoginService implements LoginService {
     }
 
     /**
-     * Builds a FirebaseLoginService from context
+     * Builds a FirebaseLoginService
      *
      * @return a FirebaseLoginService
      */
@@ -36,7 +36,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public User getCurrentUser() {
         //Waiting for Adapter class
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -91,7 +91,8 @@ public class FirebaseLoginService implements LoginService {
     }
 
     /**
-     * @return the current Firebase user, throws @{@link IllegalArgumentException} if none is set
+     * @return the current Firebase user
+     * @throws IllegalArgumentException if no user is set
      */
     private FirebaseUser getCurrentFirebaseUser() {
         FirebaseUser user = this.mAuth.getCurrentUser();

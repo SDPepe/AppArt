@@ -16,6 +16,7 @@ public interface LoginService {
      * @param email    the user's email
      * @param password the user's password
      * @param callback what should be done on login success or failure
+     * @throws IllegalArgumentException if one the arguments is null
      */
     void loginWithEmail(String email, String password, OnCompleteListener<AuthResult> callback);
 
@@ -32,6 +33,7 @@ public interface LoginService {
      *
      * @param email    the user's email
      * @param callback what should be done after success or failure
+     * @throws IllegalArgumentException if one of the arguments is null
      */
     void resetPasswordWithEmail(String email, OnCompleteListener<Void> callback);
 
@@ -41,6 +43,8 @@ public interface LoginService {
      * @param email    the user's email
      * @param password the user's password
      * @param callback what should be done after success or failure
+     * @throws IllegalArgumentException if one of the arguments is null
+     * @throws IllegalStateException    if no current user is set
      */
     void createUser(String email, String password, OnCompleteListener<AuthResult> callback);
 
@@ -49,6 +53,8 @@ public interface LoginService {
      *
      * @param email    the new email to set
      * @param callback what is performed on update
+     * @throws IllegalArgumentException if one of the arguments is null
+     * @throws IllegalStateException    if no current user is set
      */
     void updateEmailAddress(String email, OnCompleteListener<Void> callback);
 
@@ -57,6 +63,8 @@ public interface LoginService {
      *
      * @param password the new password to set
      * @param callback what is performed on password change if it succeeds or on failure
+     * @throws IllegalArgumentException if one of the arguments is null
+     * @throws IllegalStateException    if no current user is set
      */
     void updatePassword(String password, OnCompleteListener<Void> callback);
 
@@ -64,6 +72,8 @@ public interface LoginService {
      * Verifies an user's email
      *
      * @param callback what is performed on send success or failure
+     * @throws IllegalArgumentException if callback is null
+     * @throws IllegalStateException    if no current user is set
      */
     void sendEmailVerification(OnCompleteListener<Void> callback);
 
@@ -71,6 +81,8 @@ public interface LoginService {
      * Deletes a user
      *
      * @param callback what is performed on deletion success or failure
+     * @throws IllegalArgumentException if callback is null
+     * @throws IllegalStateException    if no current user is set
      */
     void deleteUser(OnCompleteListener<Void> callback);
 
@@ -80,6 +92,8 @@ public interface LoginService {
      * @param email    the user's email
      * @param password the user's password
      * @param callback what is performed on re-authentication success or failure
+     * @throws IllegalArgumentException if one of the arguments is null
+     * @throws IllegalStateException    if no current user is set
      */
     void reAuthenticateUser(String email, String password, OnCompleteListener<Void> callback);
 }
