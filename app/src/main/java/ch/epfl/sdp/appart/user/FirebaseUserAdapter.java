@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.user;
 
 import android.media.Image;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class FirebaseUserAdapter implements User {
@@ -13,6 +14,9 @@ public class FirebaseUserAdapter implements User {
 
 
     public FirebaseUserAdapter(String userId, String name, String email) {
+        if (userId == null || name == null || email == null) {
+            throw new IllegalArgumentException("Failed to create user: null parameters");
+        }
         this.userId = userId;
         this.name = name;
         this.email = email;
@@ -25,6 +29,9 @@ public class FirebaseUserAdapter implements User {
 
     @Override
     public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("cannot set null name");
+        }
         this.name = name;
     }
 
@@ -35,6 +42,9 @@ public class FirebaseUserAdapter implements User {
 
     @Override
     public void setUserEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("cannot set null name");
+        }
         this.email = email;
     }
 
@@ -45,6 +55,9 @@ public class FirebaseUserAdapter implements User {
 
     @Override
     public void setPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null) {
+            throw new IllegalArgumentException("cannot set null name");
+        }
         this.phoneNumber = phoneNumber;
     }
 
@@ -55,6 +68,9 @@ public class FirebaseUserAdapter implements User {
 
     @Override
     public void setProfileImage(Image img) {
+        if (img == null) {
+            throw new IllegalArgumentException("cannot set null name");
+        }
         this.profilePicture = img;
     }
 
@@ -71,7 +87,9 @@ public class FirebaseUserAdapter implements User {
          */
         return false;
     }
-
+    
     // TO BE CONTINUED
-    public FirebaseUser getUserInstance() {return null;}
+    public FirebaseUser getUserInstance() {
+       throw new UnsupportedOperationException("The function call is still not implemented");
+    }
 }
