@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import ch.epfl.sdp.appart.scroll.ScrollingActivity;
+import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<array name="apart1">
+    <item name="address">Lausanne</item>
+    <item name="image">@drawable/apart_fake_image_1</item>
+    <item name="price">1000</item>
+</array>
+</resources>
