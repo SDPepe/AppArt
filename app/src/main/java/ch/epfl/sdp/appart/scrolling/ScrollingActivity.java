@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.scrolling.card.ApartmentCard;
+import ch.epfl.sdp.appart.scrolling.card.ApartmentCardAdapter;
+
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,4 +44,11 @@ public class ScrollingActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
 
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("Scroll", "stoping");
+    }
+
 }

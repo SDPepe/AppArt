@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.scrolling;
+package ch.epfl.sdp.appart.scrolling.card;
 
 import android.content.Context;
 import android.content.res.Resources;

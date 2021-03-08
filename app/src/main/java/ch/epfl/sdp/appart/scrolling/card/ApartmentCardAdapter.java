@@ -1,9 +1,8 @@
-package ch.epfl.sdp.appart.scrolling;
+package ch.epfl.sdp.appart.scrolling.card;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
+import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 
 /**
  * Based on the following tutorial : https://developer.android.com/codelabs/basic-android-kotlin-training-recyclerview-scrollable-list
@@ -27,7 +27,7 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     private List<ApartmentCard> cards;
     private Context context;
 
-    public ApartmentCardAdapter(Context context, List<ApartmentCard> cards) {
+    public ApartmentCardAdapter(Activity context, List<ApartmentCard> cards) {
         this.cards = new ArrayList<>();
         this.cards.addAll(cards);
         this.context = context;
@@ -57,7 +57,12 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         ApartmentCard card = cards.get(position);
         holder.cardImageView.setImageResource(card.getImageId());
-
+        holder.cardImageView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AnnounceActivity.class);
+                context.startActivity(intent);
+            }
+        });
         holder.addressTextView.setText(card.getCity());
         StringBuilder sb = new StringBuilder().append(card.getPrice()).append(".-/mo");
         holder.priceTextView.setText(sb.toString());
