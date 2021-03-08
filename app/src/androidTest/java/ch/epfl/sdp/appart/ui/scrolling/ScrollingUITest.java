@@ -1,6 +1,5 @@
 package ch.epfl.sdp.appart.ui.scrolling;
 
-import android.content.Intent;
 import android.view.View;
 
 import androidx.test.espresso.intent.Intents;
@@ -14,23 +13,26 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.action.ViewActions.click;
-
-import ch.epfl.sdp.appart.R;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 public class ScrollingUITest {
+
+    @Rule
+    public ActivityScenarioRule<ScrollingActivity> scrollingActivityRule = new ActivityScenarioRule<>(ScrollingActivity.class);
 
     /**
      * taken from :
      * https://stackoverflow.com/questions/29378552/in-espresso-how-to-avoid-ambiguousviewmatcherexception-when-multiple-views-matc
      * Allows to select the index th view.
+     *
      * @param matcher the matcher on the view
-     * @param index the index of the view we want to match
+     * @param index   the index of the view we want to match
      * @return
      */
     public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
@@ -50,9 +52,6 @@ public class ScrollingUITest {
             }
         };
     }
-
-    @Rule
-    public ActivityScenarioRule<ScrollingActivity> scrollingActivityRule = new ActivityScenarioRule<>(ScrollingActivity.class);
 
     @Test
     public void clickOnImageViewFromCardViewStartAnnounceActivity() {

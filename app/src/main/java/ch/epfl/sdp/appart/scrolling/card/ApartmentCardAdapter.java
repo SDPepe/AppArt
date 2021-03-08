@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.appart.R;
@@ -36,7 +35,7 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
             throw new IllegalArgumentException("context cannot be null");
         }
 
-       this.cards = cards;
+        this.cards = cards;
         this.context = context;
     }
 
@@ -71,8 +70,7 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
             }
         });
         holder.addressTextView.setText(card.getCity());
-        StringBuilder sb = new StringBuilder().append(card.getPrice()).append(".-/mo");
-        holder.priceTextView.setText(sb.toString());
+        holder.priceTextView.setText(card.getPrice() + ".-/mo");
     }
 
     /**
