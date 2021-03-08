@@ -36,8 +36,7 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
             throw new IllegalArgumentException("context cannot be null");
         }
 
-        this.cards = new ArrayList<>();
-        this.cards.addAll(cards);
+       this.cards = cards;
         this.context = context;
     }
 
