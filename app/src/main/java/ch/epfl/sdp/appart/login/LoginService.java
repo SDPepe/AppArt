@@ -1,5 +1,8 @@
 package ch.epfl.sdp.appart.login;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthResult;
+
 import ch.epfl.sdp.appart.user.User;
 
 /**
@@ -12,18 +15,9 @@ public interface LoginService {
      *
      * @param email    the user's email
      * @param password the user's password
-     * @return a boolean that indicates if the login was successful
+     * @param callback what should be done on login success or failure
      */
-    boolean loginWithEmail(String email, String password);
-
-    /**
-     * Performs a user login with username and password.
-     *
-     * @param username the user's username
-     * @param password the user's password
-     * @return a boolean that indicates if the login was successful
-     */
-    boolean loginWithUsername(String username, String password);
+    void loginWithEmail(String email, String password, OnCompleteListener<AuthResult> callback);
 
     /**
      * Retrieves the current user if there is one, null otherwise.
@@ -36,17 +30,17 @@ public interface LoginService {
      * Resets the password associated to an email if said email is linked with an account
      * We do not indicate if the email was found or not to prevent malicious users to know if someone is registered or not
      *
-     * @param email the user's email
+     * @param email    the user's email
+     * @param callback what should be done after success or failure
      */
-    void resetPasswordWithEmail(String email);
+    void resetPasswordWithEmail(String email, OnCompleteListener<Void> callback);
 
     /**
-     * Creates a user with a username, an email and a password
+     * Creates a user with an email and a password
      *
-     * @param username the user's username
      * @param email    the user's email
      * @param password the user's password
-     * @return the newly create user
+     * @param callback what should be done after success or failure
      */
-    User createUser(String username, String email, String password);
+    void createUser(String email, String password, OnCompleteListener<AuthResult> callback);
 }

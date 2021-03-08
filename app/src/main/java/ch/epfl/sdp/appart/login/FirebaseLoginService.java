@@ -2,11 +2,9 @@ package ch.epfl.sdp.appart.login;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -24,60 +22,33 @@ public class FirebaseLoginService implements LoginService {
     }
 
     @Override
-    public boolean loginWithEmail(String email, String password) {
+    public void loginWithEmail(String email, String password, OnCompleteListener<AuthResult> callback) {
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this.executor, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            //Success
-
-                        } else {
-                            //Failure
-                        }
-                    }
-                });
-        //TODO: Change this
-        return false;
-    }
-
-    @Override
-    public boolean loginWithUsername(String username, String password) {
-        return false;
+                .addOnCompleteListener(this.executor, callback);
     }
 
     @Override
     public User getCurrentUser() {
+        //Waiting for Adapter class
         return null;
     }
 
     @Override
-    public void resetPasswordWithEmail(String email) {
-
+    public void resetPasswordWithEmail(String email, OnCompleteListener<Void> callback) {
+        this.mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(callback);
     }
 
     @Override
-    public User createUser(String username, String email, String password) {
+    public void createUser(String email, String password, OnCompleteListener<AuthResult> callback) {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this.executor, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Do something on success
-                        } else {
-                            //Do something on failed
-                        }
-
-                        // ...
-                    }
-                });
-        return null;
+                .addOnCompleteListener(this.executor, callback);
     }
 
     /**
      * Gives an executor from the context to the FirebaseLoginService
      *
-     * @param context
+     * @param context the context from which we get an executor
      * @return an executor
      */
     private static Executor buildExecutorFromContext(Context context) {
@@ -86,10 +57,11 @@ public class FirebaseLoginService implements LoginService {
 
     /**
      * Builds a FirebaseLoginService from context
-     * @param context
-     * @return a FirebaseLginService
+     *
+     * @param context the context needed to retrieve an executor
+     * @return a FirebaseLoginService
      */
-    public static LoginService buildfromContext(Context context) {
+    public static LoginService buildFromContext(Context context) {
         return new FirebaseLoginService(buildExecutorFromContext(context));
     }
 }
