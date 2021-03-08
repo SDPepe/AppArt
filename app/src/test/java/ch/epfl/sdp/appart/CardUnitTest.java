@@ -1,63 +1,70 @@
 package ch.epfl.sdp.appart;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.*;
 
 import ch.epfl.sdp.appart.user.FirebaseUserAdapter;
 
 public class CardUnitTest {
 
-    private Card card;
-
-    @BeforeAll
-    public void initCard(){
-        card = new Card(42, new FirebaseUserAdapter(), "Fancy apartment",
-                "Av. de la gare 1", "900", null, true, false);
-    }
-
     @Test
-    public void gettersTest(){
-        assertThat(card.getTitle(), is("Fancy apartment"));
-        assertThat(card.getAddress(), is("Av. de la gare 1"));
-        assertThat(card.getPrice(), is("900"));
+    public void gettersTest() {
+        Card card = new Card(42, new FirebaseUserAdapter(),
+                "Lausanne", "900", null);
+        assertEquals("Lausanne", card.getCity());
+        assertEquals("900", card.getPrice());
         //assertThat(card.getImage(), is());
-        assertThat(card.hidePrice(), is(true));
-        assertThat(card.hideAddress(), is(false));
     }
 
     @Test
-    public void settersTest(){
-        card.setTitle("Awesome apartment");
-        assertThat(card.getTitle(), is("Awesome apartment"));
-        card.setAddress("Av. de la gare 3");
-        assertThat(card.getAddress(), is("Av. de la gare 3"));
+    public void settersTest() {
+        Card card = new Card(42, new FirebaseUserAdapter(),
+                "Lausanne", "900", null);
+        card.setCity("Morges");
+        assertEquals("Morges", card.getCity());
         card.setPrice("850");
-        assertThat(card.getPrice(), is("850"));
+        assertEquals("850", card.getPrice());
         //card.setImage();
         //assertThat(card.getImage(),is());
-        card.setHidePrice(false);
-        assertThat(card.hidePrice(), is(false));
-        card.setHideAddress(true);
-        assertThat(card.hideAddress(), is(false));
     }
 
-    @Test
-    public void nullArgumentsTest(){
-        assertThrows(IllegalArgumentException.class, () -> new Card(0, null, "",
-                "", "", null, true, true));
-        assertThrows(IllegalArgumentException.class, () -> new Card(0, new FirebaseUserAdapter(),
-                null, "", "", null, true, true));
-        assertThrows(IllegalArgumentException.class, () -> new Card(0, new FirebaseUserAdapter(),
-                "", null, "", null, true, true));
-        assertThrows(IllegalArgumentException.class, () -> new Card(0, new FirebaseUserAdapter(),
-                "", "", null, null, true, true));
-        assertThrows(IllegalArgumentException.class, () -> card.setTitle(null));
-        assertThrows(IllegalArgumentException.class, () -> card.setAddress(null));
-        assertThrows(IllegalArgumentException.class, () -> card.setPrice(null));
-        assertThrows(IllegalArgumentException.class, () -> card.setImage(null));
+    @Test(expected = IllegalArgumentException.class)
+    public void nullArgumentsConstructorTest1() {
+        Card c = new Card(0, null, "", "", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullArgumentsConstructorTest2() {
+        Card c = new Card(0, new FirebaseUserAdapter(), null, "", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullArgumentsConstructorTest3() {
+        Card c = new Card(0, new FirebaseUserAdapter(), "", null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullArgumentsSetCityTest() {
+        Card card = new Card(42, new FirebaseUserAdapter(),
+                "Lausanne", "900", null);
+        card.setCity(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullArgumentsSetPriceTest() {
+        Card card = new Card(42, new FirebaseUserAdapter(),
+                "Lausanne", "900", null);
+        card.setPrice(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullArgumentsSetImageTest() {
+        Card card = new Card(42, new FirebaseUserAdapter(),
+                "Lausanne", "900", null);
+        card.setImage(null);
     }
 }
