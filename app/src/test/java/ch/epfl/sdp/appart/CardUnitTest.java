@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -11,59 +12,58 @@ public class CardUnitTest {
     @Test
     public void gettersTest() {
         User user = mock(User.class);
-        Card card = new Card(42, user, "Lausanne", "900", null);
+        Card card = new Card(42, user, "Lausanne", 900, "assets/img1.jpg");
         assertEquals("Lausanne", card.getCity());
-        assertEquals("900", card.getPrice());
-        //assertThat(card.getImage(), is());
+        assertEquals(900, card.getPrice());
+        assertEquals("assets/img1.jpg", card.getImageUrl());
     }
 
     @Test
     public void settersTest() {
         User user = mock(User.class);
-        Card card = new Card(42, user, "Lausanne", "900", null);
+        Card card = new Card(42, user, "Lausanne", 900, "assets/img1.jpg");
         card.setCity("Morges");
         assertEquals("Morges", card.getCity());
-        card.setPrice("850");
-        assertEquals("850", card.getPrice());
-        //card.setImage();
-        //assertThat(card.getImage(),is());
+        card.setPrice(850);
+        assertEquals(850, card.getPrice());
+        card.setImageUrl("assets/img2.jpg");
+        assertEquals("assets/img2.jpg", card.getImageUrl());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest1() {
-        Card c = new Card(0, null, "", "", null);
+        Card c = new Card(0, null, "",
+                0, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest2() {
         User user = mock(User.class);
-        Card c = new Card(0,  user, null, "", null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void nullArgumentsConstructorTest3() {
-        User user = mock(User.class);
-        Card c = new Card(0, user, "", null, null);
+        Card c = new Card(0, user, null, 0, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsSetCityTest() {
         User user = mock(User.class);
-        Card card = new Card(42, user, "Lausanne", "900", null);
+        Card card = new Card(42, user, "Lausanne", 900, "assets/img1.jpg");
         card.setCity(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void nullArgumentsSetPriceTest() {
-        User user = mock(User.class);
-        Card card = new Card(42, user, "Lausanne", "900", null);
-        card.setPrice(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsSetImageTest() {
         User user = mock(User.class);
-        Card card = new Card(42, user, "Lausanne", "900", null);
-        card.setImage(null);
+        Card card = new Card(42, user, "Lausanne", 900, "assets/img1.jpg");
+        card.setImageUrl(null);
+    }
+
+    @Test
+    public void equalsTest() {
+        User user = mock(User.class);
+        Card card = new Card(42, user, "Lausanne", 900, "assets/img1.jpg");
+        assertEquals(false, card.equals(null));
+        Card card2 = new Card(42, user, "", 0, "");
+        Card card3 = new Card(0, user, "", 0, "");
+        assertEquals(true, card.equals(card2));
+        assertEquals(false, card.equals(card3));
     }
 }

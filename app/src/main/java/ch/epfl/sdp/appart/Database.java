@@ -4,7 +4,8 @@ import java.util.List;
 
 public interface Database {
 
-  public List<Card> getCards();
-  public boolean putCard(Card card);
+    public List<Card> getCards();
+
+    public boolean putCard(Card card);
 
 }

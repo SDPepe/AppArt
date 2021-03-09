@@ -12,17 +12,17 @@ import static org.mockito.Mockito.*;
 public class DatabaseUnitTest {
 
     @Test
-    public void getCardsTest(){
+    public void getCardsTest() {
         Database db = mock(Database.class);
         when(db.getCards()).thenReturn(new ArrayList<>());
         assertEquals(new ArrayList<>(), db.getCards());
     }
 
     @Test
-    public void putCardTest(){
+    public void putCardTest() {
         Database db = mock(Database.class);
         User user = mock(User.class);
-        Card card = new Card(42, user, "Lausanne", "900", null);
+        Card card = new Card(42, user, "Lausanne", 0, "");
         when(db.putCard(card)).thenReturn(true);
         assertEquals(true, db.putCard(card));
     }

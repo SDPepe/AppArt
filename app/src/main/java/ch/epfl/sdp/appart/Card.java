@@ -1,25 +1,23 @@
 package ch.epfl.sdp.appart;
 
-import android.media.Image;
-
 import ch.epfl.sdp.appart.user.User;
 
 public class Card {
     private final int id;
     private final User owner;
     private String city;
-    private String price;
-    private Image image;
+    private int price;
+    private String imageUrl;
 
-    public Card(int id, User owner, String city, String price, Image image) {
-        if (owner == null || city == null || price == null /*|| image == null*/)
+    public Card(int id, User owner, String city, int price, String imageUrl) {
+        if (owner == null || city == null || imageUrl == null)
             throw new IllegalArgumentException("Argument is null!");
 
         this.id = id;
         this.owner = owner;
         this.city = city;
         this.price = price;
-        this.image = image;
+        this.imageUrl = imageUrl;
     }
 
     // Getter Setter
@@ -32,26 +30,33 @@ public class Card {
         this.city = city;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
-        nullChecker(price);
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public Image getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(Image image) {
-        nullChecker(image);
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        nullChecker(imageUrl);
+        this.imageUrl = imageUrl;
     }
 
     private void nullChecker(Object o) {
         if (o == null)
             throw new IllegalArgumentException("Argument is null!");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof Card)) return false;
+        Card other = (Card) o;
+        if (this.id == other.id) return true;
+        return false;
     }
 }
