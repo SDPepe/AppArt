@@ -3,17 +3,17 @@ package ch.epfl.sdp.appart;
 import ch.epfl.sdp.appart.user.User;
 
 public class Card {
-    private final int id;
+    private final String id;
     private final User owner;
     private String city;
     private int price;
     private String imageUrl;
 
-    public Card(int id, User owner, String city, int price, String imageUrl) {
+    public Card( User owner, String city, int price, String imageUrl) {
         if (owner == null || city == null || imageUrl == null)
             throw new IllegalArgumentException("Argument is null!");
 
-        this.id = id;
+        this.id = null;
         this.owner = owner;
         this.city = city;
         this.price = price;
@@ -21,6 +21,10 @@ public class Card {
     }
 
     // Getter Setter
+    public String getId() {
+        return id;
+    }
+
     public String getCity() {
         return city;
     }
@@ -41,6 +45,8 @@ public class Card {
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public String getUserId(){ return owner.getUserId();}
 
     public void setImageUrl(String imageUrl) {
         nullChecker(imageUrl);
