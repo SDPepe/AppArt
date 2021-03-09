@@ -15,26 +15,15 @@ public interface User {
     public void setName(String name);
 
     /**
-     * getter method for ID
-     * @return the unique id of the user
-     */
-    public String getUserId();
-
-    /**
-     * setter method for user email
-     */
-    public void setUserEmail(String email);
-
-    /**
      * getter method for user email
      * @return user email as a string
      */
     public String getUserEmail();
 
     /**
-     * setter method for user phone number
+     * setter method for user email
      */
-    public void setPhoneNumber(String phoneNumber);
+    public void setUserEmail(String email);
 
     /**
      * getter method for user phone number
@@ -43,15 +32,26 @@ public interface User {
     public String getPhoneNumber();
 
     /**
-     * setter method for user profile picture
+     * setter method for user phone number
      */
-    public void setProfileImage(Image img);
+    public void setPhoneNumber(String phoneNumber);
 
     /**
      * getter method for user profile picture
      * @return the profile picture (Object type was chosen as generic, should be changed once the object Picture is identified)
      */
-    public Image getProfileImage();
+    public String getProfileImage();
+
+    /**
+     * setter method for user profile picture
+     */
+    public void setProfileImage(String img);
+
+    /**
+     * getter method for ID
+     * @return the unique id of the user
+     */
+    public String getUserId();
 
     /**
      * @return true if the user is registered with a university domain, false otherwise
