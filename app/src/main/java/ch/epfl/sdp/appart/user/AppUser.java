@@ -12,7 +12,7 @@ public class AppUser implements User {
     private String email;
     private String phoneNumber;
     private String password;
-    private Image profilePicture;
+    private String profilePicture;
 
 
     public AppUser(String userId, String name, String email, String password) {
@@ -66,12 +66,12 @@ public class AppUser implements User {
     }
 
     @Override
-    public Image getProfileImage() {
+    public String getProfileImage() {
         return profilePicture;
     }
 
     @Override
-    public void setProfileImage(Image img) {
+    public void setProfileImage(String img) {
         if (img == null) {
             throw new IllegalArgumentException("ERROR - image parameter was null");
         }
