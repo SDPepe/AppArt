@@ -12,15 +12,15 @@ import java.util.Set;
 public class UniversityEmailDatabase {
 
     /* add here new trusted university email providers */
-    private String[] universityEmailDatabase = {"epfl.ch", "unil.ch", "unige.ch"};
+    private static final String[] universityEmailDatabase = {"epfl.ch", "unil.ch", "unige.ch"};
 
-    private Set<String> universityEmailDatabaseSet = new HashSet<String>(Arrays.asList(universityEmailDatabase));
+    private static final Set<String> universityEmailDatabaseSet = new HashSet<String>(Arrays.asList(universityEmailDatabase));
 
     /**
      * @param email the user's email
      * @return true if the given email provider is in the trusted university providers accpeted by the application, false otherwise
      */
-    public boolean has(String email) {
+    public static boolean has(String email) {
         if (email == null) {
             throw new IllegalArgumentException("ERROR - email parameter was null");
         }

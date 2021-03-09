@@ -11,7 +11,6 @@ public class AppUser implements User {
     private String userId;
     private String email;
     private String phoneNumber;
-    private String password;
     private String profilePicture;
 
 
@@ -84,17 +83,8 @@ public class AppUser implements User {
     }
 
     @Override
-    public void updatePassword(String password) {
-        if (password == null) {
-            throw new IllegalArgumentException("ERROR - password parameter was null");
-        }
-        this.password = password;
-    }
-
-    @Override
     public boolean hasUniversityEmail() {
-        UniversityEmailDatabase uniDb = new UniversityEmailDatabase();
-        return uniDb.has(this.email);
+        return UniversityEmailDatabase.has(this.email);
     }
 
 }

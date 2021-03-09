@@ -54,12 +54,6 @@ public interface User {
     public String getUserId();
 
     /**
-     * a setter for app-user password if user changes password
-     * @param password the new password
-     */
-    public void updatePassword(String password);
-
-    /**
      * @return true if the user is registered with a university domain, false otherwise
      */
     public boolean hasUniversityEmail();
