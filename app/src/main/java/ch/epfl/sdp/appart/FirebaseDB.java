@@ -25,7 +25,9 @@ public class FirebaseDB implements Database {
 
   @Override
   public List<Card> getCards() {
-    return db.collection("cards").get();
+    // TODO get cards and return list
+    //return db.collection("cards").get();
+    return null;
   }
 
   @Override
@@ -36,7 +38,9 @@ public class FirebaseDB implements Database {
     docData.put("price", card.getPrice());
     docData.put("imageUrl", card.getImageUrl());
 
+    // TODO correct callback definition
     if (card.getId() == null) {
+      /*
       db.collection("cards").add(docData)
           .addOnSuccessListener(new OnSuccessListener<Void>(){
             @Override
@@ -49,7 +53,23 @@ public class FirebaseDB implements Database {
             public void onFailure(@NonNull Exception e) {
               Log.w(TAG, "Error writing document", e);
             }
+          });*/
+    } else {
+      /*
+      db.collection("cards").document(card.getId()).set(docData)
+          .addOnSuccessListener(new OnSuccessListener<Void>(){
+            @Override
+            public void onSuccess(Void aVoid) {
+              Log.d(TAG, "DocumentSnapshot successfully written!");
+              }
+          })
+          .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+              Log.w(TAG, "Error writing document", e);
+            }
           });
+       */
     }
     return true;
   }

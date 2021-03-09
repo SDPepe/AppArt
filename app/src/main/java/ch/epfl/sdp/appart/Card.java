@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import javax.annotation.Nullable;
+
 import ch.epfl.sdp.appart.user.User;
 
 public class Card {
@@ -9,7 +11,7 @@ public class Card {
     private int price;
     private String imageUrl;
 
-    public Card( User owner, String city, int price, String imageUrl) {
+    public Card(User owner, String city, int price, String imageUrl) {
         if (owner == null || city == null || imageUrl == null)
             throw new IllegalArgumentException("Argument is null!");
 
@@ -21,6 +23,7 @@ public class Card {
     }
 
     // Getter Setter
+    @Nullable
     public String getId() {
         return id;
     }
@@ -46,7 +49,9 @@ public class Card {
         return imageUrl;
     }
 
-    public String getUserId(){ return owner.getUserId();}
+    public String getUserId() {
+        return owner.getUserId();
+    }
 
     public void setImageUrl(String imageUrl) {
         nullChecker(imageUrl);
@@ -62,7 +67,7 @@ public class Card {
     public boolean equals(Object o) {
         if (o == null || !(o instanceof Card)) return false;
         Card other = (Card) o;
-        if (this.id == other.id) return true;
+        if (this.id.equals(other.id)) return true;
         return false;
     }
 }
