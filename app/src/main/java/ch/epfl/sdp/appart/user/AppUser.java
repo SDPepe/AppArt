@@ -21,7 +21,6 @@ public class AppUser implements User {
         this.userId = userId;
         this.name = name;
         this.email = email;
-        this.password = password;
     }
 
 
