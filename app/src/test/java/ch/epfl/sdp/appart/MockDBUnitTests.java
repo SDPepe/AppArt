@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
 import static org.junit.Assert.*;
@@ -22,7 +23,8 @@ public class MockDBUnitTests {
         for (int i = 0; i < locations.length; i++) {
             cards.add(new Card(mock(User.class), locations[i], prices[i], imageRefs[i]));
         }
-        Database mockdb = new MockDB();
+        User user = new AppUser("0", "Mock", "john.doe@epfl.ch", "");
+        Database mockdb = new MockDB(user);
 
         // TODO change when FirebaseUser is ready
         //assertEquals(cards, mockdb.getCards());
@@ -32,7 +34,8 @@ public class MockDBUnitTests {
 
     @Test
     public void putCardTest() {
-        Database mockdb = new MockDB();
+        User user = new AppUser("0", "Mock", "john.doe@epfl.ch", "");
+        Database mockdb = new MockDB(user);
         Card card = new Card(mock(User.class), "", 0, "");
         assertEquals(false, mockdb.putCard(card));
     }
