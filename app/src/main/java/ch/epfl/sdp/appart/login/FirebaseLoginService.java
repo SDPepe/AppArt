@@ -29,11 +29,19 @@ public class FirebaseLoginService implements LoginService {
         return new FirebaseLoginService();
     }
 
-    @Override
-    public void loginWithEmail(String email, String password, LoginCallback callback) {
+    private void emailAndPasswordHandling(String email, String password, LoginCallback callback, boolean accountCreation) {
         if (email == null || password == null || callback == null)
             throw new IllegalArgumentException();
-        addCallbackToTask(mAuth.signInWithEmailAndPassword(email, password), callback);
+        if (accountCreation) {
+            addCallbackToTask(mAuth.createUserWithEmailAndPassword(email, password), callback);
+        } else {
+            addCallbackToTask(mAuth.signInWithEmailAndPassword(email, password), callback);
+        }
+    }
+
+    @Override
+    public void loginWithEmail(String email, String password, LoginCallback callback) {
+        emailAndPasswordHandling(email, password, callback, false);
     }
 
     @Override
@@ -55,8 +63,7 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public void createUser(String email, String password, LoginCallback callback) {
-        if (email == null || password == null || callback == null) throw new IllegalArgumentException();
-        addCallbackToTask(mAuth.createUserWithEmailAndPassword(email, password), callback);
+        emailAndPasswordHandling(email, password, callback, true);
     }
 
     @Override
