@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.user;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 
 /**
@@ -24,9 +25,32 @@ public class UniversityEmailDatabase {
         if (email == null) {
             throw new IllegalArgumentException("ERROR - email parameter was null");
         }
+
+        if (!UniversityEmailDatabase.emailSyntaxIsValid(email)) {return false;}
+
         String[] split = email.split("@");
         String emailProvider = split[split.length-1];
         return universityEmailDatabaseSet.contains(emailProvider);
+    }
+
+
+    /**
+     * @param email the user's email
+     * @return true if the syntax of the email is correct, false otherwise
+     */
+    public static boolean emailSyntaxIsValid(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("ERROR - email parameter was null");
+        }
+
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +  //part before @
+                "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null) {
+            return false;
+        }
+        return pat.matcher(email).matches();
     }
 
 }
