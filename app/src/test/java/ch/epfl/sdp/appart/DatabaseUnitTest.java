@@ -22,7 +22,7 @@ public class DatabaseUnitTest {
     public void putCardTest() {
         Database db = mock(Database.class);
         User user = mock(User.class);
-        Card card = new Card(user, "Lausanne", 0, "");
+        Card card = new Card(null, user, "Lausanne", 0, "");
         when(db.putCard(card)).thenReturn(true);
         assertEquals(true, db.putCard(card));
     }

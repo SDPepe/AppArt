@@ -21,22 +21,18 @@ public class MockDBUnitTests {
         String[] imageRefs = {"MockDB/ap1.jpg", "MockDB/ap2.jpg", "MockDB/ap3.jpg", "MockDB/ap4.jpg",
                 "MockDB/ap5.jpg"};
         for (int i = 0; i < locations.length; i++) {
-            cards.add(new Card(mock(User.class), locations[i], prices[i], imageRefs[i]));
+            cards.add(new Card("", mock(User.class), locations[i], prices[i], imageRefs[i]));
         }
         User user = new AppUser("0", "Mock", "john.doe@epfl.ch", "");
         Database mockdb = new MockDB(user);
-
-        // TODO change when FirebaseUser is ready
-        //assertEquals(cards, mockdb.getCards());
-        mockdb.getCards();
-        assertEquals(true, true);
+        assertEquals(cards, mockdb.getCards());
     }
 
     @Test
     public void putCardTest() {
         User user = new AppUser("0", "Mock", "john.doe@epfl.ch", "");
         Database mockdb = new MockDB(user);
-        Card card = new Card(mock(User.class), "", 0, "");
+        Card card = new Card(null, mock(User.class), "", 0, "");
         assertEquals(false, mockdb.putCard(card));
     }
 }

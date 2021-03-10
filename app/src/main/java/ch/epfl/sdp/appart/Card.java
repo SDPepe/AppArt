@@ -11,11 +11,11 @@ public class Card {
     private int price;
     private String imageUrl;
 
-    public Card(User owner, String city, int price, String imageUrl) {
+    public Card(@Nullable String id, User owner, String city, int price, String imageUrl) {
         if (owner == null || city == null || imageUrl == null)
             throw new IllegalArgumentException("Argument is null!");
 
-        this.id = null;
+        this.id = id;
         this.owner = owner;
         this.city = city;
         this.price = price;
