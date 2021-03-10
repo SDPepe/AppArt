@@ -9,6 +9,7 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
 public class FirebaseLoginService implements LoginService {
@@ -37,8 +38,13 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public User getCurrentUser() {
-        //Waiting for Adapter class
-        throw new UnsupportedOperationException();
+        FirebaseUser user = getCurrentFirebaseUser();
+        String name = user.getDisplayName();
+        String userId = user.getUid();
+        String email = user.getEmail();
+        String phoneNumber = user.getPhoneNumber();
+        String profilePic = user.getPhotoUrl().toString();
+        return new AppUser(userId, name, email, phoneNumber, profilePic);
     }
 
     @Override

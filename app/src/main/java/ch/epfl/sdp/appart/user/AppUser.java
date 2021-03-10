@@ -14,13 +14,19 @@ public class AppUser implements User {
     private String profilePicture;
 
 
-    public AppUser(String userId, String name, String email, String password) {
+    public AppUser(String userId, String name, String email, String phoneNumber, String profilePicture) {
         if (userId == null || name == null || email == null) {
             throw new IllegalArgumentException("ERROR - failed to create user: null parameters");
         }
         this.userId = userId;
         this.name = name;
         this.email = email;
+        if(phoneNumber != null) {
+            this.phoneNumber = phoneNumber;
+        }
+        if(profilePicture != null) {
+            this.profilePicture = profilePicture;
+        }
     }
 
 
