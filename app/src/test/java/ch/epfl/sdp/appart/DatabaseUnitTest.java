@@ -1,5 +1,11 @@
 package ch.epfl.sdp.appart;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,8 +20,9 @@ public class DatabaseUnitTest {
     @Test
     public void getCardsTest() {
         Database db = mock(Database.class);
-        when(db.getCards()).thenReturn(new ArrayList<>());
-        assertEquals(new ArrayList<>(), db.getCards());
+        db.getCards(task -> {
+        });
+        assertTrue(true);
     }
 
     @Test
@@ -23,7 +30,18 @@ public class DatabaseUnitTest {
         Database db = mock(Database.class);
         User user = mock(User.class);
         Card card = new Card(null, user, "Lausanne", 0, "");
-        when(db.putCard(card)).thenReturn(true);
-        assertEquals(true, db.putCard(card));
+        db.putCard(card, task -> {
+        });
+        assertTrue(true);
+    }
+
+    @Test
+    public void updateCardTest() {
+        Database db = mock(Database.class);
+        User user = mock(User.class);
+        Card card = new Card("0", user, "Lausanne", 0, "");
+        db.updateCard(card, task -> {
+        });
+        assertTrue(true);
     }
 }
