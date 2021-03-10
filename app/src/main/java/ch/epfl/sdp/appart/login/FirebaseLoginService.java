@@ -55,8 +55,7 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public void createUser(String email, String password, LoginCallback callback) {
-        if (email == null || password == null || callback == null)
-            throw new IllegalArgumentException();
+        if (email == null || password == null || callback == null) throw new IllegalArgumentException();
         addCallbackToTask(mAuth.createUserWithEmailAndPassword(email, password), callback);
     }
 

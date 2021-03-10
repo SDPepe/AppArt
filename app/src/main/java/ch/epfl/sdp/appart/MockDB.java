@@ -19,7 +19,7 @@ public class MockDB implements Database {
         cards = new ArrayList<>();
         this.mockUser = mockUser;
 
-        mockUser = new AppUser("0", "Mock", "john.doe@epfl.ch", "");
+        mockUser = new AppUser("0", "Mock", "john.doe@epfl.ch", "", "");
         for (int i = 0; i < locations.length; i++) {
             cards.add(new Card("", mockUser, locations[i], prices[i], imageRefs[i]));
         }
