@@ -1,8 +1,5 @@
 package ch.epfl.sdp.appart.login;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.auth.AuthResult;
-
 import ch.epfl.sdp.appart.user.User;
 
 /**
@@ -18,7 +15,7 @@ public interface LoginService {
      * @param callback what should be done on login success or failure
      * @throws IllegalArgumentException if one the arguments is null
      */
-    void loginWithEmail(String email, String password, OnCompleteListener<AuthResult> callback);
+    void loginWithEmail(String email, String password, LoginCallback callback);
 
     /**
      * Retrieves the current user if there is one, null otherwise.
@@ -35,7 +32,7 @@ public interface LoginService {
      * @param callback what should be done after success or failure
      * @throws IllegalArgumentException if one of the arguments is null
      */
-    void resetPasswordWithEmail(String email, OnCompleteListener<Void> callback);
+    void resetPasswordWithEmail(String email, LoginCallback callback);
 
     /**
      * Creates a user with an email and a password
@@ -46,7 +43,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    void createUser(String email, String password, OnCompleteListener<AuthResult> callback);
+    void createUser(String email, String password, LoginCallback callback);
 
     /**
      * Updates the email address of a user
@@ -56,7 +53,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    void updateEmailAddress(String email, OnCompleteListener<Void> callback);
+    void updateEmailAddress(String email, LoginCallback callback);
 
     /**
      * Updates the password of a user
@@ -66,7 +63,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    void updatePassword(String password, OnCompleteListener<Void> callback);
+    void updatePassword(String password, LoginCallback callback);
 
     /**
      * Verifies an user's email
@@ -75,7 +72,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if callback is null
      * @throws IllegalStateException    if no current user is set
      */
-    void sendEmailVerification(OnCompleteListener<Void> callback);
+    void sendEmailVerification(LoginCallback callback);
 
     /**
      * Deletes a user
@@ -84,7 +81,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if callback is null
      * @throws IllegalStateException    if no current user is set
      */
-    void deleteUser(OnCompleteListener<Void> callback);
+    void deleteUser(LoginCallback callback);
 
     /**
      * Re-authenticates a user. This is needed for things like password change or critical operations
@@ -95,5 +92,5 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    void reAuthenticateUser(String email, String password, OnCompleteListener<Void> callback);
+    void reAuthenticateUser(String email, String password, LoginCallback callback);
 }
