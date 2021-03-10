@@ -1,3 +1,11 @@
+checks:
+  similar-code:
+    config:
+      threshold: 75
+  identical-code:
+    config:
+      threshold: 75
+
 check_android_task:
   name: Run Android tests
   env:
