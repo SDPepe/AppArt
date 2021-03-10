@@ -23,14 +23,14 @@ public class MockDBUnitTests {
         for (int i = 0; i < locations.length; i++) {
             cards.add(new Card("", mock(User.class), locations[i], prices[i], imageRefs[i]));
         }
-        User user = new AppUser("0", "Mock", "john.doe@epfl.ch", "");
+        User user = new AppUser("0", "Mock", "john.doe@epfl.ch", "", "");
         Database mockdb = new MockDB(user);
         assertEquals(cards, mockdb.getCards());
     }
 
     @Test
     public void putCardTest() {
-        User user = new AppUser("0", "Mock", "john.doe@epfl.ch", "");
+        User user = new AppUser("0", "Mock", "john.doe@epfl.ch", "", "");
         Database mockdb = new MockDB(user);
         Card card = new Card(null, mock(User.class), "", 0, "");
         assertEquals(false, mockdb.putCard(card));
