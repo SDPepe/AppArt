@@ -8,6 +8,9 @@ import ch.epfl.sdp.appart.user.User;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+/**
+ *
+ */
 public class DatabaseUnitTest {
 
     @Test
@@ -21,8 +24,7 @@ public class DatabaseUnitTest {
     @Test
     public void putCardTest() {
         Database db = mock(Database.class);
-        User user = mock(User.class);
-        Card card = new Card(null, user, "Lausanne", 0, "");
+        Card card = new Card(null, "user", "Lausanne", 0, "");
         db.putCard(card, task -> {
         });
         assertTrue(true);
@@ -31,8 +33,7 @@ public class DatabaseUnitTest {
     @Test
     public void updateCardTest() {
         Database db = mock(Database.class);
-        User user = mock(User.class);
-        Card card = new Card("0", user, "Lausanne", 0, "");
+        Card card = new Card("0", "user", "Lausanne", 0, "");
         db.updateCard(card, task -> {
         });
         assertTrue(true);
