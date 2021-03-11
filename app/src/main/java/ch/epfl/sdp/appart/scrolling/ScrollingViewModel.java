@@ -23,13 +23,15 @@ import ch.epfl.sdp.appart.user.User;
 public class ScrollingViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<Card>> mCards = new MutableLiveData<>();
-    ;
     private FirebaseDB db = new FirebaseDB();
 
     public ScrollingViewModel(@NonNull Application application) {
         super(application);
     }
 
+    /*
+     * Gets the cards from the database and updates the LiveData list
+     */
     public void initHome() {
 
         db.getCards(new OnCompleteListener<QuerySnapshot>() {
@@ -42,7 +44,7 @@ public class ScrollingViewModel extends AndroidViewModel {
                             Log.d("0", document.getId() + " => " + document.getData());
                             ls.add(new Card(document.getId(), (String) document.getData().get("userId"),
                                     (String) document.getData().get("city"),
-                                    (int) document.getData().get("price"),
+                                    (long) document.getData().get("price"),
                                     (String) document.getData().get("imageUrl")));
                         }
                         mCards.setValue(ls);

@@ -6,17 +6,21 @@ import ch.epfl.sdp.appart.user.User;
 
 public class Card {
     private final String id;
-    private final String owner;
+    private final String ownerId;
     private String city;
     private long price;
     private String imageUrl;
 
-    public Card(@Nullable String id, String owner, String city, long price, String imageUrl) {
-        if (owner == null || city == null || imageUrl == null)
+    /*
+     * A newly created card will be local, hence the id won't be assigned (null). At the first
+     * upload to Firestore, a new unique id will be generated and assigned to the card.
+     */
+    public Card(@Nullable String id, String ownerId, String city, long price, String imageUrl) {
+        if (ownerId == null || city == null || imageUrl == null)
             throw new IllegalArgumentException("Argument is null!");
 
         this.id = id;
-        this.owner = owner;
+        this.ownerId = ownerId;
         this.city = city;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -50,7 +54,7 @@ public class Card {
     }
 
     public String getUserId() {
-        return owner;
+        return ownerId;
     }
 
     public void setImageUrl(String imageUrl) {
