@@ -9,7 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".scrolling.AnnounceActivity"></activity>
+        <activity android:name=".user.ResetActivity"></activity>
+        <!--
+               Set to true if your app is Standalone, that is, it does not require the handheld
+               app to run.
+        -->
+        <activity android:name=".user.LoginActivity" />
+        <!--
+               Set to true if your app is Standalone, that is, it does not require the handheld
+               app to run.
+        -->
+        <activity android:name=".scrolling.AnnounceActivity" />
         <activity android:name=".scrolling.ScrollingActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -19,5 +29,9 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>
