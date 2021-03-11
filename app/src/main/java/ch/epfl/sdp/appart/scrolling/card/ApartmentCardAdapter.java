@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.scrolling.card;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
+import ch.epfl.sdp.appart.Card;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
+
+import static java.lang.String.*;
 
 /**
  * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView
@@ -23,10 +29,10 @@ import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
  */
 public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdapter.CardViewHolder> {
 
-    private final List<ApartmentCard> cards;
+    private final List<Card> cards;
     private final Context context;
 
-    public ApartmentCardAdapter(Activity context, List<ApartmentCard> cards) {
+    public ApartmentCardAdapter(Activity context, List<Card> cards) {
 
         if (cards == null) {
             throw new IllegalArgumentException("cards cannot be null");
@@ -62,14 +68,18 @@ public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdap
      */
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        ApartmentCard card = cards.get(position);
-        holder.cardImageView.setImageResource(card.getImageId());
+        Card card = cards.get(position);
         holder.cardImageView.setOnClickListener(v -> {
             Intent intent = new Intent(context, AnnounceActivity.class);
             context.startActivity(intent);
         });
+
+        Glide.with(context)
+                .load(Uri.parse("file:///android_asset/" + card.getImageUrl()))
+                .into(holder.cardImageView);
+
         holder.addressTextView.setText(card.getCity());
-        holder.priceTextView.setText(card.getPrice() + ".-/mo");
+        holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));
     }
 
     /**

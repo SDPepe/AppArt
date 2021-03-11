@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.epfl.sdp.appart.Card;
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.scrolling.card.ApartmentCard;
 import ch.epfl.sdp.appart.scrolling.card.ApartmentCardAdapter;
+import ch.epfl.sdp.appart.user.AppUser;
+import ch.epfl.sdp.appart.user.User;
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -20,13 +22,17 @@ public class ScrollingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
-        List<ApartmentCard> cardsId = Arrays.asList(
-                new ApartmentCard(R.drawable.apart_fake_image_1, "Lausanne", 1000),
-                new ApartmentCard(R.drawable.apart_fake_image_2, "Ecublens", 1200),
-                new ApartmentCard(R.drawable.apart_fake_image_3, "Renens", 800),
-                new ApartmentCard(R.drawable.apart_fake_image_4, "Prilly", 1150),
-                new ApartmentCard(R.drawable.apart_fake_image_5, "Lausanne", 900)
+        User u = new AppUser("dummy", "dummy", "dummy", "dummy");
+
+        List<Card> cardsId = Arrays.asList(
+                new Card(null, u, "Lausanne", 1000, "apart_fake_image_1.jpeg"),
+                new Card(null, u, "Ecublens", 1200, "apart_fake_image_2.jpeg"),
+                new Card(null, u, "Renens", 900, "apart_fake_image_3.jpeg"),
+                new Card(null, u, "Prilly", 1150, "apart_fake_image_4.jpeg"),
+                new Card(null, u, "Lausanne", 1200, "apart_fake_image_5.jpeg")
         );
+
+
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(new ApartmentCardAdapter(this, cardsId));
