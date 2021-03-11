@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart;
+package ch.epfl.sdp.appart.scrolling.card;
 
 import javax.annotation.Nullable;
 
@@ -6,12 +6,12 @@ import ch.epfl.sdp.appart.user.User;
 
 public class Card {
     private final String id;
-    private final User owner;
+    private final String owner;
     private String city;
-    private int price;
+    private long price;
     private String imageUrl;
 
-    public Card(@Nullable String id, User owner, String city, int price, String imageUrl) {
+    public Card(@Nullable String id, String owner, String city, long price, String imageUrl) {
         if (owner == null || city == null || imageUrl == null)
             throw new IllegalArgumentException("Argument is null!");
 
@@ -37,11 +37,11 @@ public class Card {
         this.city = city;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 
@@ -50,7 +50,7 @@ public class Card {
     }
 
     public String getUserId() {
-        return owner.getUserId();
+        return owner;
     }
 
     public void setImageUrl(String imageUrl) {

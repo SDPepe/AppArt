@@ -1,15 +1,8 @@
 package ch.epfl.sdp.appart;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import org.junit.Test;
 
-import java.util.ArrayList;
-
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.User;
 
 import static org.junit.Assert.*;

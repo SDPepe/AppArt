@@ -7,12 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sdp.appart.Card;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.scrolling.card.ApartmentCard;
 import ch.epfl.sdp.appart.scrolling.card.ApartmentCardAdapter;
 
 public class ScrollingActivity extends AppCompatActivity {
@@ -30,9 +29,8 @@ public class ScrollingActivity extends AppCompatActivity {
         mViewModel.initHome();
 
         recyclerView = findViewById(R.id.recycler_view);
-
+        recyclerView.setAdapter(new ApartmentCardAdapter(this, new ArrayList<>()));
         recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
-
         mViewModel.getCards().observe(this, this::updateList);
 
     }
@@ -43,7 +41,7 @@ public class ScrollingActivity extends AppCompatActivity {
         Log.d("Scroll", "stoping");
     }
 
-    private void updateList(List<Card> ls){
+    private void updateList(List<Card> ls) {
         recyclerView.setAdapter(new ApartmentCardAdapter(this, ls));
     }
 

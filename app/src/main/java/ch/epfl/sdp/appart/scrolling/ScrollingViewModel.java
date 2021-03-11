@@ -16,20 +16,21 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sdp.appart.Card;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.FirebaseDB;
 import ch.epfl.sdp.appart.user.User;
 
 public class ScrollingViewModel extends AndroidViewModel {
 
-    private  MutableLiveData<List<Card>> mCards = new MutableLiveData<>();;
+    private MutableLiveData<List<Card>> mCards = new MutableLiveData<>();
+    ;
     private FirebaseDB db = new FirebaseDB();
 
     public ScrollingViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public void initHome(){
+    public void initHome() {
 
         db.getCards(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -39,10 +40,10 @@ public class ScrollingViewModel extends AndroidViewModel {
                         List<Card> ls = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Log.d("0", document.getId() + " => " + document.getData());
-                            ls.add(new Card(document.getId(), (User)document.getData().get("userId"),
-                                    (String)document.getData().get("city"),
-                                    (int)document.getData().get("price"),
-                                    (String)document.getData().get("imageUrl")));
+                            ls.add(new Card(document.getId(), (String) document.getData().get("userId"),
+                                    (String) document.getData().get("city"),
+                                    (int) document.getData().get("price"),
+                                    (String) document.getData().get("imageUrl")));
                         }
                         mCards.setValue(ls);
                     } else {
@@ -59,3 +60,4 @@ public class ScrollingViewModel extends AndroidViewModel {
     public LiveData<List<Card>> getCards() {
         return mCards;
     }
+}

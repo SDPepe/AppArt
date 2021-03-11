@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import ch.epfl.sdp.appart.Card;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
 
