@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.login;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,7 +53,11 @@ public class FirebaseLoginService implements LoginService {
         String userId = user.getUid();
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
-        String profilePic = user.getPhotoUrl().toString();
+        Uri photoUrl = user.getPhotoUrl();
+        String profilePic = null;
+        if(photoUrl != null) {
+            profilePic = photoUrl.toString();
+        }
         return new AppUser(userId, name, email, phoneNumber, profilePic);
     }
 
