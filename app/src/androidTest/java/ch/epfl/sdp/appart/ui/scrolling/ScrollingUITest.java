@@ -58,7 +58,12 @@ public class ScrollingUITest {
     public void clickOnImageViewFromCardViewStartAnnounceActivity() {
         Intents.init();
         //onView(withId(R.id.card_image)).perform(click());
-
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
         ViewInteraction card = onView(withIndex(withId(R.id.card_image), 0));
         card.perform(click());
 
