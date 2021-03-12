@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.ui.scrolling;
 
 import android.view.View;
 
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -56,7 +57,16 @@ public class ScrollingUITest {
     @Test
     public void clickOnImageViewFromCardViewStartAnnounceActivity() {
         Intents.init();
-        onView(withIndex(withId(R.id.card_image), 0)).perform(click());
+        //onView(withId(R.id.card_image)).perform(click());
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        ViewInteraction card = onView(withIndex(withId(R.id.card_image), 0));
+        card.perform(click());
+
         Intents.release();
     }
 
