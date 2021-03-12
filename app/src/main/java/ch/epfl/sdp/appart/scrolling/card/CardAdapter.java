@@ -26,12 +26,12 @@ import static java.lang.String.*;
  * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView
  * Based on the following tutorial : https://developer.android.com/codelabs/basic-android-kotlin-training-recyclerview-scrollable-list
  */
-public class ApartmentCardAdapter extends RecyclerView.Adapter<ApartmentCardAdapter.CardViewHolder> {
+public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
     private final List<Card> cards;
     private final Context context;
 
-    public ApartmentCardAdapter(Activity context, List<Card> cards) {
+    public CardAdapter(Activity context, List<Card> cards) {
 
         if (cards == null) {
             throw new IllegalArgumentException("cards cannot be null");

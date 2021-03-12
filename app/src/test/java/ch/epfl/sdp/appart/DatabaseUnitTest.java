@@ -3,7 +3,6 @@ package ch.epfl.sdp.appart;
 import org.junit.Test;
 
 import ch.epfl.sdp.appart.scrolling.card.Card;
-import ch.epfl.sdp.appart.user.User;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
