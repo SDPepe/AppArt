@@ -14,7 +14,8 @@ check_android_task:
     echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
   start_emulator_background_script:
     $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
-  install_sudo_script:
+  install_sudo_script: |
+    apt-get update
     apt-get install sudo -y
   download_fireabse_script : |
     curl -sL https://firebase.tools | bash
