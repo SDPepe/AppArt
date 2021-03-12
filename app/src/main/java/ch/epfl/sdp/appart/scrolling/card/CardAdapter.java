@@ -14,9 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
+import ch.epfl.sdp.appart.FirebaseGlideModule;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
 
@@ -73,8 +76,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             context.startActivity(intent);
         });
 
+        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + card.getImageUrl());
+
         Glide.with(context)
-                .load(Uri.parse("file:///android_asset/" + card.getImageUrl()))
+                .load(ref)
                 .into(holder.cardImageView);
 
         holder.addressTextView.setText(card.getCity());
