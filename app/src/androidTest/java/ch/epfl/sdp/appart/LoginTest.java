@@ -39,7 +39,7 @@ public class LoginTest {
         createSignal.await();
         FirebaseUser user = auth.getCurrentUser();
         String mail = user.getEmail();
-        assertThat(user.getEmail(), is("antoine.de.gendt@gmail.com"));
+        assertThat(user.getEmail(), is("blabla"));
 
         CountDownLatch deleteSignal = new CountDownLatch(1);
         user.delete().addOnCompleteListener(task -> {
