@@ -1,3 +1,16 @@
+firebase_emulator_task:
+  name: Firebase Emulator setup
+  download_script : |
+    curl -sL https://firebase.tools | bash
+  intall_firebase_cache:
+    folder: $HOME/.cache/firebase
+    reupload_on_changes: false
+  start_firebase_script: |
+    firebase emulators:start
+  
+    
+
+
 check_android_task:
   name: Run Android tests
   env:

@@ -12,3 +12,5 @@
 /captures
 .externalNativeBuild
 .cxx
+firebase-debug.log
+ui-debug.log
