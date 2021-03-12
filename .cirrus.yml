@@ -15,11 +15,11 @@ check_android_task:
   start_emulator_background_script:
     $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
   download_fireabse_script : |
-    curl -sL https://firebase.tools | bash
+    curl -sL https://firebase.tools
   intall_firebase_cache:
     folder: $HOME/.cache/firebase
     reupload_on_changes: false
-  start_firebase_script: |
+  start_firebase_background_script: |
     firebase emulators:start
   build_script: |
     chmod +x gradlew
