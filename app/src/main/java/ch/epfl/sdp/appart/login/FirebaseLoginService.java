@@ -48,14 +48,17 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public User getCurrentUser() {
-        FirebaseUser user = getCurrentFirebaseUser();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            return null;
+        }
         String name = user.getDisplayName();
         String userId = user.getUid();
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
         Uri photoUrl = user.getPhotoUrl();
         String profilePic = null;
-        if(photoUrl != null) {
+        if (photoUrl != null) {
             profilePic = photoUrl.toString();
         }
         return new AppUser(userId, name, email, phoneNumber, profilePic);

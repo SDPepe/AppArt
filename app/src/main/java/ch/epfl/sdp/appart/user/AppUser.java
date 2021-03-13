@@ -15,7 +15,8 @@ public class AppUser implements User {
 
 
     public AppUser(String userId, String name, String email, String phoneNumber, String profilePicture) {
-        if (userId == null || name == null || email == null) {
+        //User has not necessary a name
+        if (userId == null || /*name == null ||*/ email == null) {
             throw new IllegalArgumentException("ERROR - failed to create user: null parameters");
         }
         this.userId = userId;
