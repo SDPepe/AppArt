@@ -4,9 +4,11 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -16,17 +18,27 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.Database;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.FirebaseDB;
 import ch.epfl.sdp.appart.user.User;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.AndroidEntryPoint;
+import dagger.hilt.android.HiltAndroidApp;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 
-public class ScrollingViewModel extends AndroidViewModel {
+@HiltViewModel
+public class ScrollingViewModel extends ViewModel {
 
     private MutableLiveData<List<Card>> mCards = new MutableLiveData<>();
-    private FirebaseDB db = new FirebaseDB();
 
-    public ScrollingViewModel(@NonNull Application application) {
-        super(application);
+    Database db;
+
+    @Inject
+    public ScrollingViewModel(Database database) {
+        this.db = database;
     }
 
     /*

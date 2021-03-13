@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
+@Singleton
 public class FirebaseDB implements Database {
 
   private final FirebaseFirestore db;

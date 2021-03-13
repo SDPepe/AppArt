@@ -13,7 +13,9 @@ import java.util.List;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class ScrollingActivity extends AppCompatActivity {
 
     private ScrollingViewModel mViewModel;
