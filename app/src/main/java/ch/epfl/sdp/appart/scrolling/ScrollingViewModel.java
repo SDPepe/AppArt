@@ -21,6 +21,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.Database;
+import ch.epfl.sdp.appart.database.QueryDocument;
+import ch.epfl.sdp.appart.database.QueryResult;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.FirebaseDB;
 import ch.epfl.sdp.appart.user.User;
@@ -46,13 +48,13 @@ public class ScrollingViewModel extends ViewModel {
      */
     public void initHome() {
 
-        db.getCards(new OnCompleteListener<QuerySnapshot>() {
+        db.getCards(new OnCompleteListener<QueryResult>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull Task<QueryResult> task) {
                 if (task.isSuccessful()) {
                     if (task.isSuccessful()) {
                         List<Card> ls = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
+                        for (QueryDocument document : task.getResult()) {
                             Log.d("0", document.getId() + " => " + document.getData());
                             ls.add(new Card(document.getId(), (String) document.getData().get("userId"),
                                     (String) document.getData().get("city"),
