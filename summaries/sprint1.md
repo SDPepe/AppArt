@@ -22,3 +22,8 @@ Starting week two I will try spending my time more efficiently on PRs and maximi
 ## Quentin
 
 ## Overall team
+
+This week was really preparation and architecture focused. We didn't really know how we wanted our class to look like and how to design them. Moreover, the meetings were too long and not as productive as we wanted them to be.
+
+We still managed to produce useful work in a reasonable quantity. Now that we are more organized I think the meetings will be more productive and shorter. The more we progress on building the foundations that are required for every feature to work the more we can separate our work and actually implement these features.
+The login system will soon be complete and the Database system is. We also have UIs for several elements, such as the scrollig activity with all the ads, the login activity and the reset password activity. 
