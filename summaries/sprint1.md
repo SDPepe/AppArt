@@ -13,6 +13,9 @@ Next week I plan on better exploring the UI parts of the project. I will impleme
 ## Émilien
 
 ## Filippo
+Last week I was in charge of managing the backend for communicating with the database. After Lorenzo did the firebase setup together we organized how to implement the various classes that deal with interacting with the firebase. So we mainly implements the Database interface and the Card class which contains the information that will be displayed in the scrolling activity. In addition, also working with Quentin who took care of the Scroll UI, we have implemented the ViewModel that allows communication between the various components.
+
+Next week I will be in charge of managing the viewmodel and communication with firebase for another UI: User profile UI. 
 
 ## Lorenzo
 I was in charge of setting up Firebase as back-end of of app. I then worked with Filippo on the implementation of the models and logic related to the ScrollingActivity. This inlcuded the database classes for the communication with Firestore. We then worked with the help of Quentin on the implementation of the scrolling ViewModel.
