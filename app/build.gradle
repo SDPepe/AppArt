@@ -60,10 +60,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.firebaseui:firebase-ui-storage:4.3.2'
-    implementation 'com.google.dagger:hilt-android:2.28-alpha'
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.28-alpha'
-    annotationProcessor 'com.google.dagger:hilt-android-compiler:2.28-alpha'
-    androidTestAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.28-alpha'
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    annotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
+    androidTestAnnotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
     compileOnly 'com.google.android.wearable:wearable:2.6.0'
 }
 

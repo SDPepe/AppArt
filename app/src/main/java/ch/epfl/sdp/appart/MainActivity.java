@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import ch.epfl.sdp.appart.hilt.HiltTestActivity;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 import ch.epfl.sdp.appart.user.LoginActivity;
 
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, HiltTestActivity.class);
         startActivity(intent);
 
     }

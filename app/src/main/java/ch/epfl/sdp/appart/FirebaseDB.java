@@ -7,12 +7,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 public class FirebaseDB implements Database {
 
   private final FirebaseFirestore db;
 
+  @Inject
   public FirebaseDB() {
     db = FirebaseFirestore.getInstance();
   }
