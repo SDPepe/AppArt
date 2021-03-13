@@ -11,6 +11,9 @@ My job for this week was to implement the General User Interface, the AppUser cl
 Next week I plan on better exploring the UI parts of the project. I will implement a user profile activity which enables the user to edit its personal information. This implementation should interact with the FirebaseService to update the user's information in database.
 
 ## Émilien
+For this week, I had to create the login UI. As such, I did the login activity and the "Forgot password" activity. I also created a signup activity, but as Antoine has mentioned, we couldn't merge the whole registering part of the project into the master branch, so this was not displayed in the demo. We worked together with Antoine and Carlo to make the login UI work with the backend, and thus to be able to actually connect to the app with an account. This should work fine, but we still need to test this feature, and as such it has not been merged with the master branch yet. 
+
+For next week, I have to create a sliding menu where the user can access his profile.
 
 ## Filippo
 Last week I was in charge of managing the backend for communicating with the database. After Lorenzo did the firebase setup together we organized how to implement the various classes that deal with interacting with the firebase. So we mainly implements the Database interface and the Card class which contains the information that will be displayed in the scrolling activity. In addition, also working with Quentin who took care of the Scroll UI, we have implemented the ViewModel that allows communication between the various components.
