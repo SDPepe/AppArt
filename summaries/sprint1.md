@@ -21,6 +21,12 @@ Starting week two I will try spending my time more efficiently on PRs and maximi
 
 ## Quentin
 
+I worked on the scrolling UI. I designed a layout that has the property of being simple. It only gives the most important informations to the user => A picture of the apart, the location and the price per month. Therefore, my work was also about thinking a straight foward design that will not be a blocker in the future. The card showing system is based on a RecyclerView. It is just a system that reuse created card's views as they swap in order to avoid memory overhead and garbadge collector overhead. I had to create an adapater that takes our cards and convert them into displayable views in the recycler.
+
+I aslo worked with Filippo and Lorenzo on the ViewModel of the ScrollActivity. Indeed, I knew how the card views were created and so how thier images could be updated and they knew about the backend of the database. 
+
+Finally, I setup Glide which is a library that allows loading images either from resources, assets or from a custom backend. The latter was what interested us because we are using Firebase storage. A blocker is that now we need to Mock the database in order to test the UI.
+
 ## Overall team
 
 This week was really preparation and architecture focused. We didn't really know how we wanted our class to look like and how to design them. Moreover, the meetings were too long and not as productive as we wanted them to be.
