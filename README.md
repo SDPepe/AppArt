@@ -6,9 +6,6 @@ The aim of this application is to create a trusted and self-organised market pla
 The main feature which distinguishes this idea from a basic apartment market place is that it’s narrowed to university-related users: this both provides a friendly and trusted place for users to feel comfortable with their experience of the app.
 
 
-## Split app model:
-Firebase is used to store the apartments photos and information, and also for the authentication system of users that cannot use a Uni login.
-
 
 ## Badges
 [![Build Status](https://api.cirrus-ci.com/github/SDPepe/AppArt.svg)](https://cirrus-ci.com/github/SDPepe/AppArt)
