@@ -2,3 +2,7 @@ exclude_patterns:
 - "**/test/"
 - "**/androidTest/"
 - "**test"
+- "LoginCallback.java"
+- "LoginService.java"
+- "Database.java"
+- "User.java"
