@@ -97,7 +97,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                     .load(ref)
                     .into(holder.cardImageView);
         } else if (MockDataBase.class.isInstance(database)) {
-            throw new UnsupportedOperationException("loading with mock not implemented");
+            Glide.with(context)
+                    .load(card.getImageUrl())
+                    .into(holder.cardImageView);
         } else {
             throw new UnsupportedOperationException("card viewer found not implemented backend");
         }

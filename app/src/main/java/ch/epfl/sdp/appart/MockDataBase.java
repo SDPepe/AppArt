@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentReference;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +19,21 @@ import ch.epfl.sdp.appart.scrolling.card.Card;
 
 public class MockDataBase implements Database {
 
-    public MockDataBase() {
+    private final List<Card> cards = new ArrayList<>();
 
+    public MockDataBase() {
+        cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
     }
 
     @Override
     public CompletableFuture<List<Card>> getCards() {
-        throw new UnsupportedOperationException("getCard is not implemented");
+        CompletableFuture<List<Card>> result = new CompletableFuture<>();
+        result.complete(cards);
+        return result;
     }
 
     @Override
