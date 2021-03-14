@@ -43,25 +43,22 @@ public class FirebaseDB implements Database {
     CompletableFuture<List<Card>> result = new CompletableFuture<>();
 
     db.collection("cards").get().addOnCompleteListener(
-            new OnCompleteListener<QuerySnapshot>() {
-              @Override
-              public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                List<Card> queriedCards = new ArrayList<>();
+            task -> {
+              List<Card> queriedCards = new ArrayList<>();
 
-                if (task.isSuccessful()) {
+              if (task.isSuccessful()) {
 
-                  for (QueryDocumentSnapshot document : task.getResult()) {
-                    queriedCards.add(new Card(document.getId(), (String) document.getData().get("userId"),
-                            (String) document.getData().get("city"),
-                            (long) document.getData().get("price"),
-                            (String) document.getData().get("imageUrl")));
-                  }
-                  result.complete(queriedCards);
-                } else {
-                  result.completeExceptionally(new IllegalStateException("query of the cards failed"));
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                  queriedCards.add(new Card(document.getId(), (String) document.getData().get("userId"),
+                          (String) document.getData().get("city"),
+                          (long) document.getData().get("price"),
+                          (String) document.getData().get("imageUrl")));
                 }
-
+                result.complete(queriedCards);
+              } else {
+                result.completeExceptionally(new IllegalStateException("query of the cards failed"));
               }
+
             }
     );
 
@@ -70,19 +67,16 @@ public class FirebaseDB implements Database {
 
   @Override
   public CompletableFuture<String> putCard(Card card) {
-      CompletableFuture<String> resultIdFutur = new CompletableFuture<>();
+      CompletableFuture<String> resultIdFuture = new CompletableFuture<>();
       db.collection("cards")
-        .add(extractCardsInfo(card)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentReference> task) {
-                  if (task.isSuccessful()) {
-                    resultIdFutur.complete(task.getResult().getId());
-                  } else {
-                    resultIdFutur.completeExceptionally(new IllegalStateException("query of the cards failed"));
-                  }
-                }
-              });
-        return resultIdFutur;
+        .add(extractCardsInfo(card)).addOnCompleteListener(task -> {
+          if (task.isSuccessful()) {
+            resultIdFuture.complete(task.getResult().getId());
+          } else {
+            resultIdFuture.completeExceptionally(new IllegalStateException("query of the cards failed"));
+          }
+        });
+        return resultIdFuture;
   }
   
   @Override
@@ -91,14 +85,11 @@ public class FirebaseDB implements Database {
     db.collection("cards")
         .document(card.getId())
         .set(extractCardsInfo(card))
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
-              @Override
-              public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                  isFinishedFuture.complete(null);
-                } else {
-                  isFinishedFuture.completeExceptionally(new IllegalStateException("update of the cards failed"));
-                }
+            .addOnCompleteListener(task -> {
+              if (task.isSuccessful()) {
+                isFinishedFuture.complete(null);
+              } else {
+                isFinishedFuture.completeExceptionally(new IllegalStateException("update of the cards failed"));
               }
             });
     return isFinishedFuture;

@@ -15,8 +15,7 @@ public class DatabaseUnitTest {
     @Test
     public void getCardsTest() {
         Database db = mock(Database.class);
-        db.getCards(task -> {
-        });
+        db.getCards();
         assertTrue(true);
     }
 
@@ -24,8 +23,7 @@ public class DatabaseUnitTest {
     public void putCardTest() {
         Database db = mock(Database.class);
         Card card = new Card(null, "user", "Lausanne", 0, "");
-        db.putCard(card, task -> {
-        });
+        db.putCard(card);
         assertTrue(true);
     }
 
@@ -33,8 +31,7 @@ public class DatabaseUnitTest {
     public void updateCardTest() {
         Database db = mock(Database.class);
         Card card = new Card("0", "user", "Lausanne", 0, "");
-        db.updateCard(card, task -> {
-        });
+        db.updateCard(card);
         assertTrue(true);
     }
 }

@@ -8,7 +8,7 @@ import android.media.Image;
  */
 public class AppUser implements User {
     private String name;
-    private String userId;
+    private final String userId;
     private String email;
     private String phoneNumber;
     private String profilePicture;

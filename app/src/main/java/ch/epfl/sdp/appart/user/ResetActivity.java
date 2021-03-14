@@ -23,7 +23,7 @@ public class ResetActivity extends AppCompatActivity {
      * @param view
      */
     public void resetPassword(View view) {
-        EditText emailView = (EditText) findViewById(R.id.reset_email);
+        EditText emailView = findViewById(R.id.reset_email);
         String email = emailView.getText().toString();
     }
 

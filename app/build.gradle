@@ -16,8 +16,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "ch.epfl.sdp.appart.CustomTestRunner"
+        //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner" //replaced when using hilt
     }
 
     buildTypes {
@@ -65,7 +65,7 @@ dependencies {
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     androidTestAnnotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
-    compileOnly 'com.google.android.wearable:wearable:2.6.0'
+    compileOnly 'com.google.android.wearable:wearable:2.8.1'
 }
 
 tasks.withType(Test) {
@@ -104,4 +104,8 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
 
 connectedCheck {
     finalizedBy jacocoTestReport
+}
+
+hilt {
+    enableTransformForLocalTests = true
 }

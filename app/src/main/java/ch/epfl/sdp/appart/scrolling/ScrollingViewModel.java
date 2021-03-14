@@ -25,7 +25,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class ScrollingViewModel extends ViewModel {
 
-    private MutableLiveData<List<Card>> mCards = new MutableLiveData<>();
+    private final MutableLiveData<List<Card>> mCards = new MutableLiveData<>();
 
     Database db;
 
@@ -40,31 +40,8 @@ public class ScrollingViewModel extends ViewModel {
     public void initHome() {
 
         CompletableFuture<List<Card>> queriedCards = db.getCards();
-        queriedCards.thenAccept(cards -> {
-            mCards.setValue(cards);
-        });
-        /*
-        db.getCards(new OnCompleteListener<Query>() {
-            @Override
-            public void onComplete(@NonNull Task<Query> task) {
-                if (task.isSuccessful()) {
-                    if (task.isSuccessful()) {
-                        List<Card> ls = new ArrayList<>();
-                        for (QueryDocument document : task.getResult()) {
-                            Log.d("0", document.getId() + " => " + document.getData());
-                            ls.add(new Card(document.getId(), (String) document.getData().get("userId"),
-                                    (String) document.getData().get("city"),
-                                    (long) document.getData().get("price"),
-                                    (String) document.getData().get("imageUrl")));
-                        }
-                        mCards.setValue(ls);
-                    } else {
-                        Log.w("1", "Error getting documents: ", task.getException());
-                    }
-                }
-            }
-        });
-        */
+        queriedCards.thenAccept(mCards::setValue);
+
     }
 
     /*

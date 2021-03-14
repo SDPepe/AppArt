@@ -72,7 +72,6 @@ public class Card {
         if (this.id == null) return false;
         if (o == null || !(o instanceof Card)) return false;
         Card other = (Card) o;
-        if (this.id.equals(other.id)) return true;
-        return false;
+        return this.id.equals(other.id);
     }
 }
