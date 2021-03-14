@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,12 +11,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,21 +48,37 @@ public class FirebaseDB implements Database {
 
     db.collection("cards").get().addOnCompleteListener(
             task -> {
+
               List<Card> queriedCards = new ArrayList<>();
 
               if (task.isSuccessful()) {
 
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                  queriedCards.add(new Card(document.getId(), (String) document.getData().get("userId"),
-                          (String) document.getData().get("city"),
-                          (long) document.getData().get("price"),
-                          (String) document.getData().get("imageUrl")));
-                }
-                result.complete(queriedCards);
-              } else {
-                result.completeExceptionally(new IllegalStateException("query of the cards failed"));
-              }
+                  List<CompletableFuture<Card>> cardsFutures = new ArrayList<>();
 
+                  for (QueryDocumentSnapshot document : task.getResult()) {
+                      CompletableFuture<Card> cardFuture = new CompletableFuture<>();
+
+                      String imageUrl = (String) document.getData().get("imageUrl");
+                      StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + imageUrl);
+                      ref.getDownloadUrl().addOnCompleteListener(getUrlTask -> {
+                          if (getUrlTask.isSuccessful()) {
+                              Uri uri = getUrlTask.getResult();
+                              cardFuture.complete(new Card(document.getId(), (String) document.getData().get("userId"),
+                                      (String) document.getData().get("city"),
+                                      (long) document.getData().get("price"),
+                                      /*uri.toString()*/imageUrl));
+                          } else {
+                              cardFuture.completeExceptionally(new IllegalStateException("failed to download one of the URL"));
+                          }
+                      });
+                      cardsFutures.add(cardFuture);
+                  }
+
+                  allOf(cardsFutures).thenApply(cardsCompleted -> {
+                      return result.complete(cardsCompleted);
+                  });
+
+              }
             }
     );
 
@@ -103,5 +123,15 @@ public class FirebaseDB implements Database {
     docData.put("imageUrl", card.getImageUrl());
     return docData;
   }
+
+  private <T> CompletableFuture<List<T>> allOf(List<CompletableFuture<T>> futuresList) {
+          CompletableFuture<Void> allFuturesResult =
+                  CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[futuresList.size()]));
+          return allFuturesResult.thenApply(v ->
+                  futuresList.stream().
+                          map(future -> future.join()).
+                          collect(Collectors.<T>toList())
+          );
+    }
 
 }

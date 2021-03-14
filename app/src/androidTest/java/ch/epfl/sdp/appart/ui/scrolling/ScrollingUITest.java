@@ -19,10 +19,14 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.Database;
+import ch.epfl.sdp.appart.MockDataBase;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.hilt.FireBaseModule;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
+import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -30,6 +34,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 
 //@RunWith(AndroidJUnit4.class)
+@UninstallModules(FireBaseModule.class)
 @HiltAndroidTest
 public class ScrollingUITest {
 
@@ -38,19 +43,13 @@ public class ScrollingUITest {
 
     @Rule(order = 1)
     public ActivityScenarioRule<ScrollingActivity> scrollingActivityRule = new ActivityScenarioRule<>(ScrollingActivity.class);
-    /*
-    @Rule public RuleChain rule = RuleChain.outerRule(new HiltAndroidRule(this))
-            .around(new ActivityScenarioRule<>(ScrollingActivity.class));
-       */
 
-    @Inject
-    Database database;
+    @BindValue Database database = new MockDataBase();
 
     @Before
     public void init() {
         hiltRule.inject();
     }
-
 
     /**
      * taken from :

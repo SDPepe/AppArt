@@ -14,14 +14,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.ModelLoader;
+import com.bumptech.glide.load.model.stream.UrlLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.net.URL;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.Database;
+import ch.epfl.sdp.appart.FirebaseDB;
 import ch.epfl.sdp.appart.FirebaseGlideModule;
+import ch.epfl.sdp.appart.MockDataBase;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
+import dagger.hilt.android.AndroidEntryPoint;
+import dagger.hilt.android.qualifiers.ActivityContext;
+import dagger.hilt.android.scopes.ActivityScoped;
 
 import static java.lang.String.*;
 
@@ -34,7 +45,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     private final List<Card> cards;
     private final Context context;
 
-    public CardAdapter(Activity context, List<Card> cards) {
+    private Database database;
+
+    public CardAdapter(Activity context, Database database, List<Card> cards) {
 
         if (cards == null) {
             throw new IllegalArgumentException("cards cannot be null");
@@ -46,6 +59,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         this.cards = cards;
         this.context = context;
+        this.database = database;
     }
 
     /**
@@ -76,11 +90,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             context.startActivity(intent);
         });
 
-        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + card.getImageUrl());
+        //dirty hack : to be fixed
+        if (FirebaseDB.class.isInstance(database)) {
+            StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + card.getImageUrl());
+            Glide.with(context)
+                    .load(ref)
+                    .into(holder.cardImageView);
+        } else if (MockDataBase.class.isInstance(database)) {
+            throw new UnsupportedOperationException("loading with mock not implemented");
+        } else {
+            throw new UnsupportedOperationException("card viewer found not implemented backend");
+        }
 
-        Glide.with(context)
-                .load(ref)
-                .into(holder.cardImageView);
 
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));

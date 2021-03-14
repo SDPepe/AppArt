@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent;
 
 @Module
 @InstallIn(SingletonComponent.class)
-public abstract class DataBaseServiceHiltActivityModule {
+public abstract class FireBaseModule {
 
     @Singleton
     @Binds
