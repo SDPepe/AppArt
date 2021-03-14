@@ -1,17 +1,27 @@
 package ch.epfl.sdp.appart;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.database.Document;
+import ch.epfl.sdp.appart.database.QueryDocument;
 import ch.epfl.sdp.appart.database.adapters.DocumentReferenceAdapter;
 import ch.epfl.sdp.appart.database.Query;
 import ch.epfl.sdp.appart.database.adapters.QuerySnapshotAdapter;
@@ -28,31 +38,70 @@ public class FirebaseDB implements Database {
   }
 
   @Override
-  public void getCards(OnCompleteListener<Query> callback) {
+  public CompletableFuture<List<Card>> getCards() {
 
-    Task<Query> query = db.collection("cards").get()
-            .continueWith((Task<QuerySnapshot> t) -> {
-               return new QuerySnapshotAdapter(t.getResult());
-            });
-    query.addOnCompleteListener(callback);
+    CompletableFuture<List<Card>> result = new CompletableFuture<>();
 
+    db.collection("cards").get().addOnCompleteListener(
+            new OnCompleteListener<QuerySnapshot>() {
+              @Override
+              public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<Card> queriedCards = new ArrayList<>();
+
+                if (task.isSuccessful()) {
+
+                  for (QueryDocumentSnapshot document : task.getResult()) {
+                    queriedCards.add(new Card(document.getId(), (String) document.getData().get("userId"),
+                            (String) document.getData().get("city"),
+                            (long) document.getData().get("price"),
+                            (String) document.getData().get("imageUrl")));
+                  }
+                  result.complete(queriedCards);
+                } else {
+                  result.completeExceptionally(new IllegalStateException("query of the cards failed"));
+                }
+
+              }
+            }
+    );
+
+   return result;
   }
 
   @Override
-  public void putCard(Card card, OnCompleteListener<Document> callback) {
-      Task<Document> document = db.collection("cards")
-        .add(extractCardsInfo(card)).continueWith((Task<DocumentReference> t) -> {
-           return new DocumentReferenceAdapter(t.getResult());
-        });
-        document.addOnCompleteListener(callback);
+  public CompletableFuture<String> putCard(Card card) {
+      CompletableFuture<String> resultIdFutur = new CompletableFuture<>();
+      db.collection("cards")
+        .add(extractCardsInfo(card)).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentReference> task) {
+                  if (task.isSuccessful()) {
+                    resultIdFutur.complete(task.getResult().getId());
+                  } else {
+                    resultIdFutur.completeExceptionally(new IllegalStateException("query of the cards failed"));
+                  }
+                }
+              });
+        return resultIdFutur;
   }
   
   @Override
-  public void updateCard(Card card, OnCompleteListener<Void> callback) {
+  public CompletableFuture<Void> updateCard(Card card) {
+    CompletableFuture<Void> isFinishedFuture = new CompletableFuture<>();
     db.collection("cards")
         .document(card.getId())
         .set(extractCardsInfo(card))
-            .addOnCompleteListener(callback);
+            .addOnCompleteListener(new OnCompleteListener<Void>() {
+              @Override
+              public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                  isFinishedFuture.complete(null);
+                } else {
+                  isFinishedFuture.completeExceptionally(new IllegalStateException("update of the cards failed"));
+                }
+              }
+            });
+    return isFinishedFuture;
   }
 
   private Map<String, Object> extractCardsInfo(Card card){

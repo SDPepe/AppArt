@@ -6,7 +6,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.database.Document;
 import ch.epfl.sdp.appart.database.Query;
@@ -20,17 +22,17 @@ public class MockDataBase implements Database {
     }
 
     @Override
-    public void getCards(OnCompleteListener<Query> callback) {
-
+    public CompletableFuture<List<Card>> getCards() {
+        throw new UnsupportedOperationException("getCard is not implemented");
     }
 
     @Override
-    public void putCard(Card card, OnCompleteListener<Document> callback) {
+    public CompletableFuture<String> putCard(Card card) {
         throw new UnsupportedOperationException("putCard is not implemented");
     }
 
     @Override
-    public void updateCard(Card card, OnCompleteListener<Void> callback) {
+    public CompletableFuture<Void> updateCard(Card card) {
         throw new UnsupportedOperationException("updateCard is not implemented");
     }
 

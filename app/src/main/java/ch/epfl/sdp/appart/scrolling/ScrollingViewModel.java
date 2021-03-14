@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
@@ -38,6 +39,11 @@ public class ScrollingViewModel extends ViewModel {
      */
     public void initHome() {
 
+        CompletableFuture<List<Card>> queriedCards = db.getCards();
+        queriedCards.thenAccept(cards -> {
+            mCards.setValue(cards);
+        });
+        /*
         db.getCards(new OnCompleteListener<Query>() {
             @Override
             public void onComplete(@NonNull Task<Query> task) {
@@ -58,6 +64,7 @@ public class ScrollingViewModel extends ViewModel {
                 }
             }
         });
+        */
     }
 
     /*
