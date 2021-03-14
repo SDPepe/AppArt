@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordView.getText().toString();
 
         System.out.println(email + " " + password);*/
+        //Need to implement call to login service
 
     }
 
