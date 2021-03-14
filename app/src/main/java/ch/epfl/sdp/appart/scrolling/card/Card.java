@@ -2,8 +2,6 @@ package ch.epfl.sdp.appart.scrolling.card;
 
 import javax.annotation.Nullable;
 
-import ch.epfl.sdp.appart.user.User;
-
 public class Card {
     private final String id;
     private final String ownerId;
@@ -53,13 +51,13 @@ public class Card {
         return imageUrl;
     }
 
-    public String getUserId() {
-        return ownerId;
-    }
-
     public void setImageUrl(String imageUrl) {
         nullChecker(imageUrl);
         this.imageUrl = imageUrl;
+    }
+
+    public String getUserId() {
+        return ownerId;
     }
 
     private void nullChecker(Object o) {

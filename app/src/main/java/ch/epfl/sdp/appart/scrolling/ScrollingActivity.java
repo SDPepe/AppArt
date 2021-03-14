@@ -13,19 +13,18 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.Database;
-import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ScrollingActivity extends AppCompatActivity {
 
-    private ScrollingViewModel mViewModel;
-    private RecyclerView recyclerView;
-
     @Inject
     Database database;
+    private ScrollingViewModel mViewModel;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

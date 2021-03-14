@@ -5,7 +5,6 @@ import android.view.View;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -13,10 +12,6 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
-import org.junit.runner.RunWith;
-
-import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.Database;
 import ch.epfl.sdp.appart.MockDataBase;
@@ -47,12 +42,8 @@ public class ScrollingUITest {
     @Rule(order = 1)
     public ActivityScenarioRule<ScrollingActivity> scrollingActivityRule = new ActivityScenarioRule<>(ScrollingActivity.class);
 
-    @BindValue Database database = new MockDataBase();
-
-    @Before
-    public void init() {
-        hiltRule.inject();
-    }
+    @BindValue
+    Database database = new MockDataBase();
 
     /**
      * taken from :
@@ -79,6 +70,11 @@ public class ScrollingUITest {
                 return matcher.matches(view) && currentIndex++ == index;
             }
         };
+    }
+
+    @Before
+    public void init() {
+        hiltRule.inject();
     }
 
     @Test

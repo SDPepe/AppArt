@@ -37,14 +37,14 @@ public class UniversityEmailDatabaseTest {
     }
 
     @Test
-    public void  hasMethodOfUniversityDatabaseFailsWithNullParameter() {
+    public void hasMethodOfUniversityDatabaseFailsWithNullParameter() {
         assertThrows(IllegalArgumentException.class, () -> {
             UniversityEmailDatabase.has(null);
         });
     }
 
     @Test
-    public void  emailSyntaxIsValidMethodFailsWithNullParameter() {
+    public void emailSyntaxIsValidMethodFailsWithNullParameter() {
         assertThrows(IllegalArgumentException.class, () -> {
             UniversityEmailDatabase.emailSyntaxIsValid(null);
         });

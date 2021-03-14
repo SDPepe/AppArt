@@ -26,10 +26,12 @@ public class UniversityEmailDatabase {
             throw new IllegalArgumentException("ERROR - email parameter was null");
         }
 
-        if (!UniversityEmailDatabase.emailSyntaxIsValid(email)) {return false;}
+        if (!UniversityEmailDatabase.emailSyntaxIsValid(email)) {
+            return false;
+        }
 
         String[] split = email.split("@");
-        String emailProvider = split[split.length-1];
+        String emailProvider = split[split.length - 1];
         return universityEmailDatabaseSet.contains(emailProvider);
     }
 

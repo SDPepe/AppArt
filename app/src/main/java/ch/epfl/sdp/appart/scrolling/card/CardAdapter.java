@@ -3,7 +3,6 @@ package ch.epfl.sdp.appart.scrolling.card;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,27 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.ModelLoader;
-import com.bumptech.glide.load.model.stream.UrlLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.net.URL;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.Database;
 import ch.epfl.sdp.appart.FirebaseDB;
-import ch.epfl.sdp.appart.FirebaseGlideModule;
 import ch.epfl.sdp.appart.MockDataBase;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
-import dagger.hilt.android.AndroidEntryPoint;
-import dagger.hilt.android.qualifiers.ActivityContext;
-import dagger.hilt.android.scopes.ActivityScoped;
 
-import static java.lang.String.*;
+import static java.lang.String.format;
 
 /**
  * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView
@@ -45,7 +35,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     private final List<Card> cards;
     private final Context context;
 
-    private Database database;
+    private final Database database;
 
     public CardAdapter(Activity context, Database database, List<Card> cards) {
 
@@ -64,7 +54,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     /**
      * Create a new CardViewHolder based on the layout of a card.
-     * @param parent the View that will contain the ViewHolder
+     *
+     * @param parent   the View that will contain the ViewHolder
      * @param viewType unknown
      * @return the newly created CardViewHolder
      */
@@ -79,7 +70,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     /**
      * Replace the content of a view according to the card stored at position.
-     * @param holder The CardViewHolder to be overwrite.
+     *
+     * @param holder   The CardViewHolder to be overwrite.
      * @param position The index of the card which will overwrite the CardViewHolder
      */
     @Override
@@ -91,12 +83,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         });
 
         //dirty hack : to be fixed
-        if (FirebaseDB.class.isInstance(database)) {
+        if (database instanceof FirebaseDB) {
             StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + card.getImageUrl());
             Glide.with(context)
                     .load(ref)
                     .into(holder.cardImageView);
-        } else if (MockDataBase.class.isInstance(database)) {
+        } else if (database instanceof MockDataBase) {
             Glide.with(context)
                     .load(card.getImageUrl())
                     .into(holder.cardImageView);
@@ -111,6 +103,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     /**
      * Get the number of cards available
+     *
      * @return the number of cards
      */
     @Override
