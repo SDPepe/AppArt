@@ -1,8 +1,10 @@
-package ch.epfl.sdp.appart.database;
+package ch.epfl.sdp.appart.database.adapters;
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.Map;
+
+import ch.epfl.sdp.appart.database.QueryDocument;
 
 /**
  * Class that adapt a document snapshot from firebase to a QueryDocument

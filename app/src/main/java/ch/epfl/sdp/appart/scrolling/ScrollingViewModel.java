@@ -1,19 +1,14 @@
 package ch.epfl.sdp.appart.scrolling;
 
-import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.hilt.lifecycle.ViewModelInject;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +17,8 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.Database;
 import ch.epfl.sdp.appart.database.QueryDocument;
-import ch.epfl.sdp.appart.database.QueryResult;
+import ch.epfl.sdp.appart.database.Query;
 import ch.epfl.sdp.appart.scrolling.card.Card;
-import ch.epfl.sdp.appart.FirebaseDB;
-import ch.epfl.sdp.appart.user.User;
-import dagger.hilt.InstallIn;
-import dagger.hilt.android.AndroidEntryPoint;
-import dagger.hilt.android.HiltAndroidApp;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
@@ -48,9 +38,9 @@ public class ScrollingViewModel extends ViewModel {
      */
     public void initHome() {
 
-        db.getCards(new OnCompleteListener<QueryResult>() {
+        db.getCards(new OnCompleteListener<Query>() {
             @Override
-            public void onComplete(@NonNull Task<QueryResult> task) {
+            public void onComplete(@NonNull Task<Query> task) {
                 if (task.isSuccessful()) {
                     if (task.isSuccessful()) {
                         List<Card> ls = new ArrayList<>();

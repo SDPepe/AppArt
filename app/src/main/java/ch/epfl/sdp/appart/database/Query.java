@@ -4,7 +4,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.List;
 
-public interface QueryResult extends Iterable<QueryDocument> {
+public interface Query extends Iterable<QueryDocument> {
     boolean isEmpty();
     int size();
 }

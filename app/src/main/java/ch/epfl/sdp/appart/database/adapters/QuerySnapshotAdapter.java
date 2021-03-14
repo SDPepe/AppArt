@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.database;
+package ch.epfl.sdp.appart.database.adapters;
 
 import androidx.annotation.NonNull;
 
@@ -6,10 +6,13 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Iterator;
-import java.util.List;
+
+import ch.epfl.sdp.appart.database.Query;
+import ch.epfl.sdp.appart.database.QueryDocument;
+import ch.epfl.sdp.appart.database.adapters.QueryDocumentSnapshotAdapter;
 
 
-public class QuerySnapshotAdapter implements QueryResult {
+public class QuerySnapshotAdapter implements Query {
 
     private final QuerySnapshot querySnapshot;
 

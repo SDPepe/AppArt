@@ -1,108 +1,37 @@
 package ch.epfl.sdp.appart;
 
-import android.app.Activity;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.concurrent.Executor;
+import java.util.Iterator;
+import java.util.Map;
 
-import ch.epfl.sdp.appart.database.QueryResult;
+import ch.epfl.sdp.appart.database.Document;
+import ch.epfl.sdp.appart.database.Query;
+import ch.epfl.sdp.appart.database.QueryDocument;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 public class MockDataBase implements Database {
 
-    @Override
-    public void getCards(OnCompleteListener<QueryResult> callback) {
-        /*
-        callback.onComplete(new Task<QuerySnapshot>() {
-            @Override
-            public boolean isComplete() {
-                return true;
-            }
+    public MockDataBase() {
 
-            @Override
-            public boolean isSuccessful() {
-                return true;
-            }
-
-            @Override
-            public boolean isCanceled() {
-                return false;
-            }
-
-            @Nullable
-            @Override
-            public QuerySnapshot getResult() {
-                return null;
-            }
-
-            @Nullable
-            @Override
-            public <X extends Throwable> QuerySnapshot getResult(@NonNull Class<X> aClass) throws X {
-                throw new UnsupportedOperationException("unimplemented function");
-            }
-
-            @Nullable
-            @Override
-            public Exception getException() {
-                throw new UnsupportedOperationException("unimplemented function");
-            }
-
-            @NonNull
-            @Override
-            public Task<QuerySnapshot> addOnSuccessListener(@NonNull OnSuccessListener<? super QuerySnapshot> onSuccessListener) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Task<QuerySnapshot> addOnSuccessListener(@NonNull Executor executor, @NonNull OnSuccessListener<? super QuerySnapshot> onSuccessListener) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Task<QuerySnapshot> addOnSuccessListener(@NonNull Activity activity, @NonNull OnSuccessListener<? super QuerySnapshot> onSuccessListener) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Task<QuerySnapshot> addOnFailureListener(@NonNull OnFailureListener onFailureListener) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Task<QuerySnapshot> addOnFailureListener(@NonNull Executor executor, @NonNull OnFailureListener onFailureListener) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Task<QuerySnapshot> addOnFailureListener(@NonNull Activity activity, @NonNull OnFailureListener onFailureListener) {
-                return null;
-            }
-        });
-         */
     }
 
     @Override
-    public void putCard(Card card, OnCompleteListener<DocumentReference> callback) {
+    public void getCards(OnCompleteListener<Query> callback) {
 
+    }
+
+    @Override
+    public void putCard(Card card, OnCompleteListener<Document> callback) {
+        throw new UnsupportedOperationException("putCard is not implemented");
     }
 
     @Override
     public void updateCard(Card card, OnCompleteListener<Void> callback) {
-
+        throw new UnsupportedOperationException("updateCard is not implemented");
     }
 
 }
