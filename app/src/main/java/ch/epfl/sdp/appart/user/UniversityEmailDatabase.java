@@ -49,9 +49,6 @@ public class UniversityEmailDatabase {
                 "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
         Pattern pat = Pattern.compile(emailRegex);
-        if (email == null) {
-            return false;
-        }
         return pat.matcher(email).matches();
     }
 
