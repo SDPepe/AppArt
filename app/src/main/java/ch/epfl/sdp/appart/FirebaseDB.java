@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.net.Uri;
+import android.text.BoringLayout;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -100,16 +101,17 @@ public class FirebaseDB implements Database {
   }
   
   @Override
-  public CompletableFuture<Void> updateCard(Card card) {
-    CompletableFuture<Void> isFinishedFuture = new CompletableFuture<>();
+  public CompletableFuture<Boolean> updateCard(Card card) {
+    CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
     db.collection("cards")
         .document(card.getId())
         .set(extractCardsInfo(card))
             .addOnCompleteListener(task -> {
               if (task.isSuccessful()) {
-                isFinishedFuture.complete(null);
+                isFinishedFuture.complete(true);
               } else {
-                isFinishedFuture.completeExceptionally(new IllegalStateException("update of the cards failed"));
+                //isFinishedFuture.completeExceptionally(new IllegalStateException("update of the cards failed"));
+                  isFinishedFuture.complete(false);
               }
             });
     return isFinishedFuture;

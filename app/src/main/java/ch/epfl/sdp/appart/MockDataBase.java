@@ -38,12 +38,22 @@ public class MockDataBase implements Database {
 
     @Override
     public CompletableFuture<String> putCard(Card card) {
-        throw new UnsupportedOperationException("putCard is not implemented");
+        CompletableFuture<String> result = new CompletableFuture<>();
+        cards.add(card);
+        result.complete(card.getId());
+        return result;
     }
 
     @Override
-    public CompletableFuture<Void> updateCard(Card card) {
-        throw new UnsupportedOperationException("updateCard is not implemented");
+    public CompletableFuture<Boolean> updateCard(Card card) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        if (cards.contains(card)) {
+            cards.set(cards.indexOf(card), card);
+            result.complete(true);
+        } else {
+            result.complete(false);
+        }
+        return result;
     }
 
 }

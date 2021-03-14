@@ -11,6 +11,6 @@ public interface Database {
 
     CompletableFuture<String> putCard(Card card);
 
-    CompletableFuture<Void> updateCard(Card card);
+    CompletableFuture<Boolean> updateCard(Card card);
 
 }
