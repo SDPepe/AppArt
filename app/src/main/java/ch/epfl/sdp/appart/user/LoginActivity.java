@@ -6,10 +6,18 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
+import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
+
+    @Inject
+    LoginService loginService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -11,12 +11,17 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
+@Singleton
 public class FirebaseLoginService implements LoginService {
     private final FirebaseAuth mAuth;
 
+    @Inject
     FirebaseLoginService() {
         this.mAuth = FirebaseAuth.getInstance();
     }
