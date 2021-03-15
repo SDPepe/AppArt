@@ -39,7 +39,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:fillViewport="false"
@@ -54,28 +54,21 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/photoScrollView"
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fillViewport="true">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="1024dp"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <include layout="@layout/photo_layout" />
 
                     <Space
                         android:id="@+id/hspace1"
-                        android:layout_width="8dp"
-                        android:layout_height="match_parent" />
-
-                    <include layout="@layout/photo_layout" />
-
-                    <Space
-                        android:id="@+id/hspace2"
                         android:layout_width="8dp"
                         android:layout_height="match_parent" />
 
@@ -89,6 +82,13 @@
                     <include layout="@layout/photo_layout" />
 
                     <Space
+                        android:id="@+id/hspace2"
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent" />
+
+                    <include layout="@layout/photo_layout" />
+
+                    <Space
                         android:id="@+id/hspace4"
                         android:layout_width="8dp"
                         android:layout_height="match_parent" />
@@ -96,13 +96,12 @@
                     <include layout="@layout/photo_layout" />
 
                 </LinearLayout>
-
-            </androidx.core.widget.NestedScrollView>
+            </HorizontalScrollView>
 
             <Space
                 android:id="@+id/spacer1"
                 android:layout_width="match_parent"
-                android:layout_height="16dp" />
+                android:layout_height="8dp" />
 
             <Button
                 android:id="@+id/vtourButton"
@@ -170,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="This is a cool apartment!"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
                 android:textSize="18sp" />
 
             <Space
