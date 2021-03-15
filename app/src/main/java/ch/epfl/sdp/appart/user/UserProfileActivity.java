@@ -1,16 +1,18 @@
 package ch.epfl.sdp.appart.user;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import ch.epfl.sdp.appart.R;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.se.omapi.Session;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -23,6 +25,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private Spinner genderView;
     private TextView uniAccountClaimer;
     private TextView emailView;
+    private ImageView imageView;
 
 
     @Override
@@ -40,6 +43,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.genderView =  findViewById(R.id.genderView);
         this.genderView.setEnabled(ageView.isEnabled());
         this.uniAccountClaimer = findViewById(R.id.uniAccounClaimer);
+        this.imageView = findViewById(R.id.imageView);
 
         /* set attributes */
         getAndSetCurrentAttributes();
@@ -58,16 +62,6 @@ public class UserProfileActivity extends AppCompatActivity {
         enableDisableEntries();
     }
 
-    public void getAndSetCurrentAttributes(){
-        this.nameView.setText(LoginActivity.sessionUser.getName());
-        this.emailView.setText(LoginActivity.sessionUser.getUserEmail());
-        if(LoginActivity.sessionUser.getAge() != 0) {this.ageView.setText(String.valueOf(LoginActivity.sessionUser.getAge()));}
-        if(LoginActivity.sessionUser.getPhoneNumber()!= null) {this.phoneNumberView.setText(LoginActivity.sessionUser.getPhoneNumber());}
-        if(LoginActivity.sessionUser.getGender()!= null) {this.genderView.setSelection(LoginActivity.sessionUser.getGender().ordinal());}
-        this.uniAccountClaimer.setText((LoginActivity.sessionUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
-
-    }
-
     public void doneEditing(View view) {
         /* set attributes */
         setNewAttributes();
@@ -75,11 +69,14 @@ public class UserProfileActivity extends AppCompatActivity {
         /* disable editing text */
         enableDisableEntries();
 
+        getAndSetCurrentAttributes();
+
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
 
         /* HERE THE FIREBASE CLASS SHOULD BE CALLED AND ALL
          MODIFIED ATTRIBUTES SHOULD BE MODIFIED IN DATABASE */
+        printAttributesTest();
 
     }
 
@@ -101,6 +98,52 @@ public class UserProfileActivity extends AppCompatActivity {
         LoginActivity.sessionUser.setName(((TextView) findViewById(R.id.nameText)).getText().toString());
         LoginActivity.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.genderView)).getSelectedItemPosition()));
         LoginActivity.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumberText)).getText().toString().trim());
+    }
+
+    private void getAndSetCurrentAttributes() {
+        this.nameView.setText(LoginActivity.sessionUser.getName());
+        this.emailView.setText(LoginActivity.sessionUser.getUserEmail());
+        this.uniAccountClaimer.setText((LoginActivity.sessionUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
+        if (LoginActivity.sessionUser.getAge() != 0) {
+            this.ageView.setText(String.valueOf(LoginActivity.sessionUser.getAge()));
+        }
+        if (LoginActivity.sessionUser.getPhoneNumber() != null) {
+            this.phoneNumberView.setText(LoginActivity.sessionUser.getPhoneNumber());
+        }
+        if (LoginActivity.sessionUser.getGender() != null) {
+            this.genderView.setSelection(LoginActivity.sessionUser.getGender().ordinal());
+
+            if (LoginActivity.sessionUser.getProfileImage() == null) {
+                int id;
+                if (LoginActivity.sessionUser.getGender() == Gender.MALE) {
+                    id = R.drawable.user_example_male;
+                } else if (LoginActivity.sessionUser.getGender() == Gender.FEMALE) {
+                    id = R.drawable.user_example_female;
+                } else {
+                    id = R.drawable.user_example_no_gender;
+                }
+                Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
+                this.imageView.setImageDrawable(iconImage);
+            } else {
+                // set actual user-specific profile picture
+            }
+
+        }
+    }
+
+    /* DELETE THIS METHOD ONCE REAL TESTS ARE DONE */
+    private void printAttributesTest(){
+        System.out.println("\n\n\n\n********************************************************************************************************************************************");
+        System.out.println("********************************************************************************************************************************************");
+        System.out.println();
+        System.out.println("  User email : " + LoginActivity.sessionUser.getUserEmail());
+        System.out.println("  User name : " + LoginActivity.sessionUser.getName());
+        System.out.println("  User phone number : " + LoginActivity.sessionUser.getPhoneNumber());
+        System.out.println("  User age : " + LoginActivity.sessionUser.getAge());
+        System.out.println("  User gender : " + LoginActivity.sessionUser.getGender());
+        System.out.println();
+        System.out.println("********************************************************************************************************************************************");
+        System.out.println("********************************************************************************************************************************************\n");
     }
 
 
