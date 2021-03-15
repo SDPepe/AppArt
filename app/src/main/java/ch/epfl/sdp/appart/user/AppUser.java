@@ -1,14 +1,12 @@
 package ch.epfl.sdp.appart.user;
 
-import android.media.Image;
-
 /**
  * This class represents a generic user of our application - the actual
  * communication with firebase is done in the Firebase login service
  */
 public class AppUser implements User {
+    private final String userId;
     private String name;
-    private String userId;
     private String email;
     private String phoneNumber;
     private String profilePicture;

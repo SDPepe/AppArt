@@ -1,8 +1,6 @@
 package ch.epfl.sdp.appart;
 
 import org.junit.Test;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 
 import ch.epfl.sdp.appart.user.AppUser;
 

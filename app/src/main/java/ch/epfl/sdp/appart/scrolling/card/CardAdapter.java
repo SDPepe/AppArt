@@ -3,7 +3,6 @@ package ch.epfl.sdp.appart.scrolling.card;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,13 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import ch.epfl.sdp.appart.FirebaseGlideModule;
+import ch.epfl.sdp.appart.Database;
+import ch.epfl.sdp.appart.FirebaseDB;
+import ch.epfl.sdp.appart.MockDataBase;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
 
-import static java.lang.String.*;
+import static java.lang.String.format;
 
 /**
  * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView
@@ -34,7 +35,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     private final List<Card> cards;
     private final Context context;
 
-    public CardAdapter(Activity context, List<Card> cards) {
+    private final Database database;
+
+    public CardAdapter(Activity context, Database database, List<Card> cards) {
 
         if (cards == null) {
             throw new IllegalArgumentException("cards cannot be null");
@@ -46,11 +49,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         this.cards = cards;
         this.context = context;
+        this.database = database;
     }
 
     /**
      * Create a new CardViewHolder based on the layout of a card.
-     * @param parent the View that will contain the ViewHolder
+     *
+     * @param parent   the View that will contain the ViewHolder
      * @param viewType unknown
      * @return the newly created CardViewHolder
      */
@@ -65,7 +70,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     /**
      * Replace the content of a view according to the card stored at position.
-     * @param holder The CardViewHolder to be overwrite.
+     *
+     * @param holder   The CardViewHolder to be overwrite.
      * @param position The index of the card which will overwrite the CardViewHolder
      */
     @Override
@@ -76,11 +82,20 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             context.startActivity(intent);
         });
 
-        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + card.getImageUrl());
+        //dirty hack : to be fixed
+        if (database instanceof FirebaseDB) {
+            StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + card.getImageUrl());
+            Glide.with(context)
+                    .load(ref)
+                    .into(holder.cardImageView);
+        } else if (database instanceof MockDataBase) {
+            Glide.with(context)
+                    .load(card.getImageUrl())
+                    .into(holder.cardImageView);
+        } else {
+            throw new UnsupportedOperationException("card viewer found not implemented backend");
+        }
 
-        Glide.with(context)
-                .load(ref)
-                .into(holder.cardImageView);
 
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));
@@ -88,6 +103,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     /**
      * Get the number of cards available
+     *
      * @return the number of cards
      */
     @Override
