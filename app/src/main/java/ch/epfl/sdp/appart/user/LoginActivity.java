@@ -2,7 +2,9 @@ package ch.epfl.sdp.appart.user;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,17 +34,28 @@ public class LoginActivity extends AppCompatActivity {
      * @param view
      */
     public void logIn(View view) {
-        Intent intent = new Intent(this, ScrollingActivity.class);
-        startActivity(intent);
-        /*EditText emailView = (EditText) findViewById(R.id.email_login);
+        EditText emailView = (EditText) findViewById(R.id.email_login);
         EditText passwordView = (EditText) findViewById(R.id.password);
 
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
-        System.out.println(email + " " + password);*/
-        //Need to implement call to login service
+        loginService.loginWithEmail(email, password, hasSucceeded -> {
+            if(hasSucceeded) {
+                Intent intent = new Intent(this, ScrollingActivity.class);
+                startActivity(intent);
+            }
+            else {
+                //Popup login failed
+                Log.d("LOGIN", "Login failed !");
+            }
+        });
 
+    }
+
+    public void createAccount(View view) {
+        Intent intent = new Intent(this, CreateUserActivity.class);
+        startActivity(intent);
     }
 
     /**
