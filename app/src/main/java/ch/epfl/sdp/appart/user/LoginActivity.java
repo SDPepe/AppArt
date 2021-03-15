@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.user;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +11,8 @@ import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 
 public class LoginActivity extends AppCompatActivity {
+
+    public static User sessionUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,16 +27,17 @@ public class LoginActivity extends AppCompatActivity {
      * @param view
      */
     public void logIn(View view) {
-        Intent intent = new Intent(this, ScrollingActivity.class);
+        Intent intent = new Intent(this, UserProfileActivity.class);
         startActivity(intent);
-        /*EditText emailView = (EditText) findViewById(R.id.email_login);
-        EditText passwordView = (EditText) findViewById(R.id.password);
 
+        EditText emailView = (EditText) findViewById(R.id.email_login);
         String email = emailView.getText().toString();
-        String password = passwordView.getText().toString();
+        this.sessionUser = new AppUser("1", email);
 
-        System.out.println(email + " " + password);*/
-        //Need to implement call to login service
+        /*
+        EditText passwordView = (EditText) findViewById(R.id.password);
+        String password = passwordView.getText().toString();
+        //Need to implement call to login service */
 
     }
 
