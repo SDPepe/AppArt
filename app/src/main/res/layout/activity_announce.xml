@@ -6,21 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".scrolling.AnnounceActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="225dp"
-        android:layout_height="191dp"
-        android:layout_marginStart="93dp"
-        android:layout_marginTop="218dp"
-        android:layout_marginEnd="93dp"
-        android:layout_marginBottom="322dp"
-        android:text="Empty announce"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
@@ -34,4 +19,193 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <TextView
+        android:id="@+id/titleField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Ad title"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_button" />
+
+    <ScrollView
+        android:id="@+id/verScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:fillViewport="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleField">
+
+        <LinearLayout
+            android:id="@+id/verChildren"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/photoScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="1024dp"
+                    android:orientation="horizontal">
+
+                    <include layout="@layout/photo_layout" />
+
+                    <Space
+                        android:id="@+id/hspace1"
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent" />
+
+                    <include layout="@layout/photo_layout" />
+
+                    <Space
+                        android:id="@+id/hspace2"
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent" />
+
+                    <include layout="@layout/photo_layout" />
+
+                    <Space
+                        android:id="@+id/hspace3"
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent" />
+
+                    <include layout="@layout/photo_layout" />
+
+                    <Space
+                        android:id="@+id/hspace4"
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent" />
+
+                    <include layout="@layout/photo_layout" />
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <Space
+                android:id="@+id/spacer1"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <Button
+                android:id="@+id/vtourButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="take a virtual tour" />
+
+            <Space
+                android:id="@+id/spacer2"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Address:"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/addressField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="hidden by owner"
+                android:textSize="18sp" />
+
+            <Space
+                android:id="@+id/spacer3"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Price:"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/priceField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="welcome to the price field mf"
+                android:textSize="18sp" />
+
+            <Space
+                android:id="@+id/spacer4"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description:"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/descriptionField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="This is a cool apartment!"
+                android:textSize="18sp" />
+
+            <Space
+                android:id="@+id/space5"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:id="@+id/user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Advertiser:"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/userField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="username"
+                android:textSize="18sp" />
+
+            <Space
+                android:id="@+id/spacer6"
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <Button
+                android:id="@+id/contactInfoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="show contact info" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

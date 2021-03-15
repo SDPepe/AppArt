@@ -14,11 +14,15 @@ public class AnnounceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
+
+        initBackButton();
+
+    }
+
+    private void initBackButton(){
         ImageView backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getBaseContext(), ScrollingActivity.class);
-            startActivity(intent);
+            finish();
         });
-
     }
 }
