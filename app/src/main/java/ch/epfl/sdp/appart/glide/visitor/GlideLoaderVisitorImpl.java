@@ -10,13 +10,13 @@ import com.google.firebase.storage.StorageReference;
 import ch.epfl.sdp.appart.database.FirebaseDB;
 import ch.epfl.sdp.appart.database.MockDataBase;
 
-public final class GlideDatabaseLoaderVisitorImpl implements GlideLoaderVisitor {
+public final class GlideLoaderVisitorImpl implements GlideLoaderVisitor {
 
     private final ImageView view;
     private final String imageReference;
     private final Context context;
 
-    public GlideDatabaseLoaderVisitorImpl(Context context, ImageView view, String imageReference) {
+    public GlideLoaderVisitorImpl(Context context, ImageView view, String imageReference) {
         this.context = context;
         this.view = view;
         this.imageReference = imageReference;
