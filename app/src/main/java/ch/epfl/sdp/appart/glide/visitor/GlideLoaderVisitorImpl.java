@@ -10,6 +10,11 @@ import com.google.firebase.storage.StorageReference;
 import ch.epfl.sdp.appart.database.FirebaseDB;
 import ch.epfl.sdp.appart.database.MockDataBase;
 
+/**
+ * Implementation of the Visitor that helps to select the right reference
+ * in function of the bound database.
+ * This class is encapsulating the loading with Glide
+ */
 public final class GlideLoaderVisitorImpl implements GlideLoaderVisitor {
 
     private final ImageView view;
@@ -17,6 +22,19 @@ public final class GlideLoaderVisitorImpl implements GlideLoaderVisitor {
     private final Context context;
 
     public GlideLoaderVisitorImpl(Context context, ImageView view, String imageReference) {
+
+        if (context == null) {
+            throw new IllegalArgumentException("context cannot be null");
+        }
+
+        if (view == null) {
+            throw new IllegalArgumentException("imageView cannot be null");
+        }
+
+        if (imageReference == null) {
+            throw new IllegalArgumentException("imageReference cannot be null");
+        }
+
         this.context = context;
         this.view = view;
         this.imageReference = imageReference;
@@ -24,9 +42,8 @@ public final class GlideLoaderVisitorImpl implements GlideLoaderVisitor {
 
     @Override
     public void visit(FirebaseDB database) {
-        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + imageReference);
         Glide.with(context)
-                .load(ref)
+                .load(database.getStorageReference("Cards/" + imageReference))
                 .into(view);
     }
 

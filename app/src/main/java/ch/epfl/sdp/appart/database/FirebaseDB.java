@@ -2,6 +2,8 @@ package ch.epfl.sdp.appart.database;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,10 +21,13 @@ import ch.epfl.sdp.appart.scrolling.card.Card;
 public class FirebaseDB implements Database {
 
     private final FirebaseFirestore db;
+    private final FirebaseStorage storage;
+    private final static String STORAGE_URL = "gs://appart-ec344.appspot.com/";
 
     @Inject
     public FirebaseDB() {
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -95,6 +100,16 @@ public class FirebaseDB implements Database {
         docData.put("price", card.getPrice());
         docData.put("imageUrl", card.getImageUrl());
         return docData;
+    }
+
+    /**
+     * Returns the storage reference of a stored firebase object
+     * @param storageUrl the url in the storage like Cards/img.jpeg
+     *                   would return an image from the the Cards folder named img.jpeg
+     * @return the StorageReference of the object.
+     */
+    public StorageReference getStorageReference(String storageUrl) {
+        return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
     }
 
 }
