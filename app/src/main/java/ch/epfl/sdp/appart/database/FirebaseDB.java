@@ -1,22 +1,18 @@
-package ch.epfl.sdp.appart;
-
-import android.net.Uri;
+package ch.epfl.sdp.appart.database;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 @Singleton
@@ -85,6 +81,11 @@ public class FirebaseDB implements Database {
                     isFinishedFuture.complete(task.isSuccessful());
                 });
         return isFinishedFuture;
+    }
+
+    @Override
+    public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
     }
 
     private Map<String, Object> extractCardsInfo(Card card) {

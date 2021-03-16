@@ -18,9 +18,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import ch.epfl.sdp.appart.Database;
-import ch.epfl.sdp.appart.FirebaseDB;
-import ch.epfl.sdp.appart.MockDataBase;
+import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.database.FirebaseDB;
+import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
 

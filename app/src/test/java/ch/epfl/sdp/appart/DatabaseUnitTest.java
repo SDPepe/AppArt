@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart;
 
 import org.junit.Test;
 
+import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 import static org.junit.Assert.assertTrue;

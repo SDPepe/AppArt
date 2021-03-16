@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart;
+package ch.epfl.sdp.appart.glide;
 
 import android.content.Context;
 
