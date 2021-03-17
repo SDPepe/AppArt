@@ -45,6 +45,14 @@
     <!-- Ad photo layout -->
     <string name="photo_descprition">Photo</string>
 
+    <!-- Contact info dialog stuff -->
+    <string name="default_hidden">Hidden by the advertiser</string>
+    <string name="dialog_phone">Phone number:</string>
+    <string name="dialog_username">username</string>
+    <string name="dialog_email">Email address:</string>
+    <string name="dialog_close">Close</string>
+
+
     <!-- VirtualTourActivity stuff -->
     <string name="empty">Not yet implemented!</string>
 </resources>

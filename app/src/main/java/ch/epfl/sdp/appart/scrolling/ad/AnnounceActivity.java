@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.scrolling.ad;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
 
@@ -68,7 +70,9 @@ public class AnnounceActivity extends AppCompatActivity {
     }
 
     public void openContactInfo(View view){
-
+        DialogFragment contactFrag = new ContactInfoDialogFragment();
+        //contactFrag.getView().setBackgroundColor(Color.TRANSPARENT);
+        contactFrag.show(getSupportFragmentManager(), "contact dialog");
     }
 
     public void openVirtualTour(View view){
