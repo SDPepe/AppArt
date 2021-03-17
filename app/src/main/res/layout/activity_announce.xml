@@ -14,7 +14,7 @@
         android:layout_marginTop="18dp"
         android:layout_marginEnd="356dp"
         android:layout_marginBottom="681dp"
-        android:contentDescription="Close ad"
+        android:contentDescription="@string/backbutton_desc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +28,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Ad title"
+        android:text="@string/default_title"
         android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,41 +64,10 @@
                 android:fillViewport="true">
 
                 <LinearLayout
+                    android:id="@+id/horChildren"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <include layout="@layout/photo_layout" />
-
-                    <Space
-                        android:id="@+id/hspace1"
-                        android:layout_width="8dp"
-                        android:layout_height="match_parent" />
-
-                    <include layout="@layout/photo_layout" />
-
-                    <Space
-                        android:id="@+id/hspace3"
-                        android:layout_width="8dp"
-                        android:layout_height="match_parent" />
-
-                    <include layout="@layout/photo_layout" />
-
-                    <Space
-                        android:id="@+id/hspace2"
-                        android:layout_width="8dp"
-                        android:layout_height="match_parent" />
-
-                    <include layout="@layout/photo_layout" />
-
-                    <Space
-                        android:id="@+id/hspace4"
-                        android:layout_width="8dp"
-                        android:layout_height="match_parent" />
-
-                    <include layout="@layout/photo_layout" />
-
-                </LinearLayout>
+                    android:orientation="horizontal"/>
             </HorizontalScrollView>
 
             <Space
@@ -110,7 +79,7 @@
                 android:id="@+id/vtourButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="take a virtual tour" />
+                android:text="@string/vtourbutton_text" />
 
             <Space
                 android:id="@+id/spacer2"
@@ -121,7 +90,7 @@
                 android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Address:"
+                android:text="@string/address"
                 android:textSize="24sp" />
 
             <TextView
@@ -130,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="hidden by owner"
+                android:text="@string/default_loading"
                 android:textSize="18sp" />
 
             <Space
@@ -142,7 +111,7 @@
                 android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Price:"
+                android:text="@string/price"
                 android:textSize="24sp" />
 
             <TextView
@@ -151,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="welcome to the price field mf"
+                android:text="@string/default_loading"
                 android:textSize="18sp" />
 
             <Space
@@ -163,7 +132,7 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description:"
+                android:text="@string/description"
                 android:textSize="24sp" />
 
             <TextView
@@ -184,7 +153,7 @@
                 android:id="@+id/user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Advertiser:"
+                android:text="@string/user"
                 android:textSize="24sp" />
 
             <TextView
@@ -193,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="username"
+                android:text="@string/default_loading"
                 android:textSize="18sp" />
 
             <Space
@@ -205,7 +174,7 @@
                 android:id="@+id/contactInfoButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="show contact info" />
+                android:text="@string/contactbutton_text" />
 
         </LinearLayout>
     </ScrollView>
