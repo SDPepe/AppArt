@@ -3,7 +3,7 @@ package ch.epfl.sdp.appart.glide.visitor;
 /**
  * Accepts the different visitors
  */
-public interface GlideLoaderAcceptor {
+public interface DatabaseVisitorHost {
     /**
      * Inject the GlideLoaderVisitor into the instance.
      * @param visitor the GlideLoader we want to inject
