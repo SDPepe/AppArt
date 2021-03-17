@@ -44,4 +44,7 @@
 
     <!-- Ad photo layout -->
     <string name="photo_descprition">Photo</string>
+
+    <!-- VirtualTourActivity stuff -->
+    <string name="empty">Not yet implemented!</string>
 </resources>
