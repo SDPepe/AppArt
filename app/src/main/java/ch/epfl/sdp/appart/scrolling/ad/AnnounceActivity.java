@@ -55,6 +55,10 @@ public class AnnounceActivity extends AppCompatActivity {
                 horizontalLayout.addView(hspacer);
             }
         }
+        setFields();
+    }
+
+    private void setFields(){
         TextView addressField = findViewById(R.id.addressField);
         addressField.setText(R.string.mock_address);
         TextView priceField = findViewById(R.id.priceField);
