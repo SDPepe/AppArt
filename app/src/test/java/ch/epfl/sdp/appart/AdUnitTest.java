@@ -99,6 +99,8 @@ public class AdUnitTest {
 
     @Test
     public void photosrefsGetterTest(){
-        assertEquals(new ArrayList<String>(), ad.getPhotosRefs());
+        List<String> refs = new ArrayList<>();
+        refs.add("ref");
+        assertEquals(refs, ad.getPhotosRefs());
     }
 }
