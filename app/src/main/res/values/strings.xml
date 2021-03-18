@@ -113,4 +113,6 @@
     <string name="email_reset">Enter your email adress</string>
     <string name="reset_button">Reset password</string>
     <string name="login_failed_snack">Login failed !</string>
+    <string name="create_account_failed_snack">Create account failed !</string>
+    <string name="invalid_email_snack">Invalid email !</string>
 </resources>

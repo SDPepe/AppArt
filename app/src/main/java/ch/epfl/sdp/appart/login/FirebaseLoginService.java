@@ -2,11 +2,7 @@ package ch.epfl.sdp.appart.login;
 
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,9 +27,10 @@ public class FirebaseLoginService implements LoginService {
     }
 
     private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
-        if(email == null || password == null) throw new IllegalArgumentException();
-        return new FutureSetup<AuthResult, User>().setUpFuture(task,
-                authResult -> getUserFromAuthResult(authResult));
+        if (email == null || password == null) throw new IllegalArgumentException();
+        //Handle loss of network with https://firebase.google.com/docs/database/android/offline-capabilities#section-connection-state
+        return setUpFuture(task,
+                this::getUserFromAuthResult);
     }
 
     /**
@@ -72,7 +69,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> resetPasswordWithEmail(String email) {
         if (email == null) throw new IllegalArgumentException();
-        return new FutureSetup<Void, Void>().setUpFuture(mAuth.sendPasswordResetEmail(email),
+        return setUpFuture(mAuth.sendPasswordResetEmail(email),
                 result -> result);
     }
 
@@ -85,35 +82,41 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
         if (email == null) throw new IllegalArgumentException();
-        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().updateEmail(email)
+        return setUpFuture(getCurrentFirebaseUser().updateEmail(email)
                 , result -> result);
     }
 
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
         if (password == null) throw new IllegalArgumentException();
-        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().updatePassword(password),
+        return setUpFuture(getCurrentFirebaseUser().updatePassword(password),
                 result -> result);
     }
 
     @Override
     public CompletableFuture<Void> sendEmailVerification() {
-        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().sendEmailVerification(),
-                result ->result);
+        return setUpFuture(getCurrentFirebaseUser().sendEmailVerification(),
+                result -> result);
     }
 
     @Override
     public CompletableFuture<Void> deleteUser() {
-        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().delete(),
+        return setUpFuture(getCurrentFirebaseUser().delete(),
                 result -> result);
     }
 
     @Override
     public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
-        if(email == null || password == null) throw new IllegalArgumentException();
-        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().reauthenticate(
+        if (email == null || password == null) throw new IllegalArgumentException();
+        return setUpFuture(getCurrentFirebaseUser().reauthenticate(
                 EmailAuthProvider.getCredential(email, password)),
                 result -> result);
+    }
+
+    @Override
+    public void useEmulator(String ip, int port) {
+        if(ip == null) throw new IllegalArgumentException();
+        mAuth.useEmulator(ip, port);
     }
 
     /**
@@ -133,7 +136,7 @@ public class FirebaseLoginService implements LoginService {
      * @return a user
      */
     private User getUserFromAuthResult(AuthResult result) {
-        FirebaseUser user = result.getUser();
+        FirebaseUser user = getCurrentFirebaseUser();
         Uri profilePicUrl = user.getPhotoUrl();
         String profilePicString = null;
         if (profilePicUrl != null) {
@@ -146,32 +149,28 @@ public class FirebaseLoginService implements LoginService {
      * Interface that handles the conversion of a task from one type to another
      *
      * @param <FROM> the type we want to convert
-     * @param <TO> the type we want to get
+     * @param <TO>   the type we want to get
      */
     private interface ConvertTask<FROM, TO> {
         TO convertTask(FROM arg);
     }
 
     /**
-     * A private class that handles the creation of a future from a task
+     * Completes the future depending on the task result
+     *
+     * @param task the task whose result will go into the returned future if successful
+     * @param func the function used to convert the task from one type to another
+     * @return a future that contains the task result
      */
-    private class FutureSetup<FROM, TO> {
-        /**
-         *
-         * @param task the task whose result will go into the returned future if successful
-         * @param func the function used to convert the task from one type to another
-         * @return a future that contains the task result
-         */
-        public CompletableFuture<TO> setUpFuture(Task<FROM> task, ConvertTask<FROM, TO> func) {
-            CompletableFuture<TO> future = new CompletableFuture<>();
-            task.addOnCompleteListener(taskResult -> {
-                if (taskResult.isSuccessful()) {
-                    future.complete(func.convertTask(taskResult.getResult()));
-                } else {
-                    future.completeExceptionally(new LoginServiceRequestFailedException(taskResult.getException().getMessage()));
-                }
-            });
-            return future;
-        }
+    private <FROM, TO> CompletableFuture<TO> setUpFuture(Task<FROM> task, ConvertTask<FROM, TO> func) {
+        CompletableFuture<TO> future = new CompletableFuture<>();
+        task.addOnCompleteListener(taskResult -> {
+            if (taskResult.isSuccessful()) {
+                future.complete(func.convertTask(taskResult.getResult()));
+            } else {
+                future.completeExceptionally(new LoginServiceRequestFailedException(taskResult.getException().getMessage()));
+            }
+        });
+        return future;
     }
 }

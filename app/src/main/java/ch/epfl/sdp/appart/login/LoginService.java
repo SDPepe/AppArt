@@ -30,7 +30,7 @@ public interface LoginService {
      * Resets the password associated to an email if said email is linked with an account
      * We do not indicate if the email was found or not to prevent malicious users to know if someone is registered or not
      *
-     * @param email    the user's email
+     * @param email the user's email
      * @return an empty completable future
      * @throws IllegalArgumentException if one of the arguments is null
      */
@@ -50,7 +50,7 @@ public interface LoginService {
     /**
      * Updates the email address of a user
      *
-     * @param email    the new email to set
+     * @param email the new email to set
      * @return an empty completable future
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
@@ -95,4 +95,7 @@ public interface LoginService {
      * @throws IllegalStateException    if no current user is set
      */
     CompletableFuture<Void> reAuthenticateUser(String email, String password);
+
+    void useEmulator(String ip, int port);
+
 }

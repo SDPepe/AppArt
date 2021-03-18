@@ -20,6 +20,7 @@ import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
+@SuppressWarnings("JavaDoc")
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,20 +36,20 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Method called when the login button is pushed
-     * For now, juste takes the user to the scrolling activity page
+     * For now, just takes the user to the scrolling activity page
      *
      * @param view
      */
     public void logIn(View view) {
-        EditText emailView = (EditText) findViewById(R.id.email_login);
-        EditText passwordView = (EditText) findViewById(R.id.password);
+        EditText emailView = findViewById(R.id.email_login);
+        EditText passwordView = findViewById(R.id.password);
 
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
 
         CompletableFuture<User> loginFuture = loginService.loginWithEmail(email, password);
-        loginFuture.exceptionally( e -> {
+        loginFuture.exceptionally(e -> {
             Log.d("LOGIN", e.getMessage());
             Snackbar.make(view, R.string.login_failed_snack, BaseTransientBottomBar.LENGTH_SHORT).show();
             return null;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void createAccount(View view) {
+    public void createAccount(@SuppressWarnings("unused") View view) {
         Intent intent = new Intent(this, CreateUserActivity.class);
         startActivity(intent);
     }
@@ -71,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @param view
      */
-    public void resetPassword(View view) {
+    public void resetPassword(@SuppressWarnings("unused") View view) {
         Intent intent = new Intent(this, ResetActivity.class);
         startActivity(intent);
     }

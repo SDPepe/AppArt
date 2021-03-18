@@ -2,14 +2,29 @@ package ch.epfl.sdp.appart.user;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.sdp.appart.R;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.util.concurrent.CompletableFuture;
+
+import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.login.LoginService;
+import dagger.hilt.android.AndroidEntryPoint;
+
+@SuppressWarnings("JavaDoc")
+@AndroidEntryPoint
 public class ResetActivity extends AppCompatActivity {
+
+    @Inject
+    LoginService loginService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +41,17 @@ public class ResetActivity extends AppCompatActivity {
     public void resetPassword(View view) {
         EditText emailView = findViewById(R.id.reset_email);
         String email = emailView.getText().toString();
+
+        CompletableFuture<Void> resetFuture = this.loginService.resetPasswordWithEmail(email);
+        resetFuture.exceptionally( e -> {
+            Log.d("LOGIN", e.getMessage());
+            Snackbar.make(view, R.string.invalid_email_snack, BaseTransientBottomBar.LENGTH_SHORT).show();
+            return null;
+        });
+        resetFuture.thenAccept(arg -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        });
     }
 
     /**
@@ -34,7 +60,7 @@ public class ResetActivity extends AppCompatActivity {
      *
      * @param view
      */
-    public void backToLogin(View view) {
+    public void backToLogin(@SuppressWarnings("unused") View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }

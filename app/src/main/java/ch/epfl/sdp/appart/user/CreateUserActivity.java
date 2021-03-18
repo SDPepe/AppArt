@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -39,7 +42,8 @@ public class CreateUserActivity extends AppCompatActivity {
 
         CompletableFuture<User> futureUser = loginService.createUser(email, password);
         futureUser.exceptionally(e -> {
-            //Popup error
+            Log.d("LOGIN", e.getMessage());
+            Snackbar.make(view, R.string.create_account_failed_snack, BaseTransientBottomBar.LENGTH_SHORT).show();
             return null;
         });
         futureUser.thenAccept(user -> {
