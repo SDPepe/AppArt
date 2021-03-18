@@ -18,10 +18,11 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import ch.epfl.sdp.appart.Database;
-import ch.epfl.sdp.appart.FirebaseDB;
-import ch.epfl.sdp.appart.MockDataBase;
+import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.database.FirebaseDB;
+import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitorImpl;
 import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
 
 import static java.lang.String.format;
@@ -82,20 +83,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             context.startActivity(intent);
         });
 
-        //dirty hack : to be fixed
-        if (database instanceof FirebaseDB) {
-            StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl("gs://appart-ec344.appspot.com/Cards/" + card.getImageUrl());
-            Glide.with(context)
-                    .load(ref)
-                    .into(holder.cardImageView);
-        } else if (database instanceof MockDataBase) {
-            Glide.with(context)
-                    .load(card.getImageUrl())
-                    .into(holder.cardImageView);
-        } else {
-            throw new UnsupportedOperationException("card viewer found not implemented backend");
-        }
-
+        database.accept(new GlideLoaderVisitorImpl(context, holder.cardImageView, card.getImageUrl()));
 
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));

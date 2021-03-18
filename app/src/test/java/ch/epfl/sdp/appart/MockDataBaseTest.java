@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 import static org.junit.Assert.assertFalse;

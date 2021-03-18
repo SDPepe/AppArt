@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.hilt.FireBaseModule;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;

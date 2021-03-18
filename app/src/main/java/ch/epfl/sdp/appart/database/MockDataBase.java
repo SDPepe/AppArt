@@ -1,9 +1,10 @@
-package ch.epfl.sdp.appart;
+package ch.epfl.sdp.appart.database;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 public class MockDataBase implements Database {
@@ -43,6 +44,11 @@ public class MockDataBase implements Database {
             result.complete(false);
         }
         return result;
+    }
+
+    @Override
+    public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
     }
 
 }
