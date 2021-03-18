@@ -25,8 +25,9 @@
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
         -->
-        <activity android:name=".scrolling.AnnounceActivity" />
+        <activity android:name=".scrolling.ad.AnnounceActivity" />
         <activity android:name=".scrolling.ScrollingActivity" />
+        <activity android:name=".vtour.VirtualTourActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
