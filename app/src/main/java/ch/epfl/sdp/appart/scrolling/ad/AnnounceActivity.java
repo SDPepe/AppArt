@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.Database;
+import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
 import dagger.hilt.android.AndroidEntryPoint;
