@@ -35,6 +35,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @HiltAndroidTest
 public class LoginUITest {
@@ -99,6 +100,8 @@ public class LoginUITest {
         assertThat(user.getUserEmail(), is(email));
 
         loginService.deleteUser().get();
+
+        assertNull(loginService.getCurrentUser());
     }
 
     @After

@@ -26,6 +26,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertNull;
 
 @HiltAndroidTest
 public class ResetPasswordTest {
@@ -54,7 +55,7 @@ public class ResetPasswordTest {
 
     @Test
     public void resetPasswordOnNonExistingUserTest() {
-        String email = "test@testappart.ch";
+        String email = "fakeuser@testappart.ch";
         onView(withId(R.id.reset_email)).perform(typeText(email));
         onView(withId(R.id.button_reset_password)).perform(click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
@@ -70,6 +71,7 @@ public class ResetPasswordTest {
         onView(withId(R.id.button_reset_password)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
         loginService.deleteUser().get();
+        assertNull(loginService.getCurrentUser());
     }
 
     @Test
