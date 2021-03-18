@@ -16,13 +16,17 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.scrolling.ScrollingViewModel;
 import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -31,20 +35,40 @@ public class AnnounceActivity extends AppCompatActivity {
 
     @Inject
     Database database;
+    private AnnounceViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
+        mViewModel = new ViewModelProvider(this).get(AnnounceViewModel.class);
+        mViewModel.initAd();
+
+        mViewModel.getTitle().observe(this, this::updateTitle);
+        mViewModel.getPhotosRefs().observe(this, this::updatePhotos);
+        mViewModel.getAddress().observe(this, this::updateAddress);
+        mViewModel.getPrice().observe(this, this::updatePrice);
+        mViewModel.getDescription().observe(this, this::updateDescription);
+        mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
 
         initAdContent();
     }
 
+    private void updateTitle(String title){}
+
+    private void updatePhotos(List<String> references){
+        // TODO use GlideLoaderVisitor to query cards from list of references
+    }
+
+    private void updateAddress(String address){}
+
+    private void updatePrice(String price){}
+
+    private void updateDescription(String description){}
+
+    private void updateAdvertiser(String username){}
+
     private void initAdContent(){
-        // TODO update with database query
-        TextView title = findViewById(R.id.titleField);
-        title.setText(R.string.mock_title);
-        LinearLayout verticalLayout = findViewById(R.id.verChildren);
         LinearLayout horizontalLayout = findViewById(R.id.horChildren);
         for(int i = 0; i < 5; i++) {
             LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,21 +87,9 @@ public class AnnounceActivity extends AppCompatActivity {
                 horizontalLayout.addView(hspacer);
             }
         }
-        setFields();
     }
 
-    private void setFields(){
-        TextView addressField = findViewById(R.id.addressField);
-        addressField.setText(R.string.mock_address);
-        TextView priceField = findViewById(R.id.priceField);
-        priceField.setText(R.string.mock_price);
-        TextView descriptionField = findViewById(R.id.descriptionField);
-        descriptionField.setText(getString(R.string.mock_description));
-        TextView userField = findViewById(R.id.userField);
-        userField.setText(R.string.mock_user);
-    }
-
-    public void goBack(View view){
+    public void goBack(View view) {
         finish();
     }
 

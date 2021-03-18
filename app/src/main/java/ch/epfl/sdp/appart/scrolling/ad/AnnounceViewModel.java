@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.Database;
@@ -17,16 +19,20 @@ public class AnnounceViewModel extends ViewModel {
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
     private final MutableLiveData<String> adDescription = new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiser = new MutableLiveData<>(); // name of user
+    private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
 
     Database db;
 
     @Inject
     public AnnounceViewModel(Database db) { this.db = db; }
 
-    // TODO query db for ad and user data, and fill livedata
-    public void initAd(){}
+    public void initAd(){
+        // TODO query db for ad and user data, and fill livedata
+    }
 
     public LiveData<String> getTitle(){ return adTitle; }
+
+    public LiveData<List<String>> getPhotosRefs(){ return adPhotosRefs; }
 
     public LiveData<String> getAddress(){ return adAddress; }
 
