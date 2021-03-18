@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.login;
 
+import java.util.concurrent.CompletableFuture;
+
 import ch.epfl.sdp.appart.user.User;
 
 /**
@@ -15,7 +17,7 @@ public interface LoginService {
      * @param callback what should be done on login success or failure
      * @throws IllegalArgumentException if one the arguments is null
      */
-    void loginWithEmail(String email, String password, LoginCallback callback);
+    CompletableFuture<User> loginWithEmail(String email, String password);
 
     /**
      * Retrieves the current user if there is one, null otherwise.
@@ -32,7 +34,7 @@ public interface LoginService {
      * @param callback what should be done after success or failure
      * @throws IllegalArgumentException if one of the arguments is null
      */
-    void resetPasswordWithEmail(String email, LoginCallback callback);
+    CompletableFuture<Void> resetPasswordWithEmail(String email);
 
     /**
      * Creates a user with an email and a password
@@ -43,7 +45,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    void createUser(String email, String password, LoginCallback callback);
+    CompletableFuture<Void> createUser(String email, String password);
 
     /**
      * Updates the email address of a user
@@ -53,7 +55,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    void updateEmailAddress(String email, LoginCallback callback);
+    CompletableFuture<Void> updateEmailAddress(String email);
 
     /**
      * Updates the password of a user
@@ -63,7 +65,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    void updatePassword(String password, LoginCallback callback);
+    CompletableFuture<Void> updatePassword(String password);
 
     /**
      * Verifies an user's email
@@ -72,7 +74,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if callback is null
      * @throws IllegalStateException    if no current user is set
      */
-    void sendEmailVerification(LoginCallback callback);
+    CompletableFuture<Void> sendEmailVerification();
 
     /**
      * Deletes a user
@@ -81,7 +83,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if callback is null
      * @throws IllegalStateException    if no current user is set
      */
-    void deleteUser(LoginCallback callback);
+    CompletableFuture<Void> deleteUser();
 
     /**
      * Re-authenticates a user. This is needed for things like password change or critical operations
@@ -92,5 +94,5 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    void reAuthenticateUser(String email, String password, LoginCallback callback);
+    CompletableFuture<Void> reAuthenticateUser(String email, String password);
 }

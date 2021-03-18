@@ -7,9 +7,12 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,8 +51,15 @@ public class FirebaseLoginService implements LoginService {
     }
 
     @Override
-    public void loginWithEmail(String email, String password, LoginCallback callback) {
-        emailAndPasswordHandling(email, password, callback, false);
+    public CompletableFuture<User> loginWithEmail(String email, String password) {
+        //emailAndPasswordHandling(email, password, callback, false);
+        this.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+           if(task.isSuccessful())  {
+               AuthResult result = task.getResult();
+               FirebaseUser user = result.getUser();
+           }
+        });
+
     }
 
     @Override

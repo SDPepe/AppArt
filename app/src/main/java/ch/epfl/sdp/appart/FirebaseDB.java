@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -53,6 +54,8 @@ public class FirebaseDB implements Database {
                         result.complete(queriedCards);
 
                     } else {
+                        String message = task.getException().getMessage();
+                        Log.d("FIRESTORE", message);
                         result.completeExceptionally(new UnsupportedOperationException("failed to fetch the cards from firebase"));
                     }
                 }
