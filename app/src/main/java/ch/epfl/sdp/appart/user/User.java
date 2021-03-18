@@ -47,12 +47,24 @@ public interface User {
      */
     void setProfileImage(String img);
 
+    /**
+     * getter method for user gender
+     */
     Gender getGender();
 
+    /**
+     * setter method for user gender
+     */
     void setGender(Gender gender);
 
+    /**
+     * getter method for user age
+     */
     int getAge();
 
+    /**
+     * setter method for user age
+     */
     void setAge(int age);
 
 
