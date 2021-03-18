@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.Database;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -20,11 +21,15 @@ public class AnnounceViewModel extends ViewModel {
     private final MutableLiveData<String> adDescription = new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiser = new MutableLiveData<>(); // name of user
     private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
+    private final MutableLiveData<String> userPhone = new MutableLiveData<>();
+    private final MutableLiveData<String> userEmail = new MutableLiveData<>();
 
     Database db;
 
     @Inject
-    public AnnounceViewModel(Database db) { this.db = db; }
+    public AnnounceViewModel(Database db) {
+        this.db = db;
+    }
 
     public void initAd(){
         // TODO query db for ad and user data, and fill livedata
@@ -41,5 +46,9 @@ public class AnnounceViewModel extends ViewModel {
     public LiveData<String> getDescription(){ return adDescription; }
 
     public LiveData<String> getAdvertiser() { return adAdvertiser; }
+
+    public LiveData<String> getPhoneNumber() { return userPhone; }
+
+    public LiveData<String> getEmailAddress() { return userEmail; }
 
 }
