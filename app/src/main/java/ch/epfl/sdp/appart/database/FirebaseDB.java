@@ -15,7 +15,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
+import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.scrolling.card.Card;
+import kotlin.NotImplementedError;
 
 @Singleton
 public class FirebaseDB implements Database {
@@ -86,6 +88,12 @@ public class FirebaseDB implements Database {
                     isFinishedFuture.complete(task.isSuccessful());
                 });
         return isFinishedFuture;
+    }
+
+    @Override
+    public CompletableFuture<Ad> getAd(String id) {
+        // TODO get ad from firestore
+        throw new NotImplementedError();
     }
 
     @Override
