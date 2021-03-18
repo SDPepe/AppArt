@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.Database;
+import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
