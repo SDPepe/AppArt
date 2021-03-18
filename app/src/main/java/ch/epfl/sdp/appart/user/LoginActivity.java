@@ -8,6 +8,9 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -22,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Inject
     LoginService loginService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         CompletableFuture<User> loginFuture = loginService.loginWithEmail(email, password);
         loginFuture.exceptionally( e -> {
             Log.d("LOGIN", e.getMessage());
+            Snackbar.make(view, R.string.login_failed_snack, BaseTransientBottomBar.LENGTH_SHORT).show();
             return null;
         });
         loginFuture.thenAccept(user -> {
