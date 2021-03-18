@@ -19,41 +19,41 @@ public class AppUserTest {
 
     @Test
     public void userIsCreatedCorrectly() {
-        AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+        AppUser user = new AppUser("1234", "test.appart@epfl.ch");
         assertNotEquals(null, user);
     }
 
     @Test
     public void nameGetterAndSetterWork() {
-        AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+        AppUser user = new AppUser("1234", "test.appart@epfl.ch");
         user.setName("Antoine");
         assertEquals("Antoine", user.getName());
     }
 
     @Test
     public void emailGetterAndSetterWork() {
-        AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+        AppUser user = new AppUser("1234", "test.appart@epfl.ch");
         user.setUserEmail("carlomusso98@gmail.com");
         assertEquals("carlomusso98@gmail.com", user.getUserEmail());
     }
 
     @Test
     public void phoneNumberGetterAndSetterWork() {
-        AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+        AppUser user = new AppUser("1234", "test.appart@epfl.ch");
         user.setPhoneNumber("1234567812345678");
         assertEquals("1234567812345678", user.getPhoneNumber());
     }
 
     @Test
     public void profileImageGetterAndSetterWork() {
-        AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+        AppUser user = new AppUser("1234", "test.appart@epfl.ch");
         user.setProfileImage("/home/Carlo/pictures/foo.jpg");
         assertEquals("/home/Carlo/pictures/foo.jpg", user.getProfileImage());
     }
 
     @Test
     public void userIdGetterWorks() {
-        AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+        AppUser user = new AppUser("1234", "test.appart@epfl.ch");
         assertEquals("1234", user.getUserId());
     }
 
@@ -67,7 +67,7 @@ public class AppUserTest {
     @Test
     public void nameSetterFailsWithNullParameters() {
         assertThrows(IllegalArgumentException.class, () -> {
-            AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+            AppUser user = new AppUser("1234", "test.appart@epfl.ch");
             user.setName(null);
         });
     }
@@ -75,7 +75,7 @@ public class AppUserTest {
     @Test
     public void emailSetterFailsWithNullParameters() {
         assertThrows(IllegalArgumentException.class, () -> {
-            AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+            AppUser user = new AppUser("1234", "test.appart@epfl.ch");
             user.setUserEmail(null);
         });
     }
@@ -83,7 +83,7 @@ public class AppUserTest {
     @Test
     public void phoneNumberSetterFailsWithNullParameters() {
         assertThrows(IllegalArgumentException.class, () -> {
-            AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+            AppUser user = new AppUser("1234", "test.appart@epfl.ch");
             user.setPhoneNumber(null);
         });
     }
@@ -91,14 +91,14 @@ public class AppUserTest {
     @Test
     public void imageSetterFailsWithNullParameters() {
         assertThrows(IllegalArgumentException.class, () -> {
-            AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+            AppUser user = new AppUser("1234", "test.appart@epfl.ch");
             user.setProfileImage(null);
         });
     }
 
     @Test
     public void hasUniversityEmailReturnsTrueForUniversityEmail() {
-        AppUser user = new AppUser("1234", "carlo.musso@epfl.ch");
+        AppUser user = new AppUser("1234", "test.appart@epfl.ch");
 
         assertTrue(user.hasUniversityEmail());
     }
@@ -111,7 +111,7 @@ public class AppUserTest {
 
     @Test
     public void hasUniversityEmailReturnsFalseForFakeSyntaxEmail() {
-        AppUser user = new AppUser("1234", "carlo.musso@yahoo.it@epfl.ch");
+        AppUser user = new AppUser("1234", "test.appart@yahoo.it@epfl.ch");
         assertFalse(user.hasUniversityEmail());
     }
 }
