@@ -45,7 +45,7 @@ public interface LoginService {
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
-    CompletableFuture<Void> createUser(String email, String password);
+    CompletableFuture<User> createUser(String email, String password);
 
     /**
      * Updates the email address of a user

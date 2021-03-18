@@ -40,26 +40,10 @@ public class FirebaseLoginService implements LoginService {
         return new FirebaseLoginService();
     }
 
-    private void emailAndPasswordHandling(String email, String password, LoginCallback callback, boolean accountCreation) {
-        if (email == null || password == null || callback == null)
-            throw new IllegalArgumentException();
-        if (accountCreation) {
-            addCallbackToTask(mAuth.createUserWithEmailAndPassword(email, password), callback);
-        } else {
-            addCallbackToTask(mAuth.signInWithEmailAndPassword(email, password), callback);
-        }
-    }
-
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
-        //emailAndPasswordHandling(email, password, callback, false);
-        this.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-           if(task.isSuccessful())  {
-               AuthResult result = task.getResult();
-               FirebaseUser user = result.getUser();
-           }
-        });
-
+        return new FutureSetup<AuthResult, User>().setUpFuture(mAuth.signInWithEmailAndPassword(email, password),
+                authResult -> getUserFromAuthResult(authResult));
     }
 
     @Override
@@ -81,50 +65,49 @@ public class FirebaseLoginService implements LoginService {
     }
 
     @Override
-    public void resetPasswordWithEmail(String email, LoginCallback callback) {
-        if (email == null || callback == null) throw new IllegalArgumentException();
-        addCallbackToTask(mAuth.sendPasswordResetEmail(email), callback);
+    public CompletableFuture<Void> resetPasswordWithEmail(String email) {
+        if (email == null) throw new IllegalArgumentException();
+        return new FutureSetup<Void, Void>().setUpFuture(mAuth.sendPasswordResetEmail(email),
+                result -> result);
     }
 
     @Override
-    public void createUser(String email, String password, LoginCallback callback) {
-        emailAndPasswordHandling(email, password, callback, true);
+    public CompletableFuture<User> createUser(String email, String password) {
+        return new FutureSetup<AuthResult, User>().setUpFuture(mAuth.createUserWithEmailAndPassword(email, password),
+                result -> getUserFromAuthResult(result));
     }
 
     @Override
-    public void updateEmailAddress(String email, LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        addCallbackToTask(user.updateEmail(email), callback);
+    public CompletableFuture<Void> updateEmailAddress(String email) {
+        if (email == null) throw new IllegalArgumentException();
+        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().updateEmail(email)
+                , result -> result);
     }
 
     @Override
-    public void updatePassword(String password, LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        addCallbackToTask(user.updatePassword(password), callback);
+    public CompletableFuture<Void> updatePassword(String password) {
+        if (password == null) throw new IllegalArgumentException();
+        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().updatePassword(password),
+                result -> result);
     }
 
     @Override
-    public void sendEmailVerification(LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        addCallbackToTask(user.sendEmailVerification(), callback);
+    public CompletableFuture<Void> sendEmailVerification() {
+        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().sendEmailVerification(),
+                result ->result);
     }
 
     @Override
-    public void deleteUser(LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        addCallbackToTask(user.delete(), callback);
+    public CompletableFuture<Void> deleteUser() {
+        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().delete(),
+                result -> result);
     }
 
     @Override
-    public void reAuthenticateUser(String email, String password, LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
-        addCallbackToTask(user.reauthenticate(credential), callback);
+    public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
+        return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().reauthenticate(
+                EmailAuthProvider.getCredential(email, password)),
+                result -> result);
     }
 
     /**
@@ -137,22 +120,30 @@ public class FirebaseLoginService implements LoginService {
         return user;
     }
 
-
-    private <T> void addCallbackToTask(Task<T> task, LoginCallback callback) {
-        task.addOnCompleteListener(new LoginOnCompleteListener<>(callback));
+    private User getUserFromAuthResult(AuthResult result) {
+        FirebaseUser user = result.getUser();
+        Uri profilePicUrl = user.getPhotoUrl();
+        String profilePicString = null;
+        if (profilePicUrl != null) {
+            profilePicString = profilePicUrl.toString();
+        }
+        return new AppUser(user.getUid(), null, user.getEmail(), user.getPhoneNumber(), profilePicString);
     }
 
-    private static class LoginOnCompleteListener<T> implements OnCompleteListener<T> {
-        private final LoginCallback callback;
+    private interface ConvertTask<FROM, TO> {
+        TO convertTask(FROM arg);
+    }
 
-        LoginOnCompleteListener(LoginCallback callback) {
-            this.callback = callback;
-        }
+    private class FutureSetup<FROM, TO> {
+        public CompletableFuture<TO> setUpFuture(Task<FROM> task, ConvertTask<FROM, TO> func) {
+            CompletableFuture<TO> future = new CompletableFuture<>();
 
-
-        @Override
-        public void onComplete(@NonNull Task<T> task) {
-            callback.onRequestCompletion(task.isSuccessful());
+            if (task.isSuccessful()) {
+                future.complete(func.convertTask(task.getResult()));
+            } else {
+                future.completeExceptionally(new LoginServiceRequestFailedException(task.getException().getMessage()));
+            }
+            return future;
         }
     }
 }
