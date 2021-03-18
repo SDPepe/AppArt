@@ -64,9 +64,11 @@ public class FirebaseLoginService implements LoginService {
         AppUser appUser = new AppUser(userId, email);
 
         /* if the user actually has the following attributes */
-        appUser.setName(name);
-        appUser.setPhoneNumber(phoneNumber);
-        appUser.setProfileImage(profilePic);
+        if (name != null) {appUser.setName(name);}
+        if (phoneNumber != null) {appUser.setPhoneNumber(phoneNumber);}
+        if (profilePic != null) {appUser.setProfileImage(profilePic);}
+        // add age
+        // add gender 
 
         return appUser;
     }
