@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -21,11 +23,22 @@ public class ContactInfoDialogFragment extends DialogFragment {
         return contactFrag;
     }
 
+    /*
+     * creates the dialog, inflates the layout and sets the values using the Bundle given to
+     * newInstance.
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstances){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.contactdialog_layout, null))
+        View dialog = inflater.inflate(R.layout.contactdialog_layout, null);
+        TextView username = dialog.findViewById(R.id.usernameTextView);
+        username.setText(savedInstances.getString("name"));
+        TextView phone = dialog.findViewById(R.id.phoneField);
+        phone.setText(savedInstances.getString("phone"));
+        TextView email = dialog.findViewById(R.id.emailField);
+        email.setText(savedInstances.getString("email"));
+        builder.setView(dialog)
             .setNegativeButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dismiss();
