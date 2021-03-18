@@ -55,26 +55,27 @@ public class AnnounceActivity extends AppCompatActivity {
         mViewModel.initAd();
     }
 
-    private void updateTitle(String title){
+    private void updateTitle(String title) {
         TextView titleView = findViewById(R.id.titleField);
-        if (title != null){
+        if (title != null) {
             titleView.setText(title);
         } else {
-            titleView.setText(R.string. default_loading);
+            titleView.setText(R.string.default_loading);
         }
     }
 
-    private void updatePhotos(List<String> references){
+    private void updatePhotos(List<String> references) {
         LinearLayout horizontalLayout = findViewById(R.id.horChildren);
         horizontalLayout.removeAllViews();
-        for(int i = 0; i < references.size(); i++) {
-            LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        for (int i = 0; i < references.size(); i++) {
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, null);
             ImageView photo = myView.findViewById(R.id.photoImageView);
             database.accept(new GlideLoaderVisitorImpl(this, photo,
                     "Ads/ " + references.get(i)));
             horizontalLayout.addView(myView);
-            if (i != 4){
+            if (i != 4) {
                 Space hspacer = new Space(this);
                 hspacer.setLayoutParams(new ViewGroup.LayoutParams(
                         8,
@@ -85,39 +86,39 @@ public class AnnounceActivity extends AppCompatActivity {
         }
     }
 
-    private void updateAddress(String address){
+    private void updateAddress(String address) {
         TextView addressView = findViewById(R.id.addressField);
-        if (address != null){
+        if (address != null) {
             addressView.setText(address);
         } else {
-            addressView.setText(R.string. default_loading);
+            addressView.setText(R.string.default_loading);
         }
     }
 
-    private void updatePrice(String price){
+    private void updatePrice(String price) {
         TextView priceView = findViewById(R.id.priceField);
-        if (price != null){
+        if (price != null) {
             priceView.setText(price);
         } else {
-            priceView.setText(R.string. default_loading);
+            priceView.setText(R.string.default_loading);
         }
     }
 
-    private void updateDescription(String description){
+    private void updateDescription(String description) {
         TextView descriptionView = findViewById(R.id.descriptionField);
-        if (description != null){
+        if (description != null) {
             descriptionView.setText(description);
         } else {
             descriptionView.setText(R.string.default_loading);
         }
     }
 
-    private void updateAdvertiser(String username){
+    private void updateAdvertiser(String username) {
         TextView usernameView = findViewById(R.id.userField);
-        if (username != null){
+        if (username != null) {
             usernameView.setText(username);
         } else {
-            usernameView.setText(R.string. default_loading);
+            usernameView.setText(R.string.default_loading);
         }
     }
 
@@ -125,28 +126,15 @@ public class AnnounceActivity extends AppCompatActivity {
         finish();
     }
 
-    public void openContactInfo(View view){
-        DialogFragment contactFrag = ContactInfoDialogFragment.newInstance(
-                createBundleFromUser());
+    public void openContactInfo(View view) {
+        DialogFragment contactFrag = ContactInfoDialogFragment.newInstance();
         //contactFrag.getView().setBackgroundColor(Color.TRANSPARENT);
         contactFrag.show(getSupportFragmentManager(), "contact dialog");
     }
 
-    public void openVirtualTour(View view){
+    public void openVirtualTour(View view) {
         Intent intent = new Intent(this, VirtualTourActivity.class);
         startActivity(intent);
     }
 
-    // create strings to display on dialog
-    private Bundle createBundleFromUser(){
-        Bundle bundle = new Bundle();
-        String def =  getString(R.string.default_loading);
-        String name = mViewModel.getAdvertiser().getValue();
-        bundle.putString("name", name != null ? name : def);
-        String phone = mViewModel.getPhoneNumber().getValue();
-        bundle.putString("phone", phone != null ? phone : def);
-        String email = mViewModel.getEmailAddress().getValue();
-        bundle.putString("email", email != null ? email : def);
-        return bundle;
-    }
 }
