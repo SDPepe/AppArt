@@ -10,9 +10,16 @@ import android.widget.Button;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.user.User;
 
 
 public class ContactInfoDialogFragment extends DialogFragment {
+
+    public static ContactInfoDialogFragment newInstance(Bundle args){
+        ContactInfoDialogFragment contactFrag = new ContactInfoDialogFragment();
+        contactFrag.setArguments(args);
+        return contactFrag;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstances){

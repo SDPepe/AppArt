@@ -83,7 +83,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             context.startActivity(intent);
         });
 
-        database.accept(new GlideLoaderVisitorImpl(context, holder.cardImageView, card.getImageUrl()));
+        database.accept(new GlideLoaderVisitorImpl(context, holder.cardImageView,
+                "Cards/" +  card.getImageUrl()));
 
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));
