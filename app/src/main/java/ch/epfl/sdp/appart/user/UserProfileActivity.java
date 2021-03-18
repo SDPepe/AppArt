@@ -139,22 +139,28 @@ public class UserProfileActivity extends AppCompatActivity {
         }
         if (LoginActivity.sessionUser.getGender() != null) {
             this.genderView.setSelection(LoginActivity.sessionUser.getGender().ordinal());
+            /* done inside this if for the moment since only gender pictures are available now */
+            setPictureToImageComponent();
+        }
+    }
 
-            if (LoginActivity.sessionUser.getProfileImage() == null) {
-                int id;
-                if (LoginActivity.sessionUser.getGender() == Gender.MALE) {
-                    id = R.drawable.user_example_male;
-                } else if (LoginActivity.sessionUser.getGender() == Gender.FEMALE) {
-                    id = R.drawable.user_example_female;
-                } else {
-                    id = R.drawable.user_example_no_gender;
-                }
-                Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
-                this.imageView.setImageDrawable(iconImage);
+    /**
+     * sets the user profile picture (or default gender picture) to the ImageView component
+     */
+    private void setPictureToImageComponent() {
+        if (LoginActivity.sessionUser.getProfileImage() == null) {
+            int id;
+            if (LoginActivity.sessionUser.getGender() == Gender.MALE) {
+                id = R.drawable.user_example_male;
+            } else if (LoginActivity.sessionUser.getGender() == Gender.FEMALE) {
+                id = R.drawable.user_example_female;
             } else {
-                // set actual user-specific profile picture
+                id = R.drawable.user_example_no_gender;
             }
-
+            Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
+            this.imageView.setImageDrawable(iconImage);
+        } else {
+            // set actual user-specific profile picture
         }
     }
 
