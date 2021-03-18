@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @SuppressWarnings("JavaDoc")
@@ -44,8 +45,7 @@ public class ResetActivity extends AppCompatActivity {
 
         CompletableFuture<Void> resetFuture = this.loginService.resetPasswordWithEmail(email);
         resetFuture.exceptionally( e -> {
-            Log.d("LOGIN", e.getMessage());
-            Snackbar.make(view, R.string.invalid_email_snack, BaseTransientBottomBar.LENGTH_SHORT).show();
+            UIUtils.makeSnakeAndLogOnFail(view, R.string.invalid_email_snack, e);
             return null;
         });
         resetFuture.thenAccept(arg -> {

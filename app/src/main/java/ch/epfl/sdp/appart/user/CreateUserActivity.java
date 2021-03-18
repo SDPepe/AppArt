@@ -6,6 +6,7 @@ import ch.epfl.sdp.appart.MainActivity;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
+import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import android.content.Intent;
@@ -42,8 +43,7 @@ public class CreateUserActivity extends AppCompatActivity {
 
         CompletableFuture<User> futureUser = loginService.createUser(email, password);
         futureUser.exceptionally(e -> {
-            Log.d("LOGIN", e.getMessage());
-            Snackbar.make(view, R.string.create_account_failed_snack, BaseTransientBottomBar.LENGTH_SHORT).show();
+            UIUtils.makeSnakeAndLogOnFail(view, R.string.create_account_failed_snack, e);
             return null;
         });
         futureUser.thenAccept(user -> {

@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
+import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @SuppressWarnings("JavaDoc")
@@ -50,8 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
         CompletableFuture<User> loginFuture = loginService.loginWithEmail(email, password);
         loginFuture.exceptionally(e -> {
-            Log.d("LOGIN", e.getMessage());
-            Snackbar.make(view, R.string.login_failed_snack, BaseTransientBottomBar.LENGTH_SHORT).show();
+            UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
             return null;
         });
         loginFuture.thenAccept(user -> {
