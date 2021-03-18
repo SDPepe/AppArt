@@ -14,8 +14,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+/**
+ * This class manages the UI of the user profile. Here what gets updated is the AppUser instance of
+ * the logged in User (session User). Not the actual User in firebase.
+ */
 public class UserProfileActivity extends AppCompatActivity {
 
+    /* UI components */
     private Button modifyButton;
     private Button doneButton;
     private Button backButton;
@@ -45,30 +50,42 @@ public class UserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccounClaimer);
         this.imageView = findViewById(R.id.imageView);
 
-        /* set attributes */
+        /* set attributes of session user to the UI components */
         getAndSetCurrentAttributes();
 
     }
 
+    /**
+     * close activity, called by back button
+     */
     public void back(View view) {
         finish();
     }
 
+    /**
+     * edit user info, called by edit profile button
+     */
     public void editProfile(View view) {
         this.modifyButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
 
-        /* enable editing */
+        /* enable editing in all UI components */
         enableDisableEntries();
     }
 
+    /**
+     * saves user information in the sessionUser (AppUser) instance,
+     * called by the done button
+     */
     public void doneEditing(View view) {
-        /* set attributes */
+
+        /* set updated attributes from UI components to AppUser */
         setNewAttributes();
 
-        /* disable editing text */
+        /* disable editing text in all UI components*/
         enableDisableEntries();
 
+        /* update the view with new attributes */
         getAndSetCurrentAttributes();
 
         this.modifyButton.setVisibility(View.VISIBLE);
@@ -76,19 +93,26 @@ public class UserProfileActivity extends AppCompatActivity {
 
         /* HERE THE FIREBASE CLASS SHOULD BE CALLED AND ALL
          MODIFIED ATTRIBUTES SHOULD BE MODIFIED IN DATABASE */
+        /* the below line will be deleted once tests are provided */
         printAttributesTest();
 
     }
 
+    /**
+     * enables and disables UI components to edit
+     */
     private void enableDisableEntries() {
         this.nameView.setEnabled(!this.nameView.isEnabled());
         this.ageView.setEnabled(!this.ageView.isEnabled());
         this.genderView.setEnabled(!this.genderView.isEnabled());
         this.backButton.setEnabled(!this.backButton.isEnabled());
         this.phoneNumberView.setEnabled(!this.phoneNumberView.isEnabled());
-        // email is never enabled so easy
+        // email is never enabled so easily
     }
 
+    /**
+     * sets the new attributes to the session User
+     */
     private void setNewAttributes(){
         String ageString = ((EditText) findViewById(R.id.ageText)).getText().toString().trim();
         if (ageString != null && !ageString.equals("")) {
@@ -100,6 +124,9 @@ public class UserProfileActivity extends AppCompatActivity {
         LoginActivity.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumberText)).getText().toString().trim());
     }
 
+    /**
+     * sets the current session User attributes to the UI components
+     */
     private void getAndSetCurrentAttributes() {
         this.nameView.setText(LoginActivity.sessionUser.getName());
         this.emailView.setText(LoginActivity.sessionUser.getUserEmail());
@@ -133,7 +160,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     /* DELETE THIS METHOD ONCE REAL TESTS ARE DONE */
     private void printAttributesTest(){
-        System.out.println("\n\n\n\n********************************************************************************************************************************************");
+        System.out.println("\n*\n********************************************************************************************************************************************");
         System.out.println("********************************************************************************************************************************************");
         System.out.println();
         System.out.println("  User email : " + LoginActivity.sessionUser.getUserEmail());
