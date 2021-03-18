@@ -40,7 +40,7 @@ public class LoginTest {
 
         LoginService loginService = FirebaseLoginService.buildLoginService();
 
-        String email = "test@testappart.com";
+        String email = "test@testappart.ch";
         String password = "password1234";
 
         loginService.createUser(email, password).get();
@@ -53,7 +53,7 @@ public class LoginTest {
 
         assertThat(user.getUserEmail(), is(email));
 
-        String newEmail = "test2@testappart.com";
+        String newEmail = "test2@testappart.ch";
         loginService.updateEmailAddress(newEmail).get();
 
         user = loginService.getCurrentUser();

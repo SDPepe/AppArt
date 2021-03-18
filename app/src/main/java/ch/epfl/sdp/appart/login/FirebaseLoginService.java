@@ -54,16 +54,10 @@ public class FirebaseLoginService implements LoginService {
         if (user == null) {
             return null;
         }
-        String name = user.getDisplayName();
         String userId = user.getUid();
         String email = user.getEmail();
-        String phoneNumber = user.getPhoneNumber();
-        Uri photoUrl = user.getPhotoUrl();
-        String profilePic = null;
-        if (photoUrl != null) {
-            profilePic = photoUrl.toString();
-        }
-        return new AppUser(userId, name, email, phoneNumber, profilePic);
+
+        return new AppUser(userId, email);
     }
 
     @Override
@@ -137,12 +131,7 @@ public class FirebaseLoginService implements LoginService {
      */
     private User getUserFromAuthResult(AuthResult result) {
         FirebaseUser user = getCurrentFirebaseUser();
-        Uri profilePicUrl = user.getPhotoUrl();
-        String profilePicString = null;
-        if (profilePicUrl != null) {
-            profilePicString = profilePicUrl.toString();
-        }
-        return new AppUser(user.getUid(), null, user.getEmail(), user.getPhoneNumber(), profilePicString);
+        return new AppUser(user.getUid(), user.getEmail());
     }
 
     /**

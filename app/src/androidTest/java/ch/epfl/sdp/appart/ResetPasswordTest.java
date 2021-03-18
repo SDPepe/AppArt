@@ -1,10 +1,9 @@
 package ch.epfl.sdp.appart;
 
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,11 +13,8 @@ import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.login.LoginService;
-import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
-import ch.epfl.sdp.appart.user.CreateUserActivity;
 import ch.epfl.sdp.appart.user.LoginActivity;
 import ch.epfl.sdp.appart.user.ResetActivity;
-import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
@@ -30,9 +26,6 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
 
 @HiltAndroidTest
 public class ResetPasswordTest {
@@ -60,11 +53,23 @@ public class ResetPasswordTest {
     }
 
     @Test
-    public void resetPasswordTest() {
-        String email = "test@testappart.com";
+    public void resetPasswordOnNonExistingUserTest() {
+        String email = "test@testappart.ch";
+        onView(withId(R.id.reset_email)).perform(typeText(email));
+        onView(withId(R.id.button_reset_password)).perform(click());
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.invalid_email_snack)));
+    }
+
+    @Test
+    public void resetPasswordSuccessfulTest() throws ExecutionException, InterruptedException {
+        String email = "test@testappart.ch";
+        String password = "password";
+        loginService.createUser(email, password).get();
         onView(withId(R.id.reset_email)).perform(typeText(email));
         onView(withId(R.id.button_reset_password)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
+        loginService.deleteUser().get();
     }
 
     @Test
@@ -74,5 +79,10 @@ public class ResetPasswordTest {
         onView(withId(R.id.button_reset_password)).perform(click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.invalid_email_snack)));
+    }
+
+    @After
+    public void release() {
+        Intents.release();
     }
 }

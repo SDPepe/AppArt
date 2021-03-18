@@ -6,6 +6,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class LoginUITest {
 
     @Test
     public void failedLoginTest() {
-        String email = "test@testappart.com";
+        String email = "test@testappart.ch";
         String password = "password";
 
         onView(withId(R.id.email_login)).perform(typeText(email));
@@ -81,7 +82,7 @@ public class LoginUITest {
 
     @Test
     public void successfulLoginTest() throws ExecutionException, InterruptedException {
-        String email = "test@testappart.com";
+        String email = "test@testappart.ch";
         String password = "password";
         loginService.createUser(email, password).get();
 
@@ -98,5 +99,10 @@ public class LoginUITest {
         assertThat(user.getUserEmail(), is(email));
 
         loginService.deleteUser().get();
+    }
+
+    @After
+    public void release() {
+        Intents.release();
     }
 }
