@@ -13,8 +13,9 @@ public class Ad {
 
     public Ad(String title, String price, String address,
         String advertiserId, String description, List<String> photosRefs){
-        if (title == null || price == null || address == null || advertiserId == null ||
-            description == null || photosRefs == null)
+        if (title == null || price == null || address == null)
+            throw new IllegalArgumentException("An argument is null!");
+        if (advertiserId == null || description == null || photosRefs == null)
             throw new IllegalArgumentException("An argument is null!");
 
         this.title = title;
