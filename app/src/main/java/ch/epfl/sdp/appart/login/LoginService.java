@@ -14,7 +14,7 @@ public interface LoginService {
      *
      * @param email    the user's email
      * @param password the user's password
-     * @param callback what should be done on login success or failure
+     * @return a completable future containing the User if the request is successful
      * @throws IllegalArgumentException if one the arguments is null
      */
     CompletableFuture<User> loginWithEmail(String email, String password);
@@ -31,7 +31,7 @@ public interface LoginService {
      * We do not indicate if the email was found or not to prevent malicious users to know if someone is registered or not
      *
      * @param email    the user's email
-     * @param callback what should be done after success or failure
+     * @return an empty completable future
      * @throws IllegalArgumentException if one of the arguments is null
      */
     CompletableFuture<Void> resetPasswordWithEmail(String email);
@@ -41,7 +41,7 @@ public interface LoginService {
      *
      * @param email    the user's email
      * @param password the user's password
-     * @param callback what should be done after success or failure
+     * @return a completable future containing the User if the request is successful
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
@@ -51,7 +51,7 @@ public interface LoginService {
      * Updates the email address of a user
      *
      * @param email    the new email to set
-     * @param callback what is performed on update
+     * @return an empty completable future
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
@@ -61,7 +61,7 @@ public interface LoginService {
      * Updates the password of a user
      *
      * @param password the new password to set
-     * @param callback what is performed on password change if it succeeds or on failure
+     * @return an empty completable future
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */
@@ -70,7 +70,7 @@ public interface LoginService {
     /**
      * Verifies an user's email
      *
-     * @param callback what is performed on send success or failure
+     * @return an empty completable future
      * @throws IllegalArgumentException if callback is null
      * @throws IllegalStateException    if no current user is set
      */
@@ -79,7 +79,7 @@ public interface LoginService {
     /**
      * Deletes a user
      *
-     * @param callback what is performed on deletion success or failure
+     * @return an empty completable future
      * @throws IllegalArgumentException if callback is null
      * @throws IllegalStateException    if no current user is set
      */
@@ -90,7 +90,7 @@ public interface LoginService {
      *
      * @param email    the user's email
      * @param password the user's password
-     * @param callback what is performed on re-authentication success or failure
+     * @return an empty completable future
      * @throws IllegalArgumentException if one of the arguments is null
      * @throws IllegalStateException    if no current user is set
      */

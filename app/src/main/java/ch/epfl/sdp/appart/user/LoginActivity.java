@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.concurrent.CompletableFuture;
+
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.R;
@@ -40,15 +42,15 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
-        loginService.loginWithEmail(email, password, hasSucceeded -> {
-            if(hasSucceeded) {
-                Intent intent = new Intent(this, ScrollingActivity.class);
-                startActivity(intent);
-            }
-            else {
-                //Popup login failed
-                Log.d("LOGIN", "Login failed !");
-            }
+
+        CompletableFuture<User> loginFuture = loginService.loginWithEmail(email, password);
+        loginFuture.exceptionally( e -> {
+            Log.d("LOGIN", e.getMessage());
+            return null;
+        });
+        loginFuture.thenAccept(user -> {
+            Intent intent = new Intent(this, ScrollingActivity.class);
+            startActivity(intent);
         });
 
     }

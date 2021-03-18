@@ -42,6 +42,7 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
+        if(email == null || password == null) throw new IllegalArgumentException();
         return new FutureSetup<AuthResult, User>().setUpFuture(mAuth.signInWithEmailAndPassword(email, password),
                 authResult -> getUserFromAuthResult(authResult));
     }
@@ -73,6 +74,7 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> createUser(String email, String password) {
+        if(email == null || password == null) throw new IllegalArgumentException();
         return new FutureSetup<AuthResult, User>().setUpFuture(mAuth.createUserWithEmailAndPassword(email, password),
                 result -> getUserFromAuthResult(result));
     }
@@ -105,6 +107,7 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
+        if(email == null || password == null) throw new IllegalArgumentException();
         return new FutureSetup<Void, Void>().setUpFuture(getCurrentFirebaseUser().reauthenticate(
                 EmailAuthProvider.getCredential(email, password)),
                 result -> result);
@@ -120,6 +123,12 @@ public class FirebaseLoginService implements LoginService {
         return user;
     }
 
+    /**
+     * Converts an AuthResult to a User
+     *
+     * @param result the AuthResult coming from Firebase
+     * @return a user
+     */
     private User getUserFromAuthResult(AuthResult result) {
         FirebaseUser user = result.getUser();
         Uri profilePicUrl = user.getPhotoUrl();
@@ -130,19 +139,35 @@ public class FirebaseLoginService implements LoginService {
         return new AppUser(user.getUid(), null, user.getEmail(), user.getPhoneNumber(), profilePicString);
     }
 
+    /**
+     * Interface that handles the conversion of a task from one type to another
+     *
+     * @param <FROM> the type we want to convert
+     * @param <TO> the type we want to get
+     */
     private interface ConvertTask<FROM, TO> {
         TO convertTask(FROM arg);
     }
 
+    /**
+     * A private class that handles the creation of a future from a task
+     */
     private class FutureSetup<FROM, TO> {
+        /**
+         *
+         * @param task the task whose result will go into the returned future if successful
+         * @param func the function used to convert the task from one type to another
+         * @return a future that contains the task result
+         */
         public CompletableFuture<TO> setUpFuture(Task<FROM> task, ConvertTask<FROM, TO> func) {
             CompletableFuture<TO> future = new CompletableFuture<>();
-
-            if (task.isSuccessful()) {
-                future.complete(func.convertTask(task.getResult()));
-            } else {
-                future.completeExceptionally(new LoginServiceRequestFailedException(task.getException().getMessage()));
-            }
+            task.addOnCompleteListener(taskResult -> {
+                if (taskResult.isSuccessful()) {
+                    future.complete(func.convertTask(taskResult.getResult()));
+                } else {
+                    future.completeExceptionally(new LoginServiceRequestFailedException(taskResult.getException().getMessage()));
+                }
+            });
             return future;
         }
     }

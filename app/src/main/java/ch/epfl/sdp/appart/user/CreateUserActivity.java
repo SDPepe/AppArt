@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.concurrent.CompletableFuture;
+
 import javax.inject.Inject;
 
 @AndroidEntryPoint
@@ -35,15 +37,14 @@ public class CreateUserActivity extends AppCompatActivity {
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
-        this.loginService.createUser(email, password, hasSucceeded -> {
-            if(hasSucceeded) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-            }
-            else {
-                Log.d("LOGIN", "Create account failed !");
-                //TODO
-            }
+        CompletableFuture<User> futureUser = loginService.createUser(email, password);
+        futureUser.exceptionally(e -> {
+            //Popup error
+            return null;
+        });
+        futureUser.thenAccept(user -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         });
     }
 
