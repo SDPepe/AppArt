@@ -159,7 +159,7 @@ public class UserProfileActivity extends AppCompatActivity {
             }
             Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
             this.imageView.setImageDrawable(iconImage);
-        } // else { set actual user-specific profile picture }
+        } //   else { set actual user-specific profile picture }
 
 
     }
