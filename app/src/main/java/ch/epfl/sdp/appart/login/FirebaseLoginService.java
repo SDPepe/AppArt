@@ -30,6 +30,11 @@ public class FirebaseLoginService implements LoginService {
         //mAuth.useEmulator("10.0.2.2", 9099);
     }
 
+    private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
+        if(email == null || password == null) throw new IllegalArgumentException();
+        return new FutureSetup<AuthResult, User>().setUpFuture(task,
+                authResult -> getUserFromAuthResult(authResult));
+    }
 
     /**
      * Builds a FirebaseLoginService
@@ -42,9 +47,8 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
-        if(email == null || password == null) throw new IllegalArgumentException();
-        return new FutureSetup<AuthResult, User>().setUpFuture(mAuth.signInWithEmailAndPassword(email, password),
-                authResult -> getUserFromAuthResult(authResult));
+        return handleEmailAndPasswordMethod(email, password,
+                mAuth.signInWithEmailAndPassword(email, password));
     }
 
     @Override
@@ -74,9 +78,8 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> createUser(String email, String password) {
-        if(email == null || password == null) throw new IllegalArgumentException();
-        return new FutureSetup<AuthResult, User>().setUpFuture(mAuth.createUserWithEmailAndPassword(email, password),
-                result -> getUserFromAuthResult(result));
+        return handleEmailAndPasswordMethod(email, password,
+                mAuth.createUserWithEmailAndPassword(email, password));
     }
 
     @Override
