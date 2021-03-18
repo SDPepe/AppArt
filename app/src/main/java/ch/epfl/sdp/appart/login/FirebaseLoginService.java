@@ -27,7 +27,7 @@ public class FirebaseLoginService implements LoginService {
     @Inject
     FirebaseLoginService() {
         this.mAuth = FirebaseAuth.getInstance();
-        mAuth.useEmulator("10.0.2.2", 9099);
+        //mAuth.useEmulator("10.0.2.2", 9099);
     }
 
 
