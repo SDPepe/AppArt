@@ -35,7 +35,7 @@ public class ContactInfoDialogFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialog = inflater.inflate(R.layout.contactdialog_layout, null);
 
-        mViewModel = new ViewModelProvider(this).get(AnnounceViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(AnnounceViewModel.class);
 
         TextView username = dialog.findViewById(R.id.usernameTextView);
         username.setText(mViewModel.getAdvertiser().getValue());
