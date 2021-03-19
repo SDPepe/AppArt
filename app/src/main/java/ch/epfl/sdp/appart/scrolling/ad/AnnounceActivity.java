@@ -52,7 +52,7 @@ public class AnnounceActivity extends AppCompatActivity {
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
 
-        mViewModel.initAd();
+        mViewModel.initAd(getIntent().getStringExtra("adID"));
     }
 
     private void updateTitle(String title) {
