@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.ui.scrolling;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,15 +46,15 @@ public class AdUITest {
 
     @Before
     public void init() {
+        Intents.init();
         hiltRule.inject();
     }
 
     @Test
     public void clickOnVTourOpensVTourActivity(){
-        Intents.init();
+
         onView(withId(R.id.vtourButton)).perform(click());
         intended(hasComponent(VirtualTourActivity.class.getName()));
-        Intents.release();
     }
 
     @Test
@@ -66,4 +67,8 @@ public class AdUITest {
         onView(withId(R.id.dialogView)).check(doesNotExist());
     }
 
+    @After
+    public void release() {
+        Intents.release();
+    }
 }
