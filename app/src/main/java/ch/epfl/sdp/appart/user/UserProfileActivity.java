@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.user;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.login.LoginService;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,12 +14,19 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 
 /**
  * This class manages the UI of the user profile. Here what gets updated is the AppUser instance of
  * the logged in User (session User). Not the actual User in firebase.
  */
 public class UserProfileActivity extends AppCompatActivity {
+
+    @Inject
+    LoginService loginService;
+    /* temporary user*/
+    private User sessionUser;
 
     /* UI components */
     private Button modifyButton;
@@ -37,6 +45,8 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+        this.sessionUser = loginService.getCurrentUser();
 
         this.modifyButton = findViewById(R.id.modifyButton);
         this.doneButton =  findViewById(R.id.doneButton);
@@ -116,29 +126,29 @@ public class UserProfileActivity extends AppCompatActivity {
     private void setNewAttributes(){
         String ageString = ((EditText) findViewById(R.id.ageText)).getText().toString().trim();
         if (ageString != null && !ageString.equals("")) {
-            LoginActivity.sessionUser.setAge(Integer.parseInt(ageString));
+            this.sessionUser.setAge(Integer.parseInt(ageString));
         }
 
-        LoginActivity.sessionUser.setName(((TextView) findViewById(R.id.nameText)).getText().toString());
-        LoginActivity.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.genderView)).getSelectedItemPosition()));
-        LoginActivity.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumberText)).getText().toString().trim());
+        this.sessionUser.setName(((TextView) findViewById(R.id.nameText)).getText().toString());
+        this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.genderView)).getSelectedItemPosition()));
+        this.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumberText)).getText().toString().trim());
     }
 
     /**
      * sets the current session User attributes to the UI components
      */
     private void getAndSetCurrentAttributes() {
-        this.nameView.setText(LoginActivity.sessionUser.getName());
-        this.emailView.setText(LoginActivity.sessionUser.getUserEmail());
-        this.uniAccountClaimer.setText((LoginActivity.sessionUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
-        if (LoginActivity.sessionUser.getAge() != 0) {
-            this.ageView.setText(String.valueOf(LoginActivity.sessionUser.getAge()));
+        this.nameView.setText(this.sessionUser.getName());
+        this.emailView.setText(this.sessionUser.getUserEmail());
+        this.uniAccountClaimer.setText((this.sessionUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
+        if (this.sessionUser.getAge() != 0) {
+            this.ageView.setText(String.valueOf(this.sessionUser.getAge()));
         }
-        if (LoginActivity.sessionUser.getPhoneNumber() != null) {
-            this.phoneNumberView.setText(LoginActivity.sessionUser.getPhoneNumber());
+        if (this.sessionUser.getPhoneNumber() != null) {
+            this.phoneNumberView.setText(this.sessionUser.getPhoneNumber());
         }
-        if (LoginActivity.sessionUser.getGender() != null) {
-            this.genderView.setSelection(LoginActivity.sessionUser.getGender().ordinal());
+        if (this.sessionUser.getGender() != null) {
+            this.genderView.setSelection(this.sessionUser.getGender().ordinal());
             /* done inside this if for the moment since only gender pictures are available now */
             setPictureToImageComponent();
         }
@@ -148,11 +158,11 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        if (LoginActivity.sessionUser.getProfileImage() == null) {
+        if (this.sessionUser.getProfileImage() == null) {
             int id;
-            if (LoginActivity.sessionUser.getGender() == Gender.MALE) {
+            if (this.sessionUser.getGender() == Gender.MALE) {
                 id = R.drawable.user_example_male;
-            } else if (LoginActivity.sessionUser.getGender() == Gender.FEMALE) {
+            } else if (this.sessionUser.getGender() == Gender.FEMALE) {
                 id = R.drawable.user_example_female;
             } else {
                 id = R.drawable.user_example_no_gender;
@@ -169,11 +179,11 @@ public class UserProfileActivity extends AppCompatActivity {
         System.out.println("\n*\n********************************************************************************************************************************************");
         System.out.println("********************************************************************************************************************************************");
         System.out.println();
-        System.out.println("  User email : " + LoginActivity.sessionUser.getUserEmail());
-        System.out.println("  User name : " + LoginActivity.sessionUser.getName());
-        System.out.println("  User phone number : " + LoginActivity.sessionUser.getPhoneNumber());
-        System.out.println("  User age : " + LoginActivity.sessionUser.getAge());
-        System.out.println("  User gender : " + LoginActivity.sessionUser.getGender());
+        System.out.println("  User email : " + this.sessionUser.getUserEmail());
+        System.out.println("  User name : " + this.sessionUser.getName());
+        System.out.println("  User phone number : " + this.sessionUser.getPhoneNumber());
+        System.out.println("  User age : " + this.sessionUser.getAge());
+        System.out.println("  User gender : " + this.sessionUser.getGender());
         System.out.println();
         System.out.println("********************************************************************************************************************************************");
         System.out.println("********************************************************************************************************************************************\n");
