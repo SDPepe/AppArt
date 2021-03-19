@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +19,7 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +28,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.user.LoginActivity;
 import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -37,7 +43,38 @@ public class AnnounceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.account_toolbar);
+        setSupportActionBar(toolbar);
+
         initAdContent();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actions_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_account:
+                return true;
+
+            case R.id.action_settings:
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private void initAdContent(){

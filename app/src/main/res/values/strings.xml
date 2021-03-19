@@ -55,4 +55,6 @@
 
     <!-- VirtualTourActivity stuff -->
     <string name="empty">Not yet implemented!</string>
+    <string name="action_account">Account</string>
+    <string name="action_logout">Log Out</string>
 </resources>
