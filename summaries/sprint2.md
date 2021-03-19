@@ -5,6 +5,7 @@
 This week I worked on implementing the login logic behind the login UI. It was quite involved as I had to rewrite part of the LoginService interface and add a few things to the UI. I learned to test with espresso. Lorenzo worked on the AdViewModel due to the fact the UI was taking me too much time. In total I spend a lot more than 8 hours the login implementation and when I decided to work on it I didn't expect that. I think hat this week brought me a lot of experience concerning work estimations. I did not manage to finish the ViewModel but I will continue to work on it this week.
 
 ## Carlo
+This week I worked on implementing the User Profile UI and the user update. The user can now edit its personal information (e.g. name, age, phone number, gender) and the UI will store the new updated information in a local AppUser. Furthermore I refactored the User interface and the AppUser class to meet the new architecture. Unfortunately the new features were not merged because tests were missing. The goals of next week will be to coordinate with Emilien and Filippo for the defiling menu and the User Profile back-end respectively. Furthermore add tests to my implementation and add the possibility of accessing the gallery or the camera to set/modify the profile picture. After this I will be able to merge my PR. I will also take on a new, maybe smaller, task if necessary.
 
 
 ## Émilien (scrum master)
