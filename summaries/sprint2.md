@@ -32,4 +32,5 @@ A key missing feature is a mock for the login. We are currently using the Emulat
 
 
 ## Overall team
-
+This week the team took on some tasks that proved to be too time consuming, pushing almost everyone's work to be either completed last minute or that still has to be finished. Despite that, now the app is taking shape and the foundation is almost complete, so that in the following weeks we can move on implementing other core features such as the virtual tour of apartments.
+Starting next week we will try to break down user stories into more smaller tasks in order to track better the progress of everyone and to facilitate communication regarding PRs and merges.
