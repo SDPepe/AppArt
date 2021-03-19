@@ -11,7 +11,7 @@ public class FirebaseEmulatorLoginServiceWrapper implements LoginService {
     private final FirebaseLoginService loginService;
 
     public FirebaseEmulatorLoginServiceWrapper(@NonNull FirebaseLoginService loginService, @NonNull String ip, int port) {
-        if (loginService == null && ip == null) throw new IllegalArgumentException("arguments cannot be null");
+        if (loginService == null || ip == null) throw new IllegalArgumentException("arguments cannot be null");
         loginService.useEmulator(ip, port);
         this.loginService = loginService;
     }

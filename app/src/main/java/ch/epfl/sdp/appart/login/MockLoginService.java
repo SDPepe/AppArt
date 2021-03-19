@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.login;
 import android.util.Pair;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -46,21 +47,20 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
-        if (email == null || password == null) {
-            throw new IllegalArgumentException("arguments cannot be null");
-        }
+        if (email == null || password == null) throw new IllegalArgumentException("arguments cannot be null");
+
         CompletableFuture<User> result = new CompletableFuture<>();
         for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
             String entryEmail = entry.getKey().first;
             String entryPassword = entry.getKey().second;
             if (email.equals(entryEmail) && password.equals(entryPassword)) {
-                result.complete(entry.getValue());
                 currentUser = entry.getValue();
+                result.complete(currentUser);
+                return result;
             }
         }
-        if (!result.isDone()) {
-            result.completeExceptionally(new LoginServiceRequestFailedException("failed to login the user"));
-        }
+
+        result.completeExceptionally(new LoginServiceRequestFailedException("failed to login the user"));
         return result;
     }
 
@@ -79,19 +79,20 @@ public class MockLoginService implements LoginService {
                 return result;
             }
         }
-        result.completeExceptionally(new LoginServiceRequestFailedException("failed to find the associate email"));
+        result.completeExceptionally(new LoginServiceRequestFailedException("failed to find the associated email"));
         return result;
     }
 
     @Override
     public CompletableFuture<User> createUser(String email, String password) {
-        if (email == null || password == null) {
-            throw new IllegalArgumentException("arguments cannot be null");
-        }
+
+        if (email == null || password == null) throw new IllegalArgumentException("arguments cannot be null");
+        if (currentUser == null) throw new IllegalStateException("current user not set");
+
         CompletableFuture<User> result = new CompletableFuture<>();
         byte[] temporary = new byte[5]; //one more than the other to avoid collision
         new Random().nextBytes(temporary);
-        String id = new String(temporary, Charset.forName("UTF-8"));
+        String id = new String(temporary, StandardCharsets.UTF_8);
 
         User newUser = new AppUser(id, email);
         users.put(new Pair<>(email, password), newUser);
@@ -102,27 +103,72 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
-        return null;
+        if (email == null) throw new IllegalArgumentException("email cannot be null");
+        if (currentUser == null) throw new IllegalStateException("current user not set");
+        CompletableFuture<Void> result = new CompletableFuture<>();
+
+        for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
+            if (entry.getValue().equals(currentUser)) {
+                users.remove(entry.getKey()); //remove the old mapping
+                users.put(new Pair<>(email, entry.getKey().second), currentUser); //refresh the new mapping
+                currentUser.setUserEmail(email);
+                result.complete(null);
+                return result;
+            }
+        }
+        throw new MockLoginServiceException("failed to retrieve the main user in the mock login service");
     }
 
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
-        return null;
+        if (password == null) throw new IllegalArgumentException("password cannot be null");
+        if (currentUser == null) throw new IllegalStateException("current user not set");
+        CompletableFuture<Void> result = new CompletableFuture<>();
+
+        for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
+            String entryPassword = entry.getKey().second;
+            if (entry.getValue().equals(currentUser)) {
+                users.remove(entry.getKey()); //remove the old mapping
+                users.put(new Pair<>(currentUser.getUserEmail(), password), currentUser); //refresh the new mapping
+                result.complete(null);
+                return result;
+            }
+        }
+
+        throw new MockLoginServiceException("failed to retrieve the main user in the mock login service");
     }
 
     @Override
     public CompletableFuture<Void> sendEmailVerification() {
-        return null;
+        if (currentUser == null) throw new IllegalStateException("current user not set");
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        result.complete(null);
+        return result;
     }
 
     @Override
     public CompletableFuture<Void> deleteUser() {
-        return null;
+        if (currentUser == null) throw new IllegalStateException("current user not set");
+        CompletableFuture<Void> result = new CompletableFuture<>();
+
+        for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
+            if (entry.getValue().equals(currentUser)) {
+                users.remove(new Pair<>(currentUser.getUserEmail(), currentUser.getUserId()));
+            }
+        }
+
+        currentUser = null;
+        result.complete(null);
+
+        return result;
     }
 
     @Override
     public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
-        return null;
+        if (email == null) throw new IllegalArgumentException("password cannot be null");
+        if (password == null) throw new IllegalArgumentException("password cannot be null");
+        if (currentUser == null) throw new IllegalStateException("current user not set");
+        return reAuthenticateUser(email, password);
     }
 
     @Override
