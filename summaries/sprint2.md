@@ -13,6 +13,8 @@ My task this week was to add a way of accessing the user UI that Carlo is implem
 
 
 ## Filippo
+This week I work to implement the ViewModel for the Profile UI, so when a user edit the its personal information its directly comunicate with the database. I add some new functionality to the database for to allow saving, modify, getting user information and comunicate with the viewmodel. I din't merge in the master branch my task because were missing some feature for the User Interface and some issue for testing the database, but by the end of the weekend everything should be ready.
+
 
 
 ## Lorenzo
