@@ -19,6 +19,12 @@ Thinking back on it, it would have been better to directly help Antoine on the v
 
 ## Quentin
 
+I worked on dependency injection this week. I decided to go with hilt and setup the last version. I had to read all the documentation on google developper since the sdp tutorial is about an anciant 
+version and is no longer the same.
+Using hilt enabled us to mock the database and therefore to solve the espresso tests not passing last week due to a timing issue. It also makes more sense in the code as now only actitvities that need an injected class are consious about it. 
+I also modified the interface of database to use futur. It made it more concise and readable both in the client code and in the database implementation itself. 
+A key missing feature is a mock for the login. We are currently using the Emulator or the cloud service but I fill like a mock could allow us to test the ui without worrying about timings. I suggested that we get the three implementations : MockLoginService, CloudLoginService. The cloud one could transparantly use the emulator or not. I think its better because in my opinion the emulator is a system as a whole and should not interfer in our logic tests.
+
 
 ## Overall team
 
