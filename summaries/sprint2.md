@@ -2,6 +2,7 @@
 
 ## Antoine
 
+This week I worked on implementing the login logic behind the login UI. It was quite involved as I had to rewrite part of the LoginService interface and add a few things to the UI. I learned to test with espresso. Lorenzo worked on the AdViewModel due to the fact the UI was taking me too much time. In total I spend a lot more than 8 hours the login implementation and when I decided to work on it I didn't expect that. I think hat this week brought me a lot of experience concerning work estimations.
 
 ## Carlo
 
