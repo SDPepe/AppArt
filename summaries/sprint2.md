@@ -8,6 +8,7 @@ This week I worked on implementing the login logic behind the login UI. It was q
 
 
 ## Émilien (scrum master)
+My task this week was to add a way of accessing the user UI that Carlo is implementing. I did this by adding a toolbar to the appli. Now there is a few options in this menu bar, but few of them are useful for now. In perticular, I wasn't able to link the account button to the user UI, as we haven't merged the user UI to the master branch in time. This should be easily fixable for next week though, so this won't be an issue for long. There is also a settings button and a logout button in the toolbar. The first is useless for now, and the second just takes the user to the login page, without actually loging out. This is something we could do next week, as there is currently no way to log out of your account.
 
 
 ## Filippo
