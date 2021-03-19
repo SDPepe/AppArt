@@ -13,11 +13,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.sdp.appart.Database;
-import ch.epfl.sdp.appart.MockDataBase;
+import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.hilt.FireBaseModule;
-import ch.epfl.sdp.appart.scrolling.AnnounceActivity;
+import ch.epfl.sdp.appart.scrolling.ad.AnnounceActivity;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;

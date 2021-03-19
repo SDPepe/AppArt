@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.login.FirebaseLoginService;
 import ch.epfl.sdp.appart.login.LoginService;
@@ -34,24 +35,17 @@ public class LoginTest {
      */
 
     @Test
-    public void loginTest() throws InterruptedException {
+    public void loginTest() throws InterruptedException, ExecutionException {
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
 
-
-        CountDownLatch authCreate = new CountDownLatch(1);
         LoginService loginService = FirebaseLoginService.buildLoginService();
 
-        String email = "test@testappart.com";
+        String email = "test@testappart.ch";
         String password = "password1234";
 
-        loginService.createUser(email, password, hasSucceeded -> authCreate.countDown());
-        authCreate.await();
+        loginService.createUser(email, password).get();
 
-        CountDownLatch authLogin = new CountDownLatch(1);
-
-        loginService.loginWithEmail(email, password, hasSucceeded -> authLogin.countDown());
-
-        authLogin.await();
+        loginService.loginWithEmail(email, password).get();
 
         User user = loginService.getCurrentUser();
 
@@ -59,20 +53,14 @@ public class LoginTest {
 
         assertThat(user.getUserEmail(), is(email));
 
-        CountDownLatch authUpdateEmail = new CountDownLatch(1);
-
-        String newEmail = "test2@testappart.com";
-        loginService.updateEmailAddress(newEmail, hasSucceeded -> authUpdateEmail.countDown());
-        authUpdateEmail.await();
+        String newEmail = "test2@testappart.ch";
+        loginService.updateEmailAddress(newEmail).get();
 
         user = loginService.getCurrentUser();
         assertNotNull(user);
         assertThat(user.getUserEmail(), is(newEmail));
 
-        CountDownLatch authDelete = new CountDownLatch(1);
-
-        loginService.deleteUser(hasSucceeded -> authDelete.countDown());
-        authDelete.await();
+        loginService.deleteUser().get();
 
         assertNull(loginService.getCurrentUser());
 

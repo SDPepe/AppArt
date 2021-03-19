@@ -1,6 +1,4 @@
-package ch.epfl.sdp.appart;
-
-import android.net.Uri;
+package ch.epfl.sdp.appart.database;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -12,21 +10,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 @Singleton
 public class FirebaseDB implements Database {
 
     private final FirebaseFirestore db;
+    private final FirebaseStorage storage;
+    private final static String STORAGE_URL = "gs://appart-ec344.appspot.com/";
 
     @Inject
     public FirebaseDB() {
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -87,6 +88,11 @@ public class FirebaseDB implements Database {
         return isFinishedFuture;
     }
 
+    @Override
+    public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
+    }
+
     private Map<String, Object> extractCardsInfo(Card card) {
         Map<String, Object> docData = new HashMap<>();
         docData.put("userId", card.getUserId());
@@ -94,6 +100,16 @@ public class FirebaseDB implements Database {
         docData.put("price", card.getPrice());
         docData.put("imageUrl", card.getImageUrl());
         return docData;
+    }
+
+    /**
+     * Returns the storage reference of a stored firebase object
+     * @param storageUrl the url in the storage like Cards/img.jpeg
+     *                   would return an image from the the Cards folder named img.jpeg
+     * @return the StorageReference of the object.
+     */
+    public StorageReference getStorageReference(String storageUrl) {
+        return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
     }
 
 }
