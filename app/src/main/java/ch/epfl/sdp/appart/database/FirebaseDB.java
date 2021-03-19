@@ -1,7 +1,13 @@
 package ch.epfl.sdp.appart.database;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -10,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -90,9 +97,40 @@ public class FirebaseDB implements Database {
         return isFinishedFuture;
     }
 
+    private <T> void getField(CompletableFuture<T> future, String collection, String rootId, String field) {
+        this.db.collection(collection).document(rootId).get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                future.complete((T)task.getResult().get(field));
+            }
+            else {
+                future.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
+            }
+        });
+    }
+
     @Override
     public CompletableFuture<Ad> getAd(String id) {
-        // TODO get ad from firestore
+        CompletableFuture<List<String>> photoRefsFuture = new CompletableFuture<>();
+        this.db.collection("ads").document(id).get().addOnCompleteListener(adTask -> {
+            if(adTask.isSuccessful()) {
+                adTask.getResult().getReference().collection("photosRefs").get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        List<String> photoRefs = task.getResult().getDocuments().stream().map(documentSnapshot -> (String)documentSnapshot.get("ref")).collect(Collectors.toList());
+                        photoRefsFuture.complete(photoRefs);
+                    }
+                    else {
+                        photoRefsFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
+                    }
+                });
+            }
+        });
+
+        CompletableFuture<String> addressFuture = new CompletableFuture<>();
+        getField(addressFuture, "ads", id, "address");
+
+        CompletableFuture<String> advertiserIdFuture = new CompletableFuture<>();
+        getField(advertiserIdFuture, "ads", id, "advertiserId");
+
         throw new NotImplementedError();
     }
 

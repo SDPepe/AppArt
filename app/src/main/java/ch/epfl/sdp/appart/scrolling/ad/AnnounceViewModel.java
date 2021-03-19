@@ -31,8 +31,10 @@ public class AnnounceViewModel extends ViewModel {
         this.db = db;
     }
 
-    public void initAd(){
-        // TODO query db for ad and user data, and fill livedata
+    public void initAd(String id){
+        db.getAd(id).thenAccept(ad -> {
+
+        });
     }
 
     public LiveData<String> getTitle(){ return adTitle; }
