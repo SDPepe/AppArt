@@ -84,14 +84,7 @@ public class FirebaseDB implements Database {
 
     @Override
     public CompletableFuture<Boolean> updateCard(Card card) {
-        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection("cards")
-            .document(card.getId())
-            .set(extractCardsInfo(card))
-            .addOnCompleteListener(task -> {
-                isFinishedFuture.complete(task.isSuccessful());
-            });
-        return isFinishedFuture;
+        return update(null, card);
     }
 
     @Override
@@ -154,16 +147,7 @@ public class FirebaseDB implements Database {
 
     @Override
     public CompletableFuture<Boolean> updateUser(User user) {
-
-        CompletableFuture<Boolean> finished = new CompletableFuture<>();
-
-        db.collection("user")
-            .document(user.getUserId())
-            .set(extractUserInfo(user))
-            .addOnCompleteListener(task -> {
-                finished.complete(task.isSuccessful());
-            });
-        return finished;
+        return update(user, null);
     }
 
     private Map<String, Object> extractUserInfo(User user) {
@@ -175,6 +159,26 @@ public class FirebaseDB implements Database {
         docData.put("phoneNumber", user.getPhoneNumber());
         docData.put("profilePicture", user.getProfileImage());
         return docData;
+    }
+
+    private CompletableFuture<Boolean> update(User u, Card c){
+        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
+        if(u != null){
+            db.collection("user")
+                .document(u.getUserId())
+                .set(extractUserInfo(u))
+                .addOnCompleteListener(task -> {
+                    isFinishedFuture.complete(task.isSuccessful());
+                });
+        } else if(c != null){
+            db.collection("cards")
+                .document(c.getId())
+                .set(extractCardsInfo(c))
+                .addOnCompleteListener(task -> {
+                    isFinishedFuture.complete(task.isSuccessful());
+                });
+        }
+        return isFinishedFuture;
     }
 
     /**
