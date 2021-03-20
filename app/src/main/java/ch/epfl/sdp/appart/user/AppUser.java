@@ -1,31 +1,31 @@
 package ch.epfl.sdp.appart.user;
 
+import android.media.Image;
+
 /**
  * This class represents a generic user of our application - the actual
  * communication with firebase is done in the Firebase login service
  */
 public class AppUser implements User {
-    private final String userId;
     private String name;
+    private final String userId;
     private String email;
     private String phoneNumber;
+    private int age;
+    private Gender gender;
     private String profilePicture;
 
 
-    public AppUser(String userId, String name, String email, String phoneNumber, String profilePicture) {
-        //User has not necessary a name
-        if (userId == null || /*name == null ||*/ email == null) {
+    public AppUser(String userId, String email) {
+        if (userId == null || email == null) {
             throw new IllegalArgumentException("ERROR - failed to create user: null parameters");
         }
         this.userId = userId;
-        this.name = name;
         this.email = email;
-        if(phoneNumber != null) {
-            this.phoneNumber = phoneNumber;
-        }
-        if(profilePicture != null) {
-            this.profilePicture = profilePicture;
-        }
+        this.gender = Gender.NOT_SELECTED;
+
+        String[] split = email.split("@");
+        if (split[0] != null) {this.name = split[0];}
     }
 
 
@@ -79,6 +79,25 @@ public class AppUser implements User {
             throw new IllegalArgumentException("ERROR - image parameter was null");
         }
         this.profilePicture = img;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        if (gender == null) {
+            throw new IllegalArgumentException("ERROR - gender parameter was null");
+        }
+        this.gender = gender;
     }
 
     @Override

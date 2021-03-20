@@ -4,34 +4,179 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".scrolling.AnnounceActivity">
+    tools:context=".scrolling.ad.AnnounceActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="225dp"
-        android:layout_height="191dp"
-        android:layout_marginStart="93dp"
-        android:layout_marginTop="218dp"
-        android:layout_marginEnd="93dp"
-        android:layout_marginBottom="322dp"
-        android:text="Empty announce"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/back_button"
+    <ImageButton
+        android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="18dp"
-        android:layout_marginEnd="356dp"
-        android:layout_marginBottom="681dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#00FFFFFF"
+        android:contentDescription="@string/backbutton_desc"
+        android:onClick="goBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <TextView
+        android:id="@+id/titleField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/default_title"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backButton" />
+
+    <ScrollView
+        android:id="@+id/verScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:scrollbars="none"
+        android:fillViewport="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleField">
+
+        <LinearLayout
+            android:id="@+id/verChildren"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:id="@+id/horChildren"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"/>
+            </HorizontalScrollView>
+
+            <Space
+                android:id="@+id/spacer1"
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <Button
+                android:id="@+id/vtourButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="openVirtualTour"
+                android:text="@string/vtourbutton_text" />
+
+            <Space
+                android:id="@+id/spacer2"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/address"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/addressField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/default_loading"
+                android:textSize="18sp" />
+
+            <Space
+                android:id="@+id/spacer3"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/price"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/priceField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/default_loading"
+                android:textSize="18sp" />
+
+            <Space
+                android:id="@+id/spacer4"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/description"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/descriptionField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/default_loading"
+                android:textSize="18sp" />
+
+            <Space
+                android:id="@+id/space5"
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:id="@+id/user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/user"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/userField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/default_loading"
+                android:textSize="18sp" />
+
+            <Space
+                android:id="@+id/spacer6"
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <Button
+                android:id="@+id/contactInfoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="openContactInfo"
+                android:text="@string/contactbutton_text" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

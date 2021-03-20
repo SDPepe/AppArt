@@ -4,6 +4,7 @@ import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import org.junit.Test;
 
+import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 import static org.junit.Assert.assertTrue;

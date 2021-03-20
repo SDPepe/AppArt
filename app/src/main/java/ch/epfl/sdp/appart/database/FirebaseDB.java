@@ -1,6 +1,4 @@
-package ch.epfl.sdp.appart;
-
-import android.net.Uri;
+package ch.epfl.sdp.appart.database;
 
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
@@ -15,21 +13,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 @Singleton
 public class FirebaseDB implements Database {
 
     private final FirebaseFirestore db;
+    private final FirebaseStorage storage;
+    private final static String STORAGE_URL = "gs://appart-ec344.appspot.com/";
 
     @Inject
     public FirebaseDB() {
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -40,25 +41,27 @@ public class FirebaseDB implements Database {
         //ask firebase async to get the cards objects and notify the future
         //when they have been fetched
         db.collection("cards").get().addOnCompleteListener(
-                task -> {
+            task -> {
 
-                    List<Card> queriedCards = new ArrayList<>();
+                List<Card> queriedCards = new ArrayList<>();
 
-                    if (task.isSuccessful()) {
+                if (task.isSuccessful()) {
 
-                        for (QueryDocumentSnapshot document : task.getResult()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
 
-                            queriedCards.add(new Card(document.getId(), (String) document.getData().get("userId"),
-                                    (String) document.getData().get("city"),
-                                    (long) document.getData().get("price"),
-                                    (String) document.getData().get("imageUrl")));
-                        }
-                        result.complete(queriedCards);
-
-                    } else {
-                        result.completeExceptionally(new UnsupportedOperationException("failed to fetch the cards from firebase"));
+                        queriedCards.add(
+                            new Card(document.getId(), (String) document.getData().get("userId"),
+                                (String) document.getData().get("city"),
+                                (long) document.getData().get("price"),
+                                (String) document.getData().get("imageUrl")));
                     }
+                    result.complete(queriedCards);
+
+                } else {
+                    result.completeExceptionally(new UnsupportedOperationException(
+                        "failed to fetch the cards from firebase"));
                 }
+            }
         );
 
         return result;
@@ -68,11 +71,12 @@ public class FirebaseDB implements Database {
     public CompletableFuture<String> putCard(Card card) {
         CompletableFuture<String> resultIdFuture = new CompletableFuture<>();
         db.collection("cards")
-                .add(extractCardsInfo(card)).addOnCompleteListener(task -> {
+            .add(extractCardsInfo(card)).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 resultIdFuture.complete(task.getResult().getId());
             } else {
-                resultIdFuture.completeExceptionally(new IllegalStateException("query of the cards failed"));
+                resultIdFuture
+                    .completeExceptionally(new IllegalStateException("query of the cards failed"));
             }
         });
         return resultIdFuture;
@@ -82,12 +86,17 @@ public class FirebaseDB implements Database {
     public CompletableFuture<Boolean> updateCard(Card card) {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection("cards")
-                .document(card.getId())
-                .set(extractCardsInfo(card))
-                .addOnCompleteListener(task -> {
-                    isFinishedFuture.complete(task.isSuccessful());
-                });
+            .document(card.getId())
+            .set(extractCardsInfo(card))
+            .addOnCompleteListener(task -> {
+                isFinishedFuture.complete(task.isSuccessful());
+            });
         return isFinishedFuture;
+    }
+
+    @Override
+    public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
     }
 
     private Map<String, Object> extractCardsInfo(Card card) {
@@ -98,6 +107,7 @@ public class FirebaseDB implements Database {
         docData.put("imageUrl", card.getImageUrl());
         return docData;
     }
+
 
     @Override
     public CompletableFuture<User> getUser(String userId) {
@@ -121,7 +131,8 @@ public class FirebaseDB implements Database {
                     result.complete(user);
 
                 } else {
-                    result.completeExceptionally(new UnsupportedOperationException("failed to fetch the user from firebase"));
+                    result.completeExceptionally(new UnsupportedOperationException(
+                        "failed to fetch the user from firebase"));
                 }
             }
         );
@@ -136,7 +147,8 @@ public class FirebaseDB implements Database {
             .set(extractUserInfo(user)).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 isFinishedFuture.complete(task.isSuccessful());
-            }});
+            }
+        });
         return isFinishedFuture;
     }
 
@@ -163,6 +175,15 @@ public class FirebaseDB implements Database {
         return docData;
     }
 
-
-
+    /**
+     * Returns the storage reference of a stored firebase object
+     *
+     * @param storageUrl the url in the storage like Cards/img.jpeg would return an image from the the
+     *                   Cards folder named img.jpeg
+     * @return the StorageReference of the object.
+     */
+    public StorageReference getStorageReference(String storageUrl) {
+        return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
+    }
 }
+

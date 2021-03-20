@@ -2,25 +2,36 @@ package ch.epfl.sdp.appart.login;
 
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.concurrent.CompletableFuture;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
+@Singleton
 public class FirebaseLoginService implements LoginService {
     private final FirebaseAuth mAuth;
 
+    @Inject
     FirebaseLoginService() {
         this.mAuth = FirebaseAuth.getInstance();
+        //mAuth.useEmulator("10.0.2.2", 9099);
     }
 
+    private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
+        if (email == null || password == null) throw new IllegalArgumentException();
+        //Handle loss of network with https://firebase.google.com/docs/database/android/offline-capabilities#section-connection-state
+        return setUpFuture(task,
+                this::getUserFromAuthResult);
+    }
 
     /**
      * Builds a FirebaseLoginService
@@ -31,19 +42,10 @@ public class FirebaseLoginService implements LoginService {
         return new FirebaseLoginService();
     }
 
-    private void emailAndPasswordHandling(String email, String password, LoginCallback callback, boolean accountCreation) {
-        if (email == null || password == null || callback == null)
-            throw new IllegalArgumentException();
-        if (accountCreation) {
-            addCallbackToTask(mAuth.createUserWithEmailAndPassword(email, password), callback);
-        } else {
-            addCallbackToTask(mAuth.signInWithEmailAndPassword(email, password), callback);
-        }
-    }
-
     @Override
-    public void loginWithEmail(String email, String password, LoginCallback callback) {
-        emailAndPasswordHandling(email, password, callback, false);
+    public CompletableFuture<User> loginWithEmail(String email, String password) {
+        return handleEmailAndPasswordMethod(email, password,
+                mAuth.signInWithEmailAndPassword(email, password));
     }
 
     @Override
@@ -52,63 +54,63 @@ public class FirebaseLoginService implements LoginService {
         if (user == null) {
             return null;
         }
-        String name = user.getDisplayName();
         String userId = user.getUid();
         String email = user.getEmail();
-        String phoneNumber = user.getPhoneNumber();
-        Uri photoUrl = user.getPhotoUrl();
-        String profilePic = null;
-        if (photoUrl != null) {
-            profilePic = photoUrl.toString();
-        }
-        return new AppUser(userId, name, email, phoneNumber, profilePic);
+
+        return new AppUser(userId, email);
     }
 
     @Override
-    public void resetPasswordWithEmail(String email, LoginCallback callback) {
-        if (email == null || callback == null) throw new IllegalArgumentException();
-        addCallbackToTask(mAuth.sendPasswordResetEmail(email), callback);
+    public CompletableFuture<Void> resetPasswordWithEmail(String email) {
+        if (email == null) throw new IllegalArgumentException();
+        return setUpFuture(mAuth.sendPasswordResetEmail(email),
+                result -> result);
     }
 
     @Override
-    public void createUser(String email, String password, LoginCallback callback) {
-        emailAndPasswordHandling(email, password, callback, true);
+    public CompletableFuture<User> createUser(String email, String password) {
+        return handleEmailAndPasswordMethod(email, password,
+                mAuth.createUserWithEmailAndPassword(email, password));
     }
 
     @Override
-    public void updateEmailAddress(String email, LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        addCallbackToTask(user.updateEmail(email), callback);
+    public CompletableFuture<Void> updateEmailAddress(String email) {
+        if (email == null) throw new IllegalArgumentException();
+        return setUpFuture(getCurrentFirebaseUser().updateEmail(email)
+                , result -> result);
     }
 
     @Override
-    public void updatePassword(String password, LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        addCallbackToTask(user.updatePassword(password), callback);
+    public CompletableFuture<Void> updatePassword(String password) {
+        if (password == null) throw new IllegalArgumentException();
+        return setUpFuture(getCurrentFirebaseUser().updatePassword(password),
+                result -> result);
     }
 
     @Override
-    public void sendEmailVerification(LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        addCallbackToTask(user.sendEmailVerification(), callback);
+    public CompletableFuture<Void> sendEmailVerification() {
+        return setUpFuture(getCurrentFirebaseUser().sendEmailVerification(),
+                result -> result);
     }
 
     @Override
-    public void deleteUser(LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        addCallbackToTask(user.delete(), callback);
+    public CompletableFuture<Void> deleteUser() {
+        return setUpFuture(getCurrentFirebaseUser().delete(),
+                result -> result);
     }
 
     @Override
-    public void reAuthenticateUser(String email, String password, LoginCallback callback) {
-        if (callback == null) throw new IllegalArgumentException();
-        FirebaseUser user = getCurrentFirebaseUser();
-        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
-        addCallbackToTask(user.reauthenticate(credential), callback);
+    public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
+        if (email == null || password == null) throw new IllegalArgumentException();
+        return setUpFuture(getCurrentFirebaseUser().reauthenticate(
+                EmailAuthProvider.getCredential(email, password)),
+                result -> result);
+    }
+
+    @Override
+    public void useEmulator(String ip, int port) {
+        if(ip == null) throw new IllegalArgumentException();
+        mAuth.useEmulator(ip, port);
     }
 
     /**
@@ -121,22 +123,43 @@ public class FirebaseLoginService implements LoginService {
         return user;
     }
 
-
-    private <T> void addCallbackToTask(Task<T> task, LoginCallback callback) {
-        task.addOnCompleteListener(new LoginOnCompleteListener<>(callback));
+    /**
+     * Converts an AuthResult to a User
+     *
+     * @param result the AuthResult coming from Firebase
+     * @return a user
+     */
+    private User getUserFromAuthResult(AuthResult result) {
+        FirebaseUser user = getCurrentFirebaseUser();
+        return new AppUser(user.getUid(), user.getEmail());
     }
 
-    private static class LoginOnCompleteListener<T> implements OnCompleteListener<T> {
-        private final LoginCallback callback;
+    /**
+     * Interface that handles the conversion of a task from one type to another
+     *
+     * @param <FROM> the type we want to convert
+     * @param <TO>   the type we want to get
+     */
+    private interface ConvertTask<FROM, TO> {
+        TO convertTask(FROM arg);
+    }
 
-        LoginOnCompleteListener(LoginCallback callback) {
-            this.callback = callback;
-        }
-
-
-        @Override
-        public void onComplete(@NonNull Task<T> task) {
-            callback.onRequestCompletion(task.isSuccessful());
-        }
+    /**
+     * Completes the future depending on the task result
+     *
+     * @param task the task whose result will go into the returned future if successful
+     * @param func the function used to convert the task from one type to another
+     * @return a future that contains the task result
+     */
+    private <FROM, TO> CompletableFuture<TO> setUpFuture(Task<FROM> task, ConvertTask<FROM, TO> func) {
+        CompletableFuture<TO> future = new CompletableFuture<>();
+        task.addOnCompleteListener(taskResult -> {
+            if (taskResult.isSuccessful()) {
+                future.complete(func.convertTask(taskResult.getResult()));
+            } else {
+                future.completeExceptionally(new LoginServiceRequestFailedException(taskResult.getException().getMessage()));
+            }
+        });
+        return future;
     }
 }

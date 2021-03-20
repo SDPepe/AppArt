@@ -1,42 +1,42 @@
 package ch.epfl.sdp.appart;
 
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.sdp.appart.hilt.FireBaseModule;
-import dagger.hilt.android.testing.BindValue;
+import java.util.concurrent.ExecutionException;
+
+import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
+import ch.epfl.sdp.appart.user.CreateUserActivity;
+import ch.epfl.sdp.appart.user.LoginActivity;
+import ch.epfl.sdp.appart.user.ResetActivity;
+import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
-import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-@LargeTest
-//@RunWith(AndroidJUnit4.class)
-@UninstallModules(FireBaseModule.class)
 @HiltAndroidTest
 public class LoginUITest {
 
@@ -44,139 +44,68 @@ public class LoginUITest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityScenarioRule<LoginActivity> loginActivityRule = new ActivityScenarioRule<>(LoginActivity.class);
 
-    @BindValue
-    Database database = new MockDataBase();
-
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
-    }
+    @Inject
+    LoginService loginService;
 
     @Before
     public void init() {
         hiltRule.inject();
+        Intents.init();
+        loginService.useEmulator("10.0.2.2", 9099);
     }
 
     @Test
-    public void loginUITest() {
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.email_login),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatEditText.perform(replaceText("azerty"), closeSoftKeyboard());
+    public void failedLoginTest() {
+        String email = "test@testappart.ch";
+        String password = "password";
 
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.password),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                3),
-                        isDisplayed()));
-        appCompatEditText2.perform(replaceText("azerty"), closeSoftKeyboard());
+        onView(withId(R.id.email_login)).perform(typeText(email));
+        onView(withId(R.id.password)).perform(typeText(password));
+        onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.login_button)).perform(click());
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.login_failed_snack)));
+    }
 
-        ViewInteraction editText = onView(
-                allOf(withId(R.id.email_login), withText("azerty"),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        editText.check(matches(withText("azerty")));
+    @Test
+    public void goToCreateAccountTest() {
+        onView(withId(R.id.button_create_account)).perform(click());
+        intended(hasComponent(CreateUserActivity.class.getName()));
+    }
 
-        ViewInteraction button = onView(
-                allOf(withId(R.id.login_button), withText("LOGIN"),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        button.check(matches(isDisplayed()));
+    @Test
+    public void goToPasswordResetTest() {
+        onView(withId(R.id.reset_password_button)).perform(click());
+        intended(hasComponent(ResetActivity.class.getName()));
+    }
 
-        ViewInteraction button2 = onView(
-                allOf(withId(R.id.reset_password_button), withText("PASSWORD FORGOTTEN"),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        button2.check(matches(isDisplayed()));
+    @Test
+    public void successfulLoginTest() throws ExecutionException, InterruptedException {
+        String email = "test@testappart.ch";
+        String password = "password";
+        loginService.createUser(email, password).get();
 
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.login_button), withText("Login"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatButton.perform(click());
+        onView(withId(R.id.email_login)).perform(typeText(email));
+        onView(withId(R.id.password)).perform(typeText(password));
+        onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.login_button)).perform(click());
 
-        pressBack();
+        intended(hasComponent(ScrollingActivity.class.getName()));
 
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.reset_password_button), withText("Password forgotten"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
+        User user = loginService.getCurrentUser();
+        assertNotNull(user);
 
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.reset_email),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText3.perform(replaceText("blabla@blabla.com"), closeSoftKeyboard());
+        assertThat(user.getUserEmail(), is(email));
 
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.button), withText("Reset password"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatButton3.perform(click());
+        loginService.deleteUser().get();
 
-        ViewInteraction editText2 = onView(
-                allOf(withId(R.id.reset_email), withText("blabla@blabla.com"),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        editText2.check(matches(withText("blabla@blabla.com")));
+        assertNull(loginService.getCurrentUser());
+    }
 
-        ViewInteraction button3 = onView(
-                allOf(withId(R.id.button), withText("RESET PASSWORD"),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        button3.check(matches(isDisplayed()));
-
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.reset_confirmation), withText("If this address is valid, you will receive a link to change your password"),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        textView.check(matches(withText("If this address is valid, you will receive a link to change your password")));
-
-        ViewInteraction button4 = onView(
-                allOf(withId(R.id.log_in), withText("LOG IN MENU"),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        button4.check(matches(isDisplayed()));
+    @After
+    public void release() {
+        Intents.release();
     }
 }

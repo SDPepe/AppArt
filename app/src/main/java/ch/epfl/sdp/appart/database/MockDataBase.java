@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart;
+package ch.epfl.sdp.appart.database;
 
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 public class MockDataBase implements Database {
@@ -80,4 +81,8 @@ public class MockDataBase implements Database {
         return result;
     }
 
+    public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
+
+    }
 }

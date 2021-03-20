@@ -2,8 +2,8 @@ package ch.epfl.sdp.appart.hilt;
 
 import javax.inject.Singleton;
 
-import ch.epfl.sdp.appart.Database;
-import ch.epfl.sdp.appart.FirebaseDB;
+import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.database.FirebaseDB;
 import dagger.Binds;
 import dagger.Module;
 import dagger.hilt.InstallIn;
