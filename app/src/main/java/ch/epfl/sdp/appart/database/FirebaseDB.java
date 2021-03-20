@@ -154,14 +154,16 @@ public class FirebaseDB implements Database {
 
     @Override
     public CompletableFuture<Boolean> updateUser(User user) {
-        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
+
+        CompletableFuture<Boolean> finished = new CompletableFuture<>();
+
         db.collection("user")
             .document(user.getUserId())
             .set(extractUserInfo(user))
             .addOnCompleteListener(task -> {
-                isFinishedFuture.complete(task.isSuccessful());
+                finished.complete(task.isSuccessful());
             });
-        return isFinishedFuture;
+        return finished;
     }
 
     private Map<String, Object> extractUserInfo(User user) {
