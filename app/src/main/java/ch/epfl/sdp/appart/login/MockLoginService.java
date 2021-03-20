@@ -38,14 +38,12 @@ public class MockLoginService implements LoginService {
 
     @Inject
     public MockLoginService() {
-
         users.put(antoineEmailPassword, antoine);
         users.put(lorenzoEmailPassword, lorenzo);
         users.put(filippoEmailPassword, filippo);
         users.put(emilienEmailPassword, emilien);
         users.put(carloEmailPassword, carlo);
         users.put(quentinEmailPassword, quentin);
-
     }
 
     @Override
@@ -88,9 +86,8 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> createUser(String email, String password) {
-
         if (email == null || password == null) throw new IllegalArgumentException("arguments cannot be null");
-        if (currentUser == null) throw new IllegalStateException("current user not set");
+        if (currentUser != null) throw new IllegalStateException("the current user cannot be set !");
 
         CompletableFuture<User> result = new CompletableFuture<>();
         byte[] temporary = new byte[5]; //one more than the other to avoid collision
@@ -99,7 +96,10 @@ public class MockLoginService implements LoginService {
 
         User newUser = new AppUser(id, email);
         users.put(new Pair<>(email, password), newUser);
-        result.complete(newUser);
+
+        loginWithEmail(email, password)
+                .thenApply(r -> result.complete(newUser))
+                .exceptionally(result::completeExceptionally);
 
         return result;
     }
@@ -107,7 +107,7 @@ public class MockLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
         if (email == null) throw new IllegalArgumentException("email cannot be null");
-        if (currentUser == null) throw new IllegalStateException("current user not set");
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set");
         CompletableFuture<Void> result = new CompletableFuture<>();
 
         for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
@@ -126,7 +126,7 @@ public class MockLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
         if (password == null) throw new IllegalArgumentException("password cannot be null");
-        if (currentUser == null) throw new IllegalStateException("current user not set");
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set");
         CompletableFuture<Void> result = new CompletableFuture<>();
 
         for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
@@ -144,7 +144,7 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> sendEmailVerification() {
-        if (currentUser == null) throw new IllegalStateException("current user not set");
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when sending verification mail");
         CompletableFuture<Void> result = new CompletableFuture<>();
         result.complete(null);
         return result;
@@ -153,6 +153,7 @@ public class MockLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> deleteUser() {
         if (currentUser == null) throw new IllegalStateException("current user not set");
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when deleting it");
         CompletableFuture<Void> result = new CompletableFuture<>();
 
         Pair<String, String> keyToRemove = null;
@@ -176,11 +177,13 @@ public class MockLoginService implements LoginService {
     public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
         if (email == null) throw new IllegalArgumentException("password cannot be null");
         if (password == null) throw new IllegalArgumentException("password cannot be null");
-        if (currentUser == null) throw new IllegalStateException("current user not set");
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when reAuthentication");
 
-        //shouldnt do anything
+        //note : this function will never fail beyond this point
         CompletableFuture<Void> result = new CompletableFuture<>();
-        CompletableFuture<User> intermediate = loginWithEmail(email, password);
+        result.complete(null);
+        /*
+        CompletableFuture<User> intermediate = loginWithEmail(email, password); //simulate a new login
         intermediate.exceptionally(x -> {
             result.completeExceptionally(new MockLoginServiceException("failed to retrieve the main user in the mock login service"));
             return null;
@@ -190,7 +193,7 @@ public class MockLoginService implements LoginService {
             result.complete(null);
             return null;
         });
-
+        */
         return result;
     }
 

@@ -43,7 +43,6 @@ public class MockLoginServiceTest {
 
     @Test
     public void TestCreateUser() throws ExecutionException, InterruptedException {
-        loginService.loginWithEmail("antoine@epfl.ch", "1111").get();
         User user = loginService.createUser("antoine2@epfl.ch", "1234567").get();
         assertEquals(user.getUserEmail(), "antoine2@epfl.ch");
     }

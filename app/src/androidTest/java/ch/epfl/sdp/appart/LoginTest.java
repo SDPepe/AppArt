@@ -2,14 +2,22 @@ package ch.epfl.sdp.appart;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.hilt.FireBaseModule;
+import ch.epfl.sdp.appart.hilt.LoginModule;
+import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
 import ch.epfl.sdp.appart.login.FirebaseLoginService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
+import dagger.hilt.android.testing.BindValue;
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -17,6 +25,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+@UninstallModules(LoginModule.class)
+@HiltAndroidTest
 public class LoginTest {
 
     /**
@@ -34,18 +44,28 @@ public class LoginTest {
      *
      */
 
+    /**
+     * Update 20.03.21
+     * This test is meant to use the emulator of firebase to add coverage to the project.
+     * This test will fail if the emulator is not setup on local ip 10.0.2.2 with port 9099.
+     * This should be the only test using the emulator.
+     */
+
+    @Rule(order = 0)
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+
+    @BindValue
+    LoginService loginService = new FirebaseLoginService();//new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
+
     @Test
     public void loginTest() throws InterruptedException, ExecutionException {
-        FirebaseAuth.getInstance();//.useEmulator("10.0.2.2", 9099);
-
-        LoginService loginService = FirebaseLoginService.buildLoginService();
 
         String email = "test@testappart.ch";
         String password = "password1234";
 
         loginService.createUser(email, password).get();
 
-        loginService.loginWithEmail(email, password).get();
+        //loginService.loginWithEmail(email, password).get();
 
         User user = loginService.getCurrentUser();
 

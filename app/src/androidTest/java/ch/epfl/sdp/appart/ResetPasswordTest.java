@@ -12,11 +12,15 @@ import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.login.MockLoginService;
 import ch.epfl.sdp.appart.user.LoginActivity;
 import ch.epfl.sdp.appart.user.ResetActivity;
+import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -28,6 +32,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertNull;
 
+@UninstallModules(LoginModule.class)
 @HiltAndroidTest
 public class ResetPasswordTest {
 
@@ -37,14 +42,14 @@ public class ResetPasswordTest {
     @Rule(order = 1)
     public ActivityScenarioRule<ResetActivity> resetPasswordActivityRule = new ActivityScenarioRule<>(ResetActivity.class);
 
-    @Inject
-    LoginService loginService;
+    @BindValue
+    LoginService loginService = new MockLoginService();
 
     @Before
     public void init() {
         hiltRule.inject();
         Intents.init();
-        loginService.useEmulator("10.0.2.2", 9099);
+        //loginService.useEmulator("10.0.2.2", 9099);
     }
 
     @Test

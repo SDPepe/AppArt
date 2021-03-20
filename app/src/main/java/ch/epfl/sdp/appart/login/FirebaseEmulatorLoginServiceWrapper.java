@@ -6,13 +6,18 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.user.User;
 
+/**
+ * This class wraps the firebase login service.
+ * This class should only be used when the firebase emulator
+ * is setup on local ip 10.0.2.2 with port 9099.
+ */
 public class FirebaseEmulatorLoginServiceWrapper implements LoginService {
 
     private final FirebaseLoginService loginService;
 
-    public FirebaseEmulatorLoginServiceWrapper(@NonNull FirebaseLoginService loginService, @NonNull String ip, int port) {
-        if (loginService == null || ip == null) throw new IllegalArgumentException("arguments cannot be null");
-        loginService.useEmulator(ip, port);
+    public FirebaseEmulatorLoginServiceWrapper(@NonNull FirebaseLoginService loginService) {
+        if (loginService == null) throw new IllegalArgumentException("loginService cannot be null");
+        loginService.useEmulator("10.0.2.2", 9099);
         this.loginService = loginService;
     }
 
