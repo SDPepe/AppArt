@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.appart.MainActivity;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 import ch.epfl.sdp.appart.utils.UIUtils;
@@ -25,6 +26,7 @@ import javax.inject.Inject;
 @AndroidEntryPoint
 public class CreateUserActivity extends AppCompatActivity {
 
+    //@LoginModule.CloudLoginService
     @Inject
     public LoginService loginService;
 

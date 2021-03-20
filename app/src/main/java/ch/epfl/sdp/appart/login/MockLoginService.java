@@ -1,19 +1,21 @@
 package ch.epfl.sdp.appart.login;
 
-import android.util.Pair;
 
-import java.nio.charset.Charset;
+import androidx.core.util.Pair;
+
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
+@Singleton
 public class MockLoginService implements LoginService {
 
     private User currentUser = null;
@@ -34,6 +36,7 @@ public class MockLoginService implements LoginService {
     private final Pair<String, String> emilienEmailPassword = new Pair<>(emilien.getUserEmail(), emilien.getUserId());
     private final Pair<String, String> quentinEmailPassword = new Pair<>(quentin.getUserEmail(), quentin.getUserId());
 
+    @Inject
     public MockLoginService() {
 
         users.put(antoineEmailPassword, antoine);
@@ -116,7 +119,8 @@ public class MockLoginService implements LoginService {
                 return result;
             }
         }
-        throw new MockLoginServiceException("failed to retrieve the main user in the mock login service");
+        result.completeExceptionally(new MockLoginServiceException("failed to retrieve the main user in the mock login service"));
+        return result;
     }
 
     @Override
@@ -134,8 +138,8 @@ public class MockLoginService implements LoginService {
                 return result;
             }
         }
-
-        throw new MockLoginServiceException("failed to retrieve the main user in the mock login service");
+        result.completeExceptionally(new MockLoginServiceException("failed to retrieve the main user in the mock login service"));
+        return result;
     }
 
     @Override
@@ -151,10 +155,15 @@ public class MockLoginService implements LoginService {
         if (currentUser == null) throw new IllegalStateException("current user not set");
         CompletableFuture<Void> result = new CompletableFuture<>();
 
+        Pair<String, String> keyToRemove = null;
         for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
             if (entry.getValue().equals(currentUser)) {
-                users.remove(new Pair<>(currentUser.getUserEmail(), currentUser.getUserId()));
+                keyToRemove = entry.getKey();
             }
+        }
+
+        if (keyToRemove != null) {
+            users.remove(keyToRemove);
         }
 
         currentUser = null;
@@ -168,11 +177,26 @@ public class MockLoginService implements LoginService {
         if (email == null) throw new IllegalArgumentException("password cannot be null");
         if (password == null) throw new IllegalArgumentException("password cannot be null");
         if (currentUser == null) throw new IllegalStateException("current user not set");
-        return reAuthenticateUser(email, password);
+
+        //shouldnt do anything
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<User> intermediate = loginWithEmail(email, password);
+        intermediate.exceptionally(x -> {
+            result.completeExceptionally(new MockLoginServiceException("failed to retrieve the main user in the mock login service"));
+            return null;
+        });
+
+        intermediate.thenApply(user -> {
+            result.complete(null);
+            return null;
+        });
+
+        return result;
     }
 
     @Override
     public void useEmulator(String ip, int port) {
 
     }
+
 }

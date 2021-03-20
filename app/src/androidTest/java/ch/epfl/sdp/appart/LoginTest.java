@@ -36,7 +36,7 @@ public class LoginTest {
 
     @Test
     public void loginTest() throws InterruptedException, ExecutionException {
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+        FirebaseAuth.getInstance();//.useEmulator("10.0.2.2", 9099);
 
         LoginService loginService = FirebaseLoginService.buildLoginService();
 
