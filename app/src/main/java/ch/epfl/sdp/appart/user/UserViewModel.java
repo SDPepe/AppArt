@@ -1,10 +1,8 @@
 package ch.epfl.sdp.appart.user;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import ch.epfl.sdp.appart.Database;
-
+import ch.epfl.sdp.appart.database.Database;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
