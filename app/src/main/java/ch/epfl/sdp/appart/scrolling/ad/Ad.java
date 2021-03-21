@@ -10,10 +10,10 @@ public class Ad {
     private String advertiserId;
     private String description;
     private List<String> photosRefs;
-    private boolean hasVTour;
+    private boolean hasVRTour;
 
     public Ad(String title, String price, String address,
-              String advertiserId, String description, List<String> photosRefs, boolean hasVTour) {
+              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour) {
         if (title == null || price == null || address == null)
             throw new IllegalArgumentException("An argument is null!");
         if (advertiserId == null || description == null || photosRefs == null)
@@ -25,7 +25,7 @@ public class Ad {
         this.address = address;
         this.description = description;
         this.photosRefs = photosRefs;
-        this.hasVTour = hasVTour;
+        this.hasVRTour = hasVRTour;
     }
 
     public Ad(String title, String price, String address,
@@ -57,7 +57,7 @@ public class Ad {
         return photosRefs;
     }
 
-    public boolean hasVTour() {
-        return hasVTour;
+    public boolean hasVRTour() {
+        return hasVRTour;
     }
 }

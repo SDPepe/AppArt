@@ -8,14 +8,14 @@ public class Card {
     private String city;
     private long price;
     private String imageUrl;
-    private boolean hasVTour;
+    private boolean hasVRTour;
 
     /*
      * A newly created card will be local, hence the id won't be assigned (null). At the first
      * upload to Firestore, a new unique id will be generated and assigned to the card.
      */
     public Card(@Nullable String id, String ownerId, String city, long price, String imageUrl,
-                boolean hasVTour) {
+                boolean hasVRTour) {
         if (ownerId == null || city == null || imageUrl == null)
             throw new IllegalArgumentException("Argument is null!");
 
@@ -24,7 +24,7 @@ public class Card {
         this.city = city;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.hasVTour = hasVTour;
+        this.hasVRTour = hasVRTour;
     }
 
     public Card(@Nullable String id, String ownerId, String city, long price, String imageUrl) {
@@ -67,9 +67,9 @@ public class Card {
         return ownerId;
     }
 
-    public boolean hasVTour(){ return hasVTour; }
+    public boolean hasVRTour(){ return hasVRTour; }
 
-    public void setVTour(boolean b) { hasVTour = b; }
+    public void setVRTour(boolean b) { hasVRTour = b; }
 
     private void nullChecker(Object o) {
         if (o == null)

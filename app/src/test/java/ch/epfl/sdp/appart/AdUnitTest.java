@@ -110,6 +110,6 @@ public class AdUnitTest {
         refs.add("ref");
         ad = new Ad("Ad title", "1000 / mo", "Station 18, 1015 Lausanne",
                 "unknown", "Cool place", refs, true);
-        assertEquals(true, ad.hasVTour());
+        assertEquals(true, ad.hasVRTour());
     }
 }
