@@ -44,7 +44,7 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must not already be set when authentication");
+        if (getCurrentUser() != null) throw new IllegalStateException("current user must not already be set when authentication");
         return handleEmailAndPasswordMethod(email, password,
                 mAuth.signInWithEmailAndPassword(email, password));
     }
@@ -75,20 +75,23 @@ public class FirebaseLoginService implements LoginService {
                 mAuth.createUserWithEmailAndPassword(email, password));
     }
 
+    //I added this method for code climate
+    private CompletableFuture<Void> setupFutureAndUpdateProperty(Task<Void> task) {
+        return setUpFuture(task, result -> result);
+    }
+
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
         if (email == null) throw new IllegalArgumentException();
         if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when updating the email");
-        return setUpFuture(getCurrentFirebaseUser().updateEmail(email)
-                , result -> result);
+        return setupFutureAndUpdateProperty(getCurrentFirebaseUser().updateEmail(email));
     }
 
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
         if (password == null) throw new IllegalArgumentException();
         if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when updating the password");
-        return setUpFuture(getCurrentFirebaseUser().updatePassword(password),
-                result -> result);
+        return setupFutureAndUpdateProperty(getCurrentFirebaseUser().updatePassword(password));
     }
 
     @Override

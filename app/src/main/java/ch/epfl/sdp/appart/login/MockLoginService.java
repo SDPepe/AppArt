@@ -48,7 +48,8 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
-        if (email == null || password == null) throw new IllegalArgumentException("arguments cannot be null");
+        if (email == null) throw new IllegalArgumentException("email cannot be null");
+        if (password == null) throw new IllegalArgumentException("password cannot be null");
 
         CompletableFuture<User> result = new CompletableFuture<>();
         for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
@@ -104,6 +105,7 @@ public class MockLoginService implements LoginService {
         return result;
     }
 
+
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
         if (email == null) throw new IllegalArgumentException("email cannot be null");
@@ -152,8 +154,7 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> deleteUser() {
-        if (currentUser == null) throw new IllegalStateException("current user not set");
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when deleting it");
+        if (currentUser == null) throw new IllegalStateException("current user must be set when deleting it");
         CompletableFuture<Void> result = new CompletableFuture<>();
 
         Pair<String, String> keyToRemove = null;
