@@ -131,7 +131,19 @@ public class FirebaseDB implements Database {
         CompletableFuture<String> advertiserIdFuture = new CompletableFuture<>();
         getField(advertiserIdFuture, "ads", id, "advertiserId");
 
-        throw new NotImplementedError();
+        CompletableFuture<String> descriptionFuture = new CompletableFuture<>();
+        getField(descriptionFuture, "ads", id, "description");
+
+        CompletableFuture<String> priceFuture = new CompletableFuture<>();
+        getField(priceFuture, "ads", id, "price");
+
+        CompletableFuture<String> titleFuture = new CompletableFuture<>();
+        getField(priceFuture, "ads", id, "title");
+
+        CompletableFuture<Ad> futureAd = CompletableFuture.allOf(photoRefsFuture, addressFuture, advertiserIdFuture, descriptionFuture, priceFuture
+                , titleFuture).thenApply( arg -> new Ad(titleFuture.join(), priceFuture.join(), addressFuture.join(), advertiserIdFuture.join(), descriptionFuture.join(), photoRefsFuture.join()));
+
+        return  futureAd;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.scrolling.ad;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -33,7 +35,7 @@ public class AnnounceViewModel extends ViewModel {
 
     public void initAd(String id){
         db.getAd(id).thenAccept(ad -> {
-
+            Log.d("AD", ad.toString());
         });
     }
 
