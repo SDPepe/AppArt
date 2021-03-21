@@ -63,10 +63,10 @@ public class UserProfileActivityTest {
                                         0),
                                 4),
                         isDisplayed()));
-        textInputEditText.perform(replaceText("AppArt"));
+        textInputEditText.perform(replaceText("AppArt Test"));
 
         ViewInteraction textInputEditText2 = onView(
-                allOf(withId(R.id.nameText), withText("AppArt"),
+                allOf(withId(R.id.nameText), withText("AppArt Test"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -76,7 +76,7 @@ public class UserProfileActivityTest {
         textInputEditText2.perform(closeSoftKeyboard());
 
         ViewInteraction textInputEditText3 = onView(
-                allOf(withId(R.id.nameText), withText("AppArt"),
+                allOf(withId(R.id.nameText), withText("AppArt Test"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -93,10 +93,10 @@ public class UserProfileActivityTest {
                                         0),
                                 7),
                         isDisplayed()));
-        textInputEditText4.perform(replaceText("22"), closeSoftKeyboard());
+        textInputEditText4.perform(replaceText("100"), closeSoftKeyboard());
 
         ViewInteraction textInputEditText5 = onView(
-                allOf(withId(R.id.ageText), withText("22"),
+                allOf(withId(R.id.ageText), withText("100"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -142,46 +142,17 @@ public class UserProfileActivityTest {
                 .atPosition(2);
         appCompatTextView.perform(click());
 
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.doneButton), withText("DONE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
-
-        ViewInteraction viewGroup = onView(
-                allOf(withParent(allOf(withId(android.R.id.content),
-                        withParent(withId(R.id.action_bar_root)))),
-                        isDisplayed()));
-        viewGroup.check(matches(isDisplayed()));
-
-        ViewInteraction frameLayout = onView(
-                allOf(withId(android.R.id.content),
-                        withParent(allOf(withId(R.id.action_bar_root),
-                                withParent(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class)))),
-                        isDisplayed()));
-        frameLayout.check(matches(isDisplayed()));
-
         ViewInteraction button = onView(
                 allOf(withId(R.id.backButton), withText("BACK"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 
-        ViewInteraction button2 = onView(
-                allOf(withId(R.id.modifyButton), withText("EDIT PROFILE"),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        button2.check(matches(isDisplayed()));
-
         ViewInteraction textView = onView(
                 allOf(withId(R.id.email), withText("Email"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
-        textView.check(matches(withText("Email")));
+        textView.check(matches(isDisplayed()));
 
         ViewInteraction textView2 = onView(
                 allOf(withId(R.id.email), withText("Email"),
@@ -193,13 +164,13 @@ public class UserProfileActivityTest {
                 allOf(withId(R.id.emailText), withText("carlo.musso@epfl.ch"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
-        textView3.check(matches(withText("carlo.musso@epfl.ch")));
+        textView3.check(matches(isDisplayed()));
 
         ViewInteraction textView4 = onView(
                 allOf(withId(R.id.emailText), withText("carlo.musso@epfl.ch"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
-        textView4.check(matches(isDisplayed()));
+        textView4.check(matches(withText("carlo.musso@epfl.ch")));
 
         ViewInteraction imageView = onView(
                 allOf(withId(R.id.imageView),
@@ -211,7 +182,7 @@ public class UserProfileActivityTest {
                 allOf(withId(R.id.uniAccounClaimer), withText("UNI account"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
-        textView5.check(matches(withText("UNI account")));
+        textView5.check(matches(isDisplayed()));
 
         ViewInteraction textView6 = onView(
                 allOf(withId(R.id.uniAccounClaimer), withText("UNI account"),
@@ -232,16 +203,16 @@ public class UserProfileActivityTest {
         textView8.check(matches(withText("Name")));
 
         ViewInteraction editText = onView(
-                allOf(withId(R.id.nameText), withText("AppArt"),
+                allOf(withId(R.id.nameText), withText("AppArt Test"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         editText.check(matches(isDisplayed()));
 
         ViewInteraction editText2 = onView(
-                allOf(withId(R.id.nameText), withText("AppArt"),
+                allOf(withId(R.id.nameText), withText("AppArt Test"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
-        editText2.check(matches(withText("AppArt")));
+        editText2.check(matches(withText("AppArt Test")));
 
         ViewInteraction textView9 = onView(
                 allOf(withId(R.id.age), withText("Age"),
@@ -256,16 +227,16 @@ public class UserProfileActivityTest {
         textView10.check(matches(withText("Age")));
 
         ViewInteraction editText3 = onView(
-                allOf(withId(R.id.ageText), withText("22"),
+                allOf(withId(R.id.ageText), withText("100"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         editText3.check(matches(isDisplayed()));
 
         ViewInteraction editText4 = onView(
-                allOf(withId(R.id.ageText), withText("22"),
+                allOf(withId(R.id.ageText), withText("100"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
-        editText4.check(matches(withText("22")));
+        editText4.check(matches(withText("100")));
 
         ViewInteraction textView11 = onView(
                 allOf(withId(R.id.phoneNumber), withText("Phone"),
@@ -315,25 +286,6 @@ public class UserProfileActivityTest {
                                 withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
                         isDisplayed()));
         textView15.check(matches(withText("Male")));
-
-        ViewInteraction textView16 = onView(
-                allOf(withId(android.R.id.text1), withText("Male"),
-                        withParent(allOf(withId(R.id.genderView),
-                                withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
-                        isDisplayed()));
-        textView16.check(matches(isDisplayed()));
-
-        ViewInteraction view = onView(
-                allOf(withId(android.R.id.statusBarBackground),
-                        withParent(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class)),
-                        isDisplayed()));
-        view.check(matches(isDisplayed()));
-
-        ViewInteraction view2 = onView(
-                allOf(withId(android.R.id.navigationBarBackground),
-                        withParent(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class)),
-                        isDisplayed()));
-        view2.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(
