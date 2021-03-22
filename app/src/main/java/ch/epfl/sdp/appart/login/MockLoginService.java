@@ -67,7 +67,6 @@ public class MockLoginService implements LoginService {
 
         currentUser = findMatchingUserWithPasswordAndEmail(email, password);
         CompletableFuture<User> result = new CompletableFuture<>();
-
         if (currentUser == null) {
             result.completeExceptionally(new LoginServiceRequestFailedException("failed to login the user"));
         } else {
