@@ -16,7 +16,7 @@ public class VirtualTourActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vtour);
     }
 
-    public void goBack(View view){
+    public void goBack(View view) {
         finish();
     }
 

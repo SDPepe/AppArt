@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.database;
 
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

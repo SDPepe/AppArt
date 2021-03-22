@@ -40,21 +40,21 @@ public class AnnounceActivity extends AppCompatActivity {
         initAdContent();
     }
 
-    private void initAdContent(){
+    private void initAdContent() {
         // TODO update with database query
         TextView title = findViewById(R.id.titleField);
         title.setText(R.string.mock_title);
         LinearLayout verticalLayout = findViewById(R.id.verChildren);
         LinearLayout horizontalLayout = findViewById(R.id.horChildren);
-        for(int i = 0; i < 5; i++) {
-            LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for (int i = 0; i < 5; i++) {
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, null);
             ImageView photo = myView.findViewById(R.id.photoImageView);
             Glide.with(this)
-                    .load(Uri.parse("file:///android_asset/fake_ad_" + (i+1) + ".jpg"))
+                    .load(Uri.parse("file:///android_asset/fake_ad_" + (i + 1) + ".jpg"))
                     .into(photo);
             horizontalLayout.addView(myView);
-            if (i != 4){
+            if (i != 4) {
                 Space hspacer = new Space(this);
                 hspacer.setLayoutParams(new ViewGroup.LayoutParams(
                         8,
@@ -66,7 +66,7 @@ public class AnnounceActivity extends AppCompatActivity {
         setFields();
     }
 
-    private void setFields(){
+    private void setFields() {
         TextView addressField = findViewById(R.id.addressField);
         addressField.setText(R.string.mock_address);
         TextView priceField = findViewById(R.id.priceField);
@@ -77,17 +77,17 @@ public class AnnounceActivity extends AppCompatActivity {
         userField.setText(R.string.mock_user);
     }
 
-    public void goBack(View view){
+    public void goBack(View view) {
         finish();
     }
 
-    public void openContactInfo(View view){
+    public void openContactInfo(View view) {
         DialogFragment contactFrag = new ContactInfoDialogFragment();
         //contactFrag.getView().setBackgroundColor(Color.TRANSPARENT);
         contactFrag.show(getSupportFragmentManager(), "contact dialog");
     }
 
-    public void openVirtualTour(View view){
+    public void openVirtualTour(View view) {
         Intent intent = new Intent(this, VirtualTourActivity.class);
         startActivity(intent);
     }

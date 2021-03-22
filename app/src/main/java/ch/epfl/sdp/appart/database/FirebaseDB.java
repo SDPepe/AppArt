@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.database;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -41,27 +42,27 @@ public class FirebaseDB implements Database {
         //ask firebase async to get the cards objects and notify the future
         //when they have been fetched
         db.collection("cards").get().addOnCompleteListener(
-            task -> {
+                task -> {
 
-                List<Card> queriedCards = new ArrayList<>();
+                    List<Card> queriedCards = new ArrayList<>();
 
-                if (task.isSuccessful()) {
+                    if (task.isSuccessful()) {
 
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
 
-                        queriedCards.add(
-                            new Card(document.getId(), (String) document.getData().get("userId"),
-                                (String) document.getData().get("city"),
-                                (long) document.getData().get("price"),
-                                (String) document.getData().get("imageUrl")));
+                            queriedCards.add(
+                                    new Card(document.getId(), (String) document.getData().get("userId"),
+                                            (String) document.getData().get("city"),
+                                            (long) document.getData().get("price"),
+                                            (String) document.getData().get("imageUrl")));
+                        }
+                        result.complete(queriedCards);
+
+                    } else {
+                        result.completeExceptionally(new UnsupportedOperationException(
+                                "failed to fetch the cards from firebase"));
                     }
-                    result.complete(queriedCards);
-
-                } else {
-                    result.completeExceptionally(new UnsupportedOperationException(
-                        "failed to fetch the cards from firebase"));
                 }
-            }
         );
 
         return result;
@@ -71,12 +72,12 @@ public class FirebaseDB implements Database {
     public CompletableFuture<String> putCard(Card card) {
         CompletableFuture<String> resultIdFuture = new CompletableFuture<>();
         db.collection("cards")
-            .add(extractCardsInfo(card)).addOnCompleteListener(task -> {
+                .add(extractCardsInfo(card)).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 resultIdFuture.complete(task.getResult().getId());
             } else {
                 resultIdFuture
-                    .completeExceptionally(new IllegalStateException("query of the cards failed"));
+                        .completeExceptionally(new IllegalStateException("query of the cards failed"));
             }
         });
         return resultIdFuture;
@@ -109,25 +110,25 @@ public class FirebaseDB implements Database {
         //ask firebase async to get the user objects and notify the future
         //when they have been fetched
         db.collection("users").document(userId).get().addOnCompleteListener(
-            task -> {
-                if (task.isSuccessful()) {
-                    Map<String, Object> data = task.getResult().getData();
-                    AppUser user = new AppUser((String) data.get("email"), userId);
+                task -> {
+                    if (task.isSuccessful()) {
+                        Map<String, Object> data = task.getResult().getData();
+                        AppUser user = new AppUser((String) data.get("email"), userId);
 
-                    user.setAge((int) data.get("age"));
-                    user.setUserEmail((String) data.get("email"));
-                    user.setGender(Gender.ALL.get((int) data.get("gender")));
-                    user.setName((String) data.get("name"));
-                    user.setPhoneNumber((String) data.get("phoneNumber"));
-                    user.setProfileImage((String) data.get("profilePicture"));
+                        user.setAge((int) data.get("age"));
+                        user.setUserEmail((String) data.get("email"));
+                        user.setGender(Gender.ALL.get((int) data.get("gender")));
+                        user.setName((String) data.get("name"));
+                        user.setPhoneNumber((String) data.get("phoneNumber"));
+                        user.setProfileImage((String) data.get("profilePicture"));
 
-                    result.complete(user);
+                        result.complete(user);
 
-                } else {
-                    result.completeExceptionally(new UnsupportedOperationException(
-                        "failed to fetch the user from firebase"));
+                    } else {
+                        result.completeExceptionally(new UnsupportedOperationException(
+                                "failed to fetch the user from firebase"));
+                    }
                 }
-            }
         );
         return result;
     }
@@ -136,8 +137,8 @@ public class FirebaseDB implements Database {
     public CompletableFuture<Boolean> putUser(User user) {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection("users")
-            .document(user.getUserId())
-            .set(extractUserInfo(user)).addOnCompleteListener(task -> {
+                .document(user.getUserId())
+                .set(extractUserInfo(user)).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 isFinishedFuture.complete(task.isSuccessful());
             }
@@ -161,22 +162,22 @@ public class FirebaseDB implements Database {
         return docData;
     }
 
-    private CompletableFuture<Boolean> update(User u, Card c){
+    private CompletableFuture<Boolean> update(User u, Card c) {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        if(u != null){
+        if (u != null) {
             db.collection("user")
-                .document(u.getUserId())
-                .set(extractUserInfo(u))
-                .addOnCompleteListener(task -> {
-                    isFinishedFuture.complete(task.isSuccessful());
-                });
-        } else if(c != null){
+                    .document(u.getUserId())
+                    .set(extractUserInfo(u))
+                    .addOnCompleteListener(task -> {
+                        isFinishedFuture.complete(task.isSuccessful());
+                    });
+        } else if (c != null) {
             db.collection("cards")
-                .document(c.getId())
-                .set(extractCardsInfo(c))
-                .addOnCompleteListener(task -> {
-                    isFinishedFuture.complete(task.isSuccessful());
-                });
+                    .document(c.getId())
+                    .set(extractCardsInfo(c))
+                    .addOnCompleteListener(task -> {
+                        isFinishedFuture.complete(task.isSuccessful());
+                    });
         }
         return isFinishedFuture;
     }
