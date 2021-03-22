@@ -21,7 +21,7 @@ public class FirebaseLoginService implements LoginService {
     private final FirebaseAuth mAuth;
 
     @Inject
-    FirebaseLoginService() {
+    public FirebaseLoginService() {
         this.mAuth = FirebaseAuth.getInstance();
         //mAuth.useEmulator("10.0.2.2", 9099);
     }
@@ -44,6 +44,7 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
+        if (getCurrentUser() != null) throw new IllegalStateException("current user must not already be set when authentication");
         return handleEmailAndPasswordMethod(email, password,
                 mAuth.signInWithEmailAndPassword(email, password));
     }
@@ -69,6 +70,7 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> createUser(String email, String password) {
+        if (getCurrentUser() != null) throw new IllegalStateException("the current user cannot be set");
         return handleEmailAndPasswordMethod(email, password,
                 mAuth.createUserWithEmailAndPassword(email, password));
     }
@@ -76,25 +78,27 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
         if (email == null) throw new IllegalArgumentException();
-        return setUpFuture(getCurrentFirebaseUser().updateEmail(email)
-                , result -> result);
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when updating the email");
+        return setUpFuture(getCurrentFirebaseUser().updateEmail(email), result -> result);
     }
 
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
         if (password == null) throw new IllegalArgumentException();
-        return setUpFuture(getCurrentFirebaseUser().updatePassword(password),
-                result -> result);
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when updating the password");
+        return setUpFuture(getCurrentFirebaseUser().updatePassword(password), result -> result);
     }
 
     @Override
     public CompletableFuture<Void> sendEmailVerification() {
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when sending verification mail");
         return setUpFuture(getCurrentFirebaseUser().sendEmailVerification(),
                 result -> result);
     }
 
     @Override
     public CompletableFuture<Void> deleteUser() {
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when deleting it");
         return setUpFuture(getCurrentFirebaseUser().delete(),
                 result -> result);
     }
@@ -102,12 +106,12 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
         if (email == null || password == null) throw new IllegalArgumentException();
+        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when reAuthentication");
         return setUpFuture(getCurrentFirebaseUser().reauthenticate(
                 EmailAuthProvider.getCredential(email, password)),
                 result -> result);
     }
 
-    @Override
     public void useEmulator(String ip, int port) {
         if(ip == null) throw new IllegalArgumentException();
         mAuth.useEmulator(ip, port);
@@ -115,7 +119,7 @@ public class FirebaseLoginService implements LoginService {
 
     /**
      * @return the current Firebase user
-     * @throws IllegalArgumentException if no user is set
+     * @throws IllegalStateException if no user is set
      */
     private FirebaseUser getCurrentFirebaseUser() {
         FirebaseUser user = this.mAuth.getCurrentUser();

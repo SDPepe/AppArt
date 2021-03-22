@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 import ch.epfl.sdp.appart.utils.UIUtils;
@@ -25,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
 
+    //@LoginModule.CloudLoginService
     @Inject
     LoginService loginService;
 
