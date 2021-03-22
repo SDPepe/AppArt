@@ -55,7 +55,7 @@ public class LoginTest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @BindValue
-    LoginService loginService = new FirebaseLoginService();//new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
+    LoginService loginService = new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
 
     @Test
     public void loginTest() throws InterruptedException, ExecutionException {

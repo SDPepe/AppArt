@@ -20,7 +20,7 @@ import ch.epfl.sdp.appart.user.User;
 
 @Singleton
 public class FirebaseLoginService implements LoginService {
-    private FirebaseAuth mAuth;
+    private final FirebaseAuth mAuth;
 
     @Inject
     public FirebaseLoginService() {
