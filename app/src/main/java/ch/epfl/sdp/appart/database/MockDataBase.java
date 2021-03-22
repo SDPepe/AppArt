@@ -1,7 +1,11 @@
 package ch.epfl.sdp.appart.database;
 
+import ch.epfl.sdp.appart.user.AppUser;
+import ch.epfl.sdp.appart.user.User;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
@@ -10,6 +14,7 @@ import ch.epfl.sdp.appart.scrolling.card.Card;
 public class MockDataBase implements Database {
 
     private final List<Card> cards = new ArrayList<>();
+    private final Map<String, User> users = new HashMap<>();
 
     public MockDataBase() {
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
@@ -17,6 +22,9 @@ public class MockDataBase implements Database {
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        users.put("id0", new AppUser("id0", "test0@epfl.ch"));
+        users.put("id1", new AppUser("id1", "test1@epfl.ch"));
+        users.put("id2", new AppUser("id2", "test2@epfl.ch"));
     }
 
     @Override
@@ -47,8 +55,34 @@ public class MockDataBase implements Database {
     }
 
     @Override
-    public void accept(GlideLoaderVisitor visitor) {
-        visitor.visit(this);
+    public CompletableFuture<User> getUser(String userId) {
+        CompletableFuture<User> result = new CompletableFuture<>();
+        result.complete(users.get(userId));
+        return result;
     }
 
+    @Override
+    public CompletableFuture<Boolean> putUser(User user) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        users.put(user.getUserId(), user);
+        result.complete(true);
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> updateUser(User user) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        if (users.containsValue(user)) {
+            users.put(user.getUserId(), user);
+            result.complete(true);
+        } else {
+            result.complete(false);
+        }
+        return result;
+    }
+
+    public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
+
+    }
 }
