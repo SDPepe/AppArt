@@ -15,8 +15,8 @@ import org.junit.runner.RunWith;
 
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import ch.epfl.sdp.appart.user.UserProfileActivity;
 
@@ -41,7 +41,7 @@ import static org.hamcrest.Matchers.is;
 public class UserProfileActivityTest {
 
     @Rule
-    public ActivityTestRule<UserProfileActivity> mActivityTestRule = new ActivityTestRule<>(UserProfileActivity.class);
+    public ActivityScenarioRule<UserProfileActivity> mActivityTestRule = new ActivityScenarioRule<>(UserProfileActivity.class);
 
     @Test
     public void userProfileActivityTest() {
