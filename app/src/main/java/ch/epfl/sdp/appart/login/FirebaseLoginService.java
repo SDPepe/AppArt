@@ -25,7 +25,7 @@ public class FirebaseLoginService implements LoginService {
     @Inject
     public FirebaseLoginService() {
         this.mAuth = FirebaseAuth.getInstance();
-        this.mAuth.signOut();
+        this.mAuth.signOut(); //to unsure that no invalid user is cached
     }
 
     private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
