@@ -179,13 +179,13 @@ public class UserProfileActivityTest {
         imageView.check(matches(isDisplayed()));
 
         ViewInteraction textView5 = onView(
-                allOf(withId(R.id.uniAccounClaimer), withText("UNI account"),
+                allOf(withId(R.id.uniAccountClaimer), withText("UNI account"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         textView5.check(matches(isDisplayed()));
 
         ViewInteraction textView6 = onView(
-                allOf(withId(R.id.uniAccounClaimer), withText("UNI account"),
+                allOf(withId(R.id.uniAccountClaimer), withText("UNI account"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         textView6.check(matches(withText("UNI account")));

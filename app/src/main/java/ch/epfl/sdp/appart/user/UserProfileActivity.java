@@ -56,7 +56,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.phoneNumberView = findViewById(R.id.phoneNumberText);
         this.genderView =  findViewById(R.id.genderView);
         this.genderView.setEnabled(ageView.isEnabled());
-        this.uniAccountClaimer = findViewById(R.id.uniAccounClaimer);
+        this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer);
         this.imageView = findViewById(R.id.imageView);
 
         /* firebase storage initialisation */
