@@ -103,4 +103,13 @@ public class AdUnitTest {
         refs.add("ref");
         assertEquals(refs, ad.getPhotosRefs());
     }
+
+    @Test
+    public void hsaVTourGetterTest(){
+        List<String> refs = new ArrayList<>();
+        refs.add("ref");
+        ad = new Ad("Ad title", "1000 / mo", "Station 18, 1015 Lausanne",
+                "unknown", "Cool place", refs, true);
+        assertEquals(true, ad.hasVRTour());
+    }
 }
