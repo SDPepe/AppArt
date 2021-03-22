@@ -13,12 +13,14 @@ public class CardUnitTest {
 
     @Test
     public void gettersTest() {
-        Card card = new Card(null, "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, "user", "Lausanne", 900,
+                "assets/img1.jpg", true);
         assertNull(card.getId());
         assertEquals("Lausanne", card.getCity());
         assertEquals(900, card.getPrice());
         assertEquals("assets/img1.jpg", card.getImageUrl());
         assertEquals("user", card.getUserId());
+        assertEquals(true, card.hasVRTour());
     }
 
     @Test
@@ -30,6 +32,8 @@ public class CardUnitTest {
         assertEquals(850, card.getPrice());
         card.setImageUrl("assets/img2.jpg");
         assertEquals("assets/img2.jpg", card.getImageUrl());
+        card.setVRTour(true);
+        assertEquals(true, card.hasVRTour());
     }
 
     @Test(expected = IllegalArgumentException.class)

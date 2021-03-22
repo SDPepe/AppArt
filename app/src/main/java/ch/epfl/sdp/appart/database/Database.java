@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.database;
 
+import ch.epfl.sdp.appart.user.User;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -11,5 +12,11 @@ public interface Database extends DatabaseVisitorHost {
     CompletableFuture<List<Card>> getCards();
     CompletableFuture<String> putCard(Card card);
     CompletableFuture<Boolean> updateCard(Card card);
+
+    CompletableFuture<User> getUser(String userId);
+
+    CompletableFuture<Boolean> putUser(User user);
+
+    CompletableFuture<Boolean> updateUser(User user);
 
 }
