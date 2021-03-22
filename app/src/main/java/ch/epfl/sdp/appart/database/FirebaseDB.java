@@ -130,7 +130,7 @@ public class FirebaseDB implements Database {
                 if(adTask.isSuccessful()) {
                     adTask.getResult().getReference().collection("photosRefs").get().addOnCompleteListener(task -> {
                         if(task.isSuccessful()) {
-                            List<String> photoRefs = task.getResult().getDocuments().stream().map(documentSnapshot -> (String)documentSnapshot.get("ref")).collect(Collectors.toList());
+                            List<String> photoRefs = task.getResult().getDocuments().stream().map(documentSnapshot -> "Cards/" + (String)documentSnapshot.get("ref")).collect(Collectors.toList());
                             photoRefsFuture.complete(photoRefs);
                         }
                         else {
