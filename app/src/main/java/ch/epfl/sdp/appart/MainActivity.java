@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.LoginActivity;
+import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserProfileActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, UserProfileActivity.class);
         startActivity(intent);
 
     }
