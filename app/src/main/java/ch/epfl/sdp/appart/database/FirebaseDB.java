@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.database;
 
+import android.util.Log;
+
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -103,43 +106,60 @@ public class FirebaseDB implements Database {
     }
 
     @Override
-    public CompletableFuture<Ad> getAd(String id) {
+    public CompletableFuture<Ad> getAd(String cardId) {
+
         CompletableFuture<List<String>> photoRefsFuture = new CompletableFuture<>();
-        this.db.collection("ads").document(id).get().addOnCompleteListener(adTask -> {
-            if(adTask.isSuccessful()) {
-                adTask.getResult().getReference().collection("photosRefs").get().addOnCompleteListener(task -> {
-                    if(task.isSuccessful()) {
-                        List<String> photoRefs = task.getResult().getDocuments().stream().map(documentSnapshot -> (String)documentSnapshot.get("ref")).collect(Collectors.toList());
-                        photoRefsFuture.complete(photoRefs);
-                    }
-                    else {
-                        photoRefsFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
-                    }
-                });
+        CompletableFuture<String> addressFuture = new CompletableFuture<>();
+        CompletableFuture<String> advertiserIdFuture = new CompletableFuture<>();
+        CompletableFuture<String> descriptionFuture = new CompletableFuture<>();
+        CompletableFuture<String> priceFuture = new CompletableFuture<>();
+        CompletableFuture<String> titleFuture = new CompletableFuture<>();
+
+        CompletableFuture<String> adIdFuture = new CompletableFuture<>();
+        this.db.collection("cards").document(cardId).get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                adIdFuture.complete((String)task.getResult().get("adId"));
+            }
+            else {
+                adIdFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
             }
         });
+        adIdFuture.thenAccept(adId -> {
 
-        CompletableFuture<String> addressFuture = new CompletableFuture<>();
-        getField(addressFuture, "ads", id, "address");
+            this.db.collection("ads").document(adId).get().addOnCompleteListener(adTask -> {
+                if(adTask.isSuccessful()) {
+                    adTask.getResult().getReference().collection("photosRefs").get().addOnCompleteListener(task -> {
+                        if(task.isSuccessful()) {
+                            List<String> photoRefs = task.getResult().getDocuments().stream().map(documentSnapshot -> (String)documentSnapshot.get("ref")).collect(Collectors.toList());
+                            photoRefsFuture.complete(photoRefs);
+                        }
+                        else {
+                            photoRefsFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
+                        }
+                    });
+                }
+            });
 
-        CompletableFuture<String> advertiserIdFuture = new CompletableFuture<>();
-        getField(advertiserIdFuture, "ads", id, "advertiserId");
+            getField(addressFuture, "ads", adId, "address");
+            getField(advertiserIdFuture, "ads", adId, "advertiserId");
+            getField(descriptionFuture, "ads", adId, "description");
+            getField(priceFuture, "ads", adId, "price");
+            getField(titleFuture, "ads", adId, "title");
+        });
+        adIdFuture.exceptionally(e -> {
+            DatabaseRequestFailedException adIdFailed = new DatabaseRequestFailedException("adId failed !");
+            addressFuture.completeExceptionally(adIdFailed);
+            photoRefsFuture.completeExceptionally(adIdFailed);
+            advertiserIdFuture.completeExceptionally(adIdFailed);
+            descriptionFuture.completeExceptionally(adIdFailed);
+            priceFuture.completeExceptionally(adIdFailed);
+            titleFuture.completeExceptionally(adIdFailed);
+           return null;
+        });
 
-        CompletableFuture<String> descriptionFuture = new CompletableFuture<>();
-        getField(descriptionFuture, "ads", id, "description");
-
-        CompletableFuture<String> priceFuture = new CompletableFuture<>();
-        getField(priceFuture, "ads", id, "price");
-
-        CompletableFuture<String> titleFuture = new CompletableFuture<>();
-        getField(priceFuture, "ads", id, "title");
-
-        /*CompletableFuture<Ad> futureAd = CompletableFuture.allOf(photoRefsFuture, addressFuture, advertiserIdFuture, descriptionFuture, priceFuture
-                , titleFuture).thenApply( arg -> {
-           return new Ad(titleFuture.join(), priceFuture.join(), addressFuture.join(), advertiserIdFuture.join(), descriptionFuture.join(), photoRefsFuture.join());
-        });*/
-        CompletableFuture<Ad> futureAd = CompletableFuture.allOf(photoRefsFuture).thenApply( arg -> {
-            return new Ad(null, null, null, null, null, photoRefsFuture.join());
+        CompletableFuture<Ad> futureAd = CompletableFuture.allOf(photoRefsFuture, addressFuture,
+                advertiserIdFuture, descriptionFuture, priceFuture, titleFuture).thenApply(dummy -> {
+                    return new Ad(titleFuture.join(), priceFuture.join(), addressFuture.join(), advertiserIdFuture.join(), descriptionFuture.join(), photoRefsFuture.join());
         });
 
         return  futureAd;

@@ -42,7 +42,12 @@ public class AnnounceViewModel extends ViewModel {
             return null;
         });
         futureAd.thenAccept(ad -> {
-            Log.d("AD", ad.toString());
+            this.adAddress.setValue(ad.address);
+            this.adTitle.setValue(ad.title);
+            this.adPrice.setValue(ad.price);
+            this.adDescription.setValue(ad.description);
+            this.adAdvertiser.setValue(ad.advertiserId);
+            this.adPhotosRefs.setValue(ad.photosRefs);
         });
     }
 
