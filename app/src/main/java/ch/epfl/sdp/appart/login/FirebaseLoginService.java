@@ -85,8 +85,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
         String[] args = {email};
-        argsChecker(args);
-        userChecker(false, "when updating the email");
+        fullChecker(args,false, "when updating the email");
 
         return setUpFuture(getCurrentFirebaseUser().updateEmail(email), result -> result);
     }
@@ -94,8 +93,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
         String[] args = {password};
-        argsChecker(args);
-        userChecker(false, "when updating the password");
+        fullChecker(args, false, "when updating the password");
 
         return setUpFuture(getCurrentFirebaseUser().updatePassword(password), result -> result);
     }
@@ -143,6 +141,11 @@ public class FirebaseLoginService implements LoginService {
                 throw new IllegalArgumentException("String argument cannot be null");
             }
         }
+    }
+
+    private void fullChecker(String[] args, boolean hasToBeNull, String excMessage){
+        argsChecker(args);
+        userChecker(hasToBeNull, excMessage);
     }
 
     public void useEmulator(String ip, int port) {
