@@ -105,6 +105,5 @@ public interface LoginService {
      */
     CompletableFuture<Void> reAuthenticateUser(String email, String password);
 
-    void useEmulator(String ip, int port);
 
 }

@@ -66,8 +66,4 @@ public class FirebaseEmulatorLoginServiceWrapper implements LoginService {
         return loginService.reAuthenticateUser(email, password);
     }
 
-    @Override
-    public void useEmulator(String ip, int port) {
-        throw new UnsupportedOperationException("emulator already in use");
-    }
 }

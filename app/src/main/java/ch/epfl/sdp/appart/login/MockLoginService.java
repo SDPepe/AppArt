@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -46,23 +47,31 @@ public class MockLoginService implements LoginService {
         users.put(quentinEmailPassword, quentin);
     }
 
+    @Nullable
+    private User findMatchingUserWithPasswordAndEmail(String email, String password) {
+        User result = null;
+        for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
+            String entryEmail = entry.getKey().first;
+            String entryPassword = entry.getKey().second;
+            if (email.equals(entryEmail) && password.equals(entryPassword)) {
+                result = entry.getValue();
+            }
+        }
+        return result;
+    }
+
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
         if (email == null) throw new IllegalArgumentException("email cannot be null");
         if (password == null) throw new IllegalArgumentException("password cannot be null");
 
+        currentUser = findMatchingUserWithPasswordAndEmail(email, password);
         CompletableFuture<User> result = new CompletableFuture<>();
-        for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
-            String entryEmail = entry.getKey().first;
-            String entryPassword = entry.getKey().second;
-            if (email.equals(entryEmail) && password.equals(entryPassword)) {
-                currentUser = entry.getValue();
-                result.complete(currentUser);
-            }
-        }
 
-        if (getCurrentUser() == null) {
+        if (currentUser == null) {
             result.completeExceptionally(new LoginServiceRequestFailedException("failed to login the user"));
+        } else {
+            result.complete(currentUser);
         }
 
         return result;
@@ -185,24 +194,9 @@ public class MockLoginService implements LoginService {
         //note : this function will never fail beyond this point
         CompletableFuture<Void> result = new CompletableFuture<>();
         result.complete(null);
-        /*
-        CompletableFuture<User> intermediate = loginWithEmail(email, password); //simulate a new login
-        intermediate.exceptionally(x -> {
-            result.completeExceptionally(new MockLoginServiceException("failed to retrieve the main user in the mock login service"));
-            return null;
-        });
 
-        intermediate.thenApply(user -> {
-            result.complete(null);
-            return null;
-        });
-        */
         return result;
     }
 
-    @Override
-    public void useEmulator(String ip, int port) {
-
-    }
 
 }

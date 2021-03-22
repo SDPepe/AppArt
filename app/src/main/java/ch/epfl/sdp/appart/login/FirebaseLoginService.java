@@ -112,7 +112,6 @@ public class FirebaseLoginService implements LoginService {
                 result -> result);
     }
 
-    @Override
     public void useEmulator(String ip, int port) {
         if(ip == null) throw new IllegalArgumentException();
         mAuth.useEmulator(ip, port);
