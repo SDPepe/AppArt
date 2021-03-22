@@ -2,14 +2,13 @@ package ch.epfl.sdp.appart;
 
 import android.app.Activity;
 
-import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
+import ch.epfl.sdp.appart.virtualtour.VirtualTourActivity;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 

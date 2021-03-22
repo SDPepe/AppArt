@@ -13,7 +13,7 @@ import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.hilt.FireBaseModule;
 import ch.epfl.sdp.appart.scrolling.ad.AnnounceActivity;
-import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
+import ch.epfl.sdp.appart.virtualtour.VirtualTourActivity;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;

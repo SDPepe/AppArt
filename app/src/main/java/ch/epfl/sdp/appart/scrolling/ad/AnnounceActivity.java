@@ -2,13 +2,11 @@ package ch.epfl.sdp.appart.scrolling.ad;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -23,7 +21,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
+import ch.epfl.sdp.appart.virtualtour.VirtualTourActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint

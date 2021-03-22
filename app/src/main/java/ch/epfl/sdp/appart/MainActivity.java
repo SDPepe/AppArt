@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.appart.user.LoginActivity;
+import ch.epfl.sdp.appart.virtualtour.VirtualTourActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,7 +15,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        //Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, VirtualTourActivity.class);
         startActivity(intent);
 
     }
