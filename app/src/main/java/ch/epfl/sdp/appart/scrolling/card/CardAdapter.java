@@ -80,7 +80,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         Card card = cards.get(position);
         holder.cardImageView.setOnClickListener(v -> {
             Intent intent = new Intent(context, AnnounceActivity.class);
-            intent.putExtra("adID", card.getAdId());
+            intent.putExtra("adID", card.getId());
             context.startActivity(intent);
         });
 

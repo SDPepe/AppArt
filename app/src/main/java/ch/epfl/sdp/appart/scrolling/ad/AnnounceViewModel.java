@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
@@ -34,7 +35,13 @@ public class AnnounceViewModel extends ViewModel {
     }
 
     public void initAd(String id){
-        db.getAd(id).thenAccept(ad -> {
+
+        CompletableFuture<Ad> futureAd = db.getAd(id);
+        futureAd.exceptionally(e -> {
+            Log.d("ANNOUNCE", "DATABASE FAIL");
+            return null;
+        });
+        futureAd.thenAccept(ad -> {
             Log.d("AD", ad.toString());
         });
     }
