@@ -2,6 +2,8 @@ package ch.epfl.sdp.appart.login;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -18,12 +20,12 @@ import ch.epfl.sdp.appart.user.User;
 
 @Singleton
 public class FirebaseLoginService implements LoginService {
-    private final FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
     @Inject
     public FirebaseLoginService() {
         this.mAuth = FirebaseAuth.getInstance();
-        //mAuth.useEmulator("10.0.2.2", 9099);
+        this.mAuth.signOut();
     }
 
     private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
