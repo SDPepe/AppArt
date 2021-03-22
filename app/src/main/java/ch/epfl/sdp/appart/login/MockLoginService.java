@@ -58,11 +58,13 @@ public class MockLoginService implements LoginService {
             if (email.equals(entryEmail) && password.equals(entryPassword)) {
                 currentUser = entry.getValue();
                 result.complete(currentUser);
-                return result;
             }
         }
 
-        result.completeExceptionally(new LoginServiceRequestFailedException("failed to login the user"));
+        if (getCurrentUser() == null) {
+            result.completeExceptionally(new LoginServiceRequestFailedException("failed to login the user"));
+        }
+
         return result;
     }
 
