@@ -22,6 +22,8 @@ public class AppUserTest {
     public void userIsCreatedCorrectly() {
         AppUser user = new AppUser("1234", "test.appart@epfl.ch");
         assertNotEquals(null, user);
+        AppUser user2 = new AppUser("1234", "test.appart.ch");
+        assertNotEquals(null, user2);
     }
 
     @Test
@@ -60,6 +62,14 @@ public class AppUserTest {
     }
 
     @Test
+    public void genderSetterThrowsOnNull(){
+        AppUser user = new AppUser("1234", "test.appart@epfl.ch");
+        assertThrows(IllegalArgumentException.class, () -> {
+            user.setGender(null);
+        });
+    }
+
+    @Test
     public void genderGetterAndSetterWork() {
         AppUser user = new AppUser("1234", "test.appart@epfl.ch");
         user.setGender(Gender.FEMALE);
@@ -75,9 +85,23 @@ public class AppUserTest {
     }
 
     @Test
-    public void constructorFailsWithNullParameters() {
+    public void constructorFailsWithNullParameters1() {
         assertThrows(IllegalArgumentException.class, () -> {
             AppUser user = new AppUser(null, null);
+        });
+    }
+
+    @Test
+    public void constructorFailsWithNullParameters2() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            AppUser user = new AppUser("42", null);
+        });
+    }
+
+    @Test
+    public void constructorFailsWithNullParameters3() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            AppUser user = new AppUser(null, "test.appart@epfl.ch");
         });
     }
 
