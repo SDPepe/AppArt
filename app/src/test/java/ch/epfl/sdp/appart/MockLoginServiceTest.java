@@ -126,7 +126,7 @@ public class MockLoginServiceTest {
 
     @Test
     public void loginWithEmailThrowsOnNullArg1() {
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             loginService.loginWithEmail(null, "1111");
         });
     }

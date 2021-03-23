@@ -57,9 +57,8 @@ public class MockDataBaseTest {
         User user = new AppUser("1234", "test.appart@epfl.ch");
         assertTrue(dataBase.putUser(user).join());
         assertEquals(user, dataBase.getUser("1234").join());
-        User user2 = new AppUser("1234", "test2.appart@epfl.ch");
-        assertTrue(dataBase.updateUser(user2).join());
-        assertEquals(user2, dataBase.getUser("1234").join());
+        assertTrue(dataBase.updateUser(user).join());
+        assertEquals(user, dataBase.getUser("1234").join());
         User user3 = new AppUser("4321", "test.appart@epfl.ch");
         assertFalse(dataBase.updateUser(user3).join());
     }
