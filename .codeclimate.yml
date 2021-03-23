@@ -11,3 +11,4 @@ exclude_patterns:
 - "app/src/main/java/ch/epfl/sdp/appart/glide/visitor/GlideLoaderVisitor.java"
 - "app/src/main/java/ch/epfl/sdp/appart/hilt/LoginModule.java"
 - "app/src/main/java/ch/epfl/sdp/appart/login/MockLoginServiceException.java"
+- "app/src/main/java/ch/epfl/sdp/appart/login/FirebaseEmulatorLoginServiceWrapper.java"
