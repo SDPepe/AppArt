@@ -2,6 +2,8 @@ package ch.epfl.sdp.appart.database;
 
 import android.util.Log;
 
+import androidx.annotation.StringRes;
+
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
@@ -109,11 +111,7 @@ public class FirebaseDB implements Database {
     public CompletableFuture<Ad> getAd(String cardId) {
 
         CompletableFuture<List<String>> photoRefsFuture = new CompletableFuture<>();
-        CompletableFuture<String> addressFuture = new CompletableFuture<>();
-        CompletableFuture<String> advertiserIdFuture = new CompletableFuture<>();
-        CompletableFuture<String> descriptionFuture = new CompletableFuture<>();
-        CompletableFuture<String> priceFuture = new CompletableFuture<>();
-        CompletableFuture<String> titleFuture = new CompletableFuture<>();
+        CompletableFuture<PartialAd> partialAdFuture = new CompletableFuture<>();
 
         CompletableFuture<String> adIdFuture = new CompletableFuture<>();
         this.db.collection("cards").document(cardId).get().addOnCompleteListener(task -> {
@@ -140,26 +138,31 @@ public class FirebaseDB implements Database {
                 }
             });
 
-            getField(addressFuture, "ads", adId, "address");
-            getField(advertiserIdFuture, "ads", adId, "advertiserId");
-            getField(descriptionFuture, "ads", adId, "description");
-            getField(priceFuture, "ads", adId, "price");
-            getField(titleFuture, "ads", adId, "title");
+            this.db.collection("ads").document(adId).get().addOnCompleteListener(task -> {
+               if(task.isSuccessful()) {
+                   String title = (String)task.getResult().get("title");
+                   String price = (String)task.getResult().get("price");
+                   String address = (String)task.getResult().get("address");
+                   String advertiserId = (String)task.getResult().get("advertiserId");
+                   String description  = (String)task.getResult().get("description");
+                   boolean hasVTour = (boolean)task.getResult().get("hasVTour");
+                   partialAdFuture.complete(new PartialAd(title, price, address, advertiserId, description, hasVTour));
+               }
+               else {
+                   partialAdFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
+               }
+            });
         });
         adIdFuture.exceptionally(e -> {
             DatabaseRequestFailedException adIdFailed = new DatabaseRequestFailedException("adId failed !");
-            addressFuture.completeExceptionally(adIdFailed);
             photoRefsFuture.completeExceptionally(adIdFailed);
-            advertiserIdFuture.completeExceptionally(adIdFailed);
-            descriptionFuture.completeExceptionally(adIdFailed);
-            priceFuture.completeExceptionally(adIdFailed);
-            titleFuture.completeExceptionally(adIdFailed);
+            partialAdFuture.completeExceptionally(adIdFailed);
            return null;
         });
 
-        CompletableFuture<Ad> futureAd = CompletableFuture.allOf(photoRefsFuture, addressFuture,
-                advertiserIdFuture, descriptionFuture, priceFuture, titleFuture).thenApply(dummy -> {
-                    return new Ad(titleFuture.join(), priceFuture.join(), addressFuture.join(), advertiserIdFuture.join(), descriptionFuture.join(), photoRefsFuture.join());
+        CompletableFuture<Ad> futureAd = CompletableFuture.allOf(photoRefsFuture, partialAdFuture).thenApply(dummy -> {
+                    PartialAd partialAd = partialAdFuture.join();
+                    return new Ad(partialAd.title, partialAd.price, partialAd.address, partialAd.advertiserId, partialAd.description, photoRefsFuture.join());
         });
 
         return  futureAd;
@@ -268,6 +271,24 @@ public class FirebaseDB implements Database {
      */
     public StorageReference getStorageReference(String storageUrl) {
         return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
+    }
+
+    private class PartialAd {
+        public final String title;
+        public final String price;
+        public final String address;
+        public final String advertiserId;
+        public final String description;
+        public final boolean hasVTour;
+
+        PartialAd(String title, String price, String address, String advertiserId, String description, boolean hasVTour) {
+            this.title = title;
+            this.price = price;
+            this.address = address;
+            this.advertiserId = advertiserId;
+            this.description = description;
+            this.hasVTour = hasVTour;
+        }
     }
 }
 
