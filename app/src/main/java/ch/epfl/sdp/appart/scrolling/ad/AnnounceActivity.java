@@ -73,7 +73,7 @@ public class AnnounceActivity extends AppCompatActivity {
             View myView = inflater.inflate(R.layout.photo_layout, null);
             ImageView photo = myView.findViewById(R.id.photoImageView);
             database.accept(new GlideLoaderVisitorImpl(this, photo,
-                    "Ads/ " + references.get(i)));
+                     references.get(i)));
             horizontalLayout.addView(myView);
             if (i != 4) {
                 Space hspacer = new Space(this);

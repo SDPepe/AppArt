@@ -46,8 +46,10 @@ public class AnnounceViewModel extends ViewModel {
             this.adTitle.setValue(ad.getTitle());
             this.adPrice.setValue(ad.getPrice());
             this.adDescription.setValue(ad.getDescription());
-            this.adAdvertiser.setValue(ad.getAdvertiserId());
+            this.adAdvertiser.setValue(ad.getContactInfo().name);
             this.adPhotosRefs.setValue(ad.getPhotosRefs());
+            this.userEmail.setValue(ad.getContactInfo().userEmail);
+            this.userPhone.setValue(ad.getContactInfo().userPhoneNumber);
         });
     }
 

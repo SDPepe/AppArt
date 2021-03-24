@@ -11,6 +11,7 @@ public class Ad {
     private String description;
     private List<String> photosRefs;
     private boolean hasVRTour;
+    private ContactInfo contactInfo;
 
     public Ad(String title, String price, String address,
               String advertiserId, String description, List<String> photosRefs, boolean hasVRTour) {
@@ -32,6 +33,27 @@ public class Ad {
     public Ad(String title, String price, String address,
               String advertiserId, String description, List<String> photosRefs) {
         this(title, price, address, advertiserId, description, photosRefs, false);
+    }
+
+    public Ad(String title, String price, String address,
+              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour, ContactInfo contactInfo) {
+
+        if (title == null || price == null || address == null)
+            throw new IllegalArgumentException("An argument is null!");
+        if (advertiserId == null || description == null || photosRefs == null)
+            throw new IllegalArgumentException("An argument is null!");
+        if(contactInfo == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.title = title;
+        this.price = price;
+        this.advertiserId = advertiserId;
+        this.address = address;
+        this.description = description;
+        this.photosRefs = photosRefs;
+        this.hasVRTour = hasVRTour;
+        this.contactInfo = contactInfo;
     }
 
     public String getTitle() {
@@ -60,5 +82,9 @@ public class Ad {
 
     public boolean hasVRTour() {
         return hasVRTour;
+    }
+
+    public ContactInfo getContactInfo() {
+        return contactInfo;
     }
 }

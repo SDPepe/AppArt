@@ -17,6 +17,7 @@ import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.ad.Ad;
+import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
@@ -131,7 +132,7 @@ public class FirebaseDB implements Database {
      */
     private void getAdFromAdId(CompletableFuture<String> adIdFuture,
                                CompletableFuture<List<String>> photoRefsFuture,
-                               CompletableFuture<PartialAd> partialAdFuture) {
+                               CompletableFuture<PartialAd> partialAdFuture, CompletableFuture<ContactInfo> contactInfoFuture) {
         adIdFuture.thenAccept(adId -> {
 
             this.db.collection("ads").document(adId).get().addOnCompleteListener(adTask -> {
@@ -158,6 +159,19 @@ public class FirebaseDB implements Database {
                     boolean hasVTour = (boolean) task.getResult().get("hasVTour");
                     partialAdFuture.complete(new PartialAd(title, price, address, advertiserId,
                             description, hasVTour));
+
+                    //Get user info
+                    this.db.collection("users").document(advertiserId).get().addOnCompleteListener(userTask -> {
+                        if(task.isSuccessful()) {
+                            String userEmail = (String)userTask.getResult().get("email");
+                            String userPhoneNumber = (String)userTask.getResult().get("phone");
+                            String name = (String)userTask.getResult().get("name");
+                            contactInfoFuture.complete(new ContactInfo(userEmail, userPhoneNumber, name));
+                        }
+                        else {
+                            contactInfoFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
+                        }
+                    });
                 } else {
                     partialAdFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
                 }
@@ -174,12 +188,14 @@ public class FirebaseDB implements Database {
      */
     private void setupGetAdFailure(CompletableFuture<String> adIdFuture,
                                    CompletableFuture<List<String>> photoRefsFuture,
-                                   CompletableFuture<PartialAd> partialAdFuture) {
+                                   CompletableFuture<PartialAd> partialAdFuture,
+                                   CompletableFuture<ContactInfo> contactInfoFuture) {
         adIdFuture.exceptionally(e -> {
             DatabaseRequestFailedException adIdFailed = new DatabaseRequestFailedException("adId " +
                     "failed !");
             photoRefsFuture.completeExceptionally(adIdFailed);
             partialAdFuture.completeExceptionally(adIdFailed);
+            contactInfoFuture.completeExceptionally(adIdFailed);
             return null;
         });
     }
@@ -192,12 +208,12 @@ public class FirebaseDB implements Database {
      * @param partialAdFuture
      * @return a future that will contain the ad
      */
-    private CompletableFuture<Ad> buildAdFromPhotosRefsAndPartialAdFutures(CompletableFuture<List<String>> photoRefsFuture, CompletableFuture<PartialAd> partialAdFuture) {
+    private CompletableFuture<Ad> buildAdFromFutures(CompletableFuture<List<String>> photoRefsFuture, CompletableFuture<PartialAd> partialAdFuture, CompletableFuture<ContactInfo> contactInfoFuture) {
         CompletableFuture<Ad> futureAd = CompletableFuture.allOf(photoRefsFuture,
-                partialAdFuture).thenApply(dummy -> {
+                partialAdFuture, contactInfoFuture).thenApply(dummy -> {
             PartialAd partialAd = partialAdFuture.join();
             return new Ad(partialAd.title, partialAd.price, partialAd.address,
-                    partialAd.advertiserId, partialAd.description, photoRefsFuture.join());
+                    partialAd.advertiserId, partialAd.description, photoRefsFuture.join(), partialAd.hasVTour, contactInfoFuture.join());
         });
         return futureAd;
     }
@@ -209,12 +225,13 @@ public class FirebaseDB implements Database {
         // collection into the ad.
         CompletableFuture<List<String>> photoRefsFuture = new CompletableFuture<>();
         CompletableFuture<PartialAd> partialAdFuture = new CompletableFuture<>();
+        CompletableFuture<ContactInfo> contactInfoFuture = new CompletableFuture<>();
 
         CompletableFuture<String> adIdFuture = getAdId(cardId);
-        getAdFromAdId(adIdFuture, photoRefsFuture, partialAdFuture);
-        setupGetAdFailure(adIdFuture, photoRefsFuture, partialAdFuture);
+        getAdFromAdId(adIdFuture, photoRefsFuture, partialAdFuture, contactInfoFuture);
+        setupGetAdFailure(adIdFuture, photoRefsFuture, partialAdFuture, contactInfoFuture);
 
-        return buildAdFromPhotosRefsAndPartialAdFutures(photoRefsFuture, partialAdFuture);
+        return buildAdFromFutures(photoRefsFuture, partialAdFuture, contactInfoFuture);
     }
 
     @Override
