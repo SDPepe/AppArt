@@ -14,6 +14,8 @@ import ch.epfl.sdp.appart.R;
 public class VirtualTourActivity extends AppCompatActivity {
 
     private VrPanoramaView vrView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +25,24 @@ public class VirtualTourActivity extends AppCompatActivity {
         options.inputType = VrPanoramaView.Options.TYPE_MONO;
         Bitmap panoramaBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.panorama_test);
         vrView.loadImageFromBitmap(panoramaBitmap, options);
+    }
+
+    @Override
+    protected void onPause() {
+        vrView.pauseRendering();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        vrView.resumeRendering();
+    }
+
+    @Override
+    protected void onDestroy() {
+        vrView.shutdown();
+        super.onDestroy();
     }
 
     public void goBack(View view){
