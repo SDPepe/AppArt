@@ -1,7 +1,11 @@
 package ch.epfl.sdp.appart.database;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -92,13 +96,41 @@ public class FirebaseDB implements Database {
         return update(null, card);
     }
 
-    private <T> void getField(CompletableFuture<T> future, String collection, String rootId,
-                              String field) {
-        this.db.collection(collection).document(rootId).get().addOnCompleteListener(task -> {
+    /**
+     * Gets a document and apply success on success and failure on failure.
+     *
+     * @param collection the collection we want to get the document from
+     * @param docId      the id of the document we want to get
+     * @param success    the callback that is applied on success
+     * @param failure    the callback that is applied on failure
+     */
+    private void getDocAndApply(String collection, String docId, DatabaseGetCallback success,
+                                DatabaseGetCallback failure) {
+        this.db.collection(collection).document(docId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                future.complete((T) task.getResult().get(field));
+                success.getCallback(task);
             } else {
-                future.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
+                failure.getCallback(task);
+            }
+        });
+    }
+
+    /**
+     * Gets a collection and apply success on success and failure on failure
+     *
+     * @param ref        the DocumentRef from which we get the collection
+     * @param collection the collection we want to get
+     * @param success    the callback that is applied on success
+     * @param failure    the callback that is applied on failure
+     */
+    private void getDocAndApply(DocumentReference ref, String collection,
+                                DatabaseQueryCallback success,
+                                DatabaseQueryCallback failure) {
+        ref.collection(collection).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                success.getCallback(task);
+            } else {
+                failure.getCallback(task);
             }
         });
     }
@@ -111,13 +143,10 @@ public class FirebaseDB implements Database {
      */
     private CompletableFuture<String> getAdId(String cardId) {
         CompletableFuture<String> adIdFuture = new CompletableFuture<>();
-        this.db.collection("cards").document(cardId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                adIdFuture.complete((String) task.getResult().get("adId"));
-            } else {
-                adIdFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
-            }
-        });
+        getDocAndApply("cards", cardId,
+                task -> adIdFuture.complete((String) task.getResult().get("adId"
+                )),
+                task -> adIdFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage())));
         return adIdFuture;
     }
 
@@ -132,59 +161,49 @@ public class FirebaseDB implements Database {
      */
     private void getAdFromAdId(CompletableFuture<String> adIdFuture,
                                CompletableFuture<List<String>> photoRefsFuture,
-                               CompletableFuture<PartialAd> partialAdFuture, CompletableFuture<ContactInfo> contactInfoFuture) {
+                               CompletableFuture<PartialAd> partialAdFuture,
+                               CompletableFuture<ContactInfo> contactInfoFuture) {
         adIdFuture.thenAccept(adId -> {
+            getDocAndApply("ads", adId,
+                    adTask -> getDocAndApply(adTask.getResult().getReference(), "photosRefs",
+                            task -> {
+                                List<String> photoRefs =
+                                        task.getResult().getDocuments().stream().map(documentSnapshot -> "Ads/" + (String) documentSnapshot.get("ref")).collect(Collectors.toList());
+                                photoRefsFuture.complete(photoRefs);
+                            }, task -> {
+                                photoRefsFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
+                            }),
+                    adTask -> photoRefsFuture.completeExceptionally(new DatabaseRequestFailedException(adTask.getException().getMessage())));
 
-            this.db.collection("ads").document(adId).get().addOnCompleteListener(adTask -> {
-                if (adTask.isSuccessful()) {
-                    adTask.getResult().getReference().collection("photosRefs").get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            List<String> photoRefs =
-                                    task.getResult().getDocuments().stream().map(documentSnapshot -> "Ads/" + (String) documentSnapshot.get("ref")).collect(Collectors.toList());
-                            photoRefsFuture.complete(photoRefs);
-                        } else {
-                            photoRefsFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
-                        }
-                    });
-                }
-            });
+            getDocAndApply("ads", adId, task -> {
+                String title = (String) task.getResult().get("title");
+                String price = (String) task.getResult().get("price");
+                String address = (String) task.getResult().get("address");
+                String advertiserId = (String) task.getResult().get("advertiserId");
+                String description = (String) task.getResult().get("description");
+                boolean hasVTour = (boolean) task.getResult().get("hasVTour");
+                partialAdFuture.complete(new PartialAd(title, price, address, advertiserId,
+                        description, hasVTour));
+            }, task -> partialAdFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage())));
 
-            this.db.collection("ads").document(adId).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    String title = (String) task.getResult().get("title");
-                    String price = (String) task.getResult().get("price");
-                    String address = (String) task.getResult().get("address");
-                    String advertiserId = (String) task.getResult().get("advertiserId");
-                    String description = (String) task.getResult().get("description");
-                    boolean hasVTour = (boolean) task.getResult().get("hasVTour");
-                    partialAdFuture.complete(new PartialAd(title, price, address, advertiserId,
-                            description, hasVTour));
-
-                    //Get user info
-                    this.db.collection("users").document(advertiserId).get().addOnCompleteListener(userTask -> {
-                        if(task.isSuccessful()) {
-                            String userEmail = (String)userTask.getResult().get("email");
-                            String userPhoneNumber = (String)userTask.getResult().get("phone");
-                            String name = (String)userTask.getResult().get("name");
-                            contactInfoFuture.complete(new ContactInfo(userEmail, userPhoneNumber, name));
-                        }
-                        else {
-                            contactInfoFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
-                        }
-                    });
-                } else {
-                    partialAdFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
-                }
-            });
+            partialAdFuture.thenAccept(partialAd -> getDocAndApply("users",
+                    partialAd.advertiserId, userTask -> {
+                String userEmail = (String) userTask.getResult().get("email");
+                String userPhoneNumber = (String) userTask.getResult().get("phone");
+                String name = (String) userTask.getResult().get("name");
+                contactInfoFuture.complete(new ContactInfo(userEmail, userPhoneNumber
+                        , name));
+            }, userTask -> contactInfoFuture.completeExceptionally(new DatabaseRequestFailedException(userTask.getException().getMessage()))));
         });
     }
 
     /**
      * Set photoRefsFuture and partialAdFuture in a fail state if adIdFuture fails
      *
-     * @param adIdFuture
-     * @param photoRefsFuture
-     * @param partialAdFuture
+     * @param adIdFuture        the future containing the adId
+     * @param photoRefsFuture   the future containing the photosRefs
+     * @param partialAdFuture   the future containing partial information about the ad
+     * @param contactInfoFuture the future containing the contact info of the owner of the ad
      */
     private void setupGetAdFailure(CompletableFuture<String> adIdFuture,
                                    CompletableFuture<List<String>> photoRefsFuture,
@@ -201,21 +220,22 @@ public class FirebaseDB implements Database {
     }
 
     /**
-     * Returns a CompletableFuture<Ad> that will be filled with data from the photoRefsFuture and
-     * the partialAdFuture
+     * Returns a CompletableFuture<Ad> that will be filled with data from the photoRefsFuture,
+     * the partialAdFuture and the contactInfoFuture
      *
-     * @param photoRefsFuture
-     * @param partialAdFuture
+     * @param photoRefsFuture the future containing the photosRefs
+     * @param partialAdFuture the future containing the partialAdFuture
+     * @param contactInfoFuture the future containing the
      * @return a future that will contain the ad
      */
     private CompletableFuture<Ad> buildAdFromFutures(CompletableFuture<List<String>> photoRefsFuture, CompletableFuture<PartialAd> partialAdFuture, CompletableFuture<ContactInfo> contactInfoFuture) {
-        CompletableFuture<Ad> futureAd = CompletableFuture.allOf(photoRefsFuture,
+        return CompletableFuture.allOf(photoRefsFuture,
                 partialAdFuture, contactInfoFuture).thenApply(dummy -> {
             PartialAd partialAd = partialAdFuture.join();
             return new Ad(partialAd.title, partialAd.price, partialAd.address,
-                    partialAd.advertiserId, partialAd.description, photoRefsFuture.join(), partialAd.hasVTour, contactInfoFuture.join());
+                    partialAd.advertiserId, partialAd.description, photoRefsFuture.join(),
+                    partialAd.hasVTour, contactInfoFuture.join());
         });
-        return futureAd;
     }
 
     @Override
@@ -314,16 +334,12 @@ public class FirebaseDB implements Database {
             db.collection("user")
                     .document(u.getUserId())
                     .set(extractUserInfo(u))
-                    .addOnCompleteListener(task -> {
-                        isFinishedFuture.complete(task.isSuccessful());
-                    });
+                    .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         } else if (c != null) {
             db.collection("cards")
                     .document(c.getId())
                     .set(extractCardsInfo(c))
-                    .addOnCompleteListener(task -> {
-                        isFinishedFuture.complete(task.isSuccessful());
-                    });
+                    .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         }
         return isFinishedFuture;
     }
@@ -345,7 +361,7 @@ public class FirebaseDB implements Database {
      * This is useful when getting an Ad from the database and allow the use of only
      * two futures.
      */
-    private class PartialAd {
+    private static class PartialAd {
         public final String title;
         public final String price;
         public final String address;
@@ -362,6 +378,14 @@ public class FirebaseDB implements Database {
             this.description = description;
             this.hasVTour = hasVTour;
         }
+    }
+
+    private interface DatabaseGetCallback {
+        void getCallback(Task<DocumentSnapshot> task);
+    }
+
+    private interface DatabaseQueryCallback {
+        void getCallback(Task<QuerySnapshot> task);
     }
 }
 
