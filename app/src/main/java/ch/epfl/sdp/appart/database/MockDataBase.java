@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.database;
 
 
+import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class MockDataBase implements Database {
         refs.add("file:///android_asset/fake_ad_5.jpg");
         ad = new Ad("EPFL", "100'000 / mo", "Station 18, 1015 Lausanne",
                 "vetterli-id", "Ever wanted the EPFL campus all for yourself?",
-                refs);
+                refs, false, new ContactInfo("fake@appart.ch", "000000", "test_user"));
         users.put("id0", new AppUser("id0", "test0@epfl.ch"));
         users.put("id1", new AppUser("id1", "test1@epfl.ch"));
         users.put("id2", new AppUser("id2", "test2@epfl.ch"));
