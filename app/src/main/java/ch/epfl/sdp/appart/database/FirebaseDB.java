@@ -166,14 +166,7 @@ public class FirebaseDB implements Database {
 
         // upload photos TODO go parallel ?
         List<String> actualRefs = new ArrayList<>();
-        for (int i = 0; i < ad.getPhotosRefs().size(); i++){
-            Uri fileUri = Uri.fromFile(new File(ad.getPhotosRefs().get(i)));
-            StorageReference storeRef = storage.getReference()
-                    .child("Ads/" + newAdRef.getId() + "/photo" + i);
-            actualRefs.add(storeRef.getName());
-            storeRef.putFile(fileUri).addOnCompleteListener(
-                    task -> onCompleteAdOp(task, newAdRef, result));
-        }
+        uploadAdPhotos(ad, actualRefs, newAdRef, result);
 
         // TODO separate street and city of address
         // build and send card
@@ -186,6 +179,26 @@ public class FirebaseDB implements Database {
         // build and send ad
         newAdRef.set(extractAdInfo(ad)).addOnCompleteListener(
                 task -> onCompleteAdOp(task, newAdRef, result));
+        setPhotosReferencesForAd(actualRefs, newAdRef, result);
+
+        result.complete(newAdRef.getId());
+        return result;
+    }
+
+    private void uploadAdPhotos(Ad ad, List<String> actualRefs, DocumentReference newAdRef,
+                                CompletableFuture<String> result){
+        for (int i = 0; i < ad.getPhotosRefs().size(); i++){
+            Uri fileUri = Uri.fromFile(new File(ad.getPhotosRefs().get(i)));
+            StorageReference storeRef = storage.getReference()
+                    .child("Ads/" + newAdRef.getId() + "/photo" + i);
+            actualRefs.add(storeRef.getName());
+            storeRef.putFile(fileUri).addOnCompleteListener(
+                    task -> onCompleteAdOp(task, newAdRef, result));
+        }
+    }
+
+    private void setPhotosReferencesForAd(List<String> actualRefs, DocumentReference newAdRef,
+                                          CompletableFuture<String> result){
         for (int i = 0; i < actualRefs.size(); i++){
             Map<String, Object> data = new HashMap<>();
             data.put("ref", actualRefs.get(i));
@@ -194,9 +207,6 @@ public class FirebaseDB implements Database {
             photoRefDocReference.set(data).addOnCompleteListener(
                     task -> onCompleteAdOp(task, newAdRef, result));
         }
-
-        result.complete(newAdRef.getId());
-        return result;
     }
 
     private void onCompleteAdOp(Task<?> task, DocumentReference newAdRef,
