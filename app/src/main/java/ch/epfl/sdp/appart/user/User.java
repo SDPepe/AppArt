@@ -16,6 +16,7 @@ public interface User {
 
     /**
      * getter method for user email
+     *
      * @return user email as a string
      */
     String getUserEmail();
@@ -27,6 +28,7 @@ public interface User {
 
     /**
      * getter method for user phone number
+     *
      * @return user phone number as a string
      */
     String getPhoneNumber();
@@ -38,6 +40,7 @@ public interface User {
 
     /**
      * getter method for user profile picture
+     *
      * @return the profile picture (Object type was chosen as generic, should be changed once the object Picture is identified)
      */
     String getProfileImage();
@@ -70,6 +73,7 @@ public interface User {
 
     /**
      * getter method for ID
+     *
      * @return the unique id of the user
      */
     String getUserId();

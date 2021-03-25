@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart;
 
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+
 import org.junit.Test;
 
 import ch.epfl.sdp.appart.database.Database;
@@ -48,7 +49,7 @@ public class DatabaseUnitTest {
     @Test
     public void putUserTest() {
         Database db = mock(Database.class);
-        User user =  new AppUser("id3", "test3@epfl.ch");
+        User user = new AppUser("id3", "test3@epfl.ch");
         db.putUser(user);
         assertTrue(true);
     }
@@ -56,7 +57,7 @@ public class DatabaseUnitTest {
     @Test
     public void updateUserTest() {
         Database db = mock(Database.class);
-        User user =  new AppUser("id2", "test2_update@epfl.ch");
+        User user = new AppUser("id2", "test2_update@epfl.ch");
         db.updateUser(user);
         assertTrue(true);
     }

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class VirtualTourUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule  = new HiltAndroidRule(this);
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule vtourActivityRule =
@@ -34,7 +34,7 @@ public class VirtualTourUITest {
     }
 
     @Test
-    public void backButtonClosesActivity(){
+    public void backButtonClosesActivity() {
         onView(withId(R.id.tourBackButton)).perform(click());
         assertEquals(Activity.RESULT_CANCELED, vtourActivityRule.getScenario().getResult()
                 .getResultCode());
