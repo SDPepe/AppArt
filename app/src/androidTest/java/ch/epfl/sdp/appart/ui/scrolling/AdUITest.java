@@ -85,8 +85,10 @@ public class AdUITest {
         Ad testAd = database.getAd(cardID).join();
 
         onView(withId(R.id.titleField)).check(matches(withText(testAd.getTitle())));
-        onView(withId(R.id.addressField)).check(matches(withText(testAd.getAddress())));
-        onView(withId(R.id.priceField)).check(matches(withText(testAd.getPrice())));
+        onView(withId(R.id.addressField)).check(matches(withText(
+                testAd.getStreet() + ", " + testAd.getCity())));
+        onView(withId(R.id.priceField)).check(matches(withText(
+                String.valueOf(testAd.getPrice()) + " / " + testAd.getPricePeriod().toString())));
         onView(withId(R.id.descriptionField)).check(matches(withText(testAd.getDescription())));
         onView(withId(R.id.userField)).check(matches(withText(testAd.getContactInfo().name)));
     }
