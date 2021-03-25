@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -104,13 +105,13 @@ public class FirebaseDB implements Database {
      * @param success    the callback that is applied on success
      * @param failure    the callback that is applied on failure
      */
-    private void getDocAndApply(String collection, String docId, DatabaseGetCallback success,
-                                DatabaseGetCallback failure) {
+    private void getDocAndApply(String collection, String docId, Consumer<Task<DocumentSnapshot>> success,
+                                Consumer<Task<DocumentSnapshot>> failure) {
         this.db.collection(collection).document(docId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                success.getCallback(task);
+                success.accept(task);
             } else {
-                failure.getCallback(task);
+                failure.accept(task);
             }
         });
     }
@@ -124,13 +125,13 @@ public class FirebaseDB implements Database {
      * @param failure    the callback that is applied on failure
      */
     private void getDocAndApply(DocumentReference ref, String collection,
-                                DatabaseQueryCallback success,
-                                DatabaseQueryCallback failure) {
+                                Consumer<Task<QuerySnapshot>> success,
+                                Consumer<Task<QuerySnapshot>> failure) {
         ref.collection(collection).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                success.getCallback(task);
+                success.accept(task);
             } else {
-                failure.getCallback(task);
+                failure.accept(task);
             }
         });
     }
@@ -168,7 +169,7 @@ public class FirebaseDB implements Database {
                     adTask -> getDocAndApply(adTask.getResult().getReference(), "photosRefs",
                             task -> {
                                 List<String> photoRefs =
-                                        task.getResult().getDocuments().stream().map(documentSnapshot -> "Ads/" + (String) documentSnapshot.get("ref")).collect(Collectors.toList());
+                                        task.getResult().getDocuments().stream().map(documentSnapshot -> "Ads/" + documentSnapshot.get("ref")).collect(Collectors.toList());
                                 photoRefsFuture.complete(photoRefs);
                             }, task -> {
                                 photoRefsFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage()));
@@ -378,14 +379,6 @@ public class FirebaseDB implements Database {
             this.description = description;
             this.hasVTour = hasVTour;
         }
-    }
-
-    private interface DatabaseGetCallback {
-        void getCallback(Task<DocumentSnapshot> task);
-    }
-
-    private interface DatabaseQueryCallback {
-        void getCallback(Task<QuerySnapshot> task);
     }
 }
 
