@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -170,14 +171,8 @@ public class FirebaseDB implements Database {
             StorageReference storeRef = storage.getReference()
                     .child("Ads/" + newAdRef.getId() + "/photo" + i);
             actualRefs.add(storeRef.getName());
-            storeRef.putFile(fileUri).addOnCompleteListener( task -> {
-                if (!task.isSuccessful()) {
-                    storage.getReference().child("Ads/" + newAdRef).delete();
-                    // TODO symbol to indicate it wasn't successful?
-                    result.complete("*"
-                            + storage.getReference().child("Ads/" + newAdRef).getName());
-                }
-            });
+            storeRef.putFile(fileUri).addOnCompleteListener(
+                    task -> onCompleteAdOp(task, newAdRef, result));
         }
 
         // TODO separate street and city of address
@@ -204,26 +199,26 @@ public class FirebaseDB implements Database {
         return result;
     }
 
-    private void onCompleteAdOp(Task<Void> task, DocumentReference newAdRef,
+    private void onCompleteAdOp(Task<?> task, DocumentReference newAdRef,
                                 CompletableFuture<String> result){
         if (!task.isSuccessful()){
             storage.getReference().child("Ads/" + newAdRef).delete();
-            result.complete("*"
-                    + storage.getReference().child("Ads/" + newAdRef).getName());
+            result.completeExceptionally(
+                    new UnsupportedOperationException("Failed to put Ad in database"));
         }
     }
 
     private Map<String, Object> extractAdInfo(Ad ad){
-        Map<String,Object> docData = new HashMap<>();
-        docData.put("advertiserId", ad.getAdvertiserId());
-        docData.put("city", ad.getCity());
-        docData.put("description", ad.getDescription());
-        docData.put("HasVRTour", ad.hasVRTour());
-        docData.put("price", ad.getPrice());
-        docData.put("pricePeriod", ad.getPricePeriod().ordinal());
-        docData.put("street", ad.getStreet());
-        docData.put("title", ad.getTitle());
-        return docData;
+        Map<String,Object> adData = new HashMap<>();
+        adData.put("advertiserId", ad.getAdvertiserId());
+        adData.put("city", ad.getCity());
+        adData.put("description", ad.getDescription());
+        adData.put("HasVRTour", ad.hasVRTour());
+        adData.put("price", ad.getPrice());
+        adData.put("pricePeriod", ad.getPricePeriod().ordinal());
+        adData.put("street", ad.getStreet());
+        adData.put("title", ad.getTitle());
+        return adData;
     }
 
     private Map<String, Object> extractUserInfo(User user) {
