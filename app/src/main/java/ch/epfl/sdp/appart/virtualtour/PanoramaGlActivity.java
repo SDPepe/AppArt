@@ -7,7 +7,11 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.appart.R;
 
+import com.panoramagl.PLBlankPanorama;
+import com.panoramagl.PLCubicPanorama;
+import com.panoramagl.PLCylindricalPanorama;
 import com.panoramagl.PLICamera;
+import com.panoramagl.PLIQuadricPanorama;
 import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
@@ -29,21 +33,26 @@ public class PanoramaGlActivity extends AppCompatActivity {
         plManager.setInertiaEnabled(false);
         plManager.setZoomEnabled(false);
 
+
         PLSphericalPanorama panorama = new PLSphericalPanorama();
+
+        panorama.getCamera().lookAtAndZoomFactor(30.0f, 90.0f, 0.4f, false);
         panorama.setImage(new PLImage(PLUtils.getBitmap(this, R.drawable.panorama_test), false));
 
         float pitch = 5f;
         float yaw = 0f;
-        float zoomFactor = 0.8f;
+        float zoomFactor = 1.0f;
 
-
+        /*
         PLICamera camera = plManager.getPanorama().getCamera();
         pitch = camera.getPitch();
         yaw = camera.getYaw();
         zoomFactor = camera.getZoomFactor();
 
         panorama.getCamera().lookAtAndZoomFactor(pitch, yaw, zoomFactor, false);
+         */
         plManager.setPanorama(panorama);
+
     }
 
     @Override

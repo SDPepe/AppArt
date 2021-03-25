@@ -3,10 +3,12 @@ package ch.epfl.sdp.appart.virtualtour;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.vr.sdk.widgets.common.VrWidgetView;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
 import ch.epfl.sdp.appart.R;
@@ -25,6 +27,8 @@ public class VirtualTourActivity extends AppCompatActivity {
         options.inputType = VrPanoramaView.Options.TYPE_MONO;
         Bitmap panoramaBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.panorama_test);
         vrView.loadImageFromBitmap(panoramaBitmap, options);
+        vrView.setPureTouchTracking(true);
+
     }
 
     @Override
