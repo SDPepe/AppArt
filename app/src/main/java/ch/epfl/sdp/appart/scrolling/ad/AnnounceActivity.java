@@ -16,7 +16,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import ch.epfl.sdp.appart.scrolling.CameraActivity;
-import com.bumptech.glide.Glide;
 import java.util.List;
 
 
