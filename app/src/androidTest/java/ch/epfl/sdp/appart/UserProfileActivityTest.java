@@ -17,8 +17,11 @@ import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.runner.AndroidJUnit4;
 import ch.epfl.sdp.appart.user.UserProfileActivity;
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -38,10 +41,14 @@ import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
-@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4ClassRunner.class)
+@HiltAndroidTest
 public class UserProfileActivityTest {
 
-    @Rule
+    @Rule(order = 0)
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+
+    @Rule(order = 1)
     public ActivityScenarioRule<UserProfileActivity> mActivityTestRule = new ActivityScenarioRule<>(UserProfileActivity.class);
 
     @Test

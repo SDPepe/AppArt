@@ -4,30 +4,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.Database;
-import ch.epfl.sdp.appart.database.FirebaseDB;
+import dagger.hilt.android.AndroidEntryPoint;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.concurrent.CompletableFuture;
 
+import javax.inject.Inject;
+
 /**
  * This class manages the UI of the user profile and calls
  * firebase class in order to manage the updated information.
  */
+@AndroidEntryPoint
 public class UserProfileActivity extends AppCompatActivity {
 
     /* temporary user */
     private User sessionUser;
 
     /* Firestore database instance for db updates */
-    private Database db;
+    @Inject
+    Database db;
 
     /* UI components */
     private Button modifyButton;
@@ -59,9 +63,6 @@ public class UserProfileActivity extends AppCompatActivity {
         this.genderView.setEnabled(ageView.isEnabled());
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer);
         this.imageView = findViewById(R.id.imageView);
-
-        /* firebase storage initialisation */
-        this.db = new FirebaseDB();
 
         /* retrieve session user copy for use info */
         this.sessionUser = getSessionUserFromDB();
