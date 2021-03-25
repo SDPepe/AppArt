@@ -106,7 +106,7 @@ public class CameraActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     if(requestCode == CAMERA_PERM_CODE){
-      if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+      if ((grantResults.length > 0) & (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
         startCamera();
       } else {
         makeText(this, "Camera permission is required to use camera!", Toast.LENGTH_SHORT).show();
