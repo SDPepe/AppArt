@@ -13,6 +13,9 @@ import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
 import ch.epfl.sdp.appart.R;
 
+/**
+ * This is the other library that I found and I let here until we decide
+ */
 public class VirtualTourActivity extends AppCompatActivity {
 
     private VrPanoramaView vrView;
@@ -28,7 +31,6 @@ public class VirtualTourActivity extends AppCompatActivity {
         Bitmap panoramaBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.panorama_test);
         vrView.loadImageFromBitmap(panoramaBitmap, options);
         vrView.setPureTouchTracking(true);
-
     }
 
     @Override
