@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.database;
 
+import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import java.util.ArrayList;
@@ -78,6 +79,14 @@ public class MockDataBase implements Database {
         } else {
             result.complete(false);
         }
+        return result;
+    }
+
+    // TODO implement
+    @Override
+    public CompletableFuture<String> putAd(Ad ad){
+        CompletableFuture<String> result = new CompletableFuture<>();
+        result.complete("1234");
         return result;
     }
 

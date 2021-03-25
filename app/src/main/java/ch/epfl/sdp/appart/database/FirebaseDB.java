@@ -1,13 +1,20 @@
 package ch.epfl.sdp.appart.database;
 
+import android.net.Uri;
+
+import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -148,6 +155,72 @@ public class FirebaseDB implements Database {
     @Override
     public CompletableFuture<Boolean> updateUser(User user) {
         return update(user, null);
+    }
+
+    @Override
+    public CompletableFuture<String> putAd(Ad ad) {
+        CompletableFuture<String> result = new CompletableFuture<>();
+        DocumentReference newAdRef = db.collection("ads").document();
+        
+        // upload photos TODO go parallel ?
+        List<String> actualRefs = new ArrayList<>();
+        for (int i = 0; i < ad.getPhotosRefs().size(); i++){
+            Uri fileUri = Uri.fromFile(new File(ad.getPhotosRefs().get(i)));
+            StorageReference storeRef = storage.getReference()
+                    .child("Ads/" + newAdRef.getId() + "/photo" + i);
+            actualRefs.add(storeRef.getName());
+            storeRef.putFile(fileUri).addOnCompleteListener( task -> {
+                if (!task.isSuccessful()) {
+                    storage.getReference().child("Ads/" + newAdRef).delete();
+                    // TODO symbol to indicate it wasn't successful?
+                    result.complete("*"
+                            + storage.getReference().child("Ads/" + newAdRef).getName());
+                }
+            });
+        }
+
+        // TODO separate street and city of address
+        // build and send card
+        Card c = new Card(newAdRef.getId(), ad.getAdvertiserId(), ad.getAddress(),
+                Long.parseLong(ad.getPrice()), actualRefs.get(0), ad.hasVRTour());
+        DocumentReference cardRef = db.collection("cards").document();
+        cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
+                task -> onCompleteAdOp(task, newAdRef, result));
+
+        // build and send ad
+        newAdRef.set(extractAdInfo(ad)).addOnCompleteListener(
+                task -> onCompleteAdOp(task, newAdRef, result));
+        for (int i = 0; i < actualRefs.size(); i++){
+            Map<String, Object> data = new HashMap<>();
+            data.put("ref", actualRefs.get(i));
+            DocumentReference photoRefDocReference = newAdRef.collection("photosRefs")
+                    .document();
+            photoRefDocReference.set(data).addOnCompleteListener(
+                    task -> onCompleteAdOp(task, newAdRef, result));
+        }
+
+        result.complete(newAdRef.getId());
+        return result;
+    }
+
+    private void onCompleteAdOp(Task<Void> task, DocumentReference newAdRef,
+                                CompletableFuture<String> result){
+        if (!task.isSuccessful()){
+            storage.getReference().child("Ads/" + newAdRef).delete();
+            result.complete("*"
+                    + storage.getReference().child("Ads/" + newAdRef).getName());
+        }
+    }
+
+    private Map<String, Object> extractAdInfo(Ad ad){
+        Map<String,Object> docData = new HashMap<>();
+        docData.put("address", ad.getAddress());
+        docData.put("advertiserId", ad.getAdvertiserId());
+        docData.put("description", ad.getDescription());
+        docData.put("HasVRTour", ad.hasVRTour());
+        docData.put("price", ad.getPrice());
+        docData.put("title", ad.getTitle());
+        return docData;
     }
 
     private Map<String, Object> extractUserInfo(User user) {
