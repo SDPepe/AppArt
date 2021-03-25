@@ -133,7 +133,7 @@ public class CameraActivity extends AppCompatActivity {
       }
     }
   }
-  
+
   //add image to storage database
 /*
   private void uploadImageToFirebase(String name, Uri imageUri){
