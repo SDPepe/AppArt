@@ -6,7 +6,17 @@ import java.util.List;
 
 public enum PricePeriod {
 
-    DAY, WEEK, MONTH;
+    DAY("day"), WEEK("week"), MONTH("month");
+
+    private String name;
+
+    PricePeriod(String name){
+        this.name = name;
+    }
+
+    public String toString(){
+        return name;
+    }
 
     public static final List<PricePeriod> ALL = Collections
             .unmodifiableList(Arrays.asList(values()));
