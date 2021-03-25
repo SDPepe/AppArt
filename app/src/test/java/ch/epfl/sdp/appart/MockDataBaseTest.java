@@ -9,7 +9,10 @@ import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.scrolling.card.Card;
+import ch.epfl.sdp.appart.user.AppUser;
+import ch.epfl.sdp.appart.user.User;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -47,6 +50,17 @@ public class MockDataBaseTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void userOperationsWork() {
+        User user = new AppUser("1234", "test.appart@epfl.ch");
+        assertTrue(dataBase.putUser(user).join());
+        assertEquals(user, dataBase.getUser("1234").join());
+        assertTrue(dataBase.updateUser(user).join());
+        assertEquals(user, dataBase.getUser("1234").join());
+        User user3 = new AppUser("4321", "test.appart@epfl.ch");
+        assertFalse(dataBase.updateUser(user3).join());
     }
 
 }

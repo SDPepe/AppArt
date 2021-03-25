@@ -20,7 +20,7 @@ public class AdUnitTest {
     private ContactInfo ci;
 
     @Before
-    public void setup(){
+    public void setup() {
         List<String> refs = new ArrayList<>();
         refs.add("ref");
         ci = new ContactInfo("test@appart.ch", "0790790709",
@@ -32,7 +32,7 @@ public class AdUnitTest {
 
 
     @Test
-    public void exceptionOnNullArg1(){
+    public void exceptionOnNullArg1() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAD = new Ad(null, 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
@@ -41,7 +41,7 @@ public class AdUnitTest {
     }
 
     @Test
-    public void exceptionOnNullArg2(){
+    public void exceptionOnNullArg2() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAD = new Ad("Ad title", 1000, null, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
@@ -50,7 +50,7 @@ public class AdUnitTest {
     }
 
     @Test
-    public void exceptionOnNullArg3(){
+    public void exceptionOnNullArg3() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, null,
                     "1015 Lausanne", "unknown", "Cool place",
@@ -59,7 +59,7 @@ public class AdUnitTest {
     }
 
     @Test
-    public void exceptionOnNullArg4(){
+    public void exceptionOnNullArg4() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     null, "unknown", "Cool place",
@@ -68,7 +68,7 @@ public class AdUnitTest {
     }
 
     @Test
-    public void exceptionOnNullArg5(){
+    public void exceptionOnNullArg5() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", null, "Cool place",
@@ -77,7 +77,7 @@ public class AdUnitTest {
     }
 
     @Test
-    public void exceptionOnNullArg6(){
+    public void exceptionOnNullArg6() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", null,

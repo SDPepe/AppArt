@@ -63,8 +63,7 @@ public class FirebaseDB implements Database {
                         for (QueryDocumentSnapshot document : task.getResult()) {
 
                             queriedCards.add(
-                                    new Card(document.getId(), (String) document.getData().get(
-                                            "userId"),
+                                    new Card(document.getId(), (String) document.getData().get("userId"),
                                             (String) document.getData().get("city"),
                                             (long) document.getData().get("price"),
                                             (String) document.getData().get("imageUrl")));
@@ -91,8 +90,7 @@ public class FirebaseDB implements Database {
                 resultIdFuture.complete(task.getResult().getId());
             } else {
                 resultIdFuture
-                        .completeExceptionally(new IllegalStateException("query of the cards " +
-                                "failed"));
+                        .completeExceptionally(new IllegalStateException("query of the cards failed"));
             }
         });
         return resultIdFuture;
@@ -417,12 +415,16 @@ public class FirebaseDB implements Database {
             db.collection("user")
                     .document(u.getUserId())
                     .set(extractUserInfo(u))
-                    .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
+                    .addOnCompleteListener(task -> {
+                        isFinishedFuture.complete(task.isSuccessful());
+                    });
         } else if (c != null) {
             db.collection("cards")
                     .document(c.getId())
                     .set(extractCardsInfo(c))
-                    .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
+                    .addOnCompleteListener(task -> {
+                        isFinishedFuture.complete(task.isSuccessful());
+                    });
         }
         return isFinishedFuture;
     }
