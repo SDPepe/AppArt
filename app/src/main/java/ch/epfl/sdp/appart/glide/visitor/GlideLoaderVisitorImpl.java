@@ -43,7 +43,7 @@ public final class GlideLoaderVisitorImpl implements GlideLoaderVisitor {
     @Override
     public void visit(FirebaseDB database) {
         Glide.with(context)
-                .load(database.getStorageReference("Cards/" + imageReference))
+                .load(database.getStorageReference(imageReference))
                 .into(view);
     }
 
