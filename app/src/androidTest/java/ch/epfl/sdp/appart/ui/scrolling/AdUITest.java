@@ -1,18 +1,11 @@
 package ch.epfl.sdp.appart.ui.scrolling;
 
-import android.app.Application;
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
 
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,31 +31,30 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
 
 @UninstallModules(FireBaseModule.class)
 @HiltAndroidTest
 public class AdUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule  = new HiltAndroidRule(this);
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
-    static String cardID = "1PoUWbeNHvMNotxwAui5";
-    static Intent intent;
+    static final String cardID = "1PoUWbeNHvMNotxwAui5";
+    static final Intent intent;
+
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(), AnnounceActivity.class);
         intent.putExtra("cardID", cardID);
     }
 
     @Rule(order = 1)
-    public ActivityScenarioRule scrollingActivityRule = new ActivityScenarioRule<>(intent);
+    public ActivityScenarioRule<AnnounceActivity> scrollingActivityRule = new ActivityScenarioRule<>(intent);
 
     @BindValue
+    final
     Database database = new MockDataBase();
 
     @Before
@@ -72,14 +64,14 @@ public class AdUITest {
     }
 
     @Test
-    public void clickOnVTourOpensVTourActivity(){
+    public void clickOnVTourOpensVTourActivity() {
 
         onView(withId(R.id.vtourButton)).perform(click());
         intended(hasComponent(VirtualTourActivity.class.getName()));
     }
 
     @Test
-    public void contactDialogTests(){
+    public void contactDialogTests() {
         onView(withId(R.id.contactInfoButton)).perform(scrollTo()).perform(click());
         onView(withText("Close"))
                 .inRoot(isDialog())

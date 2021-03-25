@@ -11,7 +11,6 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.Database;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -27,14 +26,14 @@ public class AnnounceViewModel extends ViewModel {
     private final MutableLiveData<String> userPhone = new MutableLiveData<>();
     private final MutableLiveData<String> userEmail = new MutableLiveData<>();
 
-    Database db;
+    final Database db;
 
     @Inject
     public AnnounceViewModel(Database db) {
         this.db = db;
     }
 
-    public void initAd(String id){
+    public void initAd(String id) {
 
         CompletableFuture<Ad> futureAd = db.getAd(id);
         futureAd.exceptionally(e -> {
@@ -53,20 +52,36 @@ public class AnnounceViewModel extends ViewModel {
         });
     }
 
-    public LiveData<String> getTitle(){ return adTitle; }
+    public LiveData<String> getTitle() {
+        return adTitle;
+    }
 
-    public LiveData<List<String>> getPhotosRefs(){ return adPhotosRefs; }
+    public LiveData<List<String>> getPhotosRefs() {
+        return adPhotosRefs;
+    }
 
-    public LiveData<String> getAddress(){ return adAddress; }
+    public LiveData<String> getAddress() {
+        return adAddress;
+    }
 
-    public LiveData<String> getPrice(){ return adPrice; }
+    public LiveData<String> getPrice() {
+        return adPrice;
+    }
 
-    public LiveData<String> getDescription(){ return adDescription; }
+    public LiveData<String> getDescription() {
+        return adDescription;
+    }
 
-    public LiveData<String> getAdvertiser() { return adAdvertiser; }
+    public LiveData<String> getAdvertiser() {
+        return adAdvertiser;
+    }
 
-    public LiveData<String> getPhoneNumber() { return userPhone; }
+    public LiveData<String> getPhoneNumber() {
+        return userPhone;
+    }
 
-    public LiveData<String> getEmailAddress() { return userEmail; }
+    public LiveData<String> getEmailAddress() {
+        return userEmail;
+    }
 
 }

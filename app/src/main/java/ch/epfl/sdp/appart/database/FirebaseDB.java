@@ -105,7 +105,8 @@ public class FirebaseDB implements Database {
      * @param success    the callback that is applied on success
      * @param failure    the callback that is applied on failure
      */
-    private void getDocAndApply(String collection, String docId, Consumer<Task<DocumentSnapshot>> success,
+    private void getDocAndApply(String collection, String docId,
+                                Consumer<Task<DocumentSnapshot>> success,
                                 Consumer<Task<DocumentSnapshot>> failure) {
         this.db.collection(collection).document(docId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -189,12 +190,13 @@ public class FirebaseDB implements Database {
 
             partialAdFuture.thenAccept(partialAd -> getDocAndApply("users",
                     partialAd.advertiserId, userTask -> {
-                String userEmail = (String) userTask.getResult().get("email");
-                String userPhoneNumber = (String) userTask.getResult().get("phone");
-                String name = (String) userTask.getResult().get("name");
-                contactInfoFuture.complete(new ContactInfo(userEmail, userPhoneNumber
-                        , name));
-            }, userTask -> contactInfoFuture.completeExceptionally(new DatabaseRequestFailedException(userTask.getException().getMessage()))));
+                        String userEmail = (String) userTask.getResult().get("email");
+                        String userPhoneNumber = (String) userTask.getResult().get("phone");
+                        String name = (String) userTask.getResult().get("name");
+                        contactInfoFuture.complete(new ContactInfo(userEmail, userPhoneNumber
+                                , name));
+                    },
+                    userTask -> contactInfoFuture.completeExceptionally(new DatabaseRequestFailedException(userTask.getException().getMessage()))));
         });
     }
 
@@ -224,8 +226,8 @@ public class FirebaseDB implements Database {
      * Returns a CompletableFuture<Ad> that will be filled with data from the photoRefsFuture,
      * the partialAdFuture and the contactInfoFuture
      *
-     * @param photoRefsFuture the future containing the photosRefs
-     * @param partialAdFuture the future containing the partialAdFuture
+     * @param photoRefsFuture   the future containing the photosRefs
+     * @param partialAdFuture   the future containing the partialAdFuture
      * @param contactInfoFuture the future containing the
      * @return a future that will contain the ad
      */
@@ -372,6 +374,8 @@ public class FirebaseDB implements Database {
 
         PartialAd(String title, String price, String address, String advertiserId,
                   String description, boolean hasVTour) {
+            if (title == null || price == null || address == null || advertiserId == null || description == null)
+                throw new IllegalArgumentException();
             this.title = title;
             this.price = price;
             this.address = address;

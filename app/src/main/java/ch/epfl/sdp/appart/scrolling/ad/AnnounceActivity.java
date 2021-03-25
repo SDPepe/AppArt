@@ -2,13 +2,10 @@ package ch.epfl.sdp.appart.scrolling.ad;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -18,17 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitorImpl;
-import ch.epfl.sdp.appart.scrolling.ScrollingViewModel;
-import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -37,13 +30,12 @@ public class AnnounceActivity extends AppCompatActivity {
 
     @Inject
     Database database;
-    private AnnounceViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
-        mViewModel = new ViewModelProvider(this).get(AnnounceViewModel.class);
+        AnnounceViewModel mViewModel = new ViewModelProvider(this).get(AnnounceViewModel.class);
 
         mViewModel.getTitle().observe(this, this::updateTitle);
         mViewModel.getPhotosRefs().observe(this, this::updatePhotos);
@@ -69,11 +61,12 @@ public class AnnounceActivity extends AppCompatActivity {
         horizontalLayout.removeAllViews();
 
         for (int i = 0; i < references.size(); i++) {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater =
+                    (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, null);
             ImageView photo = myView.findViewById(R.id.photoImageView);
             database.accept(new GlideLoaderVisitorImpl(this, photo,
-                     references.get(i)));
+                    references.get(i)));
             horizontalLayout.addView(myView);
             if (i != 4) {
                 Space hspacer = new Space(this);

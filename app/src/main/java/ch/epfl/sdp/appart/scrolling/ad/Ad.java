@@ -4,13 +4,13 @@ import java.util.List;
 
 public class Ad {
 
-    private String title;
-    private String price;
-    private String address;
-    private String advertiserId;
-    private String description;
-    private List<String> photosRefs;
-    private boolean hasVRTour;
+    private final String title;
+    private final String price;
+    private final String address;
+    private final String advertiserId;
+    private final String description;
+    private final List<String> photosRefs;
+    private final boolean hasVRTour;
     private ContactInfo contactInfo;
 
     public Ad(String title, String price, String address,
@@ -36,13 +36,14 @@ public class Ad {
     }
 
     public Ad(String title, String price, String address,
-              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour, ContactInfo contactInfo) {
+              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour
+            , ContactInfo contactInfo) {
 
         if (title == null || price == null || address == null)
             throw new IllegalArgumentException("An argument is null!");
         if (advertiserId == null || description == null || photosRefs == null)
             throw new IllegalArgumentException("An argument is null!");
-        if(contactInfo == null) {
+        if (contactInfo == null) {
             throw new IllegalArgumentException();
         }
 
