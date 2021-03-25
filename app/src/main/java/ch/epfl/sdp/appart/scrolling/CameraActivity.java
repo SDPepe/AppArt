@@ -105,32 +105,26 @@ public class CameraActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
-    switch (requestCode) {
-      case CAMERA_PERM_CODE:
-        if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-          startCamera();
-        } else {
-          makeText(this, "Camera permission is required to use camera!", Toast.LENGTH_SHORT).show();
-        }
-        break;
-      default:
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if(requestCode == CAMERA_PERM_CODE){
+      if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+        startCamera();
+      } else {
+        makeText(this, "Camera permission is required to use camera!", Toast.LENGTH_SHORT).show();
+      }
+    } else {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == CAMERA_REQUEST_CODE) {
-      if (resultCode == Activity.RESULT_OK) {
+    if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
         mImageView.setImageURI(imageUri);
-      }
     }
-    if (requestCode == GALLERY_REQUEST_CODE) {
-      if (resultCode == Activity.RESULT_OK) {
+    if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
         Uri imageUri = data.getData();
         mImageView.setImageURI(imageUri);
-      }
     }
   }
 
