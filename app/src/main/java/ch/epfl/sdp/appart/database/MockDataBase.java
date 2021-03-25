@@ -5,6 +5,7 @@ import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +106,7 @@ public class MockDataBase implements Database {
 
     // TODO implement
     @Override
-    public CompletableFuture<String> putAd(Ad ad){
+    public CompletableFuture<String> putAd(Ad ad) {
         CompletableFuture<String> result = new CompletableFuture<>();
         result.complete("1234");
         return result;
