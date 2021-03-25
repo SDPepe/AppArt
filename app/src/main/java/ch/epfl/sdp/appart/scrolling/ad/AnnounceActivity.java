@@ -2,13 +2,10 @@ package ch.epfl.sdp.appart.scrolling.ad;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -16,13 +13,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
+import java.util.List;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitorImpl;
 import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -36,23 +35,38 @@ public class AnnounceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
+        AnnounceViewModel mViewModel = new ViewModelProvider(this).get(AnnounceViewModel.class);
 
-        initAdContent();
+        mViewModel.getTitle().observe(this, this::updateTitle);
+        mViewModel.getPhotosRefs().observe(this, this::updatePhotos);
+        mViewModel.getAddress().observe(this, this::updateAddress);
+        mViewModel.getPrice().observe(this, this::updatePrice);
+        mViewModel.getDescription().observe(this, this::updateDescription);
+        mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
+
+        mViewModel.initAd(getIntent().getStringExtra("adID"));
     }
 
-    private void initAdContent() {
-        // TODO update with database query
-        TextView title = findViewById(R.id.titleField);
-        title.setText(R.string.mock_title);
-        LinearLayout verticalLayout = findViewById(R.id.verChildren);
+    private void updateTitle(String title) {
+        TextView titleView = findViewById(R.id.titleField);
+        if (title != null) {
+            titleView.setText(title);
+        } else {
+            titleView.setText(R.string.default_loading);
+        }
+    }
+
+    private void updatePhotos(List<String> references) {
         LinearLayout horizontalLayout = findViewById(R.id.horChildren);
-        for (int i = 0; i < 5; i++) {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        horizontalLayout.removeAllViews();
+
+        for (int i = 0; i < references.size(); i++) {
+            LayoutInflater inflater =
+                    (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, null);
             ImageView photo = myView.findViewById(R.id.photoImageView);
-            Glide.with(this)
-                    .load(Uri.parse("file:///android_asset/fake_ad_" + (i + 1) + ".jpg"))
-                    .into(photo);
+            database.accept(new GlideLoaderVisitorImpl(this, photo,
+                    references.get(i)));
             horizontalLayout.addView(myView);
             if (i != 4) {
                 Space hspacer = new Space(this);
@@ -63,18 +77,42 @@ public class AnnounceActivity extends AppCompatActivity {
                 horizontalLayout.addView(hspacer);
             }
         }
-        setFields();
     }
 
-    private void setFields() {
-        TextView addressField = findViewById(R.id.addressField);
-        addressField.setText(R.string.mock_address);
-        TextView priceField = findViewById(R.id.priceField);
-        priceField.setText(R.string.mock_price);
-        TextView descriptionField = findViewById(R.id.descriptionField);
-        descriptionField.setText(getString(R.string.mock_description));
-        TextView userField = findViewById(R.id.userField);
-        userField.setText(R.string.mock_user);
+    private void updateAddress(String address) {
+        TextView addressView = findViewById(R.id.addressField);
+        if (address != null) {
+            addressView.setText(address);
+        } else {
+            addressView.setText(R.string.default_loading);
+        }
+    }
+
+    private void updatePrice(String price) {
+        TextView priceView = findViewById(R.id.priceField);
+        if (price != null) {
+            priceView.setText(price);
+        } else {
+            priceView.setText(R.string.default_loading);
+        }
+    }
+
+    private void updateDescription(String description) {
+        TextView descriptionView = findViewById(R.id.descriptionField);
+        if (description != null) {
+            descriptionView.setText(description);
+        } else {
+            descriptionView.setText(R.string.default_loading);
+        }
+    }
+
+    private void updateAdvertiser(String username) {
+        TextView usernameView = findViewById(R.id.userField);
+        if (username != null) {
+            usernameView.setText(username);
+        } else {
+            usernameView.setText(R.string.default_loading);
+        }
     }
 
     public void goBack(View view) {
@@ -82,7 +120,7 @@ public class AnnounceActivity extends AppCompatActivity {
     }
 
     public void openContactInfo(View view) {
-        DialogFragment contactFrag = new ContactInfoDialogFragment();
+        DialogFragment contactFrag = ContactInfoDialogFragment.newInstance();
         //contactFrag.getView().setBackgroundColor(Color.TRANSPARENT);
         contactFrag.show(getSupportFragmentManager(), "contact dialog");
     }
