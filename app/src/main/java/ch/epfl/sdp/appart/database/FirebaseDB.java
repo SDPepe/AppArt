@@ -74,6 +74,7 @@ public class FirebaseDB implements Database {
         return result;
     }
 
+    // TODO remove
     @Override
     public CompletableFuture<String> putCard(Card card) {
         CompletableFuture<String> resultIdFuture = new CompletableFuture<>();
@@ -161,7 +162,7 @@ public class FirebaseDB implements Database {
     public CompletableFuture<String> putAd(Ad ad) {
         CompletableFuture<String> result = new CompletableFuture<>();
         DocumentReference newAdRef = db.collection("ads").document();
-        
+
         // upload photos TODO go parallel ?
         List<String> actualRefs = new ArrayList<>();
         for (int i = 0; i < ad.getPhotosRefs().size(); i++){
@@ -181,8 +182,8 @@ public class FirebaseDB implements Database {
 
         // TODO separate street and city of address
         // build and send card
-        Card c = new Card(newAdRef.getId(), ad.getAdvertiserId(), ad.getAddress(),
-                Long.parseLong(ad.getPrice()), actualRefs.get(0), ad.hasVRTour());
+        Card c = new Card(newAdRef.getId(), ad.getAdvertiserId(), ad.getCity(),
+                ad.getPrice(), actualRefs.get(0), ad.hasVRTour());
         DocumentReference cardRef = db.collection("cards").document();
         cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
                 task -> onCompleteAdOp(task, newAdRef, result));
@@ -214,11 +215,13 @@ public class FirebaseDB implements Database {
 
     private Map<String, Object> extractAdInfo(Ad ad){
         Map<String,Object> docData = new HashMap<>();
-        docData.put("address", ad.getAddress());
         docData.put("advertiserId", ad.getAdvertiserId());
+        docData.put("city", ad.getCity());
         docData.put("description", ad.getDescription());
         docData.put("HasVRTour", ad.hasVRTour());
         docData.put("price", ad.getPrice());
+        docData.put("pricePeriod", ad.getPricePeriod().ordinal());
+        docData.put("street", ad.getStreet());
         docData.put("title", ad.getTitle());
         return docData;
     }
