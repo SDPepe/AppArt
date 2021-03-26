@@ -52,33 +52,33 @@ public class AdCreationViewModel extends ViewModel {
     }
 
     public void setTitle(String s) {
-        title.setValue(s);
+        title.postValue(s);
     }
 
     public void setStreet(String s) {
-        street.setValue(s);
+        street.postValue(s);
     }
 
     public void setCity(String s) {
-        city.setValue(s);
+        city.postValue(s);
     }
 
     public void setPrice(String s) {
-        price.setValue(Long.parseLong(s));
+        price.postValue(Long.parseLong(s));
     }
 
     public void setPricePeriod(PricePeriod p) {
-        pricePeriod.setValue(p);
+        pricePeriod.postValue(p);
     }
 
     public void setDescription(String s) {
-        description.setValue(s);
+        description.postValue(s);
     }
 
     public void setPhotosRefs(List<String> ls) {
-        photosRefs.setValue(ls);
+        photosRefs.postValue(ls);
     }
 
-    public void setVRTourEnable(boolean b) { VRTourEnable.setValue(b); }
+    public void setVRTourEnable(boolean b) { VRTourEnable.postValue(b); }
 
 }
