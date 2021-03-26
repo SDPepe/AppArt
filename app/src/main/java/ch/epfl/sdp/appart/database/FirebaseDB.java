@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.ad.Ad;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
@@ -265,6 +266,11 @@ public class FirebaseDB implements Database {
 
     @Override
     public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public void accept(GlideBitmapLoaderVisitor visitor) {
         visitor.visit(this);
     }
 

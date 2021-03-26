@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.database;
 
 import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.ad.Ad;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -114,6 +115,9 @@ public class MockDataBase implements Database {
 
     public void accept(GlideLoaderVisitor visitor) {
         visitor.visit(this);
+    }
 
+    public void accept(GlideBitmapLoaderVisitor visitor) {
+        visitor.visit(this);
     }
 }

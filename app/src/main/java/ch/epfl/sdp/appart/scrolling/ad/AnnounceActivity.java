@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.scrolling.ad;
 
 import android.content.Context;
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.R;
+
+import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitorImpl;
-import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -125,8 +128,8 @@ public class AnnounceActivity extends AppCompatActivity {
         contactFrag.show(getSupportFragmentManager(), "contact dialog");
     }
 
-    public void openVirtualTour(View view) {
-        Intent intent = new Intent(this, VirtualTourActivity.class);
+    public void openVirtualTour(View view){
+        Intent intent = new Intent(this, PanoramaGlActivity.class);
         startActivity(intent);
     }
 
