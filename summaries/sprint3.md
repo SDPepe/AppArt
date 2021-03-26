@@ -20,5 +20,9 @@ This week I worked on the CameraActivity. In practice I have implemented an acti
 
 ## Quentin
 
+I worked on the login service. I created a wrapper for the emulator login service and I mocked the login as requested at the meeting last week. The goal was to be able to increase the coverage 
+by testing the wrapper with the emulator which would also test the main cloud login service. 
+After that I worked on the virtual reality tour and could implement a basic activity where the user can see a 360 degree picture of an apartment. It works great and I had to load the image with Glide which presented difficulties because the library I used needs bitmaps. 
+Finally I invested how to take 360 pictures. The precise process that we need to achieve is called spherical stiching. I found no direct libaries to do this but OpenCV offers a framework for stitching. It would be great to 
 
 ## Overall team
