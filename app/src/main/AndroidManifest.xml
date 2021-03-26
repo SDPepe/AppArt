@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ch.epfl.sdp.appart">
+  package="ch.epfl.sdp.appart">
 
     <application
-        android:name=".hilt.HiltApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:name=".hilt.HiltApplication"
+      android:networkSecurityConfig="@xml/network_security_config"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme">
+        <activity android:name=".scrolling.CameraActivity"/>
         <activity android:name=".user.UserProfileActivity"/>
         <activity android:name=".user.CreateUserActivity" />
         <activity android:name=".user.ResetActivity" />
-        <!--
-               Set to true if your app is Standalone, that is, it does not require the handheld
-               app to run.
-        -->
+      
         <activity android:name=".user.LoginActivity" />
-        <!--
-               Set to true if your app is Standalone, that is, it does not require the handheld
-               app to run.
-        -->
+     
+
         <activity android:name=".virtualtour.PanoramaGlActivity" />
+
         <activity android:name=".scrolling.ad.AnnounceActivity" />
         <activity android:name=".scrolling.ScrollingActivity" />
         <activity android:name=".MainActivity">
@@ -36,5 +33,7 @@
     </application>
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
 </manifest>
