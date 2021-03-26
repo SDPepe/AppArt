@@ -17,7 +17,7 @@ import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.hilt.FireBaseModule;
 import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.scrolling.ad.AnnounceActivity;
-import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
+import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -67,7 +67,7 @@ public class AdUITest {
     public void clickOnVTourOpensVTourActivity() {
 
         onView(withId(R.id.vtourButton)).perform(click());
-        intended(hasComponent(VirtualTourActivity.class.getName()));
+        intended(hasComponent(PanoramaGlActivity.class.getName()));
     }
 
     @Test
@@ -85,8 +85,10 @@ public class AdUITest {
         Ad testAd = database.getAd(cardID).join();
 
         onView(withId(R.id.titleField)).check(matches(withText(testAd.getTitle())));
-        onView(withId(R.id.addressField)).check(matches(withText(testAd.getAddress())));
-        onView(withId(R.id.priceField)).check(matches(withText(testAd.getPrice())));
+        onView(withId(R.id.addressField)).check(matches(withText(
+                testAd.getStreet() + ", " + testAd.getCity())));
+        onView(withId(R.id.priceField)).check(matches(withText(
+                String.valueOf(testAd.getPrice()) + " / " + testAd.getPricePeriod().toString())));
         onView(withId(R.id.descriptionField)).check(matches(withText(testAd.getDescription())));
         onView(withId(R.id.userField)).check(matches(withText(testAd.getContactInfo().name)));
     }

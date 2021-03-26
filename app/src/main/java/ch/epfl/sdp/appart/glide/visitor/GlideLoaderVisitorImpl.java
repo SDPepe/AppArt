@@ -15,17 +15,13 @@ import ch.epfl.sdp.appart.database.MockDataBase;
  * in function of the bound database.
  * This class is encapsulating the loading with Glide
  */
-public final class GlideLoaderVisitorImpl implements GlideLoaderVisitor {
+public final class GlideLoaderVisitorImpl extends GlideVisitorBase implements GlideLoaderVisitor {
 
     private final ImageView view;
     private final String imageReference;
-    private final Context context;
 
     public GlideLoaderVisitorImpl(Context context, ImageView view, String imageReference) {
-
-        if (context == null) {
-            throw new IllegalArgumentException("context cannot be null");
-        }
+        super(context);
 
         if (view == null) {
             throw new IllegalArgumentException("imageView cannot be null");
@@ -35,7 +31,6 @@ public final class GlideLoaderVisitorImpl implements GlideLoaderVisitor {
             throw new IllegalArgumentException("imageReference cannot be null");
         }
 
-        this.context = context;
         this.view = view;
         this.imageReference = imageReference;
     }

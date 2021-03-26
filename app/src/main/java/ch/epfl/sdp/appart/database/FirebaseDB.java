@@ -1,8 +1,14 @@
 package ch.epfl.sdp.appart.database;
 
+import android.net.Uri;
+
+import ch.epfl.sdp.appart.scrolling.PricePeriod;
+import ch.epfl.sdp.appart.scrolling.ad.Ad;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -12,6 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +31,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
-import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 import ch.epfl.sdp.appart.scrolling.card.Card;
-import ch.epfl.sdp.appart.user.AppUser;
-import ch.epfl.sdp.appart.user.Gender;
-import ch.epfl.sdp.appart.user.User;
 
 @Singleton
 public class FirebaseDB implements Database {
@@ -78,6 +81,7 @@ public class FirebaseDB implements Database {
         return result;
     }
 
+    // TODO remove
     @Override
     public CompletableFuture<String> putCard(Card card) {
         CompletableFuture<String> resultIdFuture = new CompletableFuture<>();
@@ -180,12 +184,14 @@ public class FirebaseDB implements Database {
 
             getDocAndApply("ads", adId, task -> {
                 String title = (String) task.getResult().get("title");
-                String price = (String) task.getResult().get("price");
-                String address = (String) task.getResult().get("address");
+                long price = (long) task.getResult().get("price");
+                PricePeriod pricePeriod = PricePeriod.ALL.get(Math.toIntExact((long) task.getResult().get("pricePeriod")));
+                String street = (String) task.getResult().get("street");
+                String city = (String) task.getResult().get("city");
                 String advertiserId = (String) task.getResult().get("advertiserId");
                 String description = (String) task.getResult().get("description");
                 boolean hasVTour = (boolean) task.getResult().get("hasVTour");
-                partialAdFuture.complete(new PartialAd(title, price, address, advertiserId,
+                partialAdFuture.complete(new PartialAd(title, price, pricePeriod, street, city, advertiserId,
                         description, hasVTour));
             }, task -> partialAdFuture.completeExceptionally(new DatabaseRequestFailedException(task.getException().getMessage())));
 
@@ -236,9 +242,9 @@ public class FirebaseDB implements Database {
         return CompletableFuture.allOf(photoRefsFuture,
                 partialAdFuture, contactInfoFuture).thenApply(dummy -> {
             PartialAd partialAd = partialAdFuture.join();
-            return new Ad(partialAd.title, partialAd.price, partialAd.address,
-                    partialAd.advertiserId, partialAd.description, photoRefsFuture.join(),
-                    partialAd.hasVTour, contactInfoFuture.join());
+            return new Ad(partialAd.title, partialAd.price, partialAd.pricePeriod, partialAd.street,
+                    partialAd.city, partialAd.advertiserId, partialAd.description,
+                    photoRefsFuture.join(), partialAd.hasVTour, contactInfoFuture.join());
         });
     }
 
@@ -260,6 +266,11 @@ public class FirebaseDB implements Database {
 
     @Override
     public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public void accept(GlideBitmapLoaderVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -321,6 +332,78 @@ public class FirebaseDB implements Database {
         return update(user, null);
     }
 
+    @Override
+    public CompletableFuture<String> putAd(Ad ad) {
+        CompletableFuture<String> result = new CompletableFuture<>();
+        DocumentReference newAdRef = db.collection("ads").document();
+
+        // upload photos TODO go parallel ?
+        List<String> actualRefs = new ArrayList<>();
+        uploadAdPhotos(ad, actualRefs, newAdRef, result);
+
+        // TODO separate street and city of address
+        // build and send card
+        Card c = new Card(newAdRef.getId(), ad.getAdvertiserId(), ad.getCity(),
+                ad.getPrice(), actualRefs.get(0), ad.hasVRTour());
+        DocumentReference cardRef = db.collection("cards").document();
+        cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
+                task -> onCompleteAdOp(task, newAdRef, result));
+
+        // build and send ad
+        newAdRef.set(extractAdInfo(ad)).addOnCompleteListener(
+                task -> onCompleteAdOp(task, newAdRef, result));
+        setPhotosReferencesForAd(actualRefs, newAdRef, result);
+
+        result.complete(newAdRef.getId());
+        return result;
+    }
+
+    private void uploadAdPhotos(Ad ad, List<String> actualRefs, DocumentReference newAdRef,
+                                CompletableFuture<String> result) {
+        for (int i = 0; i < ad.getPhotosRefs().size(); i++) {
+            Uri fileUri = Uri.fromFile(new File(ad.getPhotosRefs().get(i)));
+            StorageReference storeRef = storage.getReference()
+                    .child("Ads/" + newAdRef.getId() + "/photo" + i);
+            actualRefs.add(storeRef.getName());
+            storeRef.putFile(fileUri).addOnCompleteListener(
+                    task -> onCompleteAdOp(task, newAdRef, result));
+        }
+    }
+
+    private void setPhotosReferencesForAd(List<String> actualRefs, DocumentReference newAdRef,
+                                          CompletableFuture<String> result) {
+        for (int i = 0; i < actualRefs.size(); i++) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("ref", actualRefs.get(i));
+            DocumentReference photoRefDocReference = newAdRef.collection("photosRefs")
+                    .document();
+            photoRefDocReference.set(data).addOnCompleteListener(
+                    task -> onCompleteAdOp(task, newAdRef, result));
+        }
+    }
+
+    private void onCompleteAdOp(Task<?> task, DocumentReference newAdRef,
+                                CompletableFuture<String> result) {
+        if (!task.isSuccessful()) {
+            storage.getReference().child("Ads/" + newAdRef).delete();
+            result.completeExceptionally(
+                    new UnsupportedOperationException("Failed to put Ad in database"));
+        }
+    }
+
+    private Map<String, Object> extractAdInfo(Ad ad) {
+        Map<String, Object> adData = new HashMap<>();
+        adData.put("advertiserId", ad.getAdvertiserId());
+        adData.put("city", ad.getCity());
+        adData.put("description", ad.getDescription());
+        adData.put("HasVRTour", ad.hasVRTour());
+        adData.put("price", ad.getPrice());
+        adData.put("pricePeriod", ad.getPricePeriod().ordinal());
+        adData.put("street", ad.getStreet());
+        adData.put("title", ad.getTitle());
+        return adData;
+    }
+
     private Map<String, Object> extractUserInfo(User user) {
         Map<String, Object> docData = new HashMap<>();
         docData.put("age", user.getAge());
@@ -371,19 +454,24 @@ public class FirebaseDB implements Database {
      */
     private static class PartialAd {
         public final String title;
-        public final String price;
-        public final String address;
+        public final long price;
+        public final PricePeriod pricePeriod;
+        public final String street;
+        public final String city;
         public final String advertiserId;
         public final String description;
         public final boolean hasVTour;
 
-        PartialAd(String title, String price, String address, String advertiserId,
-                  String description, boolean hasVTour) {
-            if (title == null || price == null || address == null || advertiserId == null || description == null)
+        PartialAd(String title, long price, PricePeriod pricePeriod, String street, String city,
+                  String advertiserId, String description, boolean hasVTour) {
+            if (title == null || pricePeriod == null || street == null || city == null ||
+                    advertiserId == null || description == null)
                 throw new IllegalArgumentException();
             this.title = title;
             this.price = price;
-            this.address = address;
+            this.pricePeriod = pricePeriod;
+            this.street = street;
+            this.city = city;
             this.advertiserId = advertiserId;
             this.description = description;
             this.hasVTour = hasVTour;
