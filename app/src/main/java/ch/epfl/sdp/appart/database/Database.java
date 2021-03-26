@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.database;
 
+import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.user.User;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface Database extends DatabaseVisitorHost {
     CompletableFuture<Boolean> putUser(User user);
 
     CompletableFuture<Boolean> updateUser(User user);
+
+    CompletableFuture<String> putAd(Ad ad);
 
 }
