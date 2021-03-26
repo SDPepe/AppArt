@@ -19,7 +19,7 @@ public interface LoginService {
      * @param password the user's password
      * @return a completable future containing the User if the request is successful
      * @throws IllegalArgumentException if one the arguments is null
-     * @throws IllegalStateException if the current user is already set (logged in)
+     * @throws IllegalStateException    if the current user is already set (logged in)
      */
     CompletableFuture<User> loginWithEmail(String email, String password);
 
@@ -96,7 +96,8 @@ public interface LoginService {
 
     /**
      * Re-authenticates a user. This is needed for things like password change or critical operations
-     *  The current user is required to be set.
+     * The current user is required to be set.
+     *
      * @param email    the user's email
      * @param password the user's password
      * @return an empty completable future

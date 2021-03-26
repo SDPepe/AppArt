@@ -14,10 +14,7 @@
   <string name="invalid_password">Password must be >5 characters</string>
   <string name="login_failed">"Login failed"</string>
   <string name="title_activity_password_reset">PasswordResetActivity</string>
-  <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
+  
   <string name="hello_world">Hello Square World!</string>
   <string name="title_activity_reset_password">ResetPasswordActivity</string>
   <string name="reset_confirmation">Si cette adresse est valide, un mail vous sera envoyé pour changer de mot de passe</string>
@@ -56,6 +53,24 @@
   <string name="dialog_close">Close</string>
 
 
-  <!-- VirtualTourActivity stuff -->
-  <string name="empty">Not yet implemented!</string>
+    <!-- VirtualTourActivity stuff -->
+    <string name="empty">Not yet implemented!</string>
+
+    <!-- Strings for User Profile UI -->
+    <string name="uniAccountClaimer">  UNI account  </string>
+    <string name="backButtonText"> BACK </string>
+    <string name="editProfileButtonText"> EDIT PROFILE </string>
+    <string name="doneButtonText"> DONE </string>
+    <string name="ageText"> Age </string>
+    <string name="phoneNumberText"> Phone </string>
+    <string name="nameText"> Name </string>
+    <string name="emailText"> Email </string>
+    <string name="genderText"> Gender </string>
+    <string name="nonUniAccountClaimer">  Regular account </string>
+    <string-array name="genderList">
+        <item> </item>
+        <item>Female</item>
+        <item>Male</item>
+        <item>Other</item>
+    </string-array>
 </resources>

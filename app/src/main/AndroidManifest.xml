@@ -11,21 +11,18 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-        <activity android:name=".scrolling.CameraActivity"></activity>
+        <activity android:name=".scrolling.CameraActivity"/>
+        <activity android:name=".user.UserProfileActivity"/>
         <activity android:name=".user.CreateUserActivity" />
         <activity android:name=".user.ResetActivity" />
-        <!--
-                   Set to true if your app is Standalone, that is, it does not require the handheld
-                   app to run.
-            -->
+      
         <activity android:name=".user.LoginActivity" />
-        <!--
-                   Set to true if your app is Standalone, that is, it does not require the handheld
-                   app to run.
-            -->
+     
+
+        <activity android:name=".virtualtour.PanoramaGlActivity" />
+
         <activity android:name=".scrolling.ad.AnnounceActivity" />
         <activity android:name=".scrolling.ScrollingActivity" />
-        <activity android:name=".vtour.VirtualTourActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,5 +34,6 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
+
 
 </manifest>

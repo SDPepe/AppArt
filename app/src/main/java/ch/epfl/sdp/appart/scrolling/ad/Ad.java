@@ -2,55 +2,35 @@ package ch.epfl.sdp.appart.scrolling.ad;
 
 import java.util.List;
 
+import ch.epfl.sdp.appart.scrolling.PricePeriod;
+
 public class Ad {
 
-    private final String title;
-    private final String price;
-    private final String address;
-    private final String advertiserId;
-    private final String description;
-    private final List<String> photosRefs;
-    private final boolean hasVRTour;
+    private String title;
+    private long price;
+    private PricePeriod pricePeriod;
+    private String street;
+    private String city;
+    private String advertiserId;
+    private String description;
+    private List<String> photosRefs;
+    private boolean hasVRTour;
     private ContactInfo contactInfo;
 
-    public Ad(String title, String price, String address,
-              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour) {
-
-        if (title == null || price == null || address == null)
-            throw new IllegalArgumentException("An argument is null!");
-        if (advertiserId == null || description == null || photosRefs == null)
+    public Ad(String title, long price, PricePeriod pricePeriod, String street, String city,
+              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour,
+              ContactInfo contactInfo) {
+        if (title == null || pricePeriod == null || street == null || city == null ||
+                advertiserId == null || description == null || photosRefs == null ||
+                contactInfo == null)
             throw new IllegalArgumentException("An argument is null!");
 
         this.title = title;
         this.price = price;
+        this.pricePeriod = pricePeriod;
         this.advertiserId = advertiserId;
-        this.address = address;
-        this.description = description;
-        this.photosRefs = photosRefs;
-        this.hasVRTour = hasVRTour;
-    }
-
-    public Ad(String title, String price, String address,
-              String advertiserId, String description, List<String> photosRefs) {
-        this(title, price, address, advertiserId, description, photosRefs, false);
-    }
-
-    public Ad(String title, String price, String address,
-              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour
-            , ContactInfo contactInfo) {
-
-        if (title == null || price == null || address == null)
-            throw new IllegalArgumentException("An argument is null!");
-        if (advertiserId == null || description == null || photosRefs == null)
-            throw new IllegalArgumentException("An argument is null!");
-        if (contactInfo == null) {
-            throw new IllegalArgumentException();
-        }
-
-        this.title = title;
-        this.price = price;
-        this.advertiserId = advertiserId;
-        this.address = address;
+        this.street = street;
+        this.city = city;
         this.description = description;
         this.photosRefs = photosRefs;
         this.hasVRTour = hasVRTour;
@@ -61,16 +41,24 @@ public class Ad {
         return title;
     }
 
-    public String getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public String getAddress() {
-        return address;
+    public PricePeriod getPricePeriod() {
+        return pricePeriod;
     }
 
     public String getAdvertiserId() {
         return advertiserId;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public String getDescription() {

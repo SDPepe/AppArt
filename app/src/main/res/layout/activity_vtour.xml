@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:onClick="goBack"
-    tools:context=".vtour.VirtualTourActivity">
+    tools:context=".virtualtour.VirtualTourActivity">
 
     <ImageButton
         android:id="@+id/tourBackButton"
@@ -19,20 +19,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/tourContainer"
+    <com.google.vr.sdk.widgets.pano.VrPanoramaView
+        android:id="@+id/vrPanoramaView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tourBackButton">
-
-        <TextView
-            android:id="@+id/vtourText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/empty"
-            android:textSize="18sp" />
-    </androidx.cardview.widget.CardView>
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
