@@ -1,5 +1,8 @@
 package ch.epfl.sdp.appart.ui.scrolling;
 
+import android.content.Intent;
+
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -12,6 +15,7 @@ import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.hilt.FireBaseModule;
+import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.scrolling.ad.AnnounceActivity;
 import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
 import dagger.hilt.android.testing.BindValue;
@@ -36,12 +40,21 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class AdUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule  = new HiltAndroidRule(this);
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+
+    static final String cardID = "1PoUWbeNHvMNotxwAui5";
+    static final Intent intent;
+
+    static {
+        intent = new Intent(ApplicationProvider.getApplicationContext(), AnnounceActivity.class);
+        intent.putExtra("cardID", cardID);
+    }
 
     @Rule(order = 1)
-    public ActivityScenarioRule scrollingActivityRule = new ActivityScenarioRule<>(AnnounceActivity.class);
+    public ActivityScenarioRule<AnnounceActivity> scrollingActivityRule = new ActivityScenarioRule<>(intent);
 
     @BindValue
+    final
     Database database = new MockDataBase();
 
     @Before
@@ -51,20 +64,43 @@ public class AdUITest {
     }
 
     @Test
-    public void clickOnVTourOpensVTourActivity(){
+    public void clickOnVTourOpensVTourActivity() {
 
         onView(withId(R.id.vtourButton)).perform(click());
         intended(hasComponent(PanoramaGlActivity.class.getName()));
     }
 
     @Test
-    public void contactDialogTests(){
+    public void contactDialogTests() {
         onView(withId(R.id.contactInfoButton)).perform(scrollTo()).perform(click());
         onView(withText("Close"))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()))
                 .perform(click());
         onView(withId(R.id.dialogView)).check(doesNotExist());
+    }
+
+    @Test
+    public void displayAdInfoTest() {
+        Ad testAd = database.getAd(cardID).join();
+
+        onView(withId(R.id.titleField)).check(matches(withText(testAd.getTitle())));
+        onView(withId(R.id.addressField)).check(matches(withText(testAd.getAddress())));
+        onView(withId(R.id.priceField)).check(matches(withText(testAd.getPrice())));
+        onView(withId(R.id.descriptionField)).check(matches(withText(testAd.getDescription())));
+        onView(withId(R.id.userField)).check(matches(withText(testAd.getContactInfo().name)));
+    }
+
+    @Test
+    public void displayContactInfoTest() {
+        Ad testAd = database.getAd(cardID).join();
+
+        onView(withId(R.id.contactInfoButton)).perform(scrollTo(), click());
+
+
+        onView(withId(R.id.usernameTextView)).check(matches(withText(testAd.getContactInfo().name)));
+        onView(withId(R.id.emailField)).check(matches(withText(testAd.getContactInfo().userEmail)));
+        onView(withId(R.id.phoneField)).check(matches(withText(testAd.getContactInfo().userPhoneNumber)));
     }
 
     @After
