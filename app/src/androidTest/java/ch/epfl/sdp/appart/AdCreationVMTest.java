@@ -24,6 +24,7 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,13 +41,12 @@ public class AdCreationVMTest {
     @BindValue
     Database db = mock(Database.class);
 
-    private Ad ad;
     private User user;
     private AdCreationViewModel vm;
     private CompletableFuture<String> dbRes;
 
     @Before
-    public void setup(){
+    public void setup() {
         user = new AppUser("id", "test@appart.ch");
         dbRes = new CompletableFuture<>();
         when(ls.getCurrentUser()).thenReturn(user);
@@ -65,14 +65,14 @@ public class AdCreationVMTest {
     @Test
     public void confirmCreationWorksForGoodValues() throws ExecutionException, InterruptedException {
         dbRes.complete("adId");
-        when(db.putAd(ad)).thenReturn(dbRes);
+        when(db.putAd(any(Ad.class))).thenReturn(dbRes);
         assertTrue(vm.confirmCreation().get());
     }
 
     @Test
     public void confirmCreationCompletesExceptionally() throws ExecutionException, InterruptedException {
         dbRes.completeExceptionally(new IllegalStateException());
-        when(db.putAd(ad)).thenReturn(dbRes);
+        when(db.putAd(any(Ad.class))).thenReturn(dbRes);
         assertFalse(vm.confirmCreation().get());
     }
 

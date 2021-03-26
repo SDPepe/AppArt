@@ -37,14 +37,14 @@ public class AdCreationViewModel extends ViewModel {
         this.ls = ls;
     }
 
-    public CompletableFuture<Boolean> confirmCreation(){
+    public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
         ContactInfo ci = new ContactInfo(user.getUserEmail(), user.getPhoneNumber(), user.getName());
         Ad ad = new Ad(title.getValue(), price.getValue(), pricePeriod.getValue(), street.getValue(),
                 city.getValue(), user.getUserId(), description.getValue(), photosRefs.getValue(),
                 VRTourEnable.getValue(), ci);
         CompletableFuture<String> result = db.putAd(ad);
-        return result.thenApply( s -> {
+        return result.thenApply(s -> {
             // TODO add ad ref to user's adRefs
             return true;
         }).exceptionally(e -> false);
@@ -79,8 +79,6 @@ public class AdCreationViewModel extends ViewModel {
         photosRefs.setValue(ls);
     }
 
-    public void setVRTourEnable(boolean b){
-        VRTourEnable.setValue(b);
-    }
+    public void setVRTourEnable(boolean b) { VRTourEnable.setValue(b); }
 
 }
