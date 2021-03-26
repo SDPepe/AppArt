@@ -4,6 +4,7 @@
 
 This week I worked on the backend required for the AnnounceActivity ViewModel. This consisted in fetching the adId from the cardId passed to the activity and then retrieving the information for the corresponding ad. I also needed to implement the log out back end when the toolbar was finished but this it isn't merged yet. Next week, I plan on refactoring some classes, adding tests and improve the login UI.
 ## Carlo
+This week I finished and merged the user profile activity. A large chunk of my time was utilised to re-create the user profile layout since the previous implementation did not adapt to all screen sizes and elements in the layout popped out of the view once the emulatore changed. The activity is now implemented and a user can edit its personal information on the app. Next week I will add interaction with the FirebaseDB class which updates information inside Firestore database so that editing is persistent. Furthermore I will create a SimpleUserProfileActivity: this activity will be used on the ads to enable the user to see all public information on the announcers profile.
 
 
 ## Émilien
