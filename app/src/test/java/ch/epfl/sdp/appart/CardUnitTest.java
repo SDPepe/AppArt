@@ -76,7 +76,7 @@ public class CardUnitTest {
         Card card4 = new Card("2", "user", "Lausanne", 900, "assets/img1.jpg");
         assertTrue(card2.equals(card3));
         assertFalse(card2.equals(card4));
-        User user = mock(AppUser.class);
+        User user = new AppUser("1", "test@appart.ch");
         assertFalse(card.equals(user));
         Card card5 = null;
         assertFalse(card.equals(card5));
