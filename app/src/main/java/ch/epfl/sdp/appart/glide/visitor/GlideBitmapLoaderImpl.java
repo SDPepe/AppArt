@@ -18,6 +18,12 @@ import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.FirebaseDB;
 import ch.epfl.sdp.appart.database.MockDataBase;
 
+/**
+ * This class visit the bound database and allows to fetch a Bitmap using Glide.
+ * WARNING NOTE : We might implement doing a copy of the bitmap since glide absolutely
+ * wants to recycle them all on its own and so the caller cannot keep a reference to the bitmap.
+ * This would cause memory overhead but less chances of bugs to happen. Will discuss with the team
+ */
 public class GlideBitmapLoaderImpl extends GlideVisitorBase implements GlideBitmapLoaderVisitor {
 
     private final CompletableFuture<Bitmap> bitmapFuture;
@@ -30,7 +36,7 @@ public class GlideBitmapLoaderImpl extends GlideVisitorBase implements GlideBitm
     }
 
     /**
-     * Container class that will complete the future with the right bitmap
+     * Container class that will complete the future with the bitmap when it will be loaded
      */
     private static class BitmapTarget extends CustomTarget<Bitmap> {
 
@@ -62,7 +68,10 @@ public class GlideBitmapLoaderImpl extends GlideVisitorBase implements GlideBitm
 
     @Override
     public void visit(FirebaseDB database) {
-
+        /**
+         * WARNING : For simplicity we keep the loading on the drawable for now, will change
+         * next week.
+         */
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
@@ -72,6 +81,10 @@ public class GlideBitmapLoaderImpl extends GlideVisitorBase implements GlideBitm
 
     @Override
     public void visit(MockDataBase database) {
+        /**
+         * WARNING : For simplicity we keep the loading on the drawable for now, will change
+         * next week.
+         */
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()

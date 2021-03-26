@@ -16,10 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Intent intent = new Intent(this, LoginActivity.class);
-        //Intent intent = new Intent(this, VirtualTourActivity.class);
-        Intent intent = new Intent(this, AnnounceActivity.class);
-        //Intent intent = new Intent(this, PanoramaGlActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
 
     }
