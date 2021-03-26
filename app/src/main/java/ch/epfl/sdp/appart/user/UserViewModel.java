@@ -2,12 +2,9 @@ package ch.epfl.sdp.appart.user;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import ch.epfl.sdp.appart.database.Database;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-
 import java.util.concurrent.CompletableFuture;
-
 import javax.inject.Inject;
 
 
@@ -15,54 +12,55 @@ import javax.inject.Inject;
 public class UserViewModel extends ViewModel {
 
 
-    private final MutableLiveData<Boolean> mPutCardConfirmed = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> mUpdateCardConfirmed = new MutableLiveData<>();
-    private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
-    Database db;
+  private final MutableLiveData<Boolean> mPutCardConfirmed = new MutableLiveData<>();
+  private final MutableLiveData<Boolean> mUpdateCardConfirmed = new MutableLiveData<>();
+  private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
-    @Inject
-    public UserViewModel(Database database) {
-        this.db = database;
-    }
+  Database db;
 
-    /*
-     * Put the user in the database and updates the LiveData
-     */
-    public void putUser(User user) {
-        CompletableFuture<Boolean> putUser = db.putUser(user);
-        putUser.thenAccept(mPutCardConfirmed::setValue);
-    }
+  @Inject
+  public UserViewModel(Database database) {
+    this.db = database;
+  }
 
-    /*
-     * Update the user in the database and updates the LiveData
-     */
-    public void updateUser(User user) {
-        CompletableFuture<Boolean> updateUser = db.updateUser(user);
-        updateUser.thenAccept(mUpdateCardConfirmed::setValue);
-    }
+  /*
+   * Put the user in the database and updates the LiveData
+   */
+  public void putUser(User user) {
+    CompletableFuture<Boolean> putUser = db.putUser(user);
+    putUser.thenAccept(mPutCardConfirmed::setValue);
+  }
 
-    /*
-     * Get the user from the database and updates the LiveData
-     */
-    public void getUser(String userId) {
-        CompletableFuture<User> getUser = db.getUser(userId);
-        getUser.thenAccept(mUser::setValue);
-    }
+  /*
+   * Update the user in the database and updates the LiveData
+   */
+  public void updateUser(User user) {
+    CompletableFuture<Boolean> updateUser = db.updateUser(user);
+    updateUser.thenAccept(mUpdateCardConfirmed::setValue);
+  }
 
-    /*
-     * Getters for MutableLiveData instances declared above
-     */
-    public MutableLiveData<Boolean> getPutCardConfirmed() {
-        return mPutCardConfirmed;
-    }
+  /*
+   * Get the user from the database and updates the LiveData
+   */
+  public void getUser(String userId) {
+    CompletableFuture<User> getUser = db.getUser(userId);
+    getUser.thenAccept(mUser::setValue);
+  }
 
-    public MutableLiveData<Boolean> getUpdateCardConfirmed() {
-        return mUpdateCardConfirmed;
-    }
+  /*
+   * Getters for MutableLiveData instances declared above
+   */
+  public MutableLiveData<Boolean> getPutCardConfirmed() {
+    return mPutCardConfirmed;
+  }
 
-    public MutableLiveData<User> getUser() {
-        return mUser;
-    }
+  public MutableLiveData<Boolean> getUpdateCardConfirmed() {
+    return mUpdateCardConfirmed;
+  }
+
+  public MutableLiveData<User> getUser() {
+    return mUser;
+  }
 
 }

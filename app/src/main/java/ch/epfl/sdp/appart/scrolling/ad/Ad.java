@@ -4,18 +4,16 @@ import java.util.List;
 
 public class Ad {
 
-    private final String title;
-    private final String price;
-    private final String address;
-    private final String advertiserId;
-    private final String description;
-    private final List<String> photosRefs;
-    private final boolean hasVRTour;
-    private ContactInfo contactInfo;
+    private String title;
+    private String price;
+    private String address;
+    private String advertiserId;
+    private String description;
+    private List<String> photosRefs;
+    private boolean hasVRTour;
 
     public Ad(String title, String price, String address,
               String advertiserId, String description, List<String> photosRefs, boolean hasVRTour) {
-
         if (title == null || price == null || address == null)
             throw new IllegalArgumentException("An argument is null!");
         if (advertiserId == null || description == null || photosRefs == null)
@@ -33,28 +31,6 @@ public class Ad {
     public Ad(String title, String price, String address,
               String advertiserId, String description, List<String> photosRefs) {
         this(title, price, address, advertiserId, description, photosRefs, false);
-    }
-
-    public Ad(String title, String price, String address,
-              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour
-            , ContactInfo contactInfo) {
-
-        if (title == null || price == null || address == null)
-            throw new IllegalArgumentException("An argument is null!");
-        if (advertiserId == null || description == null || photosRefs == null)
-            throw new IllegalArgumentException("An argument is null!");
-        if (contactInfo == null) {
-            throw new IllegalArgumentException();
-        }
-
-        this.title = title;
-        this.price = price;
-        this.advertiserId = advertiserId;
-        this.address = address;
-        this.description = description;
-        this.photosRefs = photosRefs;
-        this.hasVRTour = hasVRTour;
-        this.contactInfo = contactInfo;
     }
 
     public String getTitle() {
@@ -83,9 +59,5 @@ public class Ad {
 
     public boolean hasVRTour() {
         return hasVRTour;
-    }
-
-    public ContactInfo getContactInfo() {
-        return contactInfo;
     }
 }

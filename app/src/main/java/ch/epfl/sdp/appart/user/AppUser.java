@@ -25,9 +25,7 @@ public class AppUser implements User {
         this.gender = Gender.NOT_SELECTED;
 
         String[] split = email.split("@");
-        if (split[0] != null) {
-            this.name = split[0];
-        }
+        if (split[0] != null) {this.name = split[0];}
     }
 
 

@@ -57,7 +57,6 @@ public class CreateUserActivity extends AppCompatActivity {
     /**
      * Method called when the Log In button is pushed
      * Takes the user back to the login screen
-     *
      * @param view
      */
     public void backToLogin(View view) {

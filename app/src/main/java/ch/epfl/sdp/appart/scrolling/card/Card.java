@@ -67,13 +67,9 @@ public class Card {
         return ownerId;
     }
 
-    public boolean hasVRTour() {
-        return hasVRTour;
-    }
+    public boolean hasVRTour(){ return hasVRTour; }
 
-    public void setVRTour(boolean b) {
-        hasVRTour = b;
-    }
+    public void setVRTour(boolean b) { hasVRTour = b; }
 
     private void nullChecker(Object o) {
         if (o == null)

@@ -9,14 +9,12 @@ import ch.epfl.sdp.appart.database.MockDataBase;
 public interface GlideLoaderVisitor {
     /**
      * Visit the firebase database
-     *
      * @param database the Firebase database visited
      */
     void visit(FirebaseDB database);
 
     /**
      * Visit the MockDatabase database
-     *
      * @param database the MockDatabase database visited
      */
     void visit(MockDataBase database);
