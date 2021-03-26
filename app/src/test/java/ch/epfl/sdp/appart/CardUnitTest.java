@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart;
 import org.junit.Test;
 
 import ch.epfl.sdp.appart.scrolling.card.Card;
+import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
 import static org.junit.Assert.assertEquals;
@@ -75,7 +76,7 @@ public class CardUnitTest {
         Card card4 = new Card("2", "user", "Lausanne", 900, "assets/img1.jpg");
         assertTrue(card2.equals(card3));
         assertFalse(card2.equals(card4));
-        User user = mock(User.class);
+        User user = mock(AppUser.class);
         assertFalse(card.equals(user));
         Card card5 = null;
         assertFalse(card.equals(card5));
