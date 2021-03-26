@@ -10,29 +10,40 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.panoramagl.PLImage;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.FirebaseDB;
 import ch.epfl.sdp.appart.database.MockDataBase;
 
-public class GlideBitmapLoaderImpl extends GlideVisitorBase implements GlideBitmapGetterVisitor {
+public class GlideBitmapLoaderImpl extends GlideVisitorBase implements GlideBitmapLoaderVisitor {
 
-    GlideBitmapLoaderImpl(Context context, String imagePath) {
+    private final CompletableFuture<Bitmap> bitmapFuture;
+
+    public GlideBitmapLoaderImpl(Context context, CompletableFuture<Bitmap> bitmapFuture, String imagePath) {
         super(context);
         if (imagePath == null) throw new IllegalArgumentException("image path cannot be null");
+        if (bitmapFuture == null) throw new IllegalArgumentException("future cannot be null");
+        this.bitmapFuture = bitmapFuture;
     }
 
     /**
-     * Container class to get the bitmap
+     * Container class that will complete the future with the right bitmap
      */
-    private class BitmapTarget extends CustomTarget<Bitmap> {
+    private static class BitmapTarget extends CustomTarget<Bitmap> {
 
-        private Bitmap bitmap;
+        private final CompletableFuture<Bitmap> targetFuture;
+
+        protected BitmapTarget(CompletableFuture<Bitmap> targetFuture) {
+            if (targetFuture == null) throw new IllegalArgumentException("future cannot be null");
+            this.targetFuture = targetFuture;
+        }
 
         @Override
         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-            bitmap = resource;
+            targetFuture.complete(resource);
         }
 
         @Override
@@ -43,31 +54,29 @@ public class GlideBitmapLoaderImpl extends GlideVisitorBase implements GlideBitm
          * @return bitmap result
          */
         @Nullable
-        protected Bitmap getBitmap() {
-            return bitmap;
+        protected CompletableFuture<Bitmap> getBitmap() {
+            return targetFuture;
         }
+
     }
 
     @Override
-    public Bitmap visit(FirebaseDB database) {
+    public void visit(FirebaseDB database) {
 
-        BitmapTarget target = new BitmapTarget();
+        BitmapTarget target = new BitmapTarget(bitmapFuture);
+        Glide.with(context)
+                .asBitmap()
+                .load(R.drawable.panorama_test)
+                .into(target);
+    }
+
+    @Override
+    public void visit(MockDataBase database) {
+        BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
                 .load(R.drawable.panorama_test)
                 .into(target);
 
-        return target.getBitmap();
-    }
-
-    @Override
-    public Bitmap visit(MockDataBase database) {
-        BitmapTarget target = new BitmapTarget();
-        Glide.with(context)
-                .asBitmap()
-                .load(R.drawable.panorama_test)
-                .into(target);
-
-        return target.getBitmap();
     }
 }

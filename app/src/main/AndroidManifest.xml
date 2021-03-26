@@ -27,7 +27,6 @@
         <activity android:name=".virtualtour.PanoramaGlActivity" />
         <activity android:name=".scrolling.ad.AnnounceActivity" />
         <activity android:name=".scrolling.ScrollingActivity" />
-        <activity android:name=".virtualtour.VirtualTourActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

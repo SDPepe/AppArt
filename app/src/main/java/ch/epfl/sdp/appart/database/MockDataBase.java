@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.database;
 
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import java.util.ArrayList;
@@ -83,6 +84,9 @@ public class MockDataBase implements Database {
 
     public void accept(GlideLoaderVisitor visitor) {
         visitor.visit(this);
+    }
 
+    public void accept(GlideBitmapLoaderVisitor visitor) {
+        visitor.visit(this);
     }
 }

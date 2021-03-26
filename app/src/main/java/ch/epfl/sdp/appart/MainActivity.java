@@ -5,9 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.sdp.appart.user.LoginActivity;
 import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
-import ch.epfl.sdp.appart.virtualtour.VirtualTourActivity;
 
 public class MainActivity extends AppCompatActivity {
 

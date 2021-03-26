@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.virtualtour.VirtualTourActivity;
+import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -86,7 +86,7 @@ public class AnnounceActivity extends AppCompatActivity {
     }
 
     public void openVirtualTour(View view){
-        Intent intent = new Intent(this, VirtualTourActivity.class);
+        Intent intent = new Intent(this, PanoramaGlActivity.class);
         startActivity(intent);
     }
 

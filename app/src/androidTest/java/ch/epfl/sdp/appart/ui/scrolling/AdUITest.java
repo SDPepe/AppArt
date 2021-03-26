@@ -13,7 +13,7 @@ import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.database.MockDataBase;
 import ch.epfl.sdp.appart.hilt.FireBaseModule;
 import ch.epfl.sdp.appart.scrolling.ad.AnnounceActivity;
-import ch.epfl.sdp.appart.virtualtour.VirtualTourActivity;
+import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -54,7 +54,7 @@ public class AdUITest {
     public void clickOnVTourOpensVTourActivity(){
 
         onView(withId(R.id.vtourButton)).perform(click());
-        intended(hasComponent(VirtualTourActivity.class.getName()));
+        intended(hasComponent(PanoramaGlActivity.class.getName()));
     }
 
     @Test

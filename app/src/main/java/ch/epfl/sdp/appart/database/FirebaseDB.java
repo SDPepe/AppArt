@@ -1,6 +1,6 @@
 package ch.epfl.sdp.appart.database;
 
-import ch.epfl.sdp.appart.glide.visitor.GlideBitmapGetterVisitor;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
@@ -94,7 +94,7 @@ public class FirebaseDB implements Database {
     }
 
     @Override
-    public void accept(GlideBitmapGetterVisitor visitor) {
+    public void accept(GlideBitmapLoaderVisitor visitor) {
         visitor.visit(this);
     }
 
