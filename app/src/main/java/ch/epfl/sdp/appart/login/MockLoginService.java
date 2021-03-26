@@ -39,6 +39,8 @@ public class MockLoginService implements LoginService {
 
     @Inject
     public MockLoginService() {
+        lorenzo.setName("Lorenzo");
+        lorenzo.setPhoneNumber("000");
         users.put(antoineEmailPassword, antoine);
         users.put(lorenzoEmailPassword, lorenzo);
         users.put(filippoEmailPassword, filippo);
