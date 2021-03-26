@@ -10,4 +10,5 @@ public interface DatabaseVisitorHost {
      * @param visitor the GlideLoader we want to inject
      */
     void accept(GlideLoaderVisitor visitor);
+    void accept(GlideBitmapLoaderVisitor visitor);
 }
