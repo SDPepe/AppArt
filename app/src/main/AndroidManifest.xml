@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".ui.ToolbarActivity"/>
+        <activity android:name=".user.UserProfileActivity"/>
         <activity android:name=".user.CreateUserActivity" />
         <activity android:name=".user.ResetActivity" />
         <!--
@@ -23,14 +24,9 @@
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
         -->
-        <activity android:name=".scrolling.ad.AnnounceActivity" >
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+        <activity android:name=".virtualtour.PanoramaGlActivity" />
+        <activity android:name=".scrolling.ad.AnnounceActivity" />
         <activity android:name=".scrolling.ScrollingActivity" />
-        <activity android:name=".vtour.VirtualTourActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

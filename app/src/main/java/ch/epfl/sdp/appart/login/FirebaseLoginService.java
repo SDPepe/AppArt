@@ -2,12 +2,15 @@ package ch.epfl.sdp.appart.login;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -23,11 +26,12 @@ public class FirebaseLoginService implements LoginService {
     @Inject
     public FirebaseLoginService() {
         this.mAuth = FirebaseAuth.getInstance();
-        //mAuth.useEmulator("10.0.2.2", 9099);
+        this.mAuth.signOut(); //to unsure that no invalid user is cached
     }
 
     private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
-        if (email == null || password == null) throw new IllegalArgumentException();
+        String[] args = {email, password};
+        argsChecker(args);
         //Handle loss of network with https://firebase.google.com/docs/database/android/offline-capabilities#section-connection-state
         return setUpFuture(task,
                 this::getUserFromAuthResult);
@@ -44,7 +48,8 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
-        if (getCurrentUser() != null) throw new IllegalStateException("current user must not already be set when authentication");
+        userChecker(true, "when authenticating");
+
         return handleEmailAndPasswordMethod(email, password,
                 mAuth.signInWithEmailAndPassword(email, password));
     }
@@ -63,57 +68,88 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> resetPasswordWithEmail(String email) {
-        if (email == null) throw new IllegalArgumentException();
+        String[] args = {email};
+        argsChecker(args);
         return setUpFuture(mAuth.sendPasswordResetEmail(email),
                 result -> result);
     }
 
     @Override
     public CompletableFuture<User> createUser(String email, String password) {
-        if (getCurrentUser() != null) throw new IllegalStateException("the current user cannot be set");
+        userChecker(true, "when creating new user");
+
         return handleEmailAndPasswordMethod(email, password,
                 mAuth.createUserWithEmailAndPassword(email, password));
     }
 
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
-        if (email == null) throw new IllegalArgumentException();
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when updating the email");
+        String[] args = {email};
+        fullChecker(args,false, "when updating the email");
+
         return setUpFuture(getCurrentFirebaseUser().updateEmail(email), result -> result);
     }
 
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
-        if (password == null) throw new IllegalArgumentException();
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when updating the password");
+        String[] args = {password};
+        fullChecker(args, false, "when updating the password");
+
         return setUpFuture(getCurrentFirebaseUser().updatePassword(password), result -> result);
     }
 
     @Override
     public CompletableFuture<Void> sendEmailVerification() {
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when sending verification mail");
+        userChecker(false, "when sending verification email");
+
         return setUpFuture(getCurrentFirebaseUser().sendEmailVerification(),
                 result -> result);
     }
 
     @Override
     public CompletableFuture<Void> deleteUser() {
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when deleting it");
+        userChecker(false, "when deleting it");
+
         return setUpFuture(getCurrentFirebaseUser().delete(),
                 result -> result);
     }
 
     @Override
     public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
-        if (email == null || password == null) throw new IllegalArgumentException();
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set when reAuthentication");
+        String[] args = {email, password};
+        argsChecker(args);
+        userChecker(false, "when reAuthentication");
+
         return setUpFuture(getCurrentFirebaseUser().reauthenticate(
                 EmailAuthProvider.getCredential(email, password)),
                 result -> result);
     }
 
+    private void userChecker(boolean hasToBeNull, String excMessage) {
+        if (getCurrentUser() == null ^ hasToBeNull) {
+            if (hasToBeNull) {
+                throw new IllegalStateException("current user must not already be set " + excMessage);
+            } else {
+                throw new IllegalStateException("current user must be set " + excMessage);
+            }
+        }
+    }
+
+    private void argsChecker(String[] args) {
+        for (String s : args) {
+            if (s == null) {
+                throw new IllegalArgumentException("String argument cannot be null");
+            }
+        }
+    }
+
+    private void fullChecker(String[] args, boolean hasToBeNull, String excMessage){
+        argsChecker(args);
+        userChecker(hasToBeNull, excMessage);
+    }
+
     public void useEmulator(String ip, int port) {
-        if(ip == null) throw new IllegalArgumentException();
+        if (ip == null) throw new IllegalArgumentException();
         mAuth.useEmulator(ip, port);
     }
 

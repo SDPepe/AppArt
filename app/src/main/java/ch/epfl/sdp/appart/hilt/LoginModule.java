@@ -22,35 +22,6 @@ import dagger.hilt.components.SingletonComponent;
 @InstallIn(SingletonComponent.class)
 public abstract class LoginModule {
 
-    /*
-    @Qualifier
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface EmulatorLoginService {}
-
-    @Qualifier
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface CloudLoginService {}
-
-    @Qualifier
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface MockedLoginService {}
-
-
-
-    @MockedLoginService
-    @Singleton
-    @Binds
-    public abstract LoginService bindMockedLoginService(MockLoginService mockLoginService);
-    */
-
-    /*
-    @Provides
-    public static LoginService provideLoginService(
-            // Potential dependencies of this type
-    ) {
-        return new FirebaseLoginService();
-    }*/
-
     @Singleton
     @Binds
     public abstract LoginService bindCloudLoginService(FirebaseLoginService firebaseLoginService);
