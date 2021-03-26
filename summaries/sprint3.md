@@ -8,6 +8,7 @@ This week I finished and merged the user profile activity. A large chunk of my t
 
 
 ## Émilien
+This week I finished the adding of the toolbar. It was really tedious, as there was various bugs that I had to find and delete. This took most of my time, as new errors kept emerging when I fixed the previous ones. I also refactored some of the code, to implement the idea that an activity has a toolbar. Thus, all activities fitting that description will have the same behaviour, thus removing some duplicate code.
 
 
 ## Filippo
