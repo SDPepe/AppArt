@@ -184,7 +184,7 @@ public class FirebaseDB implements Database {
 
             getDocAndApply("ads", adId, task -> {
                 String title = (String) task.getResult().get("title");
-                long price = (long) task.getResult().get("price");
+                long price = (Long) task.getResult().get("price");
                 PricePeriod pricePeriod = PricePeriod.ALL.get(Math.toIntExact((long) task.getResult().get("pricePeriod")));
                 String street = (String) task.getResult().get("street");
                 String city = (String) task.getResult().get("city");
