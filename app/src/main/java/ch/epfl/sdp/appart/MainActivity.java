@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import ch.epfl.sdp.appart.scrolling.ad.AnnounceActivity;
+import ch.epfl.sdp.appart.user.LoginActivity;
 import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Intent intent = new Intent(this, LoginActivity.class);
         //Intent intent = new Intent(this, VirtualTourActivity.class);
-        Intent intent = new Intent(this, PanoramaGlActivity.class);
+        Intent intent = new Intent(this, AnnounceActivity.class);
+        //Intent intent = new Intent(this, PanoramaGlActivity.class);
         startActivity(intent);
 
     }

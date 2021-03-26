@@ -37,6 +37,15 @@ import javax.inject.Inject;
 public class PanoramaGlActivity extends AppCompatActivity {
 
     private PLManager plManager;
+    //private Bitmap bitmap;
+    /**
+     * WARNING : For people using bitmaps loaded with Glide:
+     * DON'T STORE THE BITMAP ANYWHERE IT WOULD GET RECYCLED BY SOMEONE ELSE
+     * Glide has a Cache and take care of its own recycling. as the commented
+     * line above would be uncommented and would contain a Glide's loaded Bitmap
+     * The activity would have called recycled() on this bitmap when closing.
+     * This would have caused an IllegalState and its hard to debug.
+     */
 
     @Inject
     Database database;
@@ -61,7 +70,7 @@ public class PanoramaGlActivity extends AppCompatActivity {
         database.accept(new GlideBitmapLoaderImpl(this, bitmapFuture, "file:///android_asset/panorama_test.jpg"));
 
         bitmapFuture.thenApply(bitmap -> {
-            panorama.setImage(new PLImage(bitmap, false));
+            panorama.setImage(new PLImage(bitmap, true));
             plManager.setPanorama(panorama);
             return bitmap;
         });
@@ -82,6 +91,7 @@ public class PanoramaGlActivity extends AppCompatActivity {
     }
     @Override
     protected void onDestroy() {
+
         plManager.onDestroy();
         super.onDestroy();
     }
