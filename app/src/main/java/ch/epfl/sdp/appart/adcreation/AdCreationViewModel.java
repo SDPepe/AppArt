@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.ad.Ad;
 import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 import ch.epfl.sdp.appart.user.User;
