@@ -16,9 +16,11 @@ This week I worked on the CameraActivity. In practice I have implemented an acti
 
 
 ## Lorenzo (scrum master)
-
+This week I worked on a bit of code maintainability and coverage, and on the logic of the ad creation. The ad creation viewmodel took less time to implement than expected, but it might take some time to adapt it once the activity and layout are up. On the other hand, the database extension had been quite slow, mainly because I had to get used to the conventions already used in the class and had to learn a few things more about firestore.
+I still have to improve a lot on the time management, I often lose time while coding because I don't think enough beforehand about how to implement things.
 
 ## Quentin
 
 
 ## Overall team
+This week we had a couple of issues on big tasks coming from last week, so the overall work on the tasks of this week wasn't good enough. The communication between us improved quite a lot and the work on PRs is also improving. Starting next week we will try to limit the number of new tasks we take on, so that we can finish more easily what we have left from this week.
