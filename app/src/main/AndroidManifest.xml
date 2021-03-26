@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.sdp.appart">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <application
         android:name=".hilt.HiltApplication"
         android:allowBackup="true"
@@ -13,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".user.CreateUserActivity"></activity>
+        <activity android:name=".ui.ToolbarActivity"/>
+        <activity android:name=".user.CreateUserActivity" />
         <activity android:name=".user.ResetActivity" />
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
@@ -24,7 +23,12 @@
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
         -->
-        <activity android:name=".scrolling.ad.AnnounceActivity" />
+        <activity android:name=".scrolling.ad.AnnounceActivity" >
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".scrolling.ScrollingActivity" />
         <activity android:name=".vtour.VirtualTourActivity" />
         <activity android:name=".MainActivity">
@@ -35,5 +39,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>

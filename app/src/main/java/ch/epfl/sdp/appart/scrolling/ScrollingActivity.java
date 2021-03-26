@@ -21,11 +21,12 @@ import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
+import ch.epfl.sdp.appart.ui.ToolbarActivity;
 import ch.epfl.sdp.appart.user.LoginActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ScrollingActivity extends AppCompatActivity {
+public class ScrollingActivity extends ToolbarActivity {
 
     @Inject
     Database database;

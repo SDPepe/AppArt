@@ -14,12 +14,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
-import ch.epfl.sdp.appart.database.Database;
-import ch.epfl.sdp.appart.database.MockDataBase;
-import ch.epfl.sdp.appart.hilt.FireBaseModule;
+import ch.epfl.sdp.appart.hilt.LoginModule;
+import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -27,6 +30,8 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -35,9 +40,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
-@LargeTest
-//@RunWith(AndroidJUnit4.class)
-@UninstallModules(FireBaseModule.class)
+@UninstallModules(LoginModule.class)
 @HiltAndroidTest
 public class ToolbarUITest {
 
@@ -45,34 +48,20 @@ public class ToolbarUITest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityScenarioRule<ScrollingActivity> activityRule = new ActivityScenarioRule<>(ScrollingActivity.class);
+
+    @BindValue
+    LoginService loginService = new MockLoginService();
 
     @Before
     public void init() {
         hiltRule.inject();
+        Intents.init();
+        //loginService.useEmulator("10.0.2.2", 9099);
     }
-
-    @BindValue
-    Database database = new MockDataBase();
 
     @Test
     public void toolbarUITest() {
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.login_button), withText("Login"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatButton.perform(click());
-
-        ViewInteraction viewGroup = onView(
-                allOf(withId(R.id.login_toolbar),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        viewGroup.check(matches(isDisplayed()));
-
         ViewInteraction overflowMenuButton = onView(
                 allOf(withContentDescription("More options"),
                         childAtPosition(
@@ -93,11 +82,11 @@ public class ToolbarUITest {
                         isDisplayed()));
         appCompatTextView.perform(click());
 
-        ViewInteraction viewGroup2 = onView(
+        ViewInteraction viewGroup = onView(
                 allOf(withId(R.id.login_toolbar),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
-        viewGroup2.check(matches(isDisplayed()));
+        viewGroup.check(matches(isDisplayed()));
 
         ViewInteraction overflowMenuButton2 = onView(
                 allOf(withContentDescription("More options"),
@@ -119,11 +108,11 @@ public class ToolbarUITest {
                         isDisplayed()));
         appCompatTextView2.perform(click());
 
-        ViewInteraction viewGroup3 = onView(
+        ViewInteraction viewGroup2 = onView(
                 allOf(withId(R.id.login_toolbar),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
-        viewGroup3.check(matches(isDisplayed()));
+        viewGroup2.check(matches(isDisplayed()));
 
         ViewInteraction overflowMenuButton3 = onView(
                 allOf(withContentDescription("More options"),

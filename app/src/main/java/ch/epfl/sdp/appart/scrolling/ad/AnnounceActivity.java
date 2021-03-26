@@ -28,12 +28,13 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.ui.ToolbarActivity;
 import ch.epfl.sdp.appart.user.LoginActivity;
 import ch.epfl.sdp.appart.vtour.VirtualTourActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class AnnounceActivity extends AppCompatActivity {
+public class AnnounceActivity extends ToolbarActivity {
 
     @Inject
     Database database;
@@ -47,34 +48,6 @@ public class AnnounceActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         initAdContent();
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.actions_toolbar, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_logout:
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.action_account:
-                return true;
-
-            case R.id.action_settings:
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
     }
 
     private void initAdContent(){
