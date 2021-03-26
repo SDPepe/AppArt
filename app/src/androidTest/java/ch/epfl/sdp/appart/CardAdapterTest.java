@@ -15,7 +15,6 @@ import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 
-@RunWith(MockitoJUnitRunner.class)
 public class CardAdapterTest {
 
     Database db = new MockDataBase();
