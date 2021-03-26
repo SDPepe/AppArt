@@ -8,6 +8,7 @@ import android.view.ViewParent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -158,5 +159,11 @@ public class ToolbarUITest {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+    @After
+    public void release() {
+        Intents.release();
+        //loginService.useEmulator("10.0.2.2", 9099);
     }
 }
