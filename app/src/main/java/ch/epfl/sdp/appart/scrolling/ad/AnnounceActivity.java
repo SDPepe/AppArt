@@ -21,7 +21,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import ch.epfl.sdp.appart.scrolling.CameraActivity;
 import java.util.List;
+
 
 import javax.inject.Inject;
 
@@ -140,6 +142,11 @@ public class AnnounceActivity extends ToolbarActivity {
 
     public void openVirtualTour(View view){
         Intent intent = new Intent(this, PanoramaGlActivity.class);
+        startActivity(intent);
+    }
+
+    public void openCamera(View view){
+        Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
 

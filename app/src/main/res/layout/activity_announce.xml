@@ -81,6 +81,12 @@
                 android:onClick="openVirtualTour"
                 android:text="@string/vtourbutton_text" />
 
+            <Button
+              android:id="@+id/cameraButton"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:onClick="openCamera"
+              android:text="Add Picture" />
             <Space
                 android:id="@+id/spacer2"
                 android:layout_width="match_parent"
