@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.user.LoginActivity;
+import ch.epfl.sdp.appart.user.UserProfileActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,11 +24,13 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_logout:
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
+                    Intent intentLogout = new Intent(this, LoginActivity.class);
+                    startActivity(intentLogout);
                     return true;
 
                 case R.id.action_account:
+                    Intent intentAccount = new Intent(this, UserProfileActivity.class);
+                    startActivity(intentAccount);
                     return true;
 
                 case R.id.action_settings:
