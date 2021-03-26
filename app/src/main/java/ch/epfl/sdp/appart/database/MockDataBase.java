@@ -105,11 +105,14 @@ public class MockDataBase implements Database {
         return result;
     }
 
-    // TODO implement
     @Override
     public CompletableFuture<String> putAd(Ad ad) {
         CompletableFuture<String> result = new CompletableFuture<>();
-        result.complete("1234");
+        if (ad.getTitle().equals("failing")){
+            result.completeExceptionally(new IllegalStateException());
+        } else {
+            result.complete("1234");
+        }
         return result;
     }
 
