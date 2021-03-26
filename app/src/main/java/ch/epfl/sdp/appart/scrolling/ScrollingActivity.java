@@ -59,28 +59,6 @@ public class ScrollingActivity extends ToolbarActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_logout:
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.action_account:
-                return true;
-
-            case R.id.action_settings:
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         Log.d("Scroll", "stopping");
