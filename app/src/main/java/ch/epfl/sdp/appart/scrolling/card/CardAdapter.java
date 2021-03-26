@@ -80,10 +80,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         Card card = cards.get(position);
         holder.cardImageView.setOnClickListener(v -> {
             Intent intent = new Intent(context, AnnounceActivity.class);
+            intent.putExtra("adID", card.getId());
             context.startActivity(intent);
         });
 
-        database.accept(new GlideLoaderVisitorImpl(context, holder.cardImageView, card.getImageUrl()));
+        database.accept(new GlideLoaderVisitorImpl(context, holder.cardImageView,
+                "Cards/" +  card.getImageUrl()));
 
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));
