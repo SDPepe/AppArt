@@ -10,6 +10,7 @@ This week I worked on the backend required for the AnnounceActivity ViewModel. T
 
 
 ## Filippo
+This week I worked on the CameraActivity. In practice I have implemented an activity that allows the use of the camera for take picture and allows the access at the gallery to take the image. Before the user can access to the camera/gallery permission is asked. Communication with the database must be implemented in the coming weeks.
 
 
 ## Lorenzo (scrum master)
