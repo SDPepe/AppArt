@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 public class VirtualTourUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule  = new HiltAndroidRule(this);
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule vtourActivityRule =

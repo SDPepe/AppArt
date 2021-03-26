@@ -46,7 +46,7 @@ public class ResetActivity extends AppCompatActivity {
         String email = emailView.getText().toString();
 
         CompletableFuture<Void> resetFuture = this.loginService.resetPasswordWithEmail(email);
-        resetFuture.exceptionally( e -> {
+        resetFuture.exceptionally(e -> {
             UIUtils.makeSnakeAndLogOnFail(view, R.string.invalid_email_snack, e);
             return null;
         });

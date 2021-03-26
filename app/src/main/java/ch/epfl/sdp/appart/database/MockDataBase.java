@@ -5,6 +5,7 @@ import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

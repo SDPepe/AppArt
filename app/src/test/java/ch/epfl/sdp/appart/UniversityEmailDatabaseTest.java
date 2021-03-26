@@ -1,6 +1,8 @@
-package ch.epfl.sdp.appart.user;
+package ch.epfl.sdp.appart;
 
 import org.junit.Test;
+
+import ch.epfl.sdp.appart.user.UniversityEmailDatabase;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
