@@ -89,32 +89,6 @@ public class ToolbarUITest {
                         isDisplayed()));
         viewGroup.check(matches(isDisplayed()));
 
-        ViewInteraction overflowMenuButton2 = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.login_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        overflowMenuButton2.perform(click());
-
-        ViewInteraction appCompatTextView2 = onView(
-                allOf(withId(R.id.title), withText("Account"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatTextView2.perform(click());
-
-        ViewInteraction viewGroup2 = onView(
-                allOf(withId(R.id.login_toolbar),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
-        viewGroup2.check(matches(isDisplayed()));
-
         ViewInteraction overflowMenuButton3 = onView(
                 allOf(withContentDescription("More options"),
                         childAtPosition(
