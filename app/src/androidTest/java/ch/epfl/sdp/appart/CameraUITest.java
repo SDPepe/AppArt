@@ -5,6 +5,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import ch.epfl.sdp.appart.scrolling.CameraActivity;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -32,7 +33,7 @@ public class CameraUITest {
   @Test
   public void clickOnCameraBtn(){
     Intents.init();
-    onView(withId(R.id.button_gallery)).perform(click());
+    onView(withId(R.id.button_camera)).perform(click());
     Intents.release();
   }
 
@@ -42,5 +43,6 @@ public class CameraUITest {
     onView(withId(R.id.button_gallery)).perform(click());
     Intents.release();
   }
+  
 
 }
