@@ -64,7 +64,7 @@ public class AdCreationViewModel extends ViewModel {
     }
 
     public void setPrice(String s) {
-        price.postValue(Long.parseLong(s));
+        price.postValue(Long.valueOf(Long.parseLong(s)));
     }
 
     public void setPricePeriod(PricePeriod p) {
@@ -79,6 +79,6 @@ public class AdCreationViewModel extends ViewModel {
         photosRefs.postValue(ls);
     }
 
-    public void setVRTourEnable(boolean b) { VRTourEnable.postValue(b); }
+    public void setVRTourEnable(boolean b) { VRTourEnable.postValue(Boolean.valueOf(b)); }
 
 }
