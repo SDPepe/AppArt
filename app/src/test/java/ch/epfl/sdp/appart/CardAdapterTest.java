@@ -3,6 +3,8 @@ package ch.epfl.sdp.appart;
 import android.app.Activity;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 
@@ -13,6 +15,7 @@ import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CardAdapterTest {
 
     Database db = new MockDataBase();

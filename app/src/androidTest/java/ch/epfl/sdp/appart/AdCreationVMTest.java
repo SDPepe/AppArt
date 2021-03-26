@@ -3,6 +3,8 @@ package ch.epfl.sdp.appart;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 @UninstallModules({LoginModule.class, FireBaseModule.class})
 @HiltAndroidTest
 public class AdCreationVMTest {
