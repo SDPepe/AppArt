@@ -13,7 +13,7 @@ import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 
-public class CardAdapterUnitTest {
+public class CardAdapterTest {
 
     Database db = new MockDataBase();
 
