@@ -2,6 +2,9 @@ package ch.epfl.sdp.appart.user;
 
 import android.media.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class represents a generic user of our application - the actual
  * communication with firebase is done in the Firebase login service
@@ -14,6 +17,7 @@ public class AppUser implements User {
     private int age;
     private Gender gender;
     private String profilePicture;
+    private List<String> adsIds;
 
 
     public AppUser(String userId, String email) {
@@ -23,6 +27,7 @@ public class AppUser implements User {
         this.userId = userId;
         this.email = email;
         this.gender = Gender.NOT_SELECTED;
+        this.adsIds = new ArrayList<>();
 
         String[] split = email.split("@");
         if (split[0] != null) {
@@ -110,6 +115,16 @@ public class AppUser implements User {
     @Override
     public boolean hasUniversityEmail() {
         return UniversityEmailDatabase.has(this.email);
+    }
+
+    @Override
+    public List<String> getAdsIds() { return adsIds; }
+
+    @Override
+    public void addAdId(String id) {
+        if (id == null)
+            throw new IllegalArgumentException("The argument is null");
+        adsIds.add(id);
     }
 
 }

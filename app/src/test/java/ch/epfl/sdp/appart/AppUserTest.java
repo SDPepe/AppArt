@@ -2,6 +2,9 @@ package ch.epfl.sdp.appart;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 
@@ -154,5 +157,26 @@ public class AppUserTest {
     public void hasUniversityEmailReturnsFalseForFakeSyntaxEmail() {
         AppUser user = new AppUser("1234", "test.appart@yahoo.it@epfl.ch");
         assertFalse(user.hasUniversityEmail());
+    }
+
+    @Test
+    public void adIdSetterThrowsOnNullArgument(){
+        AppUser user = new AppUser("1234", "test@appart.ch");
+        assertThrows(IllegalArgumentException.class, () -> user.addAdId(null));
+    }
+
+    @Test
+    public void adIdSetterWorksOnGoodValue(){
+        AppUser user = new AppUser("1234", "test@appart.ch");
+        user.addAdId("id");
+        List<String> ids = new ArrayList<>();
+        ids.add("id");
+        assertEquals(ids, user.getAdsIds());
+    }
+
+    @Test
+    public void adIdGetterWorks(){
+        AppUser user = new AppUser("1234", "test@appart.ch");
+        assertEquals(new ArrayList<>(), user.getAdsIds());
     }
 }

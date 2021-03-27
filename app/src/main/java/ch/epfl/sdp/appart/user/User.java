@@ -2,6 +2,8 @@ package ch.epfl.sdp.appart.user;
 
 import android.media.Image;
 
+import java.util.List;
+
 public interface User {
 
     /**
@@ -82,4 +84,18 @@ public interface User {
      * @return true if the user is registered with a university domain, false otherwise
      */
     boolean hasUniversityEmail();
+
+    /**
+     * getter method for ad references list
+     *
+     * @return a list of IDs of the ads of this user
+     */
+    List<String> getAdsIds();
+
+    /**
+     * adds the ad id to the list of this user
+     *
+     * @param id, the ID of the ad
+     */
+    void addAdId(String id);
 }
