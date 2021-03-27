@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +17,7 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,15 +28,16 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.ui.ToolbarActivity;
+import ch.epfl.sdp.appart.user.LoginActivity;
 
 import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
 import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitorImpl;
-
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class AnnounceActivity extends AppCompatActivity {
+public class AnnounceActivity extends ToolbarActivity {
 
     @Inject
     Database database;
@@ -42,6 +48,10 @@ public class AnnounceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_announce);
         AnnounceViewModel mViewModel = new ViewModelProvider(this).get(AnnounceViewModel.class);
 
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.account_toolbar);
+        setSupportActionBar(toolbar);
+      
         mViewModel.getTitle().observe(this, this::updateTitle);
         mViewModel.getPhotosRefs().observe(this, this::updatePhotos);
         mViewModel.getAddress().observe(this, this::updateAddress);
