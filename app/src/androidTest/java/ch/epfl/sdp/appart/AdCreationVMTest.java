@@ -1,10 +1,10 @@
 package ch.epfl.sdp.appart;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -18,8 +18,6 @@ import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
 import ch.epfl.sdp.appart.scrolling.PricePeriod;
-import ch.epfl.sdp.appart.scrolling.ad.Ad;
-import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -28,9 +26,6 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @UninstallModules({LoginModule.class, FireBaseModule.class})
 @HiltAndroidTest
@@ -39,22 +34,22 @@ public class AdCreationVMTest {
     @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
+    @Rule(order = 1)
+    public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
+
     @BindValue
     LoginService ls = new MockLoginService();
-
     @BindValue
     Database db = new MockDataBase();
 
     private AdCreationViewModel vm;
     private CompletableFuture<String> dbRes;
+    private User u;
 
     @Before
-    public void setup() {
+    public void init(){
         ls.loginWithEmail("lorenzo@epfl.ch", "2222");
-        dbRes = new CompletableFuture<>();
-
         vm = new AdCreationViewModel(db, ls);
-        vm.setTitle("title");
         vm.setStreet("street");
         vm.setCity("city");
         vm.setPrice("1000");
@@ -66,6 +61,7 @@ public class AdCreationVMTest {
 
     @Test
     public void confirmCreationWorksForGoodValues() throws ExecutionException, InterruptedException {
+        vm.setTitle("title");
         assertTrue(vm.confirmCreation().get());
     }
 
