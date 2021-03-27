@@ -1,9 +1,14 @@
 package ch.epfl.sdp.appart.scrolling;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,10 +21,12 @@ import ch.epfl.sdp.appart.database.Database;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
+import ch.epfl.sdp.appart.ui.ToolbarActivity;
+import ch.epfl.sdp.appart.user.LoginActivity;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ScrollingActivity extends AppCompatActivity {
+public class ScrollingActivity extends ToolbarActivity {
 
     @Inject
     Database database;
@@ -30,6 +37,9 @@ public class ScrollingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.login_toolbar);
+        setSupportActionBar(toolbar);
 
         mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
 
@@ -42,6 +52,12 @@ public class ScrollingActivity extends AppCompatActivity {
 
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actions_toolbar, menu);
+        return true;
+    }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -51,5 +67,7 @@ public class ScrollingActivity extends AppCompatActivity {
     private void updateList(List<Card> ls) {
         recyclerView.setAdapter(new CardAdapter(this, database, ls));
     }
+
+
 
 }

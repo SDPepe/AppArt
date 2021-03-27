@@ -55,6 +55,8 @@
 
     <!-- VirtualTourActivity stuff -->
     <string name="empty">Not yet implemented!</string>
+    <string name="action_account">Account</string>
+    <string name="action_logout">Log Out</string>
 
     <!-- Strings for User Profile UI -->
     <string name="uniAccountClaimer">  UNI account  </string>

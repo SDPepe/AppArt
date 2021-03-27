@@ -9,6 +9,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -74,20 +75,23 @@ public class ScrollingUITest {
 
     @Before
     public void init() {
+        Intents.init();
         hiltRule.inject();
     }
 
     @Test
     public void clickOnImageViewFromCardViewStartAnnounceActivity() {
 
-        Intents.init();
         ViewInteraction card = onView(withIndex(withId(R.id.card_image), 0));
         card.perform(click());
         intended(hasComponent(AnnounceActivity.class.getName()));
-        Intents.release();
 
     }
 
+    @After
+    public void release() {
+        Intents.release();
+    }
     /*
     @Test
     public void clickOnFirstImageViewFromCardViewAfterScrollStartAnnounceActivity() {
