@@ -25,6 +25,7 @@ public class AdCreationViewModel extends ViewModel {
     private final MutableLiveData<Long> price = new MutableLiveData<>();
     private final MutableLiveData<PricePeriod> pricePeriod = new MutableLiveData<>();
     private final MutableLiveData<String> description = new MutableLiveData<>();
+    // refs to files stored on the device. FirebaseDB will take care of loading them and uploading
     private final MutableLiveData<List<String>> photosRefs = new MutableLiveData<>();
     private final MutableLiveData<Boolean> VRTourEnable = new MutableLiveData<>();
 
@@ -37,6 +38,11 @@ public class AdCreationViewModel extends ViewModel {
         this.ls = ls;
     }
 
+    /**
+     * function to use when confirming the creation of the ad
+     * @return a completable future with true if the ad has been successfully added to the database,
+     *  false if an exception was thrown
+     */
     public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
         ContactInfo ci = new ContactInfo(user.getUserEmail(), user.getPhoneNumber(), user.getName());
@@ -45,7 +51,7 @@ public class AdCreationViewModel extends ViewModel {
                 VRTourEnable.getValue(), ci);
         CompletableFuture<String> result = db.putAd(ad);
         return result.thenApply(s -> {
-            // TODO add ad ref to user's adRefs
+            user.addAdId(s);
             return true;
         }).exceptionally(e -> false);
 
