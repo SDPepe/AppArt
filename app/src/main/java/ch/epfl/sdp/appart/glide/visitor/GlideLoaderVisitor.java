@@ -1,7 +1,7 @@
 package ch.epfl.sdp.appart.glide.visitor;
 
-import ch.epfl.sdp.appart.database.FirebaseDB;
-import ch.epfl.sdp.appart.database.MockDataBase;
+import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
 
 /**
  * Visitor for the Glide loader
@@ -12,12 +12,12 @@ public interface GlideLoaderVisitor {
      *
      * @param database the Firebase database visited
      */
-    void visit(FirebaseDB database);
+    void visit(FirestoreDatabaseService database);
 
     /**
      * Visit the MockDatabase database
      *
      * @param database the MockDatabase database visited
      */
-    void visit(MockDataBase database);
+    void visit(MockDatabaseService database);
 }

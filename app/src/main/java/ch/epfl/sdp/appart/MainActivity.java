@@ -5,8 +5,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.sdp.appart.user.LoginActivity;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override

@@ -11,18 +11,18 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-        <activity android:name=".scrolling.CameraActivity"/>
-        <activity android:name=".user.UserProfileActivity"/>
-        <activity android:name=".user.CreateUserActivity" />
-        <activity android:name=".user.ResetActivity" />
+        <activity android:name=".CameraActivity"/>
+        <activity android:name=".UserProfileActivity"/>
+        <activity android:name=".CreateUserActivity" />
+        <activity android:name=".ResetActivity" />
       
-        <activity android:name=".user.LoginActivity" />
+        <activity android:name=".LoginActivity" />
      
 
-        <activity android:name=".virtualtour.PanoramaGlActivity" />
+        <activity android:name=".PanoramaActivity" />
 
-        <activity android:name=".scrolling.ad.AnnounceActivity" />
-        <activity android:name=".scrolling.ScrollingActivity" />
+        <activity android:name=".AdActivity" />
+        <activity android:name=".ScrollingActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:onClick="back"
-    tools:context=".user.UserProfileActivity">
+    tools:context=".UserProfileActivity">
 
     <Button
         android:id="@+id/backButton"

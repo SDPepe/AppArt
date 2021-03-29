@@ -13,15 +13,9 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
-import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
-import ch.epfl.sdp.appart.user.CreateUserActivity;
-import ch.epfl.sdp.appart.user.LoginActivity;
-import ch.epfl.sdp.appart.user.ResetActivity;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;

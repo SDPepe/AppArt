@@ -1,7 +1,5 @@
 package ch.epfl.sdp.appart.user;
 
-import android.media.Image;
-
 /**
  * This class represents a generic user of our application - the actual
  * communication with firebase is done in the Firebase login service
@@ -109,7 +107,7 @@ public class AppUser implements User {
 
     @Override
     public boolean hasUniversityEmail() {
-        return UniversityEmailDatabase.has(this.email);
+        return UniversityEmailChecker.has(this.email);
     }
 
 }

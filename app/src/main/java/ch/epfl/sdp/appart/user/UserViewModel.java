@@ -3,7 +3,7 @@ package ch.epfl.sdp.appart.user;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.database.DatabaseService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 import java.util.concurrent.CompletableFuture;
@@ -19,10 +19,10 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Boolean> mUpdateCardConfirmed = new MutableLiveData<>();
     private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
-    Database db;
+    DatabaseService db;
 
     @Inject
-    public UserViewModel(Database database) {
+    public UserViewModel(DatabaseService database) {
         this.db = database;
     }
 

@@ -2,7 +2,7 @@ package ch.epfl.sdp.appart;
 
 import org.junit.Test;
 
-import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
+import ch.epfl.sdp.appart.ad.ContactInfo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;

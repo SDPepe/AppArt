@@ -12,18 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.List;
 
-import ch.epfl.sdp.appart.database.Database;
-import ch.epfl.sdp.appart.database.FirebaseDB;
-import ch.epfl.sdp.appart.database.MockDataBase;
+import ch.epfl.sdp.appart.AdActivity;
+import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.scrolling.ad.AnnounceActivity;
-import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitorImpl;
+import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 
 import static java.lang.String.format;
 
@@ -36,9 +30,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     private final List<Card> cards;
     private final Context context;
 
-    private final Database database;
+    private final DatabaseService database;
 
-    public CardAdapter(Activity context, Database database, List<Card> cards) {
+    public CardAdapter(Activity context, DatabaseService database, List<Card> cards) {
 
         if (cards == null) {
             throw new IllegalArgumentException("cards cannot be null");
@@ -79,12 +73,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         Card card = cards.get(position);
         holder.cardImageView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, AnnounceActivity.class);
+            Intent intent = new Intent(context, AdActivity.class);
             intent.putExtra("adID", card.getId());
             context.startActivity(intent);
         });
 
-        database.accept(new GlideLoaderVisitorImpl(context, holder.cardImageView,
+        database.accept(new GlideImageViewLoader(context, holder.cardImageView,
                 "Cards/" +  card.getImageUrl()));
 
         holder.addressTextView.setText(card.getCity());

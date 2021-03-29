@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -18,10 +18,10 @@ public class ScrollingViewModel extends ViewModel {
 
     private final MutableLiveData<List<Card>> mCards = new MutableLiveData<>();
 
-    Database db;
+    DatabaseService db;
 
     @Inject
-    public ScrollingViewModel(Database database) {
+    public ScrollingViewModel(DatabaseService database) {
         this.db = database;
     }
 

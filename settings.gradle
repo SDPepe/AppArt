@@ -1,4 +1,3 @@
-include ':glidefirebase'
 include ':app'
 rootProject.name = "AppArt"
 

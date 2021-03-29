@@ -1,21 +1,17 @@
 package ch.epfl.sdp.appart.login;
 
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import ch.epfl.sdp.appart.login.exceptions.LoginServiceRequestFailedException;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 

@@ -13,13 +13,9 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
-import ch.epfl.sdp.appart.user.CreateUserActivity;
-import ch.epfl.sdp.appart.user.LoginActivity;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -29,7 +25,6 @@ import dagger.hilt.android.testing.UninstallModules;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;

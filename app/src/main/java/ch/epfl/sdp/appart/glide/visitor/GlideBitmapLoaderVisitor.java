@@ -1,9 +1,7 @@
 package ch.epfl.sdp.appart.glide.visitor;
 
-import android.graphics.Bitmap;
-
-import ch.epfl.sdp.appart.database.FirebaseDB;
-import ch.epfl.sdp.appart.database.MockDataBase;
+import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
 
 public interface GlideBitmapLoaderVisitor {
 
@@ -11,12 +9,12 @@ public interface GlideBitmapLoaderVisitor {
      * Visit FirebaseDB for the GlideLoaderVisitor
      * @param database
      */
-    void visit(FirebaseDB database);
+    void visit(FirestoreDatabaseService database);
 
     /**
      * Visit MockDatabase for the GlideLoaderVisitor
      * @param database
      */
-    void visit(MockDataBase database);
+    void visit(MockDatabaseService database);
 
 }

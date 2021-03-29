@@ -1,14 +1,10 @@
 package ch.epfl.sdp.appart;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
-import ch.epfl.sdp.appart.hilt.FireBaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
 import ch.epfl.sdp.appart.login.FirebaseLoginService;

@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import ch.epfl.sdp.appart.database.MockDataBase;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -18,11 +18,11 @@ import static org.junit.Assert.assertTrue;
 
 public class MockDataBaseTest {
 
-    private MockDataBase dataBase;
+    private MockDatabaseService dataBase;
 
     @Before
     public void init() {
-        dataBase = new MockDataBase();
+        dataBase = new MockDatabaseService();
     }
 
     @Test
