@@ -1,20 +1,19 @@
 package ch.epfl.sdp.appart.database;
 
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
-import ch.epfl.sdp.appart.ad.Ad;
-import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
-import ch.epfl.sdp.appart.ad.ContactInfo;
-import ch.epfl.sdp.appart.user.AppUser;
-import ch.epfl.sdp.appart.user.User;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.ContactInfo;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
+import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
+import ch.epfl.sdp.appart.user.AppUser;
+import ch.epfl.sdp.appart.user.User;
 
 public class MockDatabaseService implements DatabaseService {
 

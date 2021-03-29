@@ -6,9 +6,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
+import ch.epfl.sdp.appart.scrolling.PricePeriod;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -86,7 +86,7 @@ public class AdUnitTest {
     }
 
     @Test
-    public void exceptionOnNullArg7(){
+    public void exceptionOnNullArg7() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
@@ -95,7 +95,7 @@ public class AdUnitTest {
     }
 
     @Test
-    public void exceptionOnNullArg8(){
+    public void exceptionOnNullArg8() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
@@ -104,7 +104,7 @@ public class AdUnitTest {
     }
 
     @Test
-    public void gettersTest(){
+    public void gettersTest() {
         assertEquals("Ad title", ad.getTitle());
         assertEquals(1000, ad.getPrice());
         assertEquals(PricePeriod.MONTH, ad.getPricePeriod());

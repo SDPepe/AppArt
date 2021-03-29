@@ -42,8 +42,8 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:scrollbars="none"
         android:fillViewport="false"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,14 +59,14 @@
                 android:id="@+id/horizontalScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:fillViewport="true">
+                android:fillViewport="true"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:id="@+id/horChildren"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"/>
+                    android:orientation="horizontal" />
             </HorizontalScrollView>
 
             <Space
@@ -82,11 +82,12 @@
                 android:text="@string/vtourbutton_text" />
 
             <Button
-              android:id="@+id/cameraButton"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:onClick="openCamera"
-              android:text="Add Picture" />
+                android:id="@+id/cameraButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="openCamera"
+                android:text="Add Picture" />
+
             <Space
                 android:id="@+id/spacer2"
                 android:layout_width="match_parent"

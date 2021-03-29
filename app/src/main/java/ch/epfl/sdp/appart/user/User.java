@@ -1,12 +1,5 @@
 package ch.epfl.sdp.appart.user;
 
-import android.media.Image;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-
 public interface User {
 
     /**

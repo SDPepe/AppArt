@@ -3,12 +3,12 @@ package ch.epfl.sdp.appart.user;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ch.epfl.sdp.appart.database.DatabaseService;
-import dagger.hilt.android.lifecycle.HiltViewModel;
-
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.database.DatabaseService;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 
 
 @HiltViewModel

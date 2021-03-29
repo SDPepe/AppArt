@@ -5,8 +5,8 @@ package ch.epfl.sdp.appart.user;
  * communication with firebase is done in the Firebase login service
  */
 public class AppUser implements User {
-    private String name;
     private final String userId;
+    private String name;
     private String email;
     private String phoneNumber;
     private int age;

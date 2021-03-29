@@ -7,10 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
-import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
-import dagger.hilt.android.AndroidEntryPoint;
 
 import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
@@ -20,11 +16,13 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
+import dagger.hilt.android.AndroidEntryPoint;
+
 @AndroidEntryPoint
 public class PanoramaActivity extends AppCompatActivity {
 
-    private PLManager plManager;
-    //private Bitmap bitmap;
     /**
      * WARNING : For people using bitmaps loaded with Glide:
      * DON'T STORE THE BITMAP ANYWHERE IT WOULD GET RECYCLED BY SOMEONE ELSE
@@ -36,6 +34,8 @@ public class PanoramaActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
+    //private Bitmap bitmap;
+    private PLManager plManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,7 @@ public class PanoramaActivity extends AppCompatActivity {
         plManager.onPause();
         super.onPause();
     }
+
     @Override
     protected void onDestroy() {
 
@@ -88,7 +89,7 @@ public class PanoramaActivity extends AppCompatActivity {
         return plManager.onTouchEvent(event);
     }
 
-    public void goBack(View view){
+    public void goBack(View view) {
         finish();
     }
 

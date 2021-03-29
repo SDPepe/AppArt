@@ -50,7 +50,7 @@ public class CardUnitTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nullArgumentsConstructorTest3(){
+    public void nullArgumentsConstructorTest3() {
         Card c = new Card(null, "user", "Lausanne", 0, null);
     }
 

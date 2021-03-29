@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ch.epfl.sdp.appart.AdActivity;
-import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 
 import static java.lang.String.format;
@@ -79,7 +79,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         });
 
         database.accept(new GlideImageViewLoader(context, holder.cardImageView,
-                "Cards/" +  card.getImageUrl()));
+                "Cards/" + card.getImageUrl()));
 
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));

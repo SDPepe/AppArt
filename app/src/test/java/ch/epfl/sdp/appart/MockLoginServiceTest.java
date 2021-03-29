@@ -18,9 +18,9 @@ import static org.junit.Assert.assertTrue;
 
 public class MockLoginServiceTest {
 
+    private final AppUser antoine = new AppUser("1111", "antoine@epfl.ch");
     private MockLoginService loginService;
     private User userTest;
-    private final AppUser antoine = new AppUser("1111", "antoine@epfl.ch");
 
     @Before
     public void init() {

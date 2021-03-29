@@ -268,8 +268,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:paddingBottom="30dp"
-                android:paddingTop="60dp">
+                android:paddingTop="60dp"
+                android:paddingBottom="30dp">
 
                 <Button
                     android:id="@+id/doneButton"

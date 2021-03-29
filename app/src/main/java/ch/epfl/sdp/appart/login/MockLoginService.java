@@ -21,16 +21,13 @@ import ch.epfl.sdp.appart.user.User;
 @Singleton
 public class MockLoginService implements LoginService {
 
-    private User currentUser = null;
     private final Map<Pair<String, String>, User> users = new HashMap<>();
-
     private final AppUser antoine = new AppUser("1111", "antoine@epfl.ch");
     private final AppUser lorenzo = new AppUser("2222", "lorenzo@epfl.ch");
     private final AppUser carlo = new AppUser("3333", "carlo@epfl.ch");
     private final AppUser filippo = new AppUser("4444", "filippo@epfl.ch");
     private final AppUser emilien = new AppUser("5555", "emilien@epfl.ch");
     private final AppUser quentin = new AppUser("6666", "quentin@epfl.ch");
-
     //using user id as password to make it straightforward
     private final Pair<String, String> antoineEmailPassword = new Pair<>(antoine.getUserEmail(), antoine.getUserId());
     private final Pair<String, String> lorenzoEmailPassword = new Pair<>(lorenzo.getUserEmail(), lorenzo.getUserId());
@@ -38,6 +35,7 @@ public class MockLoginService implements LoginService {
     private final Pair<String, String> filippoEmailPassword = new Pair<>(filippo.getUserEmail(), filippo.getUserId());
     private final Pair<String, String> emilienEmailPassword = new Pair<>(emilien.getUserEmail(), emilien.getUserId());
     private final Pair<String, String> quentinEmailPassword = new Pair<>(quentin.getUserEmail(), quentin.getUserId());
+    private User currentUser = null;
 
     @Inject
     public MockLoginService() {

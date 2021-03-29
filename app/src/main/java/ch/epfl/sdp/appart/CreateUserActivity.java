@@ -1,20 +1,20 @@
 package ch.epfl.sdp.appart;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import ch.epfl.sdp.appart.login.LoginService;
-import ch.epfl.sdp.appart.user.User;
-import ch.epfl.sdp.appart.utils.UIUtils;
-import dagger.hilt.android.AndroidEntryPoint;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.user.User;
+import ch.epfl.sdp.appart.utils.UIUtils;
+import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class CreateUserActivity extends AppCompatActivity {

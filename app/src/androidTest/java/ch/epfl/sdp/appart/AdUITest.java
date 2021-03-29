@@ -11,13 +11,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.sdp.appart.PanoramaActivity;
-import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import ch.epfl.sdp.appart.ad.Ad;
-import ch.epfl.sdp.appart.AdActivity;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -39,9 +36,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @HiltAndroidTest
 public class AdUITest {
 
-    @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
-
     static final String cardID = "1PoUWbeNHvMNotxwAui5";
     static final Intent intent;
 
@@ -50,12 +44,13 @@ public class AdUITest {
         intent.putExtra("cardID", cardID);
     }
 
-    @Rule(order = 1)
-    public ActivityScenarioRule<AdActivity> scrollingActivityRule = new ActivityScenarioRule<>(intent);
-
     @BindValue
     final
     DatabaseService database = new MockDatabaseService();
+    @Rule(order = 0)
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    @Rule(order = 1)
+    public ActivityScenarioRule<AdActivity> scrollingActivityRule = new ActivityScenarioRule<>(intent);
 
     @Before
     public void init() {

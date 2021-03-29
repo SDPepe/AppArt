@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class AdViewModel extends ViewModel {
 
+    final DatabaseService db;
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
@@ -25,8 +26,6 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
     private final MutableLiveData<String> userPhone = new MutableLiveData<>();
     private final MutableLiveData<String> userEmail = new MutableLiveData<>();
-
-    final DatabaseService db;
 
     @Inject
     public AdViewModel(DatabaseService db) {

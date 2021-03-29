@@ -2,14 +2,6 @@ package ch.epfl.sdp.appart.database;
 
 import android.net.Uri;
 
-import ch.epfl.sdp.appart.database.exceptions.DatabaseRequestFailedException;
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
-import ch.epfl.sdp.appart.ad.Ad;
-import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
-import ch.epfl.sdp.appart.user.AppUser;
-import ch.epfl.sdp.appart.user.Gender;
-import ch.epfl.sdp.appart.user.User;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,16 +23,23 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
+import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
+import ch.epfl.sdp.appart.database.exceptions.DatabaseRequestFailedException;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
+import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
+import ch.epfl.sdp.appart.user.AppUser;
+import ch.epfl.sdp.appart.user.Gender;
+import ch.epfl.sdp.appart.user.User;
 
 @Singleton
 public class FirestoreDatabaseService implements DatabaseService {
 
+    private final static String STORAGE_URL = "gs://appart-ec344.appspot.com/";
     private final FirebaseFirestore db;
     private final FirebaseStorage storage;
-    private final static String STORAGE_URL = "gs://appart-ec344.appspot.com/";
 
     @Inject
     public FirestoreDatabaseService() {

@@ -2,7 +2,6 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +15,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import ch.epfl.sdp.appart.database.DatabaseService;
-
 import java.util.List;
-
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.ad.ContactInfoDialogFragment;
-
+import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -44,7 +40,7 @@ public class AdActivity extends ToolbarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.account_toolbar);
         setSupportActionBar(toolbar);
-      
+
         mViewModel.getTitle().observe(this, this::updateTitle);
         mViewModel.getPhotosRefs().observe(this, this::updatePhotos);
         mViewModel.getAddress().observe(this, this::updateAddress);
@@ -133,12 +129,12 @@ public class AdActivity extends ToolbarActivity {
         contactFrag.show(getSupportFragmentManager(), "contact dialog");
     }
 
-    public void openVirtualTour(View view){
+    public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
         startActivity(intent);
     }
 
-    public void openCamera(View view){
+    public void openCamera(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }

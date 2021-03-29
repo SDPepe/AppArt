@@ -11,8 +11,6 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.LoginActivity;
-import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;

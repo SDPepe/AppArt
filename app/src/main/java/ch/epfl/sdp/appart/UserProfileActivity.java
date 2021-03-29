@@ -1,14 +1,5 @@
 package ch.epfl.sdp.appart;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.user.AppUser;
-import ch.epfl.sdp.appart.user.Gender;
-import ch.epfl.sdp.appart.user.User;
-import dagger.hilt.android.AndroidEntryPoint;
-
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -18,9 +9,18 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.user.AppUser;
+import ch.epfl.sdp.appart.user.Gender;
+import ch.epfl.sdp.appart.user.User;
+import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * This class manages the UI of the user profile and calls
@@ -29,13 +29,11 @@ import javax.inject.Inject;
 @AndroidEntryPoint
 public class UserProfileActivity extends AppCompatActivity {
 
-    /* temporary user */
-    private User sessionUser;
-
     /* Firestore database instance for db updates */
     @Inject
     DatabaseService db;
-
+    /* temporary user */
+    private User sessionUser;
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
@@ -56,13 +54,13 @@ public class UserProfileActivity extends AppCompatActivity {
 
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.modifyButton);
-        this.doneButton =  findViewById(R.id.doneButton);
+        this.doneButton = findViewById(R.id.doneButton);
         this.backButton = findViewById(R.id.backButton);
-        this.nameView =  findViewById(R.id.nameText);
+        this.nameView = findViewById(R.id.nameText);
         this.ageView = findViewById(R.id.ageText);
-        this.emailView =  findViewById(R.id.emailText);
+        this.emailView = findViewById(R.id.emailText);
         this.phoneNumberView = findViewById(R.id.phoneNumberText);
-        this.genderView =  findViewById(R.id.genderView);
+        this.genderView = findViewById(R.id.genderView);
         this.genderView.setEnabled(ageView.isEnabled());
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer);
         this.imageView = findViewById(R.id.imageView);
@@ -126,6 +124,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     /**
      * sets the updated user information to the firestore database
+     *
      * @return true if the update was correctly completed, false otherwise
      */
     private boolean setSessionUserToDB() {
@@ -148,7 +147,7 @@ public class UserProfileActivity extends AppCompatActivity {
     /**
      * sets the new attributes to the session User
      */
-    private void setNewAttributes(){
+    private void setNewAttributes() {
         String ageString = ((EditText) findViewById(R.id.ageText)).getText().toString().trim();
         if (ageString != null && !ageString.equals("")) {
             this.sessionUser.setAge(Integer.parseInt(ageString));

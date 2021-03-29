@@ -34,37 +34,6 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
         this.bitmapFuture = bitmapFuture;
     }
 
-    /**
-     * Container class that will complete the future with the bitmap when it will be loaded
-     */
-    private static class BitmapTarget extends CustomTarget<Bitmap> {
-
-        private final CompletableFuture<Bitmap> targetFuture;
-
-        protected BitmapTarget(CompletableFuture<Bitmap> targetFuture) {
-            if (targetFuture == null) throw new IllegalArgumentException("future cannot be null");
-            this.targetFuture = targetFuture;
-        }
-
-        @Override
-        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-            targetFuture.complete(resource);
-        }
-
-        @Override
-        public void onLoadCleared(@Nullable Drawable placeholder) {}
-
-        /**
-         * Return the bitmap that was inserted in the target
-         * @return bitmap result
-         */
-        @Nullable
-        protected CompletableFuture<Bitmap> getBitmap() {
-            return targetFuture;
-        }
-
-    }
-
     @Override
     public void visit(FirestoreDatabaseService database) {
         /**
@@ -89,6 +58,39 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
                 .asBitmap()
                 .load(R.drawable.panorama_test)
                 .into(target);
+
+    }
+
+    /**
+     * Container class that will complete the future with the bitmap when it will be loaded
+     */
+    private static class BitmapTarget extends CustomTarget<Bitmap> {
+
+        private final CompletableFuture<Bitmap> targetFuture;
+
+        protected BitmapTarget(CompletableFuture<Bitmap> targetFuture) {
+            if (targetFuture == null) throw new IllegalArgumentException("future cannot be null");
+            this.targetFuture = targetFuture;
+        }
+
+        @Override
+        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+            targetFuture.complete(resource);
+        }
+
+        @Override
+        public void onLoadCleared(@Nullable Drawable placeholder) {
+        }
+
+        /**
+         * Return the bitmap that was inserted in the target
+         *
+         * @return bitmap result
+         */
+        @Nullable
+        protected CompletableFuture<Bitmap> getBitmap() {
+            return targetFuture;
+        }
 
     }
 }

@@ -25,14 +25,6 @@ public class FirebaseLoginService implements LoginService {
         this.mAuth.signOut(); //to unsure that no invalid user is cached
     }
 
-    private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
-        String[] args = {email, password};
-        argsChecker(args);
-        //Handle loss of network with https://firebase.google.com/docs/database/android/offline-capabilities#section-connection-state
-        return setUpFuture(task,
-                this::getUserFromAuthResult);
-    }
-
     /**
      * Builds a FirebaseLoginService
      *
@@ -40,6 +32,14 @@ public class FirebaseLoginService implements LoginService {
      */
     public static LoginService buildLoginService() {
         return new FirebaseLoginService();
+    }
+
+    private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
+        String[] args = {email, password};
+        argsChecker(args);
+        //Handle loss of network with https://firebase.google.com/docs/database/android/offline-capabilities#section-connection-state
+        return setUpFuture(task,
+                this::getUserFromAuthResult);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
         String[] args = {email};
-        fullChecker(args,false, "when updating the email");
+        fullChecker(args, false, "when updating the email");
 
         return setUpFuture(getCurrentFirebaseUser().updateEmail(email), result -> result);
     }
@@ -139,7 +139,7 @@ public class FirebaseLoginService implements LoginService {
         }
     }
 
-    private void fullChecker(String[] args, boolean hasToBeNull, String excMessage){
+    private void fullChecker(String[] args, boolean hasToBeNull, String excMessage) {
         argsChecker(args);
         userChecker(hasToBeNull, excMessage);
     }
@@ -171,16 +171,6 @@ public class FirebaseLoginService implements LoginService {
     }
 
     /**
-     * Interface that handles the conversion of a task from one type to another
-     *
-     * @param <FROM> the type we want to convert
-     * @param <TO>   the type we want to get
-     */
-    private interface ConvertTask<FROM, TO> {
-        TO convertTask(FROM arg);
-    }
-
-    /**
      * Completes the future depending on the task result
      *
      * @param task the task whose result will go into the returned future if successful
@@ -197,5 +187,15 @@ public class FirebaseLoginService implements LoginService {
             }
         });
         return future;
+    }
+
+    /**
+     * Interface that handles the conversion of a task from one type to another
+     *
+     * @param <FROM> the type we want to convert
+     * @param <TO>   the type we want to get
+     */
+    private interface ConvertTask<FROM, TO> {
+        TO convertTask(FROM arg);
     }
 }
