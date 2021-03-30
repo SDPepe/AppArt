@@ -67,8 +67,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
      * @param user a User that will be stored
      * @return A future that wraps a boolean if it
      * the new id of the card stored on the database. If an error
-     * occurs, the future will complete exceptionally by holding a
-     * DatabaseServiceException.
+     * occurs, the future will deliver false.
      * @throws IllegalArgumentException if card is null.
      */
     @NonNull
