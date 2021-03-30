@@ -15,6 +15,7 @@ import ch.epfl.sdp.appart.login.exceptions.LoginServiceRequestFailedException;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
+
 @Singleton
 public class FirebaseLoginService implements LoginService {
     private final FirebaseAuth mAuth;
@@ -34,10 +35,12 @@ public class FirebaseLoginService implements LoginService {
         return new FirebaseLoginService();
     }
 
-    private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password, Task<AuthResult> task) {
+    private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password,
+                                                                 Task<AuthResult> task) {
         String[] args = {email, password};
         argsChecker(args);
-        //Handle loss of network with https://firebase.google.com/docs/database/android/offline-capabilities#section-connection-state
+        //Handle loss of network with https://firebase.google
+        // .com/docs/database/android/offline-capabilities#section-connection-state
         return setUpFuture(task,
                 this::getUserFromAuthResult);
     }
@@ -81,7 +84,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
         String[] args = {email};
-        fullChecker(args, false, "when updating the email");
+        fullChecker(args, "when updating the email");
 
         return setUpFuture(getCurrentFirebaseUser().updateEmail(email), result -> result);
     }
@@ -89,7 +92,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
         String[] args = {password};
-        fullChecker(args, false, "when updating the password");
+        fullChecker(args, "when updating the password");
 
         return setUpFuture(getCurrentFirebaseUser().updatePassword(password), result -> result);
     }
@@ -121,16 +124,32 @@ public class FirebaseLoginService implements LoginService {
                 result -> result);
     }
 
+    /**
+     * Checks if the internal state of the current user in Firebase match the expected state.
+     * getCurrentUser() must return null
+     * or a valid user depending on hasToBeNull.
+     *
+     * @param hasToBeNull boolean that decides if we need to check for null or not
+     * @param excMessage  string that contains the exception message the caller wants to display
+     * @throws IllegalStateException if the state of getCurrentUser() is not the one expected
+     */
     private void userChecker(boolean hasToBeNull, String excMessage) {
         if (getCurrentUser() == null ^ hasToBeNull) {
             if (hasToBeNull) {
-                throw new IllegalStateException("current user must not already be set " + excMessage);
+                throw new IllegalStateException("Current user must not already be set : " + excMessage);
             } else {
-                throw new IllegalStateException("current user must be set " + excMessage);
+                throw new IllegalStateException("Current user must be set : " + excMessage);
             }
         }
     }
 
+    /**
+     * Verifies that all strings in the args array are not null. These strings usually correspond
+     * to the list, or part of the list, of argument of a method.
+     *
+     * @param args the array containing the strings.
+     * @throws IllegalArgumentException if one of the strings in args is null
+     */
     private void argsChecker(String[] args) {
         for (String s : args) {
             if (s == null) {
@@ -139,11 +158,26 @@ public class FirebaseLoginService implements LoginService {
         }
     }
 
-    private void fullChecker(String[] args, boolean hasToBeNull, String excMessage) {
+    /**
+     * The fulChecker uses argsChecker and userChecker to verify that the arguments of a method
+     * are valid, and that the sate of getCurrentUser is valid for this method.
+     *
+     * @param args       the list of strings we want to check
+     * @param excMessage a string that contains the exception message the caller wants to display
+     * @throws IllegalArgumentException if one of the arguments in args is null
+     * @throws IllegalStateException    if the state of getCurrentUser is not valid for this method
+     */
+    private void fullChecker(String[] args, String excMessage) {
         argsChecker(args);
-        userChecker(hasToBeNull, excMessage);
+        userChecker(false, excMessage);
     }
 
+    /**
+     * Sets up the use of an emulator for the Firebase authentication service.
+     *
+     * @param ip   the ip of the emulator
+     * @param port the port that corresponds to the authentication service emulation
+     */
     public void useEmulator(String ip, int port) {
         if (ip == null) throw new IllegalArgumentException();
         mAuth.useEmulator(ip, port);
@@ -166,7 +200,9 @@ public class FirebaseLoginService implements LoginService {
      * @return a user
      */
     private User getUserFromAuthResult(AuthResult result) {
-        FirebaseUser user = getCurrentFirebaseUser();
+        FirebaseUser user = result.getUser();
+        //No issue with user being null because this is only executed when the login future
+        // succeeded
         return new AppUser(user.getUid(), user.getEmail());
     }
 
@@ -177,7 +213,8 @@ public class FirebaseLoginService implements LoginService {
      * @param func the function used to convert the task from one type to another
      * @return a future that contains the task result
      */
-    private <FROM, TO> CompletableFuture<TO> setUpFuture(Task<FROM> task, ConvertTask<FROM, TO> func) {
+    private <FROM, TO> CompletableFuture<TO> setUpFuture(Task<FROM> task,
+                                                         ConvertTask<FROM, TO> func) {
         CompletableFuture<TO> future = new CompletableFuture<>();
         task.addOnCompleteListener(taskResult -> {
             if (taskResult.isSuccessful()) {

@@ -14,10 +14,12 @@ import ch.epfl.sdp.appart.user.User;
 public class FirebaseEmulatorLoginServiceWrapper implements LoginService {
 
     private final FirebaseLoginService loginService;
+    private static final String LOCALHOST = "10.0.2.2";
+    private static final int AUTH_SERVICE_PORT = 9099;
 
     public FirebaseEmulatorLoginServiceWrapper(@NonNull FirebaseLoginService loginService) {
         if (loginService == null) throw new IllegalArgumentException("loginService cannot be null");
-        loginService.useEmulator("10.0.2.2", 9099);
+        loginService.useEmulator(LOCALHOST, AUTH_SERVICE_PORT);
         this.loginService = loginService;
     }
 
