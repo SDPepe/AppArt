@@ -106,7 +106,7 @@ public class Ad {
             return this;
         }
 
-        public AdBuilder withPricePeriod(PricePeriod period) {
+        public AdBuilder withPricePeriod(PricePeriod pricePeriod) {
             this.pricePeriod = pricePeriod;
             return this;
         }
