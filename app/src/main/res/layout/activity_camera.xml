@@ -9,23 +9,22 @@
     tools:context=".CameraActivity">
 
     <ImageView
-        android:id="@+id/image_view"
+        android:id="@+id/image_Camera_ImageView"
         android:layout_width="400dp"
         android:layout_height="400dp"
         android:scaleType="centerCrop"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <Button
-        android:id="@+id/button_camera"
+        android:id="@+id/camera_Camera_Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Camera" />
 
     <Button
-        android:id="@+id/button_gallery"
+        android:id="@+id/gallery_Camera_Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Gallery" />
-
 
 </LinearLayout>

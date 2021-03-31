@@ -10,21 +10,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.ad.ContactInfoDialogFragment;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import dagger.hilt.android.AndroidEntryPoint;
 
+/**
+ * This class manages the UI of the ad.
+ */
 @AndroidEntryPoint
 public class AdActivity extends ToolbarActivity {
 
@@ -38,7 +37,7 @@ public class AdActivity extends ToolbarActivity {
         AdViewModel mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.account_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.account_Ad_Toolbar);
         setSupportActionBar(toolbar);
 
         mViewModel.getTitle().observe(this, this::updateTitle);
@@ -52,7 +51,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateTitle(String title) {
-        TextView titleView = findViewById(R.id.titleField);
+        TextView titleView = findViewById(R.id.title_Ad_TextView);
         if (title != null) {
             titleView.setText(title);
         } else {
@@ -61,7 +60,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updatePhotos(List<String> references) {
-        LinearLayout horizontalLayout = findViewById(R.id.horChildren);
+        LinearLayout horizontalLayout = findViewById(R.id.horizontal_children_Ad_LinearLayout);
         horizontalLayout.removeAllViews();
 
         for (int i = 0; i < references.size(); i++) {
@@ -84,7 +83,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateAddress(String address) {
-        TextView addressView = findViewById(R.id.addressField);
+        TextView addressView = findViewById(R.id.address_field_Ad_TextView);
         if (address != null) {
             addressView.setText(address);
         } else {
@@ -93,7 +92,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updatePrice(String price) {
-        TextView priceView = findViewById(R.id.priceField);
+        TextView priceView = findViewById(R.id.price_field_Ad_TextView);
         if (price != null) {
             priceView.setText(price);
         } else {
@@ -102,7 +101,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateDescription(String description) {
-        TextView descriptionView = findViewById(R.id.descriptionField);
+        TextView descriptionView = findViewById(R.id.description_field_Ad_TextView);
         if (description != null) {
             descriptionView.setText(description);
         } else {
@@ -111,7 +110,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateAdvertiser(String username) {
-        TextView usernameView = findViewById(R.id.userField);
+        TextView usernameView = findViewById(R.id.user_field_Ad_TextView);
         if (username != null) {
             usernameView.setText(username);
         } else {
@@ -119,21 +118,41 @@ public class AdActivity extends ToolbarActivity {
         }
     }
 
+    /**
+     * Method called when the activity is done and should be closed.
+     *
+     * @param view
+     */
     public void goBack(View view) {
         finish();
     }
 
+    /**
+     * Method called when you want open the contact info.
+     *
+     * @param view
+     */
     public void openContactInfo(View view) {
         DialogFragment contactFrag = ContactInfoDialogFragment.newInstance();
         //contactFrag.getView().setBackgroundColor(Color.TRANSPARENT);
         contactFrag.show(getSupportFragmentManager(), "contact dialog");
     }
 
+    /**
+     * Method called when you want open the virtual tour.
+     *
+     * @param view
+     */
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Method called when you want open the camera.
+     *
+     * @param view
+     */
     public void openCamera(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);

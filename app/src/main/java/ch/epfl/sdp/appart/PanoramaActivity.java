@@ -5,21 +5,19 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
-
 import java.util.concurrent.CompletableFuture;
-
 import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import dagger.hilt.android.AndroidEntryPoint;
 
+/**
+ * This class manages the UI of the Panorama.
+ */
 @AndroidEntryPoint
 public class PanoramaActivity extends AppCompatActivity {
 
@@ -89,6 +87,11 @@ public class PanoramaActivity extends AppCompatActivity {
         return plManager.onTouchEvent(event);
     }
 
+    /**
+     * Method called when the activity is done and should be closed.
+     *
+     * @param view
+     */
     public void goBack(View view) {
         finish();
     }

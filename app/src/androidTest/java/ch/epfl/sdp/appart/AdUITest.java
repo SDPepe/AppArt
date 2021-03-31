@@ -61,13 +61,13 @@ public class AdUITest {
     @Test
     public void clickOnVTourOpensVTourActivity() {
 
-        onView(withId(R.id.vtourButton)).perform(click());
+        onView(withId(R.id.vtour_Ad_Button)).perform(click());
         intended(hasComponent(PanoramaActivity.class.getName()));
     }
 
     @Test
     public void contactDialogTests() {
-        onView(withId(R.id.contactInfoButton)).perform(scrollTo()).perform(click());
+        onView(withId(R.id.contact_info_Ad_Button)).perform(scrollTo()).perform(click());
         onView(withText("Close"))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()))
@@ -79,20 +79,20 @@ public class AdUITest {
     public void displayAdInfoTest() {
         Ad testAd = database.getAd(cardID).join();
 
-        onView(withId(R.id.titleField)).check(matches(withText(testAd.getTitle())));
-        onView(withId(R.id.addressField)).check(matches(withText(
+        onView(withId(R.id.title_Ad_TextView)).check(matches(withText(testAd.getTitle())));
+        onView(withId(R.id.address_field_Ad_TextView)).check(matches(withText(
                 testAd.getStreet() + ", " + testAd.getCity())));
-        onView(withId(R.id.priceField)).check(matches(withText(
+        onView(withId(R.id.price_field_Ad_TextView)).check(matches(withText(
                 String.valueOf(testAd.getPrice()) + " / " + testAd.getPricePeriod().toString())));
-        onView(withId(R.id.descriptionField)).check(matches(withText(testAd.getDescription())));
-        onView(withId(R.id.userField)).check(matches(withText(testAd.getContactInfo().name)));
+        onView(withId(R.id.description_field_Ad_TextView)).check(matches(withText(testAd.getDescription())));
+        onView(withId(R.id.user_field_Ad_TextView)).check(matches(withText(testAd.getContactInfo().name)));
     }
 
     @Test
     public void displayContactInfoTest() {
         Ad testAd = database.getAd(cardID).join();
 
-        onView(withId(R.id.contactInfoButton)).perform(scrollTo(), click());
+        onView(withId(R.id.contact_info_Ad_Button)).perform(scrollTo(), click());
 
 
         onView(withId(R.id.usernameTextView)).check(matches(withText(testAd.getContactInfo().name)));

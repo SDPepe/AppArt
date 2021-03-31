@@ -55,7 +55,7 @@ public class UserProfileActivity extends AppCompatActivity {
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.modifyButton);
         this.doneButton = findViewById(R.id.doneButton);
-        this.backButton = findViewById(R.id.backButton);
+        this.backButton = findViewById(R.id.back_Ad_ImageButton);
         this.nameView = findViewById(R.id.nameText);
         this.ageView = findViewById(R.id.ageText);
         this.emailView = findViewById(R.id.emailText);

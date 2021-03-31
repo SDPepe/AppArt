@@ -7,7 +7,7 @@
     tools:context=".CreateUserActivity">
 
     <EditText
-        android:id="@+id/create_account_password"
+        android:id="@+id/create_account_password_CreateUser_EditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/create_account"
+        android:id="@+id/create_account_CreateUser_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="createAccount"
@@ -30,11 +30,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_account_password"
+        app:layout_constraintTop_toBottomOf="@+id/create_account_password_CreateUser_EditText"
         app:layout_constraintVertical_bias="0.257" />
 
     <Button
-        android:id="@+id/create_account_login"
+        android:id="@+id/create_account_login_CreateUser_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -45,14 +45,14 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
-        android:id="@+id/create_account_email"
+        android:id="@+id/create_account_email_CreateUser_EditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Enter an email"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/create_account_password"
+        app:layout_constraintBottom_toTopOf="@+id/create_account_password_CreateUser_EditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

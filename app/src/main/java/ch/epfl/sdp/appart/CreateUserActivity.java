@@ -4,18 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.concurrent.CompletableFuture;
-
 import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
+/**
+ * This class manages the UI for create user.
+ */
 @AndroidEntryPoint
 public class CreateUserActivity extends AppCompatActivity {
 
@@ -29,9 +28,14 @@ public class CreateUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_user);
     }
 
+    /**
+     * Method called when you want create an account.
+     *
+     * @param view
+     */
     public void createAccount(View view) {
-        EditText emailView = (EditText) findViewById(R.id.create_account_email);
-        EditText passwordView = (EditText) findViewById(R.id.create_account_password);
+        EditText emailView = (EditText) findViewById(R.id.create_account_email_CreateUser_EditText);
+        EditText passwordView = (EditText) findViewById(R.id.create_account_password_CreateUser_EditText);
 
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();

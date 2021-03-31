@@ -80,7 +80,7 @@ public class ToolbarUITest {
                 allOf(withContentDescription("More options"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.login_toolbar),
+                                        withId(R.id.login_Scrolling_Toolbar),
                                         1),
                                 0),
                         isDisplayed()));
@@ -97,7 +97,7 @@ public class ToolbarUITest {
         appCompatTextView.perform(click());
 
         ViewInteraction viewGroup = onView(
-                allOf(withId(R.id.login_toolbar),
+                allOf(withId(R.id.login_Scrolling_Toolbar),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         viewGroup.check(matches(isDisplayed()));
@@ -106,7 +106,7 @@ public class ToolbarUITest {
                 allOf(withContentDescription("More options"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.login_toolbar),
+                                        withId(R.id.login_Scrolling_Toolbar),
                                         1),
                                 0),
                         isDisplayed()));
@@ -123,7 +123,7 @@ public class ToolbarUITest {
         appCompatTextView3.perform(click());
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.login_button), withText("LOGIN"),
+                allOf(withId(R.id.login_Login_Button), withText("LOGIN"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));

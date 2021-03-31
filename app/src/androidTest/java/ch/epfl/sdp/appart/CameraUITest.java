@@ -32,14 +32,14 @@ public class CameraUITest {
     @Test
     public void clickOnCameraBtn() {
         Intents.init();
-        onView(withId(R.id.button_camera)).perform(click());
+        onView(withId(R.id.camera_Camera_Button)).perform(click());
         Intents.release();
     }
 
     @Test
     public void clickOnGalleryBtn() {
         Intents.init();
-        onView(withId(R.id.button_gallery)).perform(click());
+        onView(withId(R.id.gallery_Camera_Button)).perform(click());
         Intents.release();
     }
 

@@ -4,18 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.concurrent.CompletableFuture;
-
 import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
-@SuppressWarnings("JavaDoc")
+/**
+ * This class manages the UI for reset the password.
+ */
 @AndroidEntryPoint
 public class ResetActivity extends AppCompatActivity {
 
@@ -36,7 +34,7 @@ public class ResetActivity extends AppCompatActivity {
      * @param view
      */
     public void resetPassword(View view) {
-        EditText emailView = findViewById(R.id.reset_email);
+        EditText emailView = findViewById(R.id.email_Reset_EditText);
         String email = emailView.getText().toString();
 
         CompletableFuture<Void> resetFuture = this.loginService.resetPasswordWithEmail(email);

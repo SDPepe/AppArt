@@ -368,14 +368,14 @@ public class UserProfileActivityTest {
         button.check(matches(isDisplayed()));
 
         ViewInteraction button2 = onView(
-                allOf(withId(R.id.backButton), withText("BACK"),
+                allOf(withId(R.id.back_Ad_ImageButton), withText("BACK"),
                         withParent(allOf(withId(R.id.infoLayout),
                                 withParent(withId(android.R.id.content)))),
                         isDisplayed()));
         button2.check(matches(isDisplayed()));
 
         ViewInteraction button3 = onView(
-                allOf(withId(R.id.backButton), withText("BACK"),
+                allOf(withId(R.id.back_Ad_ImageButton), withText("BACK"),
                         withParent(allOf(withId(R.id.infoLayout),
                                 withParent(withId(android.R.id.content)))),
                         isDisplayed()));

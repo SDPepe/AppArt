@@ -14,15 +14,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import dagger.hilt.android.AndroidEntryPoint;
 import static android.widget.Toast.makeText;
 
+/**
+ * This class manages the UI of the Camera.
+ */
+@AndroidEntryPoint
 public class CameraActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERM_CODE = 101;
@@ -44,9 +47,9 @@ public class CameraActivity extends AppCompatActivity {
 
         //storagereference = FirebaseStorage.getInstance().getReference();
 
-        mImageView = findViewById(R.id.image_view);
-        cameraBtn = findViewById(R.id.button_camera);
-        galleryBtn = findViewById(R.id.button_gallery);
+        mImageView = findViewById(R.id.image_Camera_ImageView);
+        cameraBtn = findViewById(R.id.camera_Camera_Button);
+        galleryBtn = findViewById(R.id.gallery_Camera_Button);
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +83,6 @@ public class CameraActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-
     }
 
     @Override
@@ -112,28 +114,27 @@ public class CameraActivity extends AppCompatActivity {
             mImageView.setImageURI(imageUri);
         }
     }
-
+}
     //add image to storage database
-/*
-  private void uploadImageToFirebase(String name, Uri imageUri){
-    StorageReference image = storagereference.child("pic/"+ name);
-    image.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<TaskSnapshot>() {
-      @Override
-      public void onSuccess(TaskSnapshot taskSnapshot) {
-          image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+    /*
+    private void uploadImageToFirebase(String name, Uri imageUri){
+        StorageReference image = storagereference.child("pic/"+ name);
+        image.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<TaskSnapshot>() {
             @Override
-            public void onSuccess(Uri uri) {
-              Log.d(TAG, "Upload image URL is " + uri.toString());
+            public void onSuccess(TaskSnapshot taskSnapshot) {
+                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d(TAG, "Upload image URL is " + uri.toString());
+                    }
+                });
+                makeText(CameraActivity.this, "Image is uploaded!", Toast.LENGTH_SHORT).show();
             }
-          });
-          makeText(CameraActivity.this, "Image is uploaded!", Toast.LENGTH_SHORT).show();
-      }
-    }).addOnFailureListener(new OnFailureListener() {
-      @Override
-      public void onFailure(@NonNull Exception e) {
-        makeText(CameraActivity.this, "Upload failled!", Toast.LENGTH_SHORT).show();
-      }
+        }).addOnFailureListener(new OnFailureListener() {
+        @Override
+        public void onFailure(@NonNull Exception e) {
+            makeText(CameraActivity.this, "Upload failled!", Toast.LENGTH_SHORT).show();
+        }
     });
   }
 */
-}

@@ -58,10 +58,10 @@ public class CreateUserAccountUITest {
         String email = "invalidEmail";
         String password = "1";
 
-        onView(withId(R.id.create_account_email)).perform(typeText(email));
-        onView(withId(R.id.create_account_password)).perform(typeText(password));
+        onView(withId(R.id.create_account_email_CreateUser_EditText)).perform(typeText(email));
+        onView(withId(R.id.create_account_password_CreateUser_EditText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.create_account)).perform(click());
+        onView(withId(R.id.create_account_CreateUser_Button)).perform(click());
         //WARNING : I checked in the app and it does not do what performed here !
         //onView(withId(com.google.android.material.R.id.snackbar_text))
         //        .check(matches(withText(R.string.create_account_failed_snack)));
@@ -69,7 +69,7 @@ public class CreateUserAccountUITest {
 
     @Test
     public void backToLoginTest() {
-        onView(withId(R.id.create_account_login)).perform(click());
+        onView(withId(R.id.create_account_login_CreateUser_Button)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
     }
 
@@ -78,10 +78,10 @@ public class CreateUserAccountUITest {
         String email = "test@testappart.ch";
         String password = "password";
 
-        onView(withId(R.id.create_account_email)).perform(typeText(email));
-        onView(withId(R.id.create_account_password)).perform(typeText(password));
+        onView(withId(R.id.create_account_email_CreateUser_EditText)).perform(typeText(email));
+        onView(withId(R.id.create_account_password_CreateUser_EditText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.create_account)).perform(click());
+        onView(withId(R.id.create_account_CreateUser_Button)).perform(click());
 
         intended(hasComponent(LoginActivity.class.getName()));
 

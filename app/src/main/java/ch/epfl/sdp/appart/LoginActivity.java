@@ -4,19 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.concurrent.CompletableFuture;
-
 import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
-@SuppressWarnings("JavaDoc")
+/**
+ * This class manages the UI for the login.
+ *
+ */
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
 
@@ -38,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
      * @param view
      */
     public void logIn(View view) {
-        EditText emailView = findViewById(R.id.email_login);
-        EditText passwordView = findViewById(R.id.password);
+        EditText emailView = findViewById(R.id.email_Login_EditText);
+        EditText passwordView = findViewById(R.id.password_Login_EditText);
 
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
@@ -57,6 +56,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method used for create an account.
+     *
+     * @param view
+     */
     public void createAccount(@SuppressWarnings("unused") View view) {
         Intent intent = new Intent(this, CreateUserActivity.class);
         startActivity(intent);

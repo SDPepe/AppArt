@@ -7,7 +7,7 @@
     tools:context=".AdActivity">
 
     <ImageButton
-        android:id="@+id/backButton"
+        android:id="@+id/back_Ad_ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -20,7 +20,7 @@
         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
     <TextView
-        android:id="@+id/titleField"
+        android:id="@+id/title_Ad_TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -32,10 +32,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backButton" />
+        app:layout_constraintTop_toBottomOf="@+id/back_Ad_ImageButton" />
 
     <ScrollView
-        android:id="@+id/verScrollView"
+        android:id="@+id/vertical_Ad_ScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -47,61 +47,61 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleField">
+        app:layout_constraintTop_toBottomOf="@+id/title_Ad_TextView">
 
         <LinearLayout
-            android:id="@+id/verChildren"
+            android:id="@+id/vertical_children_Ad_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <HorizontalScrollView
-                android:id="@+id/horizontalScrollView"
+                android:id="@+id/horizontal_Ad_HorizontalScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fillViewport="true"
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/horChildren"
+                    android:id="@+id/horizontal_children_Ad_LinearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
             <Space
-                android:id="@+id/spacer1"
+                android:id="@+id/spacer_1_Ad_Space"
                 android:layout_width="match_parent"
                 android:layout_height="8dp" />
 
             <Button
-                android:id="@+id/vtourButton"
+                android:id="@+id/vtour_Ad_Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="openVirtualTour"
                 android:text="@string/vtourbutton_text" />
 
             <Button
-                android:id="@+id/cameraButton"
+                android:id="@+id/camera_Ad_Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="openCamera"
                 android:text="Add Picture" />
 
             <Space
-                android:id="@+id/spacer2"
+                android:id="@+id/spacer_2_Ad_Space"
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
 
             <TextView
-                android:id="@+id/address"
+                android:id="@+id/address_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/address"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/addressField"
+                android:id="@+id/address_field_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -110,19 +110,19 @@
                 android:textSize="18sp" />
 
             <Space
-                android:id="@+id/spacer3"
+                android:id="@+id/spacer_3_Ad_Space"
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
 
             <TextView
-                android:id="@+id/price"
+                android:id="@+id/price_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/price"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/priceField"
+                android:id="@+id/price_field_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -131,19 +131,19 @@
                 android:textSize="18sp" />
 
             <Space
-                android:id="@+id/spacer4"
+                android:id="@+id/spacer_4_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/description_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/description"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/descriptionField"
+                android:id="@+id/description_field_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -152,19 +152,19 @@
                 android:textSize="18sp" />
 
             <Space
-                android:id="@+id/space5"
+                android:id="@+id/spacer_5_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
 
             <TextView
-                android:id="@+id/user"
+                android:id="@+id/user_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/user"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/userField"
+                android:id="@+id/user_field_Ad_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -173,12 +173,12 @@
                 android:textSize="18sp" />
 
             <Space
-                android:id="@+id/spacer6"
+                android:id="@+id/spacer_6_Ad_Space"
                 android:layout_width="match_parent"
                 android:layout_height="8dp" />
 
             <Button
-                android:id="@+id/contactInfoButton"
+                android:id="@+id/contact_info_Ad_Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="openContactInfo"
@@ -188,7 +188,7 @@
     </ScrollView>
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/account_toolbar"
+        android:id="@+id/account_Ad_Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
