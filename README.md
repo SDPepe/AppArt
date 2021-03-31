@@ -6,8 +6,24 @@ The aim of this application is to create a trusted and self-organised market pla
 The main feature which distinguishes this idea from a basic apartment market place is that it’s narrowed to university-related users: this both provides a friendly and trusted place for users to feel comfortable with their experience of the app.
 
 
-
 ## Badges
 [![Build Status](https://api.cirrus-ci.com/github/SDPepe/AppArt.svg)](https://cirrus-ci.com/github/SDPepe/AppArt)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ad483ece588a128e99e3/maintainability)](https://codeclimate.com/github/SDPepe/AppArt/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ad483ece588a128e99e3/test_coverage)](https://codeclimate.com/github/SDPepe/AppArt/test_coverage)
+
+
+
+## Code Conventions
+
+For all the view/layout objects we use only lower case letters and separate with underscores. 
+
+# Resources ids
+<name>_<activity_name>_<type>
+sign_in_login_button
+
+
+
+
+
+
+

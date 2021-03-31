@@ -12,4 +12,13 @@ public class ContactInfo {
         this.userPhoneNumber = userPhoneNumber;
         this.name = name;
     }
+
+    public ContactInfo(ContactInfo contactInfo) {
+        if (contactInfo == null) {
+            throw new IllegalArgumentException("contact info cannot be null");
+        }
+        this.name = contactInfo.name;
+        this.userEmail = contactInfo.userEmail;
+        this.userPhoneNumber = contactInfo.userPhoneNumber;
+    }
 }

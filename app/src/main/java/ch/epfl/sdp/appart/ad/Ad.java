@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.ad;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.appart.scrolling.PricePeriod;
@@ -16,9 +17,6 @@ public class Ad {
     private List<String> photosRefs;
     private boolean hasVRTour;
     private ContactInfo contactInfo;
-
-    //for the builder
-    public Ad() {}
 
     public Ad(String title, long price, PricePeriod pricePeriod, String street, String city,
               String advertiserId, String description, List<String> photosRefs, boolean hasVRTour,
@@ -79,4 +77,100 @@ public class Ad {
     public ContactInfo getContactInfo() {
         return contactInfo;
     }
+
+    /**
+     * A inner Builder class to avoid the creation of an Ad
+     * over a period of time and not only instantaneously.
+     * It also make the ad creation less painful.
+     */
+    public static class AdBuilder {
+
+        private String title;
+        private long price;
+        private PricePeriod pricePeriod;
+        private String street;
+        private String city;
+        private String advertiserId;
+        private String description;
+        private List<String> photosRefs;
+        private boolean hasVRTour;
+        private ContactInfo contactInfo;
+
+        public AdBuilder withTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public AdBuilder withPrice(long price) {
+            this.price = price;
+            return this;
+        }
+
+        public AdBuilder withPricePeriod(PricePeriod pricePeriod) {
+            this.pricePeriod = pricePeriod;
+            return this;
+        }
+
+        public AdBuilder withStreet(String street) {
+            this.street = street;
+            return this;
+        }
+
+        public AdBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public AdBuilder withAdvertiserId(String advertiserId) {
+            this.advertiserId = advertiserId;
+            return this;
+        }
+
+        public AdBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public AdBuilder withPhotosIds(List<String> photosIds) {
+            this.photosRefs = new ArrayList<>();
+            for (String id : photosIds) {
+                this.photosRefs.add(id);
+            }
+            return this;
+        }
+
+        public AdBuilder hasVRTour(boolean hasVRTour) {
+            this.hasVRTour = hasVRTour;
+            return this;
+        }
+
+        public AdBuilder withContactInfo(ContactInfo contactInfo) {
+            this.contactInfo = new ContactInfo(contactInfo);
+            return this;
+        }
+
+        public Ad build() {
+
+            Ad instance = new Ad(
+                    title,
+                    price,
+                    pricePeriod,
+                    street,
+                    city,
+                    advertiserId,
+                    description,
+                    photosRefs,
+                    hasVRTour,
+                    contactInfo
+            );
+
+            return instance;
+        }
+
+        public String getAdvertiserId() {
+            return advertiserId;
+        }
+
+    }
+
 }

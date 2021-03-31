@@ -300,13 +300,13 @@ public class FirestoreDatabaseService implements DatabaseService {
      * exceptionally with a DatabaseServiceException if the request was unsuccessful.
      * @throws IllegalArgumentException if adIdFuture is null
      */
-    private CompletableFuture<PartialAd> getPartialAdFromFutureAdId(CompletableFuture<String> adIdFuture) {
+    private CompletableFuture<Ad.AdBuilder> getPartialAdFromFutureAdId(CompletableFuture<String> adIdFuture) {
 
         if (adIdFuture == null) {
             throw new IllegalArgumentException("ad id future cannot be null");
         }
 
-        CompletableFuture<PartialAd> result = new CompletableFuture<>();
+        CompletableFuture<Ad.AdBuilder> result = new CompletableFuture<>();
 
         //once the ad id is available we query the right ad to get its detailed fields
         adIdFuture.thenAccept(adId -> {
@@ -323,18 +323,17 @@ public class FirestoreDatabaseService implements DatabaseService {
                     String description      =   (String)    documentSnapshot.get("description");
                     boolean hasVTour        =   (boolean)   documentSnapshot.get("hasVTour");
 
-                    PartialAd partialAd = new PartialAd(
-                            title,
-                            price,
-                            pricePeriod,
-                            street,
-                            city,
-                            advertiserId,
-                            description,
-                            hasVTour
-                    );
+                    Ad.AdBuilder builder = new Ad.AdBuilder()
+                            .withTitle(title)
+                            .withPrice(price)
+                            .withPricePeriod(pricePeriod)
+                            .withStreet(street)
+                            .withCity(city)
+                            .withAdvertiserId(advertiserId)
+                            .withDescription(description)
+                            .hasVRTour(hasVTour);
 
-                    result.complete(partialAd);
+                    result.complete(builder);
                 } else {
                     result.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
                 }
@@ -358,7 +357,7 @@ public class FirestoreDatabaseService implements DatabaseService {
      * exceptionally with a DatabaseServiceException if the request was unsuccessful.
      * @throws IllegalArgumentException if partialAdFuture is null
      */
-    private CompletableFuture<ContactInfo> getContactInfoFromFuturePartialAd(CompletableFuture<PartialAd> partialAdFuture) {
+    private CompletableFuture<ContactInfo> getContactInfoFromFuturePartialAd(CompletableFuture<Ad.AdBuilder> partialAdFuture) {
 
         if (partialAdFuture == null) {
             throw new IllegalArgumentException("partial ad future cannot be null");
@@ -367,7 +366,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<ContactInfo> result = new CompletableFuture<>();
         //once the partial ad has be retrieve we query the user that is providing the ad
         partialAdFuture.thenAccept(partialAd -> {
-            db.collection("users").document(partialAd.advertiserId).get().addOnCompleteListener(task -> {
+            db.collection("users").document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     String userEmail        =    (String) documentSnapshot.get("email");
@@ -401,24 +400,14 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<String> adIdFuture = getAdIdFromCard(cardId);
         CompletableFuture<List<String>> photosReferencesFuture
                 = getPhotosReferencesFromFutureAdId(adIdFuture);
-        CompletableFuture<PartialAd> partialAdFuture = getPartialAdFromFutureAdId(adIdFuture);
+        CompletableFuture<Ad.AdBuilder> partialAdFuture = getPartialAdFromFutureAdId(adIdFuture);
         CompletableFuture<ContactInfo> contactInfoFuture
                 = getContactInfoFromFuturePartialAd(partialAdFuture);
 
         CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> {
-            return partialAdFuture.thenCombine(contactInfoFuture, (partialAd, contactInfo) -> {
-                return new Ad(
-                        partialAd.title,
-                        partialAd.price,
-                        partialAd.pricePeriod,
-                        partialAd.street,
-                        partialAd.city,
-                        partialAd.advertiserId,
-                        partialAd.description,
-                        photosReferences,
-                        partialAd.hasVTour,
-                        contactInfo
-                );
+            return partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
+                adBuilder.withContactInfo(contactInfo).withPhotosIds(photosReferences);
+                return adBuilder.build();
             });
         });
 
@@ -554,35 +543,5 @@ public class FirestoreDatabaseService implements DatabaseService {
         return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
     }
 
-    /**
-     * This class stores the partial information needed to build an Ad.
-     * This is useful when getting an Ad from the database and allow the use of only
-     * two futures.
-     */
-    private static class PartialAd {
-        public final String title;
-        public final long price;
-        public final PricePeriod pricePeriod;
-        public final String street;
-        public final String city;
-        public final String advertiserId;
-        public final String description;
-        public final boolean hasVTour;
-
-        PartialAd(String title, long price, PricePeriod pricePeriod, String street, String city,
-                  String advertiserId, String description, boolean hasVTour) {
-            if (title == null || pricePeriod == null || street == null || city == null ||
-                    advertiserId == null || description == null)
-                throw new IllegalArgumentException();
-            this.title = title;
-            this.price = price;
-            this.pricePeriod = pricePeriod;
-            this.street = street;
-            this.city = city;
-            this.advertiserId = advertiserId;
-            this.description = description;
-            this.hasVTour = hasVTour;
-        }
-    }
 }
 
