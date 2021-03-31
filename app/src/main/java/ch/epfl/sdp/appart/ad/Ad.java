@@ -17,9 +17,6 @@ public class Ad {
     private boolean hasVRTour;
     private ContactInfo contactInfo;
 
-    //for the builder
-    public Ad() {}
-
     public Ad(String title, long price, PricePeriod pricePeriod, String street, String city,
               String advertiserId, String description, List<String> photosRefs, boolean hasVRTour,
               ContactInfo contactInfo) {
