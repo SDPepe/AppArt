@@ -406,7 +406,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> {
             return partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
-                adBuilder.withContactInfo(contactInfo);
+                adBuilder.withContactInfo(contactInfo).withPhotosIds(photosReferences);
                 return adBuilder.build();
             });
         });
@@ -542,6 +542,6 @@ public class FirestoreDatabaseService implements DatabaseService {
     public StorageReference getStorageReference(String storageUrl) {
         return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
     }
-    
+
 }
 
