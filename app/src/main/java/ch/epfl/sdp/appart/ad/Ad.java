@@ -78,6 +78,11 @@ public class Ad {
         return contactInfo;
     }
 
+    /**
+     * A inner Builder class to avoid the creation of an Ad
+     * over a period of time and not only instantaneously.
+     * It also make the ad creation less painful.
+     */
     public static class AdBuilder {
 
         private String title;
