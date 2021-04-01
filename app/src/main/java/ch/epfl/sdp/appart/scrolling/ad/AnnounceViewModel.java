@@ -14,6 +14,11 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.database.Database;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
+/**
+ * ViewModel for the AnnounceActivity.
+ * <p>
+ * It contains LiveData for the information showed in an Ad page.
+ */
 @HiltViewModel
 public class AnnounceViewModel extends ViewModel {
 
@@ -33,6 +38,11 @@ public class AnnounceViewModel extends ViewModel {
         this.db = db;
     }
 
+    /**
+     * Fetches the ad info from the database and sets the information to the LiveData fields.
+     *
+     * @param id the unique ID of the ad in the database
+     */
     public void initAd(String id) {
 
         CompletableFuture<Ad> futureAd = db.getAd(id);
@@ -52,6 +62,7 @@ public class AnnounceViewModel extends ViewModel {
         });
     }
 
+    // Getters
     public LiveData<String> getTitle() {
         return adTitle;
     }

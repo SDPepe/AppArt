@@ -6,28 +6,35 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.user.User;
 
-
+/**
+ * Fragment for a dialog showing information to contact a user.
+ * <p>
+ * It displays a Dialog containing the user name, phone number and email address.
+ */
 public class ContactInfoDialogFragment extends DialogFragment {
 
     private AnnounceViewModel mViewModel;
 
+    /**
+     * Creates and returns a new instance of ContactInfoDialogFragment.
+     *
+     * @return an instance of the dialog fragment
+     */
     public static ContactInfoDialogFragment newInstance() {
         ContactInfoDialogFragment contactFrag = new ContactInfoDialogFragment();
         return contactFrag;
     }
 
-    /*
-     * creates the dialog, inflates the layout and sets the values using the Bundle given to
-     * newInstance.
+    /**
+     * Build the dialog fetching the contact info from the ViewModel for the AnnounceActivity in
+     * which this dialog is displayed.
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstances) {
@@ -37,6 +44,7 @@ public class ContactInfoDialogFragment extends DialogFragment {
 
         mViewModel = new ViewModelProvider(requireActivity()).get(AnnounceViewModel.class);
 
+        // fetch info about the user and set content
         TextView username = dialog.findViewById(R.id.usernameTextView);
         username.setText(mViewModel.getAdvertiser().getValue());
         TextView phone = dialog.findViewById(R.id.phoneField);
@@ -44,6 +52,7 @@ public class ContactInfoDialogFragment extends DialogFragment {
         TextView email = dialog.findViewById(R.id.emailField);
         email.setText(mViewModel.getEmailAddress().getValue());
 
+        // Return button
         builder.setView(dialog)
                 .setNegativeButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

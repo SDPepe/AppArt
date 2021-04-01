@@ -2,6 +2,12 @@ package ch.epfl.sdp.appart.scrolling.card;
 
 import javax.annotation.Nullable;
 
+/**
+ * Object to represent a tile in the scrolling activity.
+ * <p>
+ * It contains a subset of information related to an ad. The card ID refers to the ID of the
+ * Firestore document containing data of the card.
+ */
 public class Card {
     private final String id;
     private final String ownerId;
@@ -10,9 +16,18 @@ public class Card {
     private String imageUrl;
     private boolean hasVRTour;
 
-    /*
-     * A newly created card will be local, hence the id won't be assigned (null). At the first
-     * upload to Firestore, a new unique id will be generated and assigned to the card.
+    /**
+     * Constructor of a Card.
+     * <p>
+     * The id is nullable because a locally created card will need the upload to Firestore to
+     * receive its unique ID.
+     *
+     * @param id        the unique identifier of the card using by Firestore
+     * @param ownerId   the unique id of the user that created the ad this card refers to
+     * @param city      the city where lies the apartment this card refers to
+     * @param price     the price of the apartment this card refers to
+     * @param imageUrl  the reference to the Firebase Storage image of this card
+     * @param hasVRTour whether the apartment this card refers to offers a virtual tour
      */
     public Card(@Nullable String id, String ownerId, String city, long price, String imageUrl,
                 boolean hasVRTour) {
