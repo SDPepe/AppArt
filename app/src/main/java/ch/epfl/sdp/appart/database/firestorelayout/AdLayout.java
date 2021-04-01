@@ -55,6 +55,6 @@ public final class AdLayout {
     /**
      * @apiNote : long on Firestore
      */
-    public final static String PRICE_PERIOD = "PricePeriod";
+    public final static String PRICE_PERIOD = "pricePeriod";
 
 }
