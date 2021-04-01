@@ -40,6 +40,9 @@ import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 
+/**
+ * Implementation of the DatabaseService with Firestore from Firebase.
+ */
 @Singleton
 public class FirestoreDatabaseService implements DatabaseService {
 

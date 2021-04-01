@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.database;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,9 @@ import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
+/**
+ * Mocked implementation of the DatabaseService to allows unit testing in a controlled environment.
+ */
 public class MockDatabaseService implements DatabaseService {
 
     private final List<Card> cards = new ArrayList<>();
@@ -22,22 +26,33 @@ public class MockDatabaseService implements DatabaseService {
     private final Map<String, User> users = new HashMap<>();
 
     public MockDatabaseService() {
+
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
 
-        List<String> refs = new ArrayList<>();
-        refs.add("file:///android_asset/fake_ad_1.jpg");
-        refs.add("file:///android_asset/fake_ad_2.jpg");
-        refs.add("file:///android_asset/fake_ad_3.jpg");
-        refs.add("file:///android_asset/fake_ad_4.jpg");
-        refs.add("file:///android_asset/fake_ad_5.jpg");
-        ad = new Ad("EPFL", 100000, PricePeriod.MONTH, "Station 18",
-                "1015 Lausanne", "vetterli-id",
-                "Ever wanted the EPFL campus all for yourself?", refs, false,
-                new ContactInfo("fake@appart.ch", "000000", "test_user"));
+        List<String> picturesReferences = Arrays.asList(
+                "file:///android_asset/fake_ad_1.jpg",
+                "file:///android_asset/fake_ad_2.jpg",
+                "file:///android_asset/fake_ad_3.jpg",
+                "file:///android_asset/fake_ad_4.jpg",
+                "file:///android_asset/fake_ad_5.jpg"
+        );
+
+        ad = new Ad.AdBuilder()
+                .withTitle("EPFL")
+                .withPrice(100000)
+                .withPricePeriod(PricePeriod.MONTH)
+                .withStreet("Station 18").withCity("1015 Lausanne")
+                .withAdvertiserId("vetterli-id")
+                .withDescription("Ever wanted the EPFL campus all for yourself?")
+                .withPhotosIds(picturesReferences)
+                .hasVRTour(false)
+                .withContactInfo(new ContactInfo("fake@appart.ch", "000000", "test_user"))
+                .build();
+
         users.put("id0", new AppUser("id0", "test0@epfl.ch"));
         users.put("id1", new AppUser("id1", "test1@epfl.ch"));
         users.put("id2", new AppUser("id2", "test2@epfl.ch"));
