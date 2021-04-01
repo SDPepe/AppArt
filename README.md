@@ -16,13 +16,16 @@ The main feature which distinguishes this idea from a basic apartment market pla
 ## Code Conventions
 
 For all the view/layout objects we use: 
-    + the name of the object
-    + the name of the activity to which in belongs
-    + the object type  
+
+    - the name of the object
+    - the name of the activity to which it belongs
+    - the object type  
 separated by underscore
 
-# Resources ids
-<name>_<activityName>_<type>
+## Resources ids example
+
+< name > _ < activityName > _ < type > 
+
 signIn_LoginActivity_button
 
 
