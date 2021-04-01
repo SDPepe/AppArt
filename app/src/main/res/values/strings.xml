@@ -24,7 +24,7 @@
     <string name="create_account_failed_snack">Create account failed !</string>
     <string name="invalid_email_snack">Invalid email !</string>
 
-    <!-- AnnounceActivity stuff -->
+    <!-- AdActivity stuff -->
     <string name="backbutton_desc">Close ad</string>
     <string name="default_title">Ad title</string>
     <string name="vtourbutton_text">take a virtual tour</string>
@@ -75,4 +75,29 @@
         <item>Male</item>
         <item>Other</item>
     </string-array>
+
+    <!-- AdCreationActivity stuff -->
+    <string name="editTitleAdCreation">Title</string>
+    <string name="streetAdCreation">Street:</string>
+    <string name="numberAdCreation">Number:</string>
+    <string name="editStreetAdCreation">Street address</string>
+    <string name="editNumberAdCreation">0A</string>
+    <string name="cityAdCreation">City:</string>
+    <string name="npaAdCreation">NPA:</string>
+    <string name="editCityAdCreation">City</string>
+    <string name="editNpaAdCreation">0000</string>
+    <string name="priceAdCreation">Price:</string>
+    <string name="periodAdCreation">Each:</string>
+    <string name="editPriceAdCreation">00000</string>
+    <string name="francsAdCreation">Fr.</string>
+    <string-array name="periodList">
+        <item>Month</item>
+        <item>Week</item>
+        <item>Day</item>
+    </string-array>
+    <string name="descriptionAdCreation">Description:</string>
+    <string name="editDescriptionAdCreation">A cool description</string>
+    <string name="cameraButtonAdCreation">Add Photos</string>
+    <string name="conformButtonAdCreation">Post Ad</string>
+
 </resources>
