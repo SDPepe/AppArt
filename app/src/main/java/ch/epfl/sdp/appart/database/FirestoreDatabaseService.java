@@ -523,7 +523,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
     private Map<String, Object> extractAdInfo(Ad ad) {
         Map<String, Object> adData = new HashMap<>();
-        adData.put(AdLayout.ADVERTISER, ad.getAdvertiserId());
+        adData.put(AdLayout.ADVERTISER_ID, ad.getAdvertiserId());
         adData.put(AdLayout.CITY, ad.getCity());
         adData.put(AdLayout.DESCRIPTION, ad.getDescription());
         adData.put(AdLayout.VR_TOUR, ad.hasVRTour());

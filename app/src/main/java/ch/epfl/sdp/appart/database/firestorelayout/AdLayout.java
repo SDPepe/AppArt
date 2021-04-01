@@ -1,19 +1,55 @@
 package ch.epfl.sdp.appart.database.firestorelayout;
 
+/**
+ * Un-instantiable Holder for the layout of the fields for an Ad on Firestore.
+ */
 public class AdLayout {
 
     private AdLayout() {}
 
+    /**
+     * absolute path to the ads directory in Firestore
+     */
     private final static String DIRECTORY   = "ads";
 
-    //fields of the ad entry
+    /**
+     * @apiNote : String on Firestore
+     */
     public final static String TITLE        = "title";
+
+    /**
+     * @apiNote : long on Firestore
+     */
     public final static String PRICE        = "price";
+
+    /**
+     * @apiNote : String on Firestore
+     */
     public final static String STREET       = "street";
+
+    /**
+     * @apiNote : String on Firestore
+     */
     public final static String CITY         = "city";
-    public final static String ADVERTISER   = "advertiserId";
+
+    /**
+     * @apiNote : String on Firestore
+     */
+    public final static String ADVERTISER_ID   = "advertiserId";
+
+    /**
+     * @apiNote : String on Firestore
+     */
     public final static String DESCRIPTION  = "description";
+
+    /**
+     * @apiNote : boolean on Firestore
+     */
     public final static String VR_TOUR      = "hasVTour";
+
+    /**
+     * @apiNote : long on Firestore
+     */
     public final static String PRICE_PERIOD = "PricePeriod";
 
 }

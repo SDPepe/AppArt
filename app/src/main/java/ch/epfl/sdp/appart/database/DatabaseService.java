@@ -83,9 +83,21 @@ public interface DatabaseService extends DatabaseHostVisitor {
     @NonNull
     CompletableFuture<Boolean> updateUser(User user);
 
+
+    /**
+     * Get the add related to the given CardId
+     * @param id a String that is the id of the card referencing the ad.
+     * @return A CompletableFuture<Ad> that will hold the value of the Ad or
+     * a DatabaseServiceException
+     */
     @NonNull
     CompletableFuture<Ad> getAd(String id);
 
+    /**
+     * Not completed
+     * @param ad
+     * @return
+     */
     @NonNull
     CompletableFuture<String> putAd(Ad ad);
 
