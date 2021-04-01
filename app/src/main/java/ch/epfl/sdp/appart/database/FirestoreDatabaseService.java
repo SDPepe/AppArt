@@ -209,6 +209,136 @@ public class FirestoreDatabaseService implements DatabaseService {
         return isFinishedFuture;
     }
 
+    @Override
+    @NonNull
+    public CompletableFuture<Ad> getAd(String cardId) {
+
+        if (cardId == null) {
+            throw new IllegalArgumentException("card id cannot be null");
+        }
+
+        CompletableFuture<Ad> result = new CompletableFuture<>();
+        CompletableFuture<String> adIdFuture = getAdIdFromCard(cardId);
+        CompletableFuture<List<String>> photosReferencesFuture
+                = getPhotosReferencesFromFutureAdId(adIdFuture);
+        CompletableFuture<Ad.AdBuilder> partialAdFuture = getPartialAdFromFutureAdId(adIdFuture);
+        CompletableFuture<ContactInfo> contactInfoFuture
+                = getContactInfoFromFuturePartialAd(partialAdFuture);
+
+        CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> {
+            return partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
+                adBuilder.withContactInfo(contactInfo).withPhotosIds(photosReferences);
+                return adBuilder.build();
+            });
+        });
+
+        chain.thenAccept(topmost -> {
+            topmost.thenAccept(result::complete);
+            topmost.exceptionally(exception -> {
+                result.completeExceptionally(exception);
+                return null;
+            });
+        });
+
+        chain.exceptionally(exception -> {
+            result.completeExceptionally(exception);
+            return null;
+        });
+
+        return result;
+    }
+
+    @Override
+    @NonNull
+    public CompletableFuture<String> putAd(Ad ad) {
+        CompletableFuture<String> result = new CompletableFuture<>();
+        DocumentReference newAdRef = db.collection("ads").document();
+
+        // upload photos TODO go parallel ?
+        List<String> actualRefs = new ArrayList<>();
+        uploadAdPhotos(ad, actualRefs, newAdRef, result);
+
+        // TODO separate street and city of address
+        // build and send card
+        Card c = new Card(newAdRef.getId(), ad.getAdvertiserId(), ad.getCity(),
+                ad.getPrice(), actualRefs.get(0), ad.hasVRTour());
+        DocumentReference cardRef = db.collection("cards").document();
+        cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
+                task -> onCompleteAdOp(task, newAdRef, result));
+
+        // build and send ad
+        newAdRef.set(extractAdInfo(ad)).addOnCompleteListener(
+                task -> onCompleteAdOp(task, newAdRef, result));
+        setPhotosReferencesForAd(actualRefs, newAdRef, result);
+
+        result.complete(newAdRef.getId());
+        return result;
+    }
+
+    private void uploadAdPhotos(Ad ad, List<String> actualRefs, DocumentReference newAdRef,
+                                CompletableFuture<String> result) {
+        for (int i = 0; i < ad.getPhotosRefs().size(); i++) {
+            Uri fileUri = Uri.fromFile(new File(ad.getPhotosRefs().get(i)));
+            StorageReference storeRef = storage.getReference()
+                    .child("Ads/" + newAdRef.getId() + "/photo" + i);
+            actualRefs.add(storeRef.getName());
+            storeRef.putFile(fileUri).addOnCompleteListener(
+                    task -> onCompleteAdOp(task, newAdRef, result));
+        }
+    }
+
+    private void setPhotosReferencesForAd(List<String> actualRefs, DocumentReference newAdRef,
+                                          CompletableFuture<String> result) {
+        for (int i = 0; i < actualRefs.size(); i++) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("ref", actualRefs.get(i));
+            DocumentReference photoRefDocReference = newAdRef.collection("photosRefs")
+                    .document();
+            photoRefDocReference.set(data).addOnCompleteListener(
+                    task -> onCompleteAdOp(task, newAdRef, result));
+        }
+    }
+
+    private void onCompleteAdOp(Task<?> task, DocumentReference newAdRef,
+                                CompletableFuture<String> result) {
+        if (!task.isSuccessful()) {
+            storage.getReference().child("Ads/" + newAdRef).delete();
+            result.completeExceptionally(
+                    new UnsupportedOperationException("Failed to put Ad in database"));
+        }
+    }
+
+    @Override
+    public void accept(GlideLoaderVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public void accept(GlideBitmapLoaderVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    private Map<String, Object> extractCardsInfo(Card card) {
+        Map<String, Object> docData = new HashMap<>();
+        docData.put("userId", card.getUserId());
+        docData.put("city", card.getCity());
+        docData.put("price", card.getPrice());
+        docData.put("imageUrl", card.getImageUrl());
+        return docData;
+    }
+
+    /**
+     * Returns the storage reference of a stored firebase object
+     *
+     * @param storageUrl the url in the storage like Cards/img.jpeg would return an image from
+     *                   the the
+     *                   Cards folder named img.jpeg
+     * @return the StorageReference of the object.
+     */
+    public StorageReference getStorageReference(String storageUrl) {
+        return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
+    }
+
     /**
      * Takes a cardId and fetch the adId for the corresponding card.
      * Indeed, all the cards that are showed in the scrolling menu
@@ -229,11 +359,11 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         CompletableFuture<String> result = new CompletableFuture<>();
         db.collection("cards").document(cardId).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        result.complete((String) task.getResult().get("adId"));
-                    } else {
-                        result.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
-                    }
+            if (task.isSuccessful()) {
+                result.complete((String) task.getResult().get("adId"));
+            } else {
+                result.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
+            }
         });
 
         return result;
@@ -388,124 +518,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         return result;
     }
 
-    @Override
-    @NonNull
-    public CompletableFuture<Ad> getAd(String cardId) {
-
-        if (cardId == null) {
-            throw new IllegalArgumentException("card id cannot be null");
-        }
-
-        CompletableFuture<Ad> result = new CompletableFuture<>();
-        CompletableFuture<String> adIdFuture = getAdIdFromCard(cardId);
-        CompletableFuture<List<String>> photosReferencesFuture
-                = getPhotosReferencesFromFutureAdId(adIdFuture);
-        CompletableFuture<Ad.AdBuilder> partialAdFuture = getPartialAdFromFutureAdId(adIdFuture);
-        CompletableFuture<ContactInfo> contactInfoFuture
-                = getContactInfoFromFuturePartialAd(partialAdFuture);
-
-        CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> {
-            return partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
-                adBuilder.withContactInfo(contactInfo).withPhotosIds(photosReferences);
-                return adBuilder.build();
-            });
-        });
-
-        chain.thenAccept(topmost -> {
-            topmost.thenAccept(result::complete);
-            topmost.exceptionally(exception -> {
-                result.completeExceptionally(exception);
-                return null;
-            });
-        });
-
-        chain.exceptionally(exception -> {
-            result.completeExceptionally(exception);
-            return null;
-        });
-
-        return result;
-    }
-
-    @Override
-    public void accept(GlideLoaderVisitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public void accept(GlideBitmapLoaderVisitor visitor) {
-        visitor.visit(this);
-    }
-
-    private Map<String, Object> extractCardsInfo(Card card) {
-        Map<String, Object> docData = new HashMap<>();
-        docData.put("userId", card.getUserId());
-        docData.put("city", card.getCity());
-        docData.put("price", card.getPrice());
-        docData.put("imageUrl", card.getImageUrl());
-        return docData;
-    }
-
-    @Override
-    @NonNull
-    public CompletableFuture<String> putAd(Ad ad) {
-        CompletableFuture<String> result = new CompletableFuture<>();
-        DocumentReference newAdRef = db.collection("ads").document();
-
-        // upload photos TODO go parallel ?
-        List<String> actualRefs = new ArrayList<>();
-        uploadAdPhotos(ad, actualRefs, newAdRef, result);
-
-        // TODO separate street and city of address
-        // build and send card
-        Card c = new Card(newAdRef.getId(), ad.getAdvertiserId(), ad.getCity(),
-                ad.getPrice(), actualRefs.get(0), ad.hasVRTour());
-        DocumentReference cardRef = db.collection("cards").document();
-        cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
-                task -> onCompleteAdOp(task, newAdRef, result));
-
-        // build and send ad
-        newAdRef.set(extractAdInfo(ad)).addOnCompleteListener(
-                task -> onCompleteAdOp(task, newAdRef, result));
-        setPhotosReferencesForAd(actualRefs, newAdRef, result);
-
-        result.complete(newAdRef.getId());
-        return result;
-    }
-
-    private void uploadAdPhotos(Ad ad, List<String> actualRefs, DocumentReference newAdRef,
-                                CompletableFuture<String> result) {
-        for (int i = 0; i < ad.getPhotosRefs().size(); i++) {
-            Uri fileUri = Uri.fromFile(new File(ad.getPhotosRefs().get(i)));
-            StorageReference storeRef = storage.getReference()
-                    .child("Ads/" + newAdRef.getId() + "/photo" + i);
-            actualRefs.add(storeRef.getName());
-            storeRef.putFile(fileUri).addOnCompleteListener(
-                    task -> onCompleteAdOp(task, newAdRef, result));
-        }
-    }
-
-    private void setPhotosReferencesForAd(List<String> actualRefs, DocumentReference newAdRef,
-                                          CompletableFuture<String> result) {
-        for (int i = 0; i < actualRefs.size(); i++) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("ref", actualRefs.get(i));
-            DocumentReference photoRefDocReference = newAdRef.collection("photosRefs")
-                    .document();
-            photoRefDocReference.set(data).addOnCompleteListener(
-                    task -> onCompleteAdOp(task, newAdRef, result));
-        }
-    }
-
-    private void onCompleteAdOp(Task<?> task, DocumentReference newAdRef,
-                                CompletableFuture<String> result) {
-        if (!task.isSuccessful()) {
-            storage.getReference().child("Ads/" + newAdRef).delete();
-            result.completeExceptionally(
-                    new UnsupportedOperationException("Failed to put Ad in database"));
-        }
-    }
-
     private Map<String, Object> extractAdInfo(Ad ad) {
         Map<String, Object> adData = new HashMap<>();
         adData.put("advertiserId", ad.getAdvertiserId());
@@ -528,19 +540,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         docData.put("phoneNumber", user.getPhoneNumber());
         docData.put("profilePicture", user.getProfileImage());
         return docData;
-    }
-
-
-    /**
-     * Returns the storage reference of a stored firebase object
-     *
-     * @param storageUrl the url in the storage like Cards/img.jpeg would return an image from
-     *                   the the
-     *                   Cards folder named img.jpeg
-     * @return the StorageReference of the object.
-     */
-    public StorageReference getStorageReference(String storageUrl) {
-        return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
     }
 
 }
