@@ -52,11 +52,7 @@ public class AdActivity extends ToolbarActivity {
 
     private void updateTitle(String title) {
         TextView titleView = findViewById(R.id.title_Ad_textView);
-        if (title != null) {
-            titleView.setText(title);
-        } else {
-            titleView.setText(R.string.default_loading);
-        }
+        setIfNotNull(titleView, title);
     }
 
     private void updatePhotos(List<String> references) {
@@ -84,37 +80,29 @@ public class AdActivity extends ToolbarActivity {
 
     private void updateAddress(String address) {
         TextView addressView = findViewById(R.id.address_field_Ad_textView);
-        if (address != null) {
-            addressView.setText(address);
-        } else {
-            addressView.setText(R.string.default_loading);
-        }
+        setIfNotNull(addressView, address);
     }
 
     private void updatePrice(String price) {
         TextView priceView = findViewById(R.id.price_field_Ad_textView);
-        if (price != null) {
-            priceView.setText(price);
-        } else {
-            priceView.setText(R.string.default_loading);
-        }
+        setIfNotNull(priceView, price);
     }
 
     private void updateDescription(String description) {
         TextView descriptionView = findViewById(R.id.description_field_Ad_textView);
-        if (description != null) {
-            descriptionView.setText(description);
-        } else {
-            descriptionView.setText(R.string.default_loading);
-        }
+        setIfNotNull(descriptionView, description);
     }
 
     private void updateAdvertiser(String username) {
         TextView usernameView = findViewById(R.id.user_field_Ad_textView);
-        if (username != null) {
-            usernameView.setText(username);
+        setIfNotNull(usernameView, username);
+    }
+
+    private void setIfNotNull(TextView view, String content){
+        if (content == null){
+            view.setText("Loading...");
         } else {
-            usernameView.setText(R.string.default_loading);
+            view.setText(content);
         }
     }
 
