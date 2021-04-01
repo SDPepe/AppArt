@@ -141,7 +141,6 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     private void enableDisableEntries() {
         this.nameEditText.setEnabled(!this.nameEditText.isEnabled());
-        //this.nameEditText.
         this.ageEditText.setEnabled(!this.ageEditText.isEnabled());
         this.genderSpinner.setEnabled(!this.genderSpinner.isEnabled());
         this.backButton.setEnabled(!this.backButton.isEnabled());
