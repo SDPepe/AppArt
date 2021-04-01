@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
      * @param view
      */
     public void logIn(View view) {
-        EditText emailView = findViewById(R.id.email_Login_EditText);
-        EditText passwordView = findViewById(R.id.password_Login_EditText);
+        EditText emailView = findViewById(R.id.email_Login_editText);
+        EditText passwordView = findViewById(R.id.password_Login_editText);
 
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();

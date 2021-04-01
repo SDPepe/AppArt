@@ -79,7 +79,7 @@ public class ScrollingUITest {
     @Test
     public void clickOnImageViewFromCardViewStartAnnounceActivity() {
 
-        ViewInteraction card = onView(withIndex(withId(R.id.card_image), 0));
+        ViewInteraction card = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
         card.perform(click());
         intended(hasComponent(AdActivity.class.getName()));
 

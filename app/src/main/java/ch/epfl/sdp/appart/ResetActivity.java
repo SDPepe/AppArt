@@ -34,7 +34,7 @@ public class ResetActivity extends AppCompatActivity {
      * @param view
      */
     public void resetPassword(View view) {
-        EditText emailView = findViewById(R.id.email_Reset_EditText);
+        EditText emailView = findViewById(R.id.email_Reset_editText);
         String email = emailView.getText().toString();
 
         CompletableFuture<Void> resetFuture = this.loginService.resetPasswordWithEmail(email);

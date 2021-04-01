@@ -34,8 +34,8 @@ public class CreateUserActivity extends AppCompatActivity {
      * @param view
      */
     public void createAccount(View view) {
-        EditText emailView = (EditText) findViewById(R.id.create_account_email_CreateUser_EditText);
-        EditText passwordView = (EditText) findViewById(R.id.create_account_password_CreateUser_EditText);
+        EditText emailView = (EditText) findViewById(R.id.create_account_email_CreateUser_editText);
+        EditText passwordView = (EditText) findViewById(R.id.create_account_password_CreateUser_editText);
 
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();

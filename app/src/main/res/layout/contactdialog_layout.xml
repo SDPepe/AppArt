@@ -6,7 +6,7 @@
     android:tag="dialog_tag">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/dialogView"
+        android:id="@+id/holder_ContactInfo_cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="16dp"
@@ -14,12 +14,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/vertical_ContactInfo_linearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/usernameTextView"
+                android:id="@+id/username_ContactInfo_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -29,7 +30,7 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/email_UserProfile_textView"
+                android:id="@+id/emailTitle_ContactInfo_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -38,7 +39,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/emailField"
+                android:id="@+id/email_ContactInfo_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -46,7 +47,7 @@
                 android:text="@string/default_hidden" />
 
             <TextView
-                android:id="@+id/phone"
+                android:id="@+id/phoneTitle_ContactInfo_textField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -55,7 +56,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/phoneField"
+                android:id="@+id/phone_ContactInfo_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

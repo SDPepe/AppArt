@@ -37,7 +37,7 @@ public class AdActivity extends ToolbarActivity {
         AdViewModel mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.account_Ad_Toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.account_Ad_toolbar);
         setSupportActionBar(toolbar);
 
         mViewModel.getTitle().observe(this, this::updateTitle);
@@ -51,7 +51,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateTitle(String title) {
-        TextView titleView = findViewById(R.id.title_Ad_TextView);
+        TextView titleView = findViewById(R.id.title_Ad_textView);
         if (title != null) {
             titleView.setText(title);
         } else {
@@ -60,14 +60,14 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updatePhotos(List<String> references) {
-        LinearLayout horizontalLayout = findViewById(R.id.horizontal_children_Ad_LinearLayout);
+        LinearLayout horizontalLayout = findViewById(R.id.horizontal_children_Ad_linearLayout);
         horizontalLayout.removeAllViews();
 
         for (int i = 0; i < references.size(); i++) {
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, null);
-            ImageView photo = myView.findViewById(R.id.photoImageView);
+            ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             database.accept(new GlideImageViewLoader(this, photo,
                     references.get(i)));
             horizontalLayout.addView(myView);
@@ -83,7 +83,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateAddress(String address) {
-        TextView addressView = findViewById(R.id.address_field_Ad_TextView);
+        TextView addressView = findViewById(R.id.address_field_Ad_textView);
         if (address != null) {
             addressView.setText(address);
         } else {
@@ -92,7 +92,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updatePrice(String price) {
-        TextView priceView = findViewById(R.id.price_field_Ad_TextView);
+        TextView priceView = findViewById(R.id.price_field_Ad_textView);
         if (price != null) {
             priceView.setText(price);
         } else {
@@ -101,7 +101,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateDescription(String description) {
-        TextView descriptionView = findViewById(R.id.description_field_Ad_TextView);
+        TextView descriptionView = findViewById(R.id.description_field_Ad_textView);
         if (description != null) {
             descriptionView.setText(description);
         } else {
@@ -110,7 +110,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateAdvertiser(String username) {
-        TextView usernameView = findViewById(R.id.user_field_Ad_TextView);
+        TextView usernameView = findViewById(R.id.user_field_Ad_textView);
         if (username != null) {
             usernameView.setText(username);
         } else {

@@ -45,11 +45,11 @@ public class ContactInfoDialogFragment extends DialogFragment {
         mViewModel = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
 
         // fetch info about the user and set content
-        TextView username = dialog.findViewById(R.id.usernameTextView);
+        TextView username = dialog.findViewById(R.id.username_ContactInfo_textView);
         username.setText(mViewModel.getAdvertiser().getValue());
-        TextView phone = dialog.findViewById(R.id.phoneField);
+        TextView phone = dialog.findViewById(R.id.phone_ContactInfo_textView);
         phone.setText(mViewModel.getPhoneNumber().getValue());
-        TextView email = dialog.findViewById(R.id.emailField);
+        TextView email = dialog.findViewById(R.id.email_ContactInfo_textView);
         email.setText(mViewModel.getEmailAddress().getValue());
 
         // Return button

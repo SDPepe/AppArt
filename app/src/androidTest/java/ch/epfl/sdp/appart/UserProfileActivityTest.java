@@ -187,13 +187,13 @@ public class UserProfileActivityTest {
         appCompatButton2.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.email_UserProfile_textView), withText("Email"),
+                allOf(withId(R.id.emailTitle_ContactInfo_textView), withText("Email"),
                         withParent(withParent(IsInstanceOf.instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         textView.check(matches(isDisplayed()));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.email_UserProfile_textView), withText("Email"),
+                allOf(withId(R.id.emailTitle_ContactInfo_textView), withText("Email"),
                         withParent(withParent(IsInstanceOf.instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         textView2.check(matches(withText("Email")));

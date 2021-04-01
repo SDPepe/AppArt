@@ -60,23 +60,23 @@ public class LoginUITest {
         String email = "test@testappart.ch";
         String password = "password";
 
-        onView(withId(R.id.email_Login_EditText)).perform(typeText(email));
-        onView(withId(R.id.password_Login_EditText)).perform(typeText(password));
+        onView(withId(R.id.email_Login_editText)).perform(typeText(email));
+        onView(withId(R.id.password_Login_editText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.login_Login_Button)).perform(click());
+        onView(withId(R.id.login_Login_button)).perform(click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.login_failed_snack)));
     }
 
     @Test
     public void goToCreateAccountTest() {
-        onView(withId(R.id.create_account_Login_Button)).perform(click());
+        onView(withId(R.id.create_account_Login_button)).perform(click());
         intended(hasComponent(CreateUserActivity.class.getName()));
     }
 
     @Test
     public void goToPasswordResetTest() {
-        onView(withId(R.id.reset_password_Login_Button)).perform(click());
+        onView(withId(R.id.reset_password_Login_button)).perform(click());
         intended(hasComponent(ResetActivity.class.getName()));
     }
 
@@ -86,10 +86,10 @@ public class LoginUITest {
         String password = "password";
         loginService.createUser(email, password).get();
 
-        onView(withId(R.id.email_Login_EditText)).perform(typeText(email));
-        onView(withId(R.id.password_Login_EditText)).perform(typeText(password));
+        onView(withId(R.id.email_Login_editText)).perform(typeText(email));
+        onView(withId(R.id.password_Login_editText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.login_Login_Button)).perform(click());
+        onView(withId(R.id.login_Login_button)).perform(click());
 
         intended(hasComponent(ScrollingActivity.class.getName()));
 

@@ -112,9 +112,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         public CardViewHolder(View view) {
             super(view);
-            cardImageView = view.findViewById(R.id.card_image);
-            addressTextView = view.findViewById(R.id.city_text_view);
-            priceTextView = view.findViewById(R.id.price_text_view);
+            cardImageView = view.findViewById(R.id.image_CardLayout_imageView);
+            addressTextView = view.findViewById(R.id.city_CardLayout_textView);
+            priceTextView = view.findViewById(R.id.price_CardLayout_textView);
         }
 
     }

@@ -7,14 +7,14 @@
     tools:context=".ScrollingActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_Scrolling_RecyclerView"
+        android:id="@+id/recycler_Scrolling_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager" />
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/login_Scrolling_Toolbar"
+        android:id="@+id/login_Scrolling_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"

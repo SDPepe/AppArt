@@ -7,7 +7,7 @@
     tools:context=".ResetActivity">
 
     <TextView
-        android:id="@+id/confirmation_Reset_TextView"
+        android:id="@+id/confirmation_Reset_textView"
         android:layout_width="281dp"
         android:layout_height="103dp"
         android:text="If this address is valid, you will receive a link to change your password"
@@ -20,13 +20,13 @@
         app:layout_constraintVertical_bias="0.745" />
 
     <EditText
-        android:id="@+id/email_Reset_EditText"
+        android:id="@+id/email_Reset_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/email_reset"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/password_Reset_Buttton"
+        app:layout_constraintBottom_toTopOf="@+id/password_Reset_buttton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
         app:layout_constraintVertical_bias="0.858" />
 
     <Button
-        android:id="@+id/password_Reset_Buttton"
+        android:id="@+id/password_Reset_buttton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="resetPassword"
@@ -45,7 +45,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/log_in_Reset_Button"
+        android:id="@+id/log_in_Reset_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="backToLogin"

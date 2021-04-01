@@ -61,43 +61,43 @@ public class AdUITest {
     @Test
     public void clickOnVTourOpensVTourActivity() {
 
-        onView(withId(R.id.vtour_Ad_Button)).perform(click());
+        onView(withId(R.id.vtour_Ad_button)).perform(click());
         intended(hasComponent(PanoramaActivity.class.getName()));
     }
 
     @Test
     public void contactDialogTests() {
-        onView(withId(R.id.contact_info_Ad_Button)).perform(scrollTo()).perform(click());
+        onView(withId(R.id.contact_info_Ad_button)).perform(scrollTo()).perform(click());
         onView(withText("Close"))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()))
                 .perform(click());
-        onView(withId(R.id.dialogView)).check(doesNotExist());
+        onView(withId(R.id.holder_ContactInfo_cardView)).check(doesNotExist());
     }
 
     @Test
     public void displayAdInfoTest() {
         Ad testAd = database.getAd(cardID).join();
 
-        onView(withId(R.id.title_Ad_TextView)).check(matches(withText(testAd.getTitle())));
-        onView(withId(R.id.address_field_Ad_TextView)).check(matches(withText(
+        onView(withId(R.id.title_Ad_textView)).check(matches(withText(testAd.getTitle())));
+        onView(withId(R.id.address_field_Ad_textView)).check(matches(withText(
                 testAd.getStreet() + ", " + testAd.getCity())));
-        onView(withId(R.id.price_field_Ad_TextView)).check(matches(withText(
+        onView(withId(R.id.price_field_Ad_textView)).check(matches(withText(
                 String.valueOf(testAd.getPrice()) + " / " + testAd.getPricePeriod().toString())));
-        onView(withId(R.id.description_field_Ad_TextView)).check(matches(withText(testAd.getDescription())));
-        onView(withId(R.id.user_field_Ad_TextView)).check(matches(withText(testAd.getContactInfo().name)));
+        onView(withId(R.id.description_field_Ad_textView)).check(matches(withText(testAd.getDescription())));
+        onView(withId(R.id.user_field_Ad_textView)).check(matches(withText(testAd.getContactInfo().name)));
     }
 
     @Test
     public void displayContactInfoTest() {
         Ad testAd = database.getAd(cardID).join();
 
-        onView(withId(R.id.contact_info_Ad_Button)).perform(scrollTo(), click());
+        onView(withId(R.id.contact_info_Ad_button)).perform(scrollTo(), click());
 
 
-        onView(withId(R.id.usernameTextView)).check(matches(withText(testAd.getContactInfo().name)));
-        onView(withId(R.id.emailField)).check(matches(withText(testAd.getContactInfo().userEmail)));
-        onView(withId(R.id.phoneField)).check(matches(withText(testAd.getContactInfo().userPhoneNumber)));
+        onView(withId(R.id.username_ContactInfo_textView)).check(matches(withText(testAd.getContactInfo().name)));
+        onView(withId(R.id.email_ContactInfo_textView)).check(matches(withText(testAd.getContactInfo().userEmail)));
+        onView(withId(R.id.phone_ContactInfo_textView)).check(matches(withText(testAd.getContactInfo().userPhoneNumber)));
     }
 
     @After

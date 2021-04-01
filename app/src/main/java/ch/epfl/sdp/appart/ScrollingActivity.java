@@ -32,14 +32,14 @@ public class ScrollingActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.login_Scrolling_Toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
 
         mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
 
         mViewModel.initHome();
 
-        recyclerView = findViewById(R.id.recycler_Scrolling_RecyclerView);
+        recyclerView = findViewById(R.id.recycler_Scrolling_recyclerView);
         recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
         recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
         mViewModel.getCards().observe(this, this::updateList);

@@ -47,9 +47,9 @@ public class CameraActivity extends AppCompatActivity {
 
         //storagereference = FirebaseStorage.getInstance().getReference();
 
-        mImageView = findViewById(R.id.image_Camera_ImageView);
-        cameraBtn = findViewById(R.id.camera_Camera_Button);
-        galleryBtn = findViewById(R.id.gallery_Camera_Button);
+        mImageView = findViewById(R.id.image_Camera_imageView);
+        cameraBtn = findViewById(R.id.camera_Camera_button);
+        galleryBtn = findViewById(R.id.gallery_Camera_button);
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override

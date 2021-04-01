@@ -8,7 +8,7 @@
     tools:context=".PanoramaActivity">
 
     <RelativeLayout
-        android:id="@+id/content_view"
+        android:id="@+id/content_Panorama_relativeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/VrTourBackButton"
+            android:id="@+id/back_Panorama_button"
             android:layout_width="84dp"
             android:layout_height="98dp"
             android:background="#00FFFFFF"

@@ -42,7 +42,7 @@ public class VirtualTourUITest {
 
     @Test
     public void backButtonClosesActivity() {
-        onView(withId(R.id.VrTourBackButton)).perform(click());
+        onView(withId(R.id.back_Panorama_button)).perform(click());
         assertEquals(Activity.RESULT_CANCELED, vtourActivityRule.getScenario().getResult()
                 .getResultCode());
     }
