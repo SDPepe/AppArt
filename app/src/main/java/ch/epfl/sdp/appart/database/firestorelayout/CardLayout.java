@@ -3,7 +3,7 @@ package ch.epfl.sdp.appart.database.firestorelayout;
 /**
  * Un-instantiable Holder for the layout of the fields for a Card on Firestore.
  */
-public class CardLayout {
+public final class CardLayout {
 
     private CardLayout() {}
 
@@ -11,6 +11,11 @@ public class CardLayout {
      * absolute path to the cards directory in Firestore
      */
     public final static String DIRECTORY = "cards";
+
+    /**
+     * absolute path to the cards directory in Firestore
+     */
+    public final static String AD_ID = "adId";
 
     /**
      * @apiNote : String on Firestore

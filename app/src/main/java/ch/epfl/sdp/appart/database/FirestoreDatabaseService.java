@@ -220,11 +220,12 @@ public class FirestoreDatabaseService implements DatabaseService {
             throw new IllegalArgumentException("card id cannot be null");
         }
 
-        CompletableFuture<Ad> result = new CompletableFuture<>();
-        CompletableFuture<String> adIdFuture = getAdIdFromCard(cardId);
+        CompletableFuture<Ad> result                    = new CompletableFuture<>();
+        CompletableFuture<String> adIdFuture            = getAdIdFromCard(cardId);
+        CompletableFuture<Ad.AdBuilder> partialAdFuture = getPartialAdFromFutureAdId(adIdFuture);
+
         CompletableFuture<List<String>> photosReferencesFuture
                 = getPhotosReferencesFromFutureAdId(adIdFuture);
-        CompletableFuture<Ad.AdBuilder> partialAdFuture = getPartialAdFromFutureAdId(adIdFuture);
         CompletableFuture<ContactInfo> contactInfoFuture
                 = getContactInfoFromFuturePartialAd(partialAdFuture);
 
@@ -323,10 +324,10 @@ public class FirestoreDatabaseService implements DatabaseService {
 
     private Map<String, Object> extractCardsInfo(Card card) {
         Map<String, Object> docData = new HashMap<>();
-        docData.put("userId", card.getUserId());
-        docData.put("city", card.getCity());
-        docData.put("price", card.getPrice());
-        docData.put("imageUrl", card.getImageUrl());
+        docData.put(CardLayout.USER_ID, card.getUserId());
+        docData.put(CardLayout.CITY, card.getCity());
+        docData.put(CardLayout.PRICE, card.getPrice());
+        docData.put(CardLayout.IMAGE, card.getImageUrl());
         return docData;
     }
 
@@ -361,9 +362,9 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
 
         CompletableFuture<String> result = new CompletableFuture<>();
-        db.collection("cards").document(cardId).get().addOnCompleteListener(task -> {
+        db.collection(CardLayout.DIRECTORY).document(cardId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                result.complete((String) task.getResult().get("adId"));
+                result.complete((String) task.getResult().get(CardLayout.AD_ID));
             } else {
                 result.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
             }
@@ -389,7 +390,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<List<String>> photosReferencesListFuture = new CompletableFuture<>();
 
         adIdFuture.thenAccept(adId -> {
-            this.db.collection("ads").document(adId).get().addOnCompleteListener(task -> {
+            this.db.collection(AdLayout.DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     adReferenceFuture.complete(task.getResult().getReference());
                 } else {
@@ -406,7 +407,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //once the ad firestore document reference is ready is ready
         adReferenceFuture.thenAccept(adReference -> {
-            adReference.collection("photosRefs").get().addOnCompleteListener(task -> {
+            adReference.collection(AdLayout.PICTURES_DIRECTORY).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     QuerySnapshot snapshot = task.getResult();
                     List<DocumentSnapshot> documentSnapshots = snapshot.getDocuments();
@@ -443,18 +444,18 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //once the ad id is available we query the right ad to get its detailed fields
         adIdFuture.thenAccept(adId -> {
-            db.collection("ads").document(adId).get().addOnCompleteListener(task -> {
+            db.collection(AdLayout.DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
 
-                    String title            =   (String)    documentSnapshot.get("title");
-                    long price              =   (long)      documentSnapshot.get("price");
-                    PricePeriod pricePeriod =               PricePeriod.ALL.get(Math.toIntExact((long) documentSnapshot.get("pricePeriod")));
-                    String street           =   (String)    documentSnapshot.get("street");
-                    String city             =   (String)    documentSnapshot.get("city");
-                    String advertiserId     =   (String)    documentSnapshot.get("advertiserId");
-                    String description      =   (String)    documentSnapshot.get("description");
-                    boolean hasVTour        =   (boolean)   documentSnapshot.get("hasVTour");
+                    String title            =   (String)    documentSnapshot.get(AdLayout.TITLE);
+                    long price              =   (long)      documentSnapshot.get(AdLayout.PRICE);
+                    PricePeriod pricePeriod =               PricePeriod.ALL.get(Math.toIntExact((long) documentSnapshot.get(AdLayout.PRICE_PERIOD)));
+                    String street           =   (String)    documentSnapshot.get(AdLayout.STREET);
+                    String city             =   (String)    documentSnapshot.get(AdLayout.CITY);
+                    String advertiserId     =   (String)    documentSnapshot.get(AdLayout.ADVERTISER_ID);
+                    String description      =   (String)    documentSnapshot.get(AdLayout.DESCRIPTION);
+                    boolean hasVTour        =   (boolean)   documentSnapshot.get(AdLayout.VR_TOUR);
 
                     Ad.AdBuilder builder = new Ad.AdBuilder()
                             .withTitle(title)
@@ -499,12 +500,12 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<ContactInfo> result = new CompletableFuture<>();
         //once the partial ad has be retrieve we query the user that is providing the ad
         partialAdFuture.thenAccept(partialAd -> {
-            db.collection("users").document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
+            db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    String userEmail        =    (String) documentSnapshot.get("email");
-                    String userPhoneNumber  =    (String) documentSnapshot.get("phone");
-                    String name             =    (String) documentSnapshot.get("name");
+                    String userEmail        =    (String) documentSnapshot.get(UserLayout.EMAIL);
+                    String userPhoneNumber  =    (String) documentSnapshot.get(UserLayout.PHONE);
+                    String name             =    (String) documentSnapshot.get(UserLayout.NAME);
                     ContactInfo contactInfo =         new ContactInfo(userEmail, userPhoneNumber, name);
                     result.complete(contactInfo);
                 } else {

@@ -3,7 +3,7 @@ package ch.epfl.sdp.appart.database.firestorelayout;
 /**
  * Un-instantiable Holder for the layout of the fields for a User on Firestore.
  */
-public class UserLayout {
+public final class UserLayout {
 
     private UserLayout() {}
 

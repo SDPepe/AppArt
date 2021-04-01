@@ -3,14 +3,19 @@ package ch.epfl.sdp.appart.database.firestorelayout;
 /**
  * Un-instantiable Holder for the layout of the fields for an Ad on Firestore.
  */
-public class AdLayout {
+public final class AdLayout {
 
     private AdLayout() {}
 
     /**
      * absolute path to the ads directory in Firestore
      */
-    private final static String DIRECTORY   = "ads";
+    public final static String DIRECTORY   = "ads";
+
+    /**
+     * absolute path to the pictures directory of the ad in Firestore
+     */
+    public final static String PICTURES_DIRECTORY   = "photosRefs";
 
     /**
      * @apiNote : String on Firestore
