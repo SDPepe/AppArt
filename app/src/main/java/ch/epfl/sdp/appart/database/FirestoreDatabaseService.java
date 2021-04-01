@@ -152,7 +152,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
                         user.setAge((int) data.get("age"));
                         user.setUserEmail((String) data.get("email"));
-                        user.setGender(Gender.ALL.get((int) data.get("gender")));
+                        user.setGender((String) data.get("gender"));
                         user.setName((String) data.get("name"));
                         user.setPhoneNumber((String) data.get("phoneNumber"));
                         user.setProfileImage((String) data.get("profilePicture"));

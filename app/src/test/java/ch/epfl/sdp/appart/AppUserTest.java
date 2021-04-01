@@ -72,10 +72,10 @@ public class AppUserTest {
     @Test
     public void genderGetterAndSetterWork() {
         AppUser user = new AppUser("1234", "test.appart@epfl.ch");
-        user.setGender(Gender.FEMALE);
-        assertEquals(Gender.FEMALE, user.getGender());
-        user.setGender(Gender.OTHER);
-        assertEquals(Gender.OTHER, user.getGender());
+        user.setGender(Gender.FEMALE.name());
+        assertEquals(Gender.FEMALE.name(), user.getGender());
+        user.setGender(Gender.OTHER.name());
+        assertEquals(Gender.OTHER.name(), user.getGender());
     }
 
     @Test
