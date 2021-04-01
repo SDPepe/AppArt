@@ -29,6 +29,9 @@ import javax.inject.Singleton;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
+import ch.epfl.sdp.appart.database.firestorelayout.AdLayout;
+import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
+import ch.epfl.sdp.appart.database.firestorelayout.UserLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.PricePeriod;
@@ -58,7 +61,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //ask firebase async to get the cards objects and notify the future
         //when they have been fetched
-        db.collection("cards").get().addOnCompleteListener(
+        db.collection(CardLayout.DIRECTORY).get().addOnCompleteListener(
                 task -> {
 
                     List<Card> queriedCards = new ArrayList<>();
@@ -68,10 +71,10 @@ public class FirestoreDatabaseService implements DatabaseService {
                         for (QueryDocumentSnapshot document : task.getResult()) {
 
                             queriedCards.add(
-                                    new Card(document.getId(), (String) document.getData().get("userId"),
-                                            (String) document.getData().get("city"),
-                                            (long) document.getData().get("price"),
-                                            (String) document.getData().get("imageUrl")));
+                                    new Card(document.getId(), (String) document.getData().get(CardLayout.USER_ID),
+                                            (String) document.getData().get(CardLayout.CITY),
+                                            (long) document.getData().get(CardLayout.PRICE),
+                                            (String) document.getData().get(CardLayout.IMAGE)));
                         }
                         result.complete(queriedCards);
 
@@ -96,7 +99,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
 
         CompletableFuture<String> resultIdFuture = new CompletableFuture<>();
-        db.collection("cards")
+        db.collection(CardLayout.DIRECTORY)
                 .add(extractCardsInfo(card)).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 resultIdFuture.complete(task.getResult().getId());
@@ -119,7 +122,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
 
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection("cards")
+        db.collection(CardLayout.DIRECTORY)
                 .document(card.getId())
                 .set(extractCardsInfo(card))
                 .addOnCompleteListener(task -> {
@@ -144,18 +147,18 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //ask firebase asynchronously to get the associated user object and notify the future
         //when they have been fetched
-        db.collection("users").document(userId).get().addOnCompleteListener(
+        db.collection(UserLayout.DIRECTORY).document(userId).get().addOnCompleteListener(
                 task -> {
                     if (task.isSuccessful()) {
                         Map<String, Object> data = task.getResult().getData();
-                        AppUser user = new AppUser((String) data.get("email"), userId);
+                        AppUser user = new AppUser((String) data.get(UserLayout.EMAIL), userId);
 
-                        user.setAge((int) data.get("age"));
-                        user.setUserEmail((String) data.get("email"));
-                        user.setGender(Gender.ALL.get((int) data.get("gender")));
-                        user.setName((String) data.get("name"));
-                        user.setPhoneNumber((String) data.get("phoneNumber"));
-                        user.setProfileImage((String) data.get("profilePicture"));
+                        user.setAge((int) data.get(UserLayout.AGE));
+                        user.setUserEmail((String) data.get(UserLayout.EMAIL));
+                        user.setGender(Gender.ALL.get((int) data.get(UserLayout.GENDER)));
+                        user.setName((String) data.get(UserLayout.NAME));
+                        user.setPhoneNumber((String) data.get(UserLayout.PHONE));
+                        user.setProfileImage((String) data.get(UserLayout.PICTURE)); //WARNING WAS "profilePicture" before not matching our actual
 
                         result.complete(user);
 
@@ -175,7 +178,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NonNull
     public CompletableFuture<Boolean> putUser(@NonNull User user) {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection("users")
+        db.collection(UserLayout.DIRECTORY)
                 .document(user.getUserId())
                 .set(extractUserInfo(user)).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -196,7 +199,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
 
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection("user")
+        db.collection(UserLayout.DIRECTORY)
                 .document(user.getUserId())
                 .set(extractUserInfo(user))
                 .addOnCompleteListener(task -> {
@@ -520,25 +523,25 @@ public class FirestoreDatabaseService implements DatabaseService {
 
     private Map<String, Object> extractAdInfo(Ad ad) {
         Map<String, Object> adData = new HashMap<>();
-        adData.put("advertiserId", ad.getAdvertiserId());
-        adData.put("city", ad.getCity());
-        adData.put("description", ad.getDescription());
-        adData.put("HasVRTour", ad.hasVRTour());
-        adData.put("price", ad.getPrice());
-        adData.put("pricePeriod", ad.getPricePeriod().ordinal());
-        adData.put("street", ad.getStreet());
-        adData.put("title", ad.getTitle());
+        adData.put(AdLayout.ADVERTISER, ad.getAdvertiserId());
+        adData.put(AdLayout.CITY, ad.getCity());
+        adData.put(AdLayout.DESCRIPTION, ad.getDescription());
+        adData.put(AdLayout.VR_TOUR, ad.hasVRTour());
+        adData.put(AdLayout.PRICE, ad.getPrice());
+        adData.put(AdLayout.PRICE_PERIOD, ad.getPricePeriod().ordinal());
+        adData.put(AdLayout.STREET, ad.getStreet());
+        adData.put(AdLayout.TITLE, ad.getTitle());
         return adData;
     }
 
     private Map<String, Object> extractUserInfo(User user) {
         Map<String, Object> docData = new HashMap<>();
-        docData.put("age", user.getAge());
-        docData.put("email", user.getUserEmail());
-        docData.put("gender", user.getGender());
-        docData.put("name", user.getName());
-        docData.put("phoneNumber", user.getPhoneNumber());
-        docData.put("profilePicture", user.getProfileImage());
+        docData.put(UserLayout.AGE, user.getAge());
+        docData.put(UserLayout.EMAIL, user.getUserEmail());
+        docData.put(UserLayout.GENDER, user.getGender());
+        docData.put(UserLayout.NAME, user.getName());
+        docData.put(UserLayout.PHONE, user.getPhoneNumber());
+        docData.put(UserLayout.PICTURE, user.getProfileImage());
         return docData;
     }
 

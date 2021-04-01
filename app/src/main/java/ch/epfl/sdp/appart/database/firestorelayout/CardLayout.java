@@ -2,11 +2,13 @@ package ch.epfl.sdp.appart.database.firestorelayout;
 
 public class CardLayout {
 
-    private final static String DIRECTORY = "cards";
+    private CardLayout() {}
+
+    public final static String DIRECTORY = "cards";
 
     //fields of the card entry
-    private final static String USER_ID    = "userId";
-    private final static String CITY       = "city";
-    private final static String PRICE      = "price";
-    private final static String IMAGE      = "imageUrl";
+    public final static String USER_ID    = "userId";
+    public final static String CITY       = "city";
+    public final static String PRICE      = "price";
+    public final static String IMAGE      = "imageUrl";
 }
