@@ -15,11 +15,15 @@ The main feature which distinguishes this idea from a basic apartment market pla
 
 ## Code Conventions
 
-For all the view/layout objects we use only lower case letters and separate with underscores. 
+For all the view/layout objects we use: 
+    + the name of the object
+    + the name of the activity to which in belongs
+    + the object type  
+separated by underscore
 
 # Resources ids
-<name>_<activity_name>_<type>
-sign_in_login_button
+<name>_<activityName>_<type>
+signIn_LoginActivity_button
 
 
 
