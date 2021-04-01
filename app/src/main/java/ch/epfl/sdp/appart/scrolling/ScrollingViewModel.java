@@ -13,6 +13,9 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
+/**
+ * ViewModel for the scrolling activity.
+ */
 @HiltViewModel
 public class ScrollingViewModel extends ViewModel {
 
@@ -25,7 +28,7 @@ public class ScrollingViewModel extends ViewModel {
         this.db = database;
     }
 
-    /*
+    /**
      * Gets the cards from the database and updates the LiveData list
      */
     public void initHome() {
@@ -35,8 +38,8 @@ public class ScrollingViewModel extends ViewModel {
 
     }
 
-    /*
-     * Getters for MutableLiveData instances declared above
+    /**
+     * Getter for the LiveData of the list of cards
      */
     public LiveData<List<Card>> getCards() {
         return mCards;

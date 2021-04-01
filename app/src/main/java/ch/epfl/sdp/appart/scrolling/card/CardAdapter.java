@@ -23,24 +23,29 @@ import static java.lang.String.format;
 
 /**
  * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView
- * Based on the following tutorial : https://developer.android.com/codelabs/basic-android-kotlin-training-recyclerview-scrollable-list
+ * used by the ScrollingActivity.
+ * <p>
+ * Based on the following tutorial :
+ * https://developer.android.com/codelabs/basic-android-kotlin-training-recyclerview-scrollable-list
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
     private final List<Card> cards;
     private final Context context;
-
     private final DatabaseService database;
 
+    /**
+     * Constructor of the card adapter.
+     *
+     * @param context  the parent activity
+     * @param database the database where the card images are fetched
+     * @param cards    list of Firebase Storage image references
+     */
     public CardAdapter(Activity context, DatabaseService database, List<Card> cards) {
-
-        if (cards == null) {
+        if (cards == null)
             throw new IllegalArgumentException("cards cannot be null");
-        }
-
-        if (context == null) {
+        if (context == null)
             throw new IllegalArgumentException("context cannot be null");
-        }
 
         this.cards = cards;
         this.context = context;
@@ -66,8 +71,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     /**
      * Replace the content of a view according to the card stored at position.
      *
-     * @param holder   The CardViewHolder to be overwrite.
-     * @param position The index of the card which will overwrite the CardViewHolder
+     * @param holder   the CardViewHolder to overwrite.
+     * @param position the index of the card which will overwrite the CardViewHolder
      */
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
@@ -78,6 +83,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             context.startActivity(intent);
         });
 
+        // load image from database into ImageView
         database.accept(new GlideImageViewLoader(context, holder.cardImageView,
                 "Cards/" + card.getImageUrl()));
 
@@ -86,7 +92,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
     /**
-     * Get the number of cards available
+     * Get the number of available cards
      *
      * @return the number of cards
      */
@@ -95,6 +101,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         return cards.size();
     }
 
+    /**
+     * ScrollingView tile
+     */
     protected static class CardViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView addressTextView;
