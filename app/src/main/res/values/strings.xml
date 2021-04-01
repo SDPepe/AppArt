@@ -18,7 +18,7 @@
     <string name="hello_world">Hello Square World!</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="reset_confirmation">Si cette adresse est valide, un mail vous sera envoyé pour changer de mot de passe</string>
-    <string name="email_reset">Enter your email adress</string>
+    <string name="email_reset">Enter your email address</string>
     <string name="reset_button">Reset password</string>
     <string name="login_failed_snack">Login failed !</string>
     <string name="create_account_failed_snack">Create account failed !</string>

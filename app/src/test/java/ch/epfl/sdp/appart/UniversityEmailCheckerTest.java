@@ -5,7 +5,9 @@ import org.junit.Test;
 import ch.epfl.sdp.appart.user.UniversityEmailChecker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -20,9 +22,9 @@ public class UniversityEmailCheckerTest {
         String email2 = "aaaa.bbbb@unil.ch";
         String email3 = "aaaa.bbbb@unige.ch";
 
-        assertEquals(true, UniversityEmailChecker.has(email1));
-        assertEquals(true, UniversityEmailChecker.has(email2));
-        assertEquals(true, UniversityEmailChecker.has(email3));
+        assertTrue(UniversityEmailChecker.has(email1));
+        assertTrue(UniversityEmailChecker.has(email2));
+        assertTrue(UniversityEmailChecker.has(email3));
 
     }
 
@@ -32,9 +34,9 @@ public class UniversityEmailCheckerTest {
         String email2 = "aaaa.bbbb@yahoo.com";
         String email3 = "aaaa.bbbb@libero.it";
 
-        assertEquals(false, UniversityEmailChecker.has(email1));
-        assertEquals(false, UniversityEmailChecker.has(email2));
-        assertEquals(false, UniversityEmailChecker.has(email3));
+        assertFalse(UniversityEmailChecker.has(email1));
+        assertFalse(UniversityEmailChecker.has(email2));
+        assertFalse(UniversityEmailChecker.has(email3));
 
     }
 
@@ -57,8 +59,8 @@ public class UniversityEmailCheckerTest {
         String email1 = "aaaa.bbbb@epfl.ch@gmail.com";
         String email2 = "aaaa.bbbb@unil@epfl.com";
 
-        assertEquals(false, UniversityEmailChecker.emailSyntaxIsValid(email1));
-        assertEquals(false, UniversityEmailChecker.emailSyntaxIsValid(email2));
+        assertFalse(UniversityEmailChecker.emailSyntaxIsValid(email1));
+        assertFalse(UniversityEmailChecker.emailSyntaxIsValid(email2));
 
     }
 
@@ -68,9 +70,9 @@ public class UniversityEmailCheckerTest {
         String email2 = "aaaa.bbbb@yahoo.com";
         String email3 = "aaaa.bbbb@libero.it";
 
-        assertEquals(true, UniversityEmailChecker.emailSyntaxIsValid(email1));
-        assertEquals(true, UniversityEmailChecker.emailSyntaxIsValid(email2));
-        assertEquals(true, UniversityEmailChecker.emailSyntaxIsValid(email3));
+        assertTrue(UniversityEmailChecker.emailSyntaxIsValid(email1));
+        assertTrue(UniversityEmailChecker.emailSyntaxIsValid(email2));
+        assertTrue(UniversityEmailChecker.emailSyntaxIsValid(email3));
 
     }
 
