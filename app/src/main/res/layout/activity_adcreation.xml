@@ -221,7 +221,7 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="0dp"
                     android:layout_weight="0"
-                    android:ems="10"
+                    android:ems="6"
                     android:hint="@string/editPriceAdCreation"
                     android:inputType="number" />
 
@@ -266,7 +266,11 @@
                 android:layout_marginEnd="24dp"
                 android:ems="10"
                 android:hint="@string/editDescriptionAdCreation"
-                android:inputType="textPersonName" />
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:maxLines="15"
+                android:layout_gravity="top|left"
+                android:scrollbars="vertical" />
 
             <HorizontalScrollView
                 android:id="@+id/photosScroll_AdCreation_ScrollView"
@@ -290,7 +294,6 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="024dp"
-                android:onClick="takePhoto"
                 android:text="@string/cameraButtonAdCreation" />
 
             <Button
@@ -301,7 +304,6 @@
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:onClick="createAd"
                 android:text="@string/conformButtonAdCreation" />
 
         </LinearLayout>
