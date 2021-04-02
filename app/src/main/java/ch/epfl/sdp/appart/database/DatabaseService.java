@@ -101,4 +101,6 @@ public interface DatabaseService extends DatabaseHostVisitor {
     @NonNull
     CompletableFuture<String> putAd(Ad ad);
 
+    CompletableFuture<Void> clearCache();
+
 }

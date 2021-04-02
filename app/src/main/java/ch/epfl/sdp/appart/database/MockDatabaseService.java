@@ -126,6 +126,13 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
+    @Override
+    public CompletableFuture<Void> clearCache() {
+        CompletableFuture<Void> futureClear = new CompletableFuture<>();
+        futureClear.complete(null);
+        return futureClear;
+    }
+
     public void accept(GlideLoaderVisitor visitor) {
         visitor.visit(this);
     }

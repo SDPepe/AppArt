@@ -12,7 +12,7 @@ public class AppUser implements User {
     private String name;
     private String email;
     private String phoneNumber;
-    private int age;
+    private long age;
     private Gender gender;
     private String profilePicture;
 
@@ -127,7 +127,7 @@ public class AppUser implements User {
      * @return the age of the user as int
      */
     @Override
-    public int getAge() {
+    public long getAge() {
         return age;
     }
 
@@ -136,7 +136,7 @@ public class AppUser implements User {
      * @param age the age of the user
      */
     @Override
-    public void setAge(int age) {
+    public void setAge(long age) {
         this.age = age;
     }
 

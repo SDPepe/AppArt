@@ -5,6 +5,7 @@ import android.provider.Telephony;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -109,7 +110,7 @@ public class FirestoreDatabaseService implements DatabaseService {
             } else {
                 resultIdFuture
                         .completeExceptionally(
-                                new DatabaseServiceException("query of the cards failed")
+                                new DatabaseServiceException(task.getException().getMessage())
                         );
             }
         });
@@ -156,7 +157,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                         Map<String, Object> data = task.getResult().getData();
                         AppUser user = new AppUser((String) data.get(UserLayout.EMAIL), userId);
 
-                        user.setAge((int) data.get(UserLayout.AGE));
+                        user.setAge((long) data.get(UserLayout.AGE));
                         user.setUserEmail((String) data.get(UserLayout.EMAIL));
                         user.setGender(Gender.ALL.get((int) data.get(UserLayout.GENDER)).name());
                         user.setName((String) data.get(UserLayout.NAME));
@@ -280,6 +281,20 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         result.complete(newAdRef.getId());
         return result;
+    }
+
+    @Override
+    public CompletableFuture<Void> clearCache() {
+        CompletableFuture<Void> futureClear = new CompletableFuture<>();
+        db.clearPersistence().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                futureClear.complete(null);
+            }
+            else {
+                futureClear.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
+            }
+        });
+        return futureClear;
     }
 
     private void uploadAdPhotos(Ad ad, List<String> actualRefs, DocumentReference newAdRef,
@@ -547,6 +562,17 @@ public class FirestoreDatabaseService implements DatabaseService {
         docData.put(UserLayout.PHONE, user.getPhoneNumber());
         docData.put(UserLayout.PICTURE, user.getProfileImage());
         return docData;
+    }
+
+    /**
+     * Sets up the use of an emulator for the Firebase authentication service.
+     *
+     * @param ip   the ip of the emulator
+     * @param port the port that corresponds to the authentication service emulation
+     */
+    public void useEmulator(String ip, int port) {
+        if (ip == null) throw new IllegalArgumentException();
+        db.useEmulator(ip, port);
     }
 
 }

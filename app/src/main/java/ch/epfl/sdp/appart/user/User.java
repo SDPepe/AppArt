@@ -54,13 +54,13 @@ public interface User {
      * getter for users age
      * @return the age of the user as int
      */
-    int getAge();
+    long getAge();
 
     /**
      * setter for users age
      * @param age the age of the user
      */
-    void setAge(int age);
+    void setAge(long age);
 
     /**
      * getter for users gender
