@@ -65,6 +65,13 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() { finish(); }
 
+    /**
+     *  closes activity when back button pressed on UI
+     */
+    public void contactAdUser(View view) {
+        // TODO: send message to user
+    }
+
 
     /**
      * retrieves the current user information from database
@@ -76,7 +83,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         this.sessionUser.setAge(25);
         this.sessionUser.setGender(Gender.FEMALE.name());
         this.sessionUser.setPhoneNumber("+41 7666666666");
-        // get actual ad user from database
+        // TODO: get actual ad user from database
     }
 
     /**

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:onClick="contactAdUser"
     tools:context=".SimpleUserProfileActivity">
 
     <Button
@@ -289,7 +290,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
                 android:paddingBottom="30dp"
-                android:paddingTop="60dp"/>
+                android:paddingTop="60dp">
+
+                <Button
+                    android:id="@+id/contact_SimpleUserProfile_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/contactAdUser"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="147dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
 

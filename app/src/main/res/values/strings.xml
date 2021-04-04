@@ -75,4 +75,5 @@
         <item>Male</item>
         <item>Other</item>
     </string-array>
+    <string name="contactAdUser"> CONTACT ANNOUNCER </string>
 </resources>
