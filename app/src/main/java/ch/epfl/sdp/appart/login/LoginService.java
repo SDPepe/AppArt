@@ -106,5 +106,11 @@ public interface LoginService {
      */
     CompletableFuture<Void> reAuthenticateUser(String email, String password);
 
+    /**
+     * Signs out the currently logged in user if there is one.
+     *
+     */
+    void signOut();
+
 
 }

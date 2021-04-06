@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import android.util.Log;
+
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -17,6 +19,7 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -52,32 +55,83 @@ public class LoginTest {
     @BindValue
     LoginService loginService = new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
 
-    @Test
-    public void loginTest() throws InterruptedException, ExecutionException {
+    /**
+     * It is necessary to perform the emulator tests in one signle test, otherwise we get initialization issues with useEmulator.
+     * The other solution is to add a terminate function to both the wrapper and the service.
+     */
 
-        String email = "test@testappart.ch";
-        String password = "password1234";
-
-        loginService.createUser(email, password).get();
-
-        //loginService.loginWithEmail(email, password).get();
+    public void createUser(String email, String password) {
+        loginService.createUser(email, password).join();
 
         User user = loginService.getCurrentUser();
 
         assertNotNull(user);
 
         assertThat(user.getUserEmail(), is(email));
+    }
 
-        String newEmail = "test2@testappart.ch";
-        loginService.updateEmailAddress(newEmail).get();
+    public void updateMail(String newEmail) {
+        loginService.updateEmailAddress(newEmail).join();
 
-        user = loginService.getCurrentUser();
+        User user = loginService.getCurrentUser();
         assertNotNull(user);
         assertThat(user.getUserEmail(), is(newEmail));
+    }
 
-        loginService.deleteUser().get();
-
+    public void deleteUser() {
+        loginService.deleteUser().join();
         assertNull(loginService.getCurrentUser());
+    }
+
+    public void signOut() {
+        loginService.signOut();
+        assertNull(loginService.getCurrentUser());
+    }
+
+    public void login(String email, String password) {
+        loginService.loginWithEmail(email, password).join();
+
+        User user = loginService.getCurrentUser();
+        assertNotNull(user);
+        assertThat(user.getUserEmail(), is(email));
+    }
+
+    public void updatePassword(String newPassword) {
+        loginService.updatePassword(newPassword);
+        signOut();
+    }
+
+    public void reAuthenticate(String email, String password) {
+        loginService.reAuthenticateUser(email, password);
+        User user = loginService.getCurrentUser();
+        assertNotNull(user);
+
+        assertThat(user.getUserEmail(), is(email));
+    }
+
+    @Test
+    public void loginTest() {
+
+        String email = "test@testappart.ch";
+        String password = "password1234";
+
+        createUser(email, password);
+
+        String newEmail = "test2@testappart.ch";
+        updateMail(newEmail);
+
+        deleteUser();
+
+        createUser(email, password);
+        signOut();
+        login(email, password);
+        String newPassword = "password12345";
+        updatePassword(newPassword);
+
+        login(email, newPassword);
+        reAuthenticate(email, newPassword);
+
+        deleteUser();
 
     }
 }

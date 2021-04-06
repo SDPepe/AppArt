@@ -68,4 +68,9 @@ public class FirebaseEmulatorLoginServiceWrapper implements LoginService {
         return loginService.reAuthenticateUser(email, password);
     }
 
+    @Override
+    public void signOut() {
+        this.loginService.signOut();
+    }
+
 }

@@ -124,6 +124,11 @@ public class FirebaseLoginService implements LoginService {
                 result -> result);
     }
 
+    @Override
+    public void signOut() {
+        mAuth.signOut();
+    }
+
     /**
      * Checks if the internal state of the current user in Firebase match the expected state.
      * getCurrentUser() must return null

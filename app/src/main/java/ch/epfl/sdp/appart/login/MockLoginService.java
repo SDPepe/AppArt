@@ -221,5 +221,10 @@ public class MockLoginService implements LoginService {
         return result;
     }
 
+    @Override
+    public void signOut() {
+        currentUser = null;
+    }
+
 
 }
