@@ -250,11 +250,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<ContactInfo> contactInfoFuture
                 = getContactInfoFromFuturePartialAd(partialAdFuture);
 
-        adIdFuture.join();
-        partialAdFuture.join();
-        photosReferencesFuture.join();
-        contactInfoFuture.join();
-
 
         CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> {
             return partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
