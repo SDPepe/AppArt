@@ -13,7 +13,7 @@ import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
- * This class manages the UI for create user.
+ * This class manages the UI for creating a user.
  */
 @AndroidEntryPoint
 public class CreateUserActivity extends AppCompatActivity {
@@ -29,13 +29,16 @@ public class CreateUserActivity extends AppCompatActivity {
     }
 
     /**
-     * Method called when you want create an account.
+     * Method called when the create an account button is pushed.
+     * It takes the email and the password written in the corresponding fields, and tells the login service to create an account.
+     * If it succeeds, it takes the user back to the login page.
+     * If not, it shows a popup telling the user the app wasn't able to create the account
      *
-     * @param view
+     * @param view the view that was clicked (i.e., the account button)
      */
     public void createAccount(View view) {
-        EditText emailView = (EditText) findViewById(R.id.create_account_email_CreateUser_editText);
-        EditText passwordView = (EditText) findViewById(R.id.create_account_password_CreateUser_editText);
+        EditText emailView = findViewById(R.id.create_account_email_CreateUser_editText);
+        EditText passwordView = findViewById(R.id.create_account_password_CreateUser_editText);
 
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
@@ -55,7 +58,7 @@ public class CreateUserActivity extends AppCompatActivity {
      * Method called when the Log In button is pushed
      * Takes the user back to the login screen
      *
-     * @param view
+     * @param view the view that was clicked (i.e. the log in button)
      */
     public void backToLogin(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
