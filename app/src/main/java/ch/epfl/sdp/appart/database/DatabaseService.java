@@ -18,6 +18,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
 
     /**
      * Get the list of cards stored on the database.
+     *
      * @return A future that will contains the cards if the future
      * completed successfully.
      * If the an error occurs the future will complete exceptionally
@@ -29,6 +30,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
 
     /**
      * Store the card given as argument in the database.
+     *
      * @param card the Card that will be stored
      * @return A future that wraps a String representing
      * the new id of the card stored on the database. If an error
@@ -41,6 +43,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
 
     /**
      * Update the card given as argument in the database.
+     *
      * @param card the Card that will be updated in the database
      * @return A future that wraps a Boolean. True if the card could
      * have been updated or false otherwise.
@@ -51,6 +54,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
 
     /**
      * Get the user with the related userId stored on the database.
+     *
      * @return A future that will contains the requested user if it
      * was found in the database.
      * If the an error occurs the future will complete exceptionally
@@ -64,6 +68,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
 
     /**
      * Store the user given as argument in the database.
+     *
      * @param user a User that will be stored
      * @return A future that wraps a boolean if it
      * the new id of the card stored on the database. If an error
@@ -75,6 +80,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
 
     /**
      * Update the user given as argument in the database.
+     *
      * @param user the User that will be updated in the database
      * @return A future that wraps a Boolean. True if the user could
      * have been updated or false otherwise.
@@ -86,6 +92,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
 
     /**
      * Get the add related to the given CardId
+     *
      * @param id a String that is the id of the card referencing the ad.
      * @return A CompletableFuture<Ad> that will hold the value of the Ad or
      * a DatabaseServiceException
@@ -95,6 +102,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
 
     /**
      * Not completed
+     *
      * @param ad
      * @return
      */

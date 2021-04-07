@@ -14,12 +14,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import dagger.hilt.android.AndroidEntryPoint;
+
 import static android.widget.Toast.makeText;
 
 /**
@@ -115,7 +118,7 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 }
-    //add image to storage database
+//add image to storage database
     /*
     private void uploadImageToFirebase(String name, Uri imageUri){
         StorageReference image = storagereference.child("pic/"+ name);

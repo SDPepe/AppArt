@@ -70,7 +70,9 @@ public class Card {
         return ownerId;
     }
 
-    public String getAdId() { return adId; }
+    public String getAdId() {
+        return adId;
+    }
 
     public boolean hasVRTour() {
         return hasVRTour;

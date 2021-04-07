@@ -108,7 +108,6 @@ public interface LoginService {
 
     /**
      * Signs out the currently logged in user if there is one.
-     *
      */
     void signOut();
 

@@ -223,8 +223,8 @@ public class DatabaseTest {
         cards = db.getCards().join();
 
         Card wantedCard = null;
-        for(Card retrievedCard : cards) {
-            if(retrievedCard.getId().equals(id) || !retrievedCard.getId().equals(otherCardId) || retrievedCard.getId().equals(cardId)) {
+        for (Card retrievedCard : cards) {
+            if (retrievedCard.getId().equals(id) || !retrievedCard.getId().equals(otherCardId) || retrievedCard.getId().equals(cardId)) {
                 wantedCard = retrievedCard;
                 break;
             }

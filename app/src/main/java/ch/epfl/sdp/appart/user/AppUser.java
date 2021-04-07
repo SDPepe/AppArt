@@ -19,8 +19,9 @@ public class AppUser implements User {
 
     /**
      * App user constructor
+     *
      * @param userId the unique id of the user in the Firestore database
-     * @param email the email registered with the users account
+     * @param email  the email registered with the users account
      */
     public AppUser(String userId, String email) {
         if (userId == null || email == null) {
@@ -40,6 +41,7 @@ public class AppUser implements User {
 
     /**
      * getter for users name
+     *
      * @return the name of the user
      */
     @Override
@@ -49,6 +51,7 @@ public class AppUser implements User {
 
     /**
      * setter for users name
+     *
      * @param name the new name for the user
      */
     @Override
@@ -61,6 +64,7 @@ public class AppUser implements User {
 
     /**
      * getter for user email
+     *
      * @return user email as a string
      */
     @Override
@@ -70,6 +74,7 @@ public class AppUser implements User {
 
     /**
      * setter for user email
+     *
      * @param email the new email for the user
      */
     @Override
@@ -82,6 +87,7 @@ public class AppUser implements User {
 
     /**
      * getter for user phone number
+     *
      * @return user phone number as a string
      */
     @Override
@@ -91,6 +97,7 @@ public class AppUser implements User {
 
     /**
      * setter for user phone number
+     *
      * @param phoneNumber the new phoneNumber for the user
      */
     @Override
@@ -103,6 +110,7 @@ public class AppUser implements User {
 
     /**
      * getter for user profile picture
+     *
      * @return the profile picture as a path String
      */
     @Override
@@ -112,6 +120,7 @@ public class AppUser implements User {
 
     /**
      * setter for user profile picture
+     *
      * @param img the image path for the users new profile picture
      */
     @Override
@@ -124,6 +133,7 @@ public class AppUser implements User {
 
     /**
      * getter for users age
+     *
      * @return the age of the user as int
      */
     @Override
@@ -133,6 +143,7 @@ public class AppUser implements User {
 
     /**
      * setter for users age
+     *
      * @param age the age of the user
      */
     @Override
@@ -142,6 +153,7 @@ public class AppUser implements User {
 
     /**
      * getter for users gender
+     *
      * @return the gender of the user as String
      */
     @Override
@@ -151,6 +163,7 @@ public class AppUser implements User {
 
     /**
      * setter for users gender
+     *
      * @param gender the gender of the user as string
      */
     @Override
@@ -163,6 +176,7 @@ public class AppUser implements User {
 
     /**
      * getter for users id
+     *
      * @return the unique id of the user as String
      */
     @Override
@@ -172,6 +186,7 @@ public class AppUser implements User {
 
     /**
      * university email checker
+     *
      * @return true if the user is registered with a university domain, false otherwise
      */
     @Override

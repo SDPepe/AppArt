@@ -18,7 +18,7 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     private static final int FIRESTORE_SERVICE_PORT = 8080;
 
     public FirestoreEmulatorDatabaseServiceWrapper(@NonNull FirestoreDatabaseService databaseService) {
-        if(databaseService == null) {
+        if (databaseService == null) {
             throw new IllegalArgumentException();
         }
 

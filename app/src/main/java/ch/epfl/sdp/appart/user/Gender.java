@@ -12,10 +12,10 @@ import java.util.List;
  * to create an enum instead of storing it as string.
  */
 public enum Gender {
-    NOT_SELECTED ("Not selected"),
-    FEMALE ("Female"),
-    MALE ("Male"),
-    OTHER ("Other");
+    NOT_SELECTED("Not selected"),
+    FEMALE("Female"),
+    MALE("Male"),
+    OTHER("Other");
 
     /* gives the possibility to access enum values as a list */
     public static final List<Gender> ALL = Collections

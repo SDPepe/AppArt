@@ -10,11 +10,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.ad.ContactInfoDialogFragment;
 import ch.epfl.sdp.appart.database.DatabaseService;
@@ -98,8 +102,8 @@ public class AdActivity extends ToolbarActivity {
         setIfNotNull(usernameView, username);
     }
 
-    private void setIfNotNull(TextView view, String content){
-        if (content == null){
+    private void setIfNotNull(TextView view, String content) {
+        if (content == null) {
             view.setText("Loading...");
         } else {
             view.setText(content);

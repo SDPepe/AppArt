@@ -1,12 +1,9 @@
 package ch.epfl.sdp.appart.database;
 
 import android.net.Uri;
-import android.provider.Telephony;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -39,7 +35,6 @@ import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
-import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 
 /**
@@ -76,7 +71,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                         for (QueryDocumentSnapshot document : task.getResult()) {
 
                             queriedCards.add(
-                                    new Card(document.getId(), (String)document.getData().get(CardLayout.AD_ID), (String) document.getData().get(CardLayout.USER_ID),
+                                    new Card(document.getId(), (String) document.getData().get(CardLayout.AD_ID), (String) document.getData().get(CardLayout.USER_ID),
                                             (String) document.getData().get(CardLayout.CITY),
                                             (long) document.getData().get(CardLayout.PRICE),
                                             (String) document.getData().get(CardLayout.IMAGE)));
@@ -86,7 +81,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                     } else {
                         result.completeExceptionally(
                                 new DatabaseServiceException(
-                                    "failed to fetch the cards from firebase"
+                                        "failed to fetch the cards from firebase"
                                 ));
                     }
                 }
@@ -160,28 +155,28 @@ public class FirestoreDatabaseService implements DatabaseService {
                         AppUser user = new AppUser(userId, (String) data.get(UserLayout.EMAIL));
                         user.setUserEmail((String) data.get(UserLayout.EMAIL));
                         Object rawAge = data.get(UserLayout.AGE);
-                        if(rawAge != null) {
+                        if (rawAge != null) {
                             user.setAge((long) rawAge);
                         }
 
                         Object rawGender = data.get(UserLayout.GENDER);
-                        if(rawGender != null) {
+                        if (rawGender != null) {
                             user.setGender((String) rawGender);
                         }
 
                         Object rawName = data.get(UserLayout.NAME);
-                        if(rawName != null) {
-                            user.setName((String)rawName);
+                        if (rawName != null) {
+                            user.setName((String) rawName);
                         }
 
                         Object rawPhoneNumber = data.get(UserLayout.PHONE);
-                        if(rawPhoneNumber != null) {
-                            user.setPhoneNumber((String)rawPhoneNumber);
+                        if (rawPhoneNumber != null) {
+                            user.setPhoneNumber((String) rawPhoneNumber);
                         }
 
                         Object rawPfpRef = data.get(UserLayout.PICTURE);
-                        if(rawPfpRef != null) {
-                            user.setProfileImage((String)rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
+                        if (rawPfpRef != null) {
+                            user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
                         }
 
                         result.complete(user);
@@ -189,7 +184,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                     } else {
                         result.completeExceptionally(
                                 new DatabaseServiceException(
-                                    "failed to request the user from firebase"
+                                        "failed to request the user from firebase"
                                 )
                         );
                     }
@@ -205,11 +200,11 @@ public class FirestoreDatabaseService implements DatabaseService {
         db.collection(UserLayout.DIRECTORY)
                 .document(user.getUserId())
                 .set(extractUserInfo(user)).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        isFinishedFuture.complete(true);
-                    } else {
-                        isFinishedFuture.complete(false);
-                    }
+            if (task.isSuccessful()) {
+                isFinishedFuture.complete(true);
+            } else {
+                isFinishedFuture.complete(false);
+            }
         });
         return isFinishedFuture;
     }
@@ -244,13 +239,12 @@ public class FirestoreDatabaseService implements DatabaseService {
             throw new IllegalArgumentException("card id cannot be null");
         }
 
-        CompletableFuture<Ad> result                    = new CompletableFuture<>();
-        CompletableFuture<String> adIdFuture            = getAdIdFromCard(cardId);
+        CompletableFuture<Ad> result = new CompletableFuture<>();
+        CompletableFuture<String> adIdFuture = getAdIdFromCard(cardId);
         CompletableFuture<Ad.AdBuilder> partialAdFuture = getPartialAdFromFutureAdId(adIdFuture);
 
         CompletableFuture<List<String>> photosReferencesFuture
                 = getPhotosReferencesFromFutureAdId(adIdFuture);
-
 
 
         CompletableFuture<ContactInfo> contactInfoFuture
@@ -318,10 +312,9 @@ public class FirestoreDatabaseService implements DatabaseService {
     public CompletableFuture<Void> clearCache() {
         CompletableFuture<Void> futureClear = new CompletableFuture<>();
         db.clearPersistence().addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
+            if (task.isSuccessful()) {
                 futureClear.complete(null);
-            }
-            else {
+            } else {
                 futureClear.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
             }
         });
@@ -400,6 +393,7 @@ public class FirestoreDatabaseService implements DatabaseService {
      * Ad we need to retrieve the right ad id first.
      * The future will complete with the right id if the task is
      * successful and will complete with an exception otherwise.
+     *
      * @param cardId the id of the card which we want to collect the ad id
      * @return a CompletableFuture<String> that will hold a String, the card id or a DatabaseServiceException
      * if it failed to retrieve the id
@@ -425,6 +419,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
     /**
      * Once the ad id future is completed we retrieve the lists of photos references
+     *
      * @param adIdFuture the CompletableFuture that will hold the id of the card when completed
      * @return a CompletableFuture<List<String>> that will hold the list of references to the pictures
      * or the Future can complete exceptionally with a DatabaseServiceException if the request was unsuccessful.
@@ -478,6 +473,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
     /**
      * Once the ad id future is completed we retrieve some relevant information about the ad.
+     *
      * @param adIdFuture a CompletableFuture<String> that will hold the id of the card when completed
      * @return a CompletableFuture<PartialAd> that will hold the PartialAd. The Future can complete
      * exceptionally with a DatabaseServiceException if the request was unsuccessful.
@@ -497,14 +493,14 @@ public class FirestoreDatabaseService implements DatabaseService {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
 
-                    String title            =   (String)    documentSnapshot.get(AdLayout.TITLE);
-                    long price              =   (long)      documentSnapshot.get(AdLayout.PRICE);
-                    PricePeriod pricePeriod =               PricePeriod.ALL.get(Math.toIntExact((long) documentSnapshot.get(AdLayout.PRICE_PERIOD)));
-                    String street           =   (String)    documentSnapshot.get(AdLayout.STREET);
-                    String city             =   (String)    documentSnapshot.get(AdLayout.CITY);
-                    String advertiserId     =   (String)    documentSnapshot.get(AdLayout.ADVERTISER_ID);
-                    String description      =   (String)    documentSnapshot.get(AdLayout.DESCRIPTION);
-                    boolean hasVTour        =   (boolean)   documentSnapshot.get(AdLayout.VR_TOUR);
+                    String title = (String) documentSnapshot.get(AdLayout.TITLE);
+                    long price = (long) documentSnapshot.get(AdLayout.PRICE);
+                    PricePeriod pricePeriod = PricePeriod.ALL.get(Math.toIntExact((long) documentSnapshot.get(AdLayout.PRICE_PERIOD)));
+                    String street = (String) documentSnapshot.get(AdLayout.STREET);
+                    String city = (String) documentSnapshot.get(AdLayout.CITY);
+                    String advertiserId = (String) documentSnapshot.get(AdLayout.ADVERTISER_ID);
+                    String description = (String) documentSnapshot.get(AdLayout.DESCRIPTION);
+                    boolean hasVTour = (boolean) documentSnapshot.get(AdLayout.VR_TOUR);
 
                     Ad.AdBuilder builder = new Ad.AdBuilder()
                             .withTitle(title)
@@ -534,8 +530,9 @@ public class FirestoreDatabaseService implements DatabaseService {
     /**
      * Once the partialAd is retrieved we will retrieve the related user to get information about
      * it.
+     *
      * @param partialAdFuture a CompletableFuture<PartialAd> that will hold the id of the card when completed.
-     * This Future can also complete Exceptionally with a DatabaseServiceException.
+     *                        This Future can also complete Exceptionally with a DatabaseServiceException.
      * @return a CompletableFuture<ContactInfo> that will hold the ContactInfo. The Future can complete
      * exceptionally with a DatabaseServiceException if the request was unsuccessful.
      * @throws IllegalArgumentException if partialAdFuture is null
@@ -552,10 +549,10 @@ public class FirestoreDatabaseService implements DatabaseService {
             db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    String userEmail        =    (String) documentSnapshot.get(UserLayout.EMAIL);
-                    String userPhoneNumber  =    (String) documentSnapshot.get(UserLayout.PHONE);
-                    String name             =    (String) documentSnapshot.get(UserLayout.NAME);
-                    ContactInfo contactInfo =         new ContactInfo(userEmail, userPhoneNumber, name);
+                    String userEmail = (String) documentSnapshot.get(UserLayout.EMAIL);
+                    String userPhoneNumber = (String) documentSnapshot.get(UserLayout.PHONE);
+                    String name = (String) documentSnapshot.get(UserLayout.NAME);
+                    ContactInfo contactInfo = new ContactInfo(userEmail, userPhoneNumber, name);
                     result.complete(contactInfo);
                 } else {
                     result.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
