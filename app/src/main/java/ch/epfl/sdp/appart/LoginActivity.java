@@ -19,7 +19,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
 
-    //@LoginModule.CloudLoginService
     @Inject
     LoginService loginService;
 
@@ -32,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Method called when the login button is pushed
-     * For now, just takes the user to the scrolling activity page
+     * Given the email and the password in the corresponding views, login with firebase, or show a popup if it failed to connect
      *
      * @param view
      */
@@ -57,11 +56,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Method used for create an account.
+     * Method called when Create an account button is pushed.
+     * Simply takes the user to the create user activity.
      *
      * @param view
      */
-    public void createAccount(@SuppressWarnings("unused") View view) {
+    public void createAccount(View view) {
         Intent intent = new Intent(this, CreateUserActivity.class);
         startActivity(intent);
     }
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @param view
      */
-    public void resetPassword(@SuppressWarnings("unused") View view) {
+    public void resetPassword(View view) {
         Intent intent = new Intent(this, ResetActivity.class);
         startActivity(intent);
     }

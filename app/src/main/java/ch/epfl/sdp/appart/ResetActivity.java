@@ -12,7 +12,7 @@ import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
- * This class manages the UI for reset the password.
+ * This class manages the UI for resetting the password.
  */
 @AndroidEntryPoint
 public class ResetActivity extends AppCompatActivity {
@@ -54,7 +54,7 @@ public class ResetActivity extends AppCompatActivity {
      *
      * @param view
      */
-    public void backToLogin(@SuppressWarnings("unused") View view) {
+    public void backToLogin(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
