@@ -15,7 +15,7 @@ public class CardUnitTest {
 
     @Test
     public void gettersTest() {
-        Card card = new Card(null, "user", "Lausanne", 900,
+        Card card = new Card(null, null, "user", "Lausanne", 900,
                 "assets/img1.jpg", true);
         assertNull(card.getId());
         assertEquals("Lausanne", card.getCity());
@@ -27,7 +27,7 @@ public class CardUnitTest {
 
     @Test
     public void settersTest() {
-        Card card = new Card(null, "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, null, "user", "Lausanne", 900, "assets/img1.jpg");
         card.setCity("Morges");
         assertEquals("Morges", card.getCity());
         card.setPrice(850);
@@ -40,39 +40,39 @@ public class CardUnitTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest1() {
-        Card c = new Card(null, null, "",
+        Card c = new Card(null, null, null, "",
                 0, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest2() {
-        Card c = new Card(null, "user", null, 0, "");
+        Card c = new Card(null, null, "user", null, 0, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest3() {
-        Card c = new Card(null, "user", "Lausanne", 0, null);
+        Card c = new Card(null, null, "user", "Lausanne", 0, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsSetCityTest() {
-        Card card = new Card(null, "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, null, "user", "Lausanne", 900, "assets/img1.jpg");
         card.setCity(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsSetImageTest() {
-        Card card = new Card(null, "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, null, "user", "Lausanne", 900, "assets/img1.jpg");
         card.setImageUrl(null);
     }
 
     @Test
     public void equalsTest() {
-        Card card = new Card(null, "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, null, "user", "Lausanne", 900, "assets/img1.jpg");
         assertFalse(card.equals(null));
-        Card card2 = new Card("1", "user", "Lausanne", 900, "assets/img1.jpg");
-        Card card3 = new Card("1", "user", "Lausanne", 900, "assets/img1.jpg");
-        Card card4 = new Card("2", "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card2 = new Card("1", "ad1", "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card3 = new Card("1", "ad1", "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card4 = new Card("2", "ad2", "user", "Lausanne", 900, "assets/img1.jpg");
         assertTrue(card2.equals(card3));
         assertFalse(card2.equals(card4));
         User user = mock(User.class);

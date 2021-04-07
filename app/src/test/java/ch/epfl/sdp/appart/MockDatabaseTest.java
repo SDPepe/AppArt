@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class MockDataBaseTest {
+public class MockDatabaseTest {
 
     private MockDatabaseService dataBase;
 
@@ -39,7 +39,7 @@ public class MockDataBaseTest {
 
     @Test
     public void addCardAndUpdateToDatabase() {
-        Card test = new Card("unknown2", "unknown2", "Lausanne2", 10000, "file:///android_asset/apart_fake_image_1.jpeg");
+        Card test = new Card("unknown2", "unknown2", "unknown2", "Lausanne2", 10000, "file:///android_asset/apart_fake_image_1.jpeg");
         try {
             assertFalse(dataBase.updateCard(test).get());
             assertTrue(dataBase.putCard(test).get().equals("unknown2"));

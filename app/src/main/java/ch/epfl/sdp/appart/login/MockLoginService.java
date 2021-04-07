@@ -226,5 +226,14 @@ public class MockLoginService implements LoginService {
         currentUser = null;
     }
 
+    @Override
+    public CompletableFuture<User> signInAnonymously() {
+        User anonymousUser = new AppUser("anonymousUser", "anonymous@testappart.ch");
+        CompletableFuture<User> futureAnonymous = new CompletableFuture<>();
+        futureAnonymous.complete(anonymousUser);
+        currentUser = anonymousUser;
+        return futureAnonymous;
+    }
+
 
 }

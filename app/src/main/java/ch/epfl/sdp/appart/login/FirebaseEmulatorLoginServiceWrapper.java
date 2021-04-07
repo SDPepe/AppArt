@@ -73,4 +73,9 @@ public class FirebaseEmulatorLoginServiceWrapper implements LoginService {
         this.loginService.signOut();
     }
 
+    @Override
+    public CompletableFuture<User> signInAnonymously() {
+        return loginService.signInAnonymously();
+    }
+
 }

@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.database;
 
 import android.net.Uri;
 import android.provider.Telephony;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -75,7 +76,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                         for (QueryDocumentSnapshot document : task.getResult()) {
 
                             queriedCards.add(
-                                    new Card(document.getId(), (String) document.getData().get(CardLayout.USER_ID),
+                                    new Card(document.getId(), (String)document.getData().get(CardLayout.AD_ID), (String) document.getData().get(CardLayout.USER_ID),
                                             (String) document.getData().get(CardLayout.CITY),
                                             (long) document.getData().get(CardLayout.PRICE),
                                             (String) document.getData().get(CardLayout.IMAGE)));
@@ -249,8 +250,17 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         CompletableFuture<List<String>> photosReferencesFuture
                 = getPhotosReferencesFromFutureAdId(adIdFuture);
+
+
+
         CompletableFuture<ContactInfo> contactInfoFuture
                 = getContactInfoFromFuturePartialAd(partialAdFuture);
+
+        adIdFuture.join();
+        partialAdFuture.join();
+        photosReferencesFuture.join();
+        contactInfoFuture.join();
+
 
         CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> {
             return partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
@@ -287,9 +297,11 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         // TODO separate street and city of address
         // build and send card
-        Card c = new Card(newAdRef.getId(), ad.getAdvertiserId(), ad.getCity(),
-                ad.getPrice(), actualRefs.get(0), ad.hasVRTour());
+        //Is it normal that card is built with the AdId and not the cardRef.getId() ?
+
         DocumentReference cardRef = db.collection("cards").document();
+        Card c = new Card(cardRef.getId(), newAdRef.getId(), ad.getAdvertiserId(), ad.getCity(),
+                ad.getPrice(), actualRefs.get(0), ad.hasVRTour());
         cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
                 task -> onCompleteAdOp(task, newAdRef, result));
 
@@ -365,6 +377,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         docData.put(CardLayout.CITY, card.getCity());
         docData.put(CardLayout.PRICE, card.getPrice());
         docData.put(CardLayout.IMAGE, card.getImageUrl());
+        docData.put(CardLayout.AD_ID, card.getAdId());
         return docData;
     }
 
