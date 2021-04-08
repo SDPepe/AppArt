@@ -10,13 +10,9 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
-import ch.epfl.sdp.appart.user.LoginActivity;
-import ch.epfl.sdp.appart.user.ResetActivity;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -37,12 +33,13 @@ import static org.junit.Assert.assertNull;
 public class ResetPasswordTest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule<ResetActivity> resetPasswordActivityRule = new ActivityScenarioRule<>(ResetActivity.class);
 
     @BindValue
+    final
     LoginService loginService = new MockLoginService();
 
     @Before
@@ -54,15 +51,15 @@ public class ResetPasswordTest {
 
     @Test
     public void goBackToLoginTest() {
-        onView(withId(R.id.button_log_in_from_reset)).perform(click());
+        onView(withId(R.id.log_in_Reset_button)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
     }
 
     @Test
     public void resetPasswordOnNonExistingUserTest() {
         String email = "fakeuser@testappart.ch";
-        onView(withId(R.id.reset_email)).perform(typeText(email));
-        onView(withId(R.id.button_reset_password)).perform(click());
+        onView(withId(R.id.email_Reset_editText)).perform(typeText(email));
+        onView(withId(R.id.password_Reset_button)).perform(click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.invalid_email_snack)));
     }
@@ -72,8 +69,8 @@ public class ResetPasswordTest {
         String email = "test@testappart.ch";
         String password = "password";
         loginService.createUser(email, password).get();
-        onView(withId(R.id.reset_email)).perform(typeText(email));
-        onView(withId(R.id.button_reset_password)).perform(click());
+        onView(withId(R.id.email_Reset_editText)).perform(typeText(email));
+        onView(withId(R.id.password_Reset_button)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
         loginService.deleteUser().get();
         assertNull(loginService.getCurrentUser());
@@ -82,8 +79,8 @@ public class ResetPasswordTest {
     @Test
     public void resetPasswordWithInvalidEmailTest() {
         String email = "invalidEmail";
-        onView(withId(R.id.reset_email)).perform(typeText(email));
-        onView(withId(R.id.button_reset_password)).perform(click());
+        onView(withId(R.id.email_Reset_editText)).perform(typeText(email));
+        onView(withId(R.id.password_Reset_button)).perform(click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.invalid_email_snack)));
     }

@@ -1,60 +1,41 @@
 <resources>
-  <string name="Address">Address</string>
-  <string name="Price">Price</string>
-  <string name="app_name">AppArt</string>
-  <string name="title_activity_scrolling">ScrollingActivity</string>
-  <string name="action_settings">Settings</string>
-  <string name="title_activity_login">LoginActivity</string>
-  <string name="prompt_email">Email</string>
-  <string name="prompt_password">Password</string>
-  <string name="action_sign_in">Sign in or register</string>
-  <string name="action_sign_in_short">Sign in</string>
-  <string name="welcome">"Welcome !"</string>
-  <string name="invalid_username">Not a valid username</string>
-  <string name="invalid_password">Password must be >5 characters</string>
-  <string name="login_failed">"Login failed"</string>
-  <string name="title_activity_password_reset">PasswordResetActivity</string>
-  
-  <string name="hello_world">Hello Square World!</string>
-  <string name="title_activity_reset_password">ResetPasswordActivity</string>
-  <string name="reset_confirmation">Si cette adresse est valide, un mail vous sera envoyé pour changer de mot de passe</string>
-  <string name="email_reset">Enter your email adress</string>
-  <string name="reset_button">Reset password</string>
-  <string name="login_failed_snack">Login failed !</string>
-  <string name="create_account_failed_snack">Create account failed !</string>
-  <string name="invalid_email_snack">Invalid email !</string>
+    <string name="Address">Address</string>
+    <string name="Price">Price</string>
+    <string name="app_name">AppArt</string>
+    <string name="action_settings">Settings</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
 
-  <!-- AnnounceActivity stuff -->
-  <string name="backbutton_desc">Close ad</string>
-  <string name="default_title">Ad title</string>
-  <string name="vtourbutton_text">take a virtual tour</string>
-  <string name="address">Address:</string>
-  <string name="default_loading">loading...</string>
-  <string name="price">Price:</string>
-  <string name="description">Description:</string>
-  <string name="user">Advertiser:</string>
-  <string name="contactbutton_text">show contact info</string>
+    <string name="email_reset">Enter your email address</string>
+    <string name="reset_button">Reset password</string>
+    <string name="login_failed_snack">Login failed !</string>
+    <string name="create_account_failed_snack">Create account failed !</string>
+    <string name="invalid_email_snack">Invalid email !</string>
 
-  <!-- Mock ad stuff -->
-  <string name="mock_description">\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"</string>
-  <string name="mock_address">Avenue Quelquepart 0, 0000 Ville</string>
-  <string name="mock_price">2000.- / month</string>
-  <string name="mock_user">user</string>
-  <string name="mock_title">Awesome apartment</string>
+    <!-- AnnounceActivity stuff -->
+    <string name="backbutton_desc">Close ad</string>
+    <string name="vtourbutton_text">take a virtual tour</string>
+    <string name="address">Address:</string>
+    <string name="default_loading">loading…</string>
+    <string name="price">Price:</string>
+    <string name="description">Description:</string>
+    <string name="user">Advertiser:</string>
+    <string name="contactbutton_text">show contact info</string>
 
-  <!-- Ad photo layout -->
-  <string name="photo_descprition">Photo</string>
+    <!-- Mock ad stuff -->
 
-  <!-- Contact info dialog stuff -->
-  <string name="default_hidden">Hidden by the advertiser</string>
-  <string name="dialog_phone">Phone number:</string>
-  <string name="dialog_username">username</string>
-  <string name="dialog_email">Email address:</string>
-  <string name="dialog_close">Close</string>
+    <!-- Ad photo layout -->
+    <string name="photo_descprition">Photo</string>
+
+    <!-- Contact info dialog stuff -->
+    <string name="default_hidden">Hidden by the advertiser</string>
+    <string name="dialog_phone">Phone number:</string>
+    <string name="dialog_username">username</string>
+    <string name="dialog_email">Email address:</string>
+    <string name="dialog_close">Close</string>
 
 
     <!-- VirtualTourActivity stuff -->
-    <string name="empty">Not yet implemented!</string>
     <string name="action_account">Account</string>
     <string name="action_logout">Log Out</string>
 
@@ -69,6 +50,19 @@
     <string name="emailText"> Email </string>
     <string name="genderText"> Gender </string>
     <string name="nonUniAccountClaimer">  Regular account </string>
+    <string name="cameraAdButtonDesc">Add Picture</string>
+    <string name="cameraButtonText">Camera</string>
+    <string name="galleryButtonText">Gallery</string>
+    <string name="createAccountPasswordFieldHint">Enter a password</string>
+    <string name="createAccountButtonText">Create account</string>
+    <string name="backToLoginFromCreateButtonText">Back to login</string>
+    <string name="createAccountEmailFieldHint">Enter an email</string>
+    <string name="loginButtonText">Login</string>
+    <string name="resetPasswordButtonText">Password forgotten</string>
+    <string name="createAccountFromLoginButtonText">Create account</string>
+    <string name="resetConfirmationViewText">If this address is valid, you will receive a link to change your password</string>
+    <string name="goToLoginFromResetButtonText">Log In Menu</string>
+    <string name="loadingTextAdActivity">Loading…</string>
     <string-array name="genderList">
         <item> </item>
         <item>Female</item>

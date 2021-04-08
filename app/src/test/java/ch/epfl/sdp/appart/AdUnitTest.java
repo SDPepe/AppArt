@@ -6,9 +6,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.scrolling.PricePeriod;
-import ch.epfl.sdp.appart.scrolling.ad.Ad;
-import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,7 +34,7 @@ public class AdUnitTest {
     @Test
     public void exceptionOnNullArg1() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Ad failAD = new Ad(null, 1000, PricePeriod.MONTH, "Station 18",
+            Ad failAd = new Ad(null, 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
                     new ArrayList<>(), false, ci);
         });
@@ -43,7 +43,7 @@ public class AdUnitTest {
     @Test
     public void exceptionOnNullArg2() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Ad failAD = new Ad("Ad title", 1000, null, "Station 18",
+            Ad failAd = new Ad("Ad title", 1000, null, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
                     new ArrayList<>(), false, ci);
         });
@@ -52,7 +52,7 @@ public class AdUnitTest {
     @Test
     public void exceptionOnNullArg3() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, null,
+            Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, null,
                     "1015 Lausanne", "unknown", "Cool place",
                     new ArrayList<>(), false, ci);
         });
@@ -61,7 +61,7 @@ public class AdUnitTest {
     @Test
     public void exceptionOnNullArg4() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
+            Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     null, "unknown", "Cool place",
                     new ArrayList<>(), false, ci);
         });
@@ -70,7 +70,7 @@ public class AdUnitTest {
     @Test
     public void exceptionOnNullArg5() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
+            Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", null, "Cool place",
                     new ArrayList<>(), false, ci);
         });
@@ -79,32 +79,32 @@ public class AdUnitTest {
     @Test
     public void exceptionOnNullArg6() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
+            Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", null,
                     new ArrayList<>(), false, ci);
         });
     }
 
     @Test
-    public void exceptionOnNullArg7(){
+    public void exceptionOnNullArg7() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
+            Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
                     null, false, ci);
         });
     }
 
     @Test
-    public void exceptionOnNullArg8(){
+    public void exceptionOnNullArg8() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Ad failAD = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
+            Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
                     new ArrayList<>(), false, null);
         });
     }
 
     @Test
-    public void gettersTest(){
+    public void gettersTest() {
         assertEquals("Ad title", ad.getTitle());
         assertEquals(1000, ad.getPrice());
         assertEquals(PricePeriod.MONTH, ad.getPricePeriod());

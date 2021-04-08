@@ -13,15 +13,9 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
-import ch.epfl.sdp.appart.scrolling.ScrollingActivity;
-import ch.epfl.sdp.appart.user.CreateUserActivity;
-import ch.epfl.sdp.appart.user.LoginActivity;
-import ch.epfl.sdp.appart.user.ResetActivity;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -46,19 +40,19 @@ import static org.junit.Assert.assertNull;
 public class LoginUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule<LoginActivity> loginActivityRule = new ActivityScenarioRule<>(LoginActivity.class);
 
     @BindValue
+    final
     LoginService loginService = new MockLoginService();
 
     @Before
     public void init() {
         hiltRule.inject();
         Intents.init();
-        //loginService.useEmulator("10.0.2.2", 9099);
     }
 
     @Test
@@ -66,23 +60,23 @@ public class LoginUITest {
         String email = "test@testappart.ch";
         String password = "password";
 
-        onView(withId(R.id.email_login)).perform(typeText(email));
-        onView(withId(R.id.password)).perform(typeText(password));
+        onView(withId(R.id.email_Login_editText)).perform(typeText(email));
+        onView(withId(R.id.password_Login_editText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.login_button)).perform(click());
+        onView(withId(R.id.login_Login_button)).perform(click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.login_failed_snack)));
     }
 
     @Test
     public void goToCreateAccountTest() {
-        onView(withId(R.id.button_create_account)).perform(click());
+        onView(withId(R.id.create_account_Login_button)).perform(click());
         intended(hasComponent(CreateUserActivity.class.getName()));
     }
 
     @Test
     public void goToPasswordResetTest() {
-        onView(withId(R.id.reset_password_button)).perform(click());
+        onView(withId(R.id.reset_password_Login_button)).perform(click());
         intended(hasComponent(ResetActivity.class.getName()));
     }
 
@@ -92,10 +86,10 @@ public class LoginUITest {
         String password = "password";
         loginService.createUser(email, password).get();
 
-        onView(withId(R.id.email_login)).perform(typeText(email));
-        onView(withId(R.id.password)).perform(typeText(password));
+        onView(withId(R.id.email_Login_editText)).perform(typeText(email));
+        onView(withId(R.id.password_Login_editText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.login_button)).perform(click());
+        onView(withId(R.id.login_Login_button)).perform(click());
 
         intended(hasComponent(ScrollingActivity.class.getName()));
 
