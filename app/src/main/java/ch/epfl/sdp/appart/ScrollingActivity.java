@@ -35,7 +35,7 @@ public class ScrollingActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.login_Scrolling_toolbar);
+        Toolbar toolbar = findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
 
         ScrollingViewModel mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
