@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.sdp.appart.AdActivity;
 import ch.epfl.sdp.appart.R;
@@ -88,7 +89,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                 "Cards/" + card.getImageUrl()));
 
         holder.addressTextView.setText(card.getCity());
-        holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));
+        holder.priceTextView.setText(String.format(Locale.ENGLISH, "%d.-/mo", card.getPrice()));
+
     }
 
     /**
