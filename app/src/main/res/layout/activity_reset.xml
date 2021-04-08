@@ -7,7 +7,6 @@
     tools:context=".ResetActivity">
 
     <TextView
-        android:id="@+id/confirmation_Reset_textView"
         android:layout_width="281dp"
         android:layout_height="103dp"
         android:text="@string/resetConfirmationViewText"

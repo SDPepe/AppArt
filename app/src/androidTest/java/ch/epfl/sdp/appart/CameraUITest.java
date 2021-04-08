@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,19 +28,21 @@ public class CameraUITest {
     @Before
     public void init() {
         hiltRule.inject();
+        Intents.init();
     }
 
     @Test
     public void clickOnCameraBtn() {
-        Intents.init();
         onView(withId(R.id.camera_Camera_button)).perform(click());
-        Intents.release();
     }
 
     @Test
     public void clickOnGalleryBtn() {
-        Intents.init();
         onView(withId(R.id.gallery_Camera_button)).perform(click());
+    }
+
+    @After
+    public void release() {
         Intents.release();
     }
 

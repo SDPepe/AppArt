@@ -66,7 +66,7 @@ public class AdActivity extends ToolbarActivity {
         for (int i = 0; i < references.size(); i++) {
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View myView = inflater.inflate(R.layout.photo_layout, null);
+            View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             database.accept(new GlideImageViewLoader(this, photo,
                     references.get(i)));
