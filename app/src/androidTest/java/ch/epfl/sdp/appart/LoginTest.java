@@ -22,19 +22,19 @@ import static org.junit.Assert.assertNull;
 @HiltAndroidTest
 public class LoginTest {
 
-    /**
-     *              DISCLAIMER !!!!!!!!!!!!!!!!!!!!!!!!!
-     *
-     *  I know using CountDownLatch and directly testing Firebase is not good practice but it ensures a high
-     *  enough total coverage. These tests will be removed when the code base is large enough to allow it.
-     *
-     *  Also, even though we are using CountDownLatch which is not good practice, the tests are run on a local
-     *  emulator.
-     *
-     *  Finally, these tests allow us to see how practical the loginService is to use and how complete it must be.
-     *
-     *  @ADGLY
-     *
+    /*
+                   DISCLAIMER !!!!!!!!!!!!!!!!!!!!!!!!!
+
+       I know using CountDownLatch and directly testing Firebase is not good practice but it ensures a high
+       enough total coverage. These tests will be removed when the code base is large enough to allow it.
+
+       Also, even though we are using CountDownLatch which is not good practice, the tests are run on a local
+       emulator.
+
+       Finally, these tests allow us to see how practical the loginService is to use and how complete it must be.
+
+       @ADGLY
+
      */
 
     /**

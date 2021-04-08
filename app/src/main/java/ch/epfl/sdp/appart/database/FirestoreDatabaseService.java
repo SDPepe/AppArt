@@ -130,9 +130,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         db.collection(CardLayout.DIRECTORY)
                 .document(card.getId())
                 .set(extractCardsInfo(card))
-                .addOnCompleteListener(task -> {
-                    isFinishedFuture.complete(task.isSuccessful());
-                });
+                .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
     }
 
@@ -202,9 +200,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(UserLayout.DIRECTORY)
                 .document(user.getUserId())
-                .set(extractUserInfo(user)).addOnCompleteListener(task -> {
-            isFinishedFuture.complete(task.isSuccessful());
-        });
+                .set(extractUserInfo(user)).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
     }
 
@@ -221,9 +217,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         db.collection(UserLayout.DIRECTORY)
                 .document(user.getUserId())
                 .set(extractUserInfo(user))
-                .addOnCompleteListener(task -> {
-                    isFinishedFuture.complete(task.isSuccessful());
-                });
+                .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
     }
 

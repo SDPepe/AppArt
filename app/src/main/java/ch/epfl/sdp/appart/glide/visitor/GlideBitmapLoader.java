@@ -36,9 +36,9 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
 
     @Override
     public void visit(FirestoreDatabaseService database) {
-        /**
-         * WARNING : For simplicity we keep the loading on the drawable for now, will change
-         * next week.
+        /*
+          WARNING : For simplicity we keep the loading on the drawable for now, will change
+          next week.
          */
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
@@ -49,9 +49,9 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
 
     @Override
     public void visit(MockDatabaseService database) {
-        /**
-         * WARNING : For simplicity we keep the loading on the drawable for now, will change
-         * next week.
+        /*
+          WARNING : For simplicity we keep the loading on the drawable for now, will change
+          next week.
          */
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)

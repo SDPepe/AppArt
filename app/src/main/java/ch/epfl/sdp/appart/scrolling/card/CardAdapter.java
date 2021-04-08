@@ -20,8 +20,6 @@ import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 
-import static java.lang.String.format;
-
 /**
  * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView
  * used by the ScrollingActivity.

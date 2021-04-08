@@ -86,7 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="openCamera"
-                android:text="Add Picture" />
+                android:text="@string/cameraAdButtonDesc" />
 
             <Space
                 android:id="@+id/spacer_2_Ad_space"

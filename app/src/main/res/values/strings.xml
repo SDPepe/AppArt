@@ -69,6 +69,19 @@
     <string name="emailText"> Email </string>
     <string name="genderText"> Gender </string>
     <string name="nonUniAccountClaimer">  Regular account </string>
+    <string name="cameraAdButtonDesc">Add Picture</string>
+    <string name="cameraButtonText">Camera</string>
+    <string name="galleryButtonText">Gallery</string>
+    <string name="createAccountPasswordFieldHint">Enter a password</string>
+    <string name="createAccountButtonText">Create account</string>
+    <string name="backToLoginFromCreateButtonText">Back to login</string>
+    <string name="createAccountEmailFieldHint">Enter an email</string>
+    <string name="loginButtonText">Login</string>
+    <string name="resetPasswordButtonText">Password forgotten</string>
+    <string name="createAccountFromLoginButtonText">Create account</string>
+    <string name="resetConfirmationViewText">If this address is valid, you will receive a link to change your password</string>
+    <string name="goToLoginFromResetButtonText">Log In Menu</string>
+    <string name="loadingTextAdActivity">Loading...</string>
     <string-array name="genderList">
         <item> </item>
         <item>Female</item>

@@ -66,7 +66,7 @@ public class AdActivity extends ToolbarActivity {
         for (int i = 0; i < references.size(); i++) {
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup)null);
+            View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             database.accept(new GlideImageViewLoader(this, photo,
                     references.get(i)));
@@ -104,7 +104,7 @@ public class AdActivity extends ToolbarActivity {
 
     private void setIfNotNull(TextView view, String content) {
         if (content == null) {
-            view.setText("Loading...");
+            view.setText(R.string.loadingTextAdActivity);
         } else {
             view.setText(content);
         }
