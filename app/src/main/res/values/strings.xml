@@ -81,7 +81,7 @@
     <string name="createAccountFromLoginButtonText">Create account</string>
     <string name="resetConfirmationViewText">If this address is valid, you will receive a link to change your password</string>
     <string name="goToLoginFromResetButtonText">Log In Menu</string>
-    <string name="loadingTextAdActivity">Loading...</string>
+    <string name="loadingTextAdActivity">Loading…</string>
     <string-array name="genderList">
         <item> </item>
         <item>Female</item>
