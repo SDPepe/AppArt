@@ -2,6 +2,8 @@ package ch.epfl.sdp.appart.database;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -26,48 +28,56 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
         this.db.useEmulator(LOCALHOST, FIRESTORE_SERVICE_PORT);
     }
 
+    @NotNull
     @NonNull
     @Override
     public CompletableFuture<List<Card>> getCards() {
         return this.db.getCards();
     }
 
+    @NotNull
     @NonNull
     @Override
-    public CompletableFuture<String> putCard(@NonNull Card card) {
+    public CompletableFuture<String> putCard(@NotNull @NonNull Card card) {
         return this.db.putCard(card);
     }
 
+    @NotNull
     @NonNull
     @Override
-    public CompletableFuture<Boolean> updateCard(@NonNull Card card) {
+    public CompletableFuture<Boolean> updateCard(@NotNull @NonNull Card card) {
         return db.updateCard(card);
     }
 
+    @NotNull
     @NonNull
     @Override
     public CompletableFuture<User> getUser(String userId) {
         return db.getUser(userId);
     }
 
+    @NotNull
     @NonNull
     @Override
     public CompletableFuture<Boolean> putUser(User user) {
         return db.putUser(user);
     }
 
+    @NotNull
     @NonNull
     @Override
     public CompletableFuture<Boolean> updateUser(User user) {
         return db.updateUser(user);
     }
 
+    @NotNull
     @NonNull
     @Override
     public CompletableFuture<Ad> getAd(String id) {
         return db.getAd(id);
     }
 
+    @NotNull
     @NonNull
     @Override
     public CompletableFuture<String> putAd(Ad ad) {

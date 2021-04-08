@@ -41,16 +41,12 @@ public class UniversityEmailCheckerTest {
 
     @Test
     public void hasMethodOfUniversityDatabaseFailsWithNullParameter() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UniversityEmailChecker.has(null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> UniversityEmailChecker.has(null));
     }
 
     @Test
     public void emailSyntaxIsValidMethodFailsWithNullParameter() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UniversityEmailChecker.emailSyntaxIsValid(null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> UniversityEmailChecker.emailSyntaxIsValid(null));
     }
 
     @Test

@@ -48,10 +48,11 @@ public class LoginTest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @BindValue
+    final
     LoginService loginService = new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
 
     /**
-     * It is necessary to perform the emulator tests in one signle test, otherwise we get initialization issues with useEmulator.
+     * It is necessary to perform the emulator tests in one single test, otherwise we get initialization issues with useEmulator.
      * The other solution is to add a terminate function to both the wrapper and the service.
      */
 

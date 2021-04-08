@@ -45,9 +45,11 @@ public class DatabaseTest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @BindValue
+    final
     DatabaseService db = new FirestoreEmulatorDatabaseServiceWrapper(new FirestoreDatabaseService());
 
     @BindValue
+    final
     LoginService loginService = new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
 
     User globalUser = null;

@@ -64,9 +64,7 @@ public class AppUserTest {
     @Test
     public void genderSetterThrowsOnNull() {
         AppUser user = new AppUser("1234", "test.appart@epfl.ch");
-        assertThrows(IllegalArgumentException.class, () -> {
-            user.setGender(null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> user.setGender(null));
     }
 
     @Test

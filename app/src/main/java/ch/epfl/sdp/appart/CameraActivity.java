@@ -36,7 +36,6 @@ public class CameraActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 105;
     private static final String TAG = CameraActivity.class.getSimpleName();
 
-    private Button cameraBtn, galleryBtn;
     private String currentPhotoPath;
     private ImageView mImageView;
     //private StorageReference storagereference;
@@ -47,19 +46,11 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-
-        //storagereference = FirebaseStorage.getInstance().getReference();
-
         mImageView = findViewById(R.id.image_Camera_imageView);
-        cameraBtn = findViewById(R.id.camera_Camera_button);
-        galleryBtn = findViewById(R.id.gallery_Camera_button);
+        Button cameraBtn = findViewById(R.id.camera_Camera_button);
+        Button galleryBtn = findViewById(R.id.gallery_Camera_button);
 
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View w) {
-                askCamPermission();
-            }
-        });
+        cameraBtn.setOnClickListener(w -> askCamPermission());
 
         galleryBtn.setOnClickListener((v) -> {
             Intent gallery = new Intent(Intent.ACTION_PICK, Media.EXTERNAL_CONTENT_URI);

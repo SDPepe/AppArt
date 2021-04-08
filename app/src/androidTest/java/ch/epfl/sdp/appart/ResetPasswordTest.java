@@ -33,12 +33,13 @@ import static org.junit.Assert.assertNull;
 public class ResetPasswordTest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule<ResetActivity> resetPasswordActivityRule = new ActivityScenarioRule<>(ResetActivity.class);
 
     @BindValue
+    final
     LoginService loginService = new MockLoginService();
 
     @Before
@@ -58,7 +59,7 @@ public class ResetPasswordTest {
     public void resetPasswordOnNonExistingUserTest() {
         String email = "fakeuser@testappart.ch";
         onView(withId(R.id.email_Reset_editText)).perform(typeText(email));
-        onView(withId(R.id.password_Reset_buttton)).perform(click());
+        onView(withId(R.id.password_Reset_button)).perform(click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.invalid_email_snack)));
     }
@@ -69,7 +70,7 @@ public class ResetPasswordTest {
         String password = "password";
         loginService.createUser(email, password).get();
         onView(withId(R.id.email_Reset_editText)).perform(typeText(email));
-        onView(withId(R.id.password_Reset_buttton)).perform(click());
+        onView(withId(R.id.password_Reset_button)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
         loginService.deleteUser().get();
         assertNull(loginService.getCurrentUser());
@@ -79,7 +80,7 @@ public class ResetPasswordTest {
     public void resetPasswordWithInvalidEmailTest() {
         String email = "invalidEmail";
         onView(withId(R.id.email_Reset_editText)).perform(typeText(email));
-        onView(withId(R.id.password_Reset_buttton)).perform(click());
+        onView(withId(R.id.password_Reset_button)).perform(click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText(R.string.invalid_email_snack)));
     }

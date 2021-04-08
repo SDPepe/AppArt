@@ -29,7 +29,7 @@
     <string name="default_title">Ad title</string>
     <string name="vtourbutton_text">take a virtual tour</string>
     <string name="address">Address:</string>
-    <string name="default_loading">loading...</string>
+    <string name="default_loading">loading…</string>
     <string name="price">Price:</string>
     <string name="description">Description:</string>
     <string name="user">Advertiser:</string>

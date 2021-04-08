@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.database;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,6 +60,7 @@ public class MockDatabaseService implements DatabaseService {
         users.put("id2", new AppUser("id2", "test2@epfl.ch"));
     }
 
+    @NotNull
     @Override
     public CompletableFuture<List<Card>> getCards() {
         CompletableFuture<List<Card>> result = new CompletableFuture<>();
@@ -65,16 +68,18 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
+    @NotNull
     @Override
-    public CompletableFuture<String> putCard(Card card) {
+    public CompletableFuture<String> putCard(@NotNull Card card) {
         CompletableFuture<String> result = new CompletableFuture<>();
         cards.add(card);
         result.complete(card.getId());
         return result;
     }
 
+    @NotNull
     @Override
-    public CompletableFuture<Boolean> updateCard(Card card) {
+    public CompletableFuture<Boolean> updateCard(@NotNull Card card) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         if (cards.contains(card)) {
             cards.set(cards.indexOf(card), card);
@@ -85,6 +90,7 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
+    @NotNull
     @Override
     public CompletableFuture<Ad> getAd(String id) {
         CompletableFuture<Ad> result = new CompletableFuture<>();
@@ -92,12 +98,14 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
+    @NotNull
     public CompletableFuture<User> getUser(String userId) {
         CompletableFuture<User> result = new CompletableFuture<>();
         result.complete(users.get(userId));
         return result;
     }
 
+    @NotNull
     @Override
     public CompletableFuture<Boolean> putUser(User user) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
@@ -106,6 +114,7 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
+    @NotNull
     @Override
     public CompletableFuture<Boolean> updateUser(User user) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
@@ -119,6 +128,7 @@ public class MockDatabaseService implements DatabaseService {
     }
 
     // TODO implement
+    @NotNull
     @Override
     public CompletableFuture<String> putAd(Ad ad) {
         CompletableFuture<String> result = new CompletableFuture<>();

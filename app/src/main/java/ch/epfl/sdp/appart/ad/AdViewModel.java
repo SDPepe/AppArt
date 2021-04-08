@@ -53,7 +53,7 @@ public class AdViewModel extends ViewModel {
         futureAd.thenAccept(ad -> {
             this.adAddress.setValue(ad.getStreet() + ", " + ad.getCity());
             this.adTitle.setValue(ad.getTitle());
-            this.adPrice.setValue(String.valueOf(ad.getPrice()) + " / " + ad.getPricePeriod().toString());
+            this.adPrice.setValue(ad.getPrice() + " / " + ad.getPricePeriod().toString());
             this.adDescription.setValue(ad.getDescription());
             this.adAdvertiser.setValue(ad.getContactInfo().name);
             this.adPhotosRefs.setValue(ad.getPhotosRefs());

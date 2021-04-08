@@ -18,7 +18,7 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Boolean> mUpdateCardConfirmed = new MutableLiveData<>();
     private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
-    DatabaseService db;
+    final DatabaseService db;
 
     @Inject
     public UserViewModel(DatabaseService database) {

@@ -19,7 +19,7 @@ public class CameraUITest {
 
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule<CameraActivity> intentsRule = new ActivityScenarioRule<>(CameraActivity.class);

@@ -26,15 +26,16 @@
         android:ems="10"
         android:hint="@string/email_reset"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/password_Reset_buttton"
+        app:layout_constraintBottom_toTopOf="@+id/password_Reset_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.858" />
+        app:layout_constraintVertical_bias="0.858"
+        android:autofillHints="" />
 
     <Button
-        android:id="@+id/password_Reset_buttton"
+        android:id="@+id/password_Reset_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="resetPassword"

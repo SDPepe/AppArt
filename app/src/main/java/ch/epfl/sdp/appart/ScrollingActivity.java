@@ -28,7 +28,6 @@ public class ScrollingActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
-    private ScrollingViewModel mViewModel;
     private RecyclerView recyclerView;
 
     @Override
@@ -39,7 +38,7 @@ public class ScrollingActivity extends ToolbarActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
 
-        mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
+        ScrollingViewModel mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
 
         mViewModel.initHome();
 

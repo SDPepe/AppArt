@@ -48,7 +48,7 @@ public class AdUITest {
     final
     DatabaseService database = new MockDatabaseService();
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
     @Rule(order = 1)
     public ActivityScenarioRule<AdActivity> scrollingActivityRule = new ActivityScenarioRule<>(intent);
 
@@ -83,7 +83,7 @@ public class AdUITest {
         onView(withId(R.id.address_field_Ad_textView)).check(matches(withText(
                 testAd.getStreet() + ", " + testAd.getCity())));
         onView(withId(R.id.price_field_Ad_textView)).check(matches(withText(
-                String.valueOf(testAd.getPrice()) + " / " + testAd.getPricePeriod().toString())));
+                testAd.getPrice() + " / " + testAd.getPricePeriod().toString())));
         onView(withId(R.id.description_field_Ad_textView)).check(matches(withText(testAd.getDescription())));
         onView(withId(R.id.user_field_Ad_textView)).check(matches(withText(testAd.getContactInfo().name)));
     }

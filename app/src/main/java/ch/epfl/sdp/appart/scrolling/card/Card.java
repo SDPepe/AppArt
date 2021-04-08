@@ -105,7 +105,7 @@ public class Card {
     @Override
     public boolean equals(Object o) {
         if (this.id == null) return false;
-        if (o == null || !(o instanceof Card)) return false;
+        if (!(o instanceof Card)) return false;
         Card other = (Card) o;
         return this.id.equals(other.id);
     }

@@ -30,9 +30,7 @@ public class MockDatabaseTest {
         try {
             List<Card> cards = dataBase.getCards().get();
             assertTrue(cards.size() > 0);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -42,11 +40,9 @@ public class MockDatabaseTest {
         Card test = new Card("unknown2", "unknown2", "unknown2", "Lausanne2", 10000, "file:///android_asset/apart_fake_image_1.jpeg");
         try {
             assertFalse(dataBase.updateCard(test).get());
-            assertTrue(dataBase.putCard(test).get().equals("unknown2"));
+            assertEquals("unknown2", dataBase.putCard(test).get());
             assertTrue(dataBase.updateCard(test).get());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 
