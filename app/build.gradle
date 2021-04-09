@@ -71,6 +71,7 @@ dependencies {
     compileOnly 'com.google.android.wearable:wearable:2.8.1'
     implementation 'com.google.vr:sdk-panowidget:1.180.0'
     implementation 'com.github.hannesa2:panoramagl:1.4'
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
 }
 
 tasks.withType(Test) {

@@ -1,5 +1,8 @@
 package ch.epfl.sdp.appart.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class represents a generic user of our application - it is used to manage
  * a local copy of the users information in-app. The local copy will then be
@@ -15,6 +18,7 @@ public class AppUser implements User {
     private long age;
     private Gender gender;
     private String profilePicture;
+    private List<String> adsIds;
 
 
     /**
@@ -30,6 +34,7 @@ public class AppUser implements User {
         this.userId = userId;
         this.email = email;
         this.gender = Gender.NOT_SELECTED;
+        this.adsIds = new ArrayList<>();
 
         /* As default, everything before '@' in email is selected as name,
         this is overwritten by the name setter once the user specifies it */
@@ -192,6 +197,18 @@ public class AppUser implements User {
     @Override
     public boolean hasUniversityEmail() {
         return UniversityEmailChecker.has(this.email);
+    }
+
+    @Override
+    public List<String> getAdsIds() {
+        return adsIds;
+    }
+
+    @Override
+    public void addAdId(String id) {
+        if (id == null)
+            throw new IllegalArgumentException("The argument is null");
+        adsIds.add(id);
     }
 
 }
