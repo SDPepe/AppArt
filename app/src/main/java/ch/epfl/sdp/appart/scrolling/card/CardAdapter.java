@@ -87,8 +87,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                 "Cards/" + card.getImageUrl()));
 
         holder.addressTextView.setText(card.getCity());
-        holder.priceTextView.setText(String.format(Locale.ENGLISH, "%d.-/mo", card.getPrice()));
-
+        holder.priceTextView.setText(String.format("%d.-/mo", card.getPrice()));
+        if (!card.hasVRTour())
+            holder.vrAvailableImageView.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -109,12 +110,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         private final TextView addressTextView;
         private final TextView priceTextView;
         private final ImageView cardImageView;
+        private final ImageView vrAvailableImageView;
 
         public CardViewHolder(View view) {
             super(view);
             cardImageView = view.findViewById(R.id.image_CardLayout_imageView);
             addressTextView = view.findViewById(R.id.city_CardLayout_textView);
             priceTextView = view.findViewById(R.id.price_CardLayout_textView);
+            vrAvailableImageView = view.findViewById(R.id.vrAvailable_CardLayout_imageView);
         }
 
     }
