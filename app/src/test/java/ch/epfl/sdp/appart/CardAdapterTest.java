@@ -7,18 +7,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
-import dagger.hilt.android.qualifiers.ApplicationContext;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 
 public class CardAdapterTest {
-
-    DatabaseService db = new MockDatabaseService();
-    @ApplicationContext
-    Activity context;
 
     @Test
     public void constructorThrowsOnNullArgs1() {
