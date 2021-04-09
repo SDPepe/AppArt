@@ -92,6 +92,7 @@
     <string name="editDescriptionAdCreation">A cool description</string>
     <string name="cameraButtonAdCreation">Add Photos</string>
     <string name="confirmButtonAdCreation">Post Ad</string>
+    <string name="toolbarTitle_AdCreation">Create an ad</string>
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>

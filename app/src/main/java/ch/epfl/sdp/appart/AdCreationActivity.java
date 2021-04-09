@@ -8,9 +8,15 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.adcreation.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -20,7 +26,7 @@ public class AdCreationActivity extends ToolbarActivity {
     @Inject
     DatabaseService database;
 
-    // AdCreationViewModel mViewModel;
+    AdCreationViewModel mViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -28,9 +34,10 @@ public class AdCreationActivity extends ToolbarActivity {
 
         Toolbar toolbar = findViewById(R.id.account_AdCreation_toolbar);
         setSupportActionBar(toolbar);
+        getActionBar().setTitle(getResources().getString(R.string.toolbarTitle_AdCreation));
 
         setContentView(R.layout.activity_adcreation);
-        //mViewModel = new ViewModelProvider(this).get(AdCreationViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AdCreationViewModel.class);
 
         // init buttons
         Button confirmButton = findViewById(R.id.confirm_AdCreation_button);
@@ -64,7 +71,7 @@ public class AdCreationActivity extends ToolbarActivity {
 
     private void createAd(){
         // TODO call viewmodel to create ad
-        /* CompletableFuture<Boolean> result = mVIewModel.confirmCreation();
+        CompletableFuture<Boolean> result = mViewModel.confirmCreation();
         result.thenAccept(completed -> {
            if (completed){
                finish();
@@ -73,7 +80,7 @@ public class AdCreationActivity extends ToolbarActivity {
                        "Here's a Snackbar", Snackbar.LENGTH_LONG)
                        .setAction("Action", null).show();
            }
-        });*/
+        });
     }
 
     private void takePhoto(){
