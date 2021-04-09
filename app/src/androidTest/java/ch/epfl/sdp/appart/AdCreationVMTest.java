@@ -11,9 +11,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.adcreation.AdCreationViewModel;
-import ch.epfl.sdp.appart.database.Database;
-import ch.epfl.sdp.appart.database.MockDataBase;
-import ch.epfl.sdp.appart.hilt.FireBaseModule;
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -27,7 +27,7 @@ import dagger.hilt.android.testing.UninstallModules;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@UninstallModules({LoginModule.class, FireBaseModule.class})
+@UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
 public class AdCreationVMTest {
 
@@ -40,7 +40,7 @@ public class AdCreationVMTest {
     @BindValue
     LoginService ls = new MockLoginService();
     @BindValue
-    Database db = new MockDataBase();
+    DatabaseService db = new MockDatabaseService();
 
     private AdCreationViewModel vm;
     private CompletableFuture<String> dbRes;
