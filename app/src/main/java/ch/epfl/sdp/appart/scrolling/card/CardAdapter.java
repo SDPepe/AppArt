@@ -87,7 +87,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                 "Cards/" + card.getImageUrl()));
 
         holder.addressTextView.setText(card.getCity());
-        holder.priceTextView.setText(format("%d.-/mo", card.getPrice()));
+        holder.priceTextView.setText(String.format("%d.-/mo", card.getPrice()));
         if (!card.hasVRTour())
             holder.vrAvailableImageView.setVisibility(View.INVISIBLE);
     }
