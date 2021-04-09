@@ -13,13 +13,9 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
-import ch.epfl.sdp.appart.user.CreateUserActivity;
-import ch.epfl.sdp.appart.user.LoginActivity;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -29,11 +25,9 @@ import dagger.hilt.android.testing.UninstallModules;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -44,19 +38,19 @@ import static org.junit.Assert.assertNull;
 public class CreateUserAccountUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule<CreateUserActivity> createUserActivityActivityRule = new ActivityScenarioRule<>(CreateUserActivity.class);
 
     @BindValue
+    final
     LoginService loginService = new MockLoginService();
 
     @Before
     public void init() {
         hiltRule.inject();
         Intents.init();
-        //loginService.useEmulator("10.0.2.2", 9099);
     }
 
     @Test
@@ -64,10 +58,10 @@ public class CreateUserAccountUITest {
         String email = "invalidEmail";
         String password = "1";
 
-        onView(withId(R.id.create_account_email)).perform(typeText(email));
-        onView(withId(R.id.create_account_password)).perform(typeText(password));
+        onView(withId(R.id.create_account_email_CreateUser_editText)).perform(typeText(email));
+        onView(withId(R.id.create_account_password_CreateUser_editText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.create_account)).perform(click());
+        onView(withId(R.id.create_account_CreateUser_button)).perform(click());
         //WARNING : I checked in the app and it does not do what performed here !
         //onView(withId(com.google.android.material.R.id.snackbar_text))
         //        .check(matches(withText(R.string.create_account_failed_snack)));
@@ -75,7 +69,7 @@ public class CreateUserAccountUITest {
 
     @Test
     public void backToLoginTest() {
-        onView(withId(R.id.create_account_login)).perform(click());
+        onView(withId(R.id.create_account_login_CreateUser_button)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
     }
 
@@ -84,10 +78,10 @@ public class CreateUserAccountUITest {
         String email = "test@testappart.ch";
         String password = "password";
 
-        onView(withId(R.id.create_account_email)).perform(typeText(email));
-        onView(withId(R.id.create_account_password)).perform(typeText(password));
+        onView(withId(R.id.create_account_email_CreateUser_editText)).perform(typeText(email));
+        onView(withId(R.id.create_account_password_CreateUser_editText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.create_account)).perform(click());
+        onView(withId(R.id.create_account_CreateUser_button)).perform(click());
 
         intended(hasComponent(LoginActivity.class.getName()));
 

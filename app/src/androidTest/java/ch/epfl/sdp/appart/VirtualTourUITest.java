@@ -8,10 +8,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.sdp.appart.database.Database;
-import ch.epfl.sdp.appart.database.MockDataBase;
-import ch.epfl.sdp.appart.hilt.FireBaseModule;
-import ch.epfl.sdp.appart.virtualtour.PanoramaGlActivity;
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -22,19 +21,19 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 
-@UninstallModules(FireBaseModule.class)
+@UninstallModules(DatabaseModule.class)
 @HiltAndroidTest
 public class VirtualTourUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityScenarioRule vtourActivityRule =
-            new ActivityScenarioRule<>(PanoramaGlActivity.class);
+    public final ActivityScenarioRule<PanoramaActivity> vtourActivityRule =
+            new ActivityScenarioRule<>(PanoramaActivity.class);
 
     @BindValue
-    Database database = new MockDataBase();
+    DatabaseService database = new MockDatabaseService();
 
     @Before
     public void init() {
@@ -42,8 +41,8 @@ public class VirtualTourUITest {
     }
 
     @Test
-    public void backButtonClosesActivity(){
-        onView(withId(R.id.VrTourBackButton)).perform(click());
+    public void backButtonClosesActivity() {
+        onView(withId(R.id.back_Panorama_button)).perform(click());
         assertEquals(Activity.RESULT_CANCELED, vtourActivityRule.getScenario().getResult()
                 .getResultCode());
     }

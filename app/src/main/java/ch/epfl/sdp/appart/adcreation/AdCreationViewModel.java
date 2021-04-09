@@ -8,11 +8,11 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.database.Database;
+import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.ContactInfo;
+import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.PricePeriod;
-import ch.epfl.sdp.appart.scrolling.ad.Ad;
-import ch.epfl.sdp.appart.scrolling.ad.ContactInfo;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -29,11 +29,11 @@ public class AdCreationViewModel extends ViewModel {
     private final MutableLiveData<List<String>> photosRefs = new MutableLiveData<>();
     private final MutableLiveData<Boolean> VRTourEnable = new MutableLiveData<>();
 
-    final Database db;
+    final DatabaseService db;
     final LoginService ls;
 
     @Inject
-    public AdCreationViewModel(Database db, LoginService ls) {
+    public AdCreationViewModel(DatabaseService db, LoginService ls) {
         this.db = db;
         this.ls = ls;
     }

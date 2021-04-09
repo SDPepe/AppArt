@@ -1,27 +1,31 @@
 package ch.epfl.sdp.appart.scrolling;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Enum to specify whether a price of an apartment in an ad is for a day, a week or a month
+ */
 public enum PricePeriod {
 
     DAY("day"), WEEK("week"), MONTH("month");
 
-    private String name;
-
-    PricePeriod(String name){
-        this.name = name;
-    }
-
-    public String toString(){
-        return name;
-    }
-
     public static final List<PricePeriod> ALL = Collections
             .unmodifiableList(Arrays.asList(values()));
 
-    // attribute COUNT tells us the number of enum values
     public final static int COUNT = 3;
+    private final String name;
+
+    PricePeriod(String name) {
+        this.name = name;
+    }
+
+    @NotNull
+    public String toString() {
+        return name;
+    }
 
 }

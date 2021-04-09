@@ -9,10 +9,10 @@ import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -67,18 +67,16 @@ public class AppUserTest {
     @Test
     public void genderSetterThrowsOnNull() {
         AppUser user = new AppUser("1234", "test.appart@epfl.ch");
-        assertThrows(IllegalArgumentException.class, () -> {
-            user.setGender(null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> user.setGender(null));
     }
 
     @Test
     public void genderGetterAndSetterWork() {
         AppUser user = new AppUser("1234", "test.appart@epfl.ch");
-        user.setGender(Gender.FEMALE);
-        assertEquals(Gender.FEMALE, user.getGender());
-        user.setGender(Gender.OTHER);
-        assertEquals(Gender.OTHER, user.getGender());
+        user.setGender(Gender.FEMALE.name());
+        assertEquals(Gender.FEMALE.name(), user.getGender());
+        user.setGender(Gender.OTHER.name());
+        assertEquals(Gender.OTHER.name(), user.getGender());
     }
 
     @Test

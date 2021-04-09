@@ -32,8 +32,9 @@ public interface LoginService {
     User getCurrentUser();
 
     /**
-     * Resets the password associated to an email if said email is linked with an account
-     * We do not indicate if the email was found or not to prevent malicious users to know if someone is registered or not
+     * Resets the password associated to an email if said email is linked with an account.
+     * We do not indicate if the email was found or not to prevent malicious users to know if
+     * someone is registered or not
      * The current user is not required to be set.
      *
      * @param email the user's email
@@ -57,7 +58,7 @@ public interface LoginService {
     CompletableFuture<User> createUser(String email, String password);
 
     /**
-     * Updates the email address of a user
+     * Updates the email address of a user. The user is required to be set.
      *
      * @param email the new email to set
      * @return an empty completable future
@@ -67,7 +68,7 @@ public interface LoginService {
     CompletableFuture<Void> updateEmailAddress(String email);
 
     /**
-     * Updates the password of a user
+     * Updates the password of a user. The current user is required to be set.
      *
      * @param password the new password to set
      * @return an empty completable future
@@ -80,8 +81,7 @@ public interface LoginService {
      * Verifies an user's email. The current user is required to be set.
      *
      * @return an empty completable future
-     * @throws IllegalArgumentException if callback is null
-     * @throws IllegalStateException    if no current user is set
+     * @throws IllegalStateException if no current user is set
      */
     CompletableFuture<Void> sendEmailVerification();
 
@@ -89,13 +89,13 @@ public interface LoginService {
      * Deletes a user. The current user is required to be set.
      *
      * @return an empty completable future
-     * @throws IllegalArgumentException if callback is null
-     * @throws IllegalStateException    if no current user is set
+     * @throws IllegalStateException if no current user is set
      */
     CompletableFuture<Void> deleteUser();
 
     /**
-     * Re-authenticates a user. This is needed for things like password change or critical operations
+     * Re-authenticates a user. This is needed for things like password change or critical
+     * operations
      * The current user is required to be set.
      *
      * @param email    the user's email
@@ -105,6 +105,18 @@ public interface LoginService {
      * @throws IllegalStateException    if no current user is set
      */
     CompletableFuture<Void> reAuthenticateUser(String email, String password);
+
+    /**
+     * Signs out the currently logged in user if there is one.
+     */
+    void signOut();
+
+    /**
+     * Allow an anonymous login, which might be useful in some cases
+     *
+     * @return an empty completable future which will be complete when anonymously logged in.
+     */
+    CompletableFuture<User> signInAnonymously();
 
 
 }

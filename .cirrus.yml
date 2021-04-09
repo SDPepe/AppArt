@@ -5,6 +5,7 @@ check_android_task:
     TARGET: default
     ARCH: x86
     CC_TEST_REPORTER_ID: ENCRYPTED[6770a26c58a75c6cd70782dcb463e28fca45e9c25eb04028e3bb17ba2740442e2b5d3c50602172f9f39a2456c4b8af3a]
+    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
   container:
     image: reactivecircus/android-emulator-$API_LEVEL:latest
     kvm: true
@@ -19,9 +20,6 @@ check_android_task:
     apt-get install sudo -y
   download_fireabse_script : |
     curl -sL https://firebase.tools | bash
-  intall_firebase_cache:
-    folder: $HOME/.cache/firebase
-    reupload_on_changes: false
   start_firebase_background_script: |
     firebase emulators:start
   build_script: |

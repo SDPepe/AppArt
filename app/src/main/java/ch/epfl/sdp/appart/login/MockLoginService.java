@@ -13,42 +13,55 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import ch.epfl.sdp.appart.login.exceptions.LoginServiceRequestFailedException;
+import ch.epfl.sdp.appart.login.exceptions.MockLoginServiceException;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
 @Singleton
 public class MockLoginService implements LoginService {
 
-    private User currentUser = null;
     private final Map<Pair<String, String>, User> users = new HashMap<>();
-
-    private final AppUser antoine = new AppUser("1111", "antoine@epfl.ch");
-    private final AppUser lorenzo = new AppUser("2222", "lorenzo@epfl.ch");
-    private final AppUser carlo = new AppUser("3333", "carlo@epfl.ch");
-    private final AppUser filippo = new AppUser("4444", "filippo@epfl.ch");
-    private final AppUser emilien = new AppUser("5555", "emilien@epfl.ch");
-    private final AppUser quentin = new AppUser("6666", "quentin@epfl.ch");
-
-    //using user id as password to make it straightforward
-    private final Pair<String, String> antoineEmailPassword = new Pair<>(antoine.getUserEmail(), antoine.getUserId());
-    private final Pair<String, String> lorenzoEmailPassword = new Pair<>(lorenzo.getUserEmail(), lorenzo.getUserId());
-    private final Pair<String, String> carloEmailPassword = new Pair<>(carlo.getUserEmail(), carlo.getUserId());
-    private final Pair<String, String> filippoEmailPassword = new Pair<>(filippo.getUserEmail(), filippo.getUserId());
-    private final Pair<String, String> emilienEmailPassword = new Pair<>(emilien.getUserEmail(), emilien.getUserId());
-    private final Pair<String, String> quentinEmailPassword = new Pair<>(quentin.getUserEmail(), quentin.getUserId());
+    private User currentUser = null;
 
     @Inject
     public MockLoginService() {
+        //using user id as password to make it straightforward
+        AppUser antoine = new AppUser("1111", "antoine@epfl.ch");
+        Pair<String, String> antoineEmailPassword = new Pair<>(antoine.getUserEmail(),
+                antoine.getUserId());
+        users.put(antoineEmailPassword, antoine);
+        AppUser lorenzo = new AppUser("2222", "lorenzo@epfl.ch");
+        Pair<String, String> lorenzoEmailPassword = new Pair<>(lorenzo.getUserEmail(),
+                lorenzo.getUserId());
+        users.put(lorenzoEmailPassword, lorenzo);
+        AppUser filippo = new AppUser("4444", "filippo@epfl.ch");
+        Pair<String, String> filippoEmailPassword = new Pair<>(filippo.getUserEmail(),
+                filippo.getUserId());
+        users.put(filippoEmailPassword, filippo);
+        AppUser emilien = new AppUser("5555", "emilien@epfl.ch");
+        Pair<String, String> emilienEmailPassword = new Pair<>(emilien.getUserEmail(),
+                emilien.getUserId());
+        users.put(emilienEmailPassword, emilien);
+        AppUser carlo = new AppUser("3333", "carlo@epfl.ch");
+        Pair<String, String> carloEmailPassword = new Pair<>(carlo.getUserEmail(),
+                carlo.getUserId());
+        users.put(carloEmailPassword, carlo);
+        AppUser quentin = new AppUser("6666", "quentin@epfl.ch");
+        Pair<String, String> quentinEmailPassword = new Pair<>(quentin.getUserEmail(),
+                quentin.getUserId());
+        users.put(quentinEmailPassword, quentin);
         lorenzo.setName("Lorenzo");
         lorenzo.setPhoneNumber("000");
-        users.put(antoineEmailPassword, antoine);
-        users.put(lorenzoEmailPassword, lorenzo);
-        users.put(filippoEmailPassword, filippo);
-        users.put(emilienEmailPassword, emilien);
-        users.put(carloEmailPassword, carlo);
-        users.put(quentinEmailPassword, quentin);
     }
 
+    /**
+     * Finds the user that has the specified email and password
+     *
+     * @param email    the email of the user
+     * @param password the password of the user
+     * @return a valid user if a matching user is found, null otherwise
+     */
     @Nullable
     private User findMatchingUserWithPasswordAndEmail(String email, String password) {
         User result = null;
@@ -64,13 +77,14 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
-        if (email == null) throw new IllegalArgumentException("email cannot be null");
-        if (password == null) throw new IllegalArgumentException("password cannot be null");
+        if (email == null) throw new IllegalArgumentException("Email cannot be null !");
+        if (password == null) throw new IllegalArgumentException("Password cannot be null !");
 
         currentUser = findMatchingUserWithPasswordAndEmail(email, password);
         CompletableFuture<User> result = new CompletableFuture<>();
         if (currentUser == null) {
-            result.completeExceptionally(new LoginServiceRequestFailedException("failed to login the user"));
+            result.completeExceptionally(new LoginServiceRequestFailedException("Failed to login " +
+                    "the user !"));
         } else {
             result.complete(currentUser);
         }
@@ -93,16 +107,17 @@ public class MockLoginService implements LoginService {
                 return result;
             }
         }
-        result.completeExceptionally(new LoginServiceRequestFailedException("failed to find the associated email"));
+        result.completeExceptionally(new LoginServiceRequestFailedException("Failed to find the " +
+                "associated email !"));
         return result;
     }
 
     @Override
     public CompletableFuture<User> createUser(String email, String password) {
         if (email == null || password == null)
-            throw new IllegalArgumentException("arguments cannot be null");
+            throw new IllegalArgumentException("Arguments cannot be null !");
         if (currentUser != null)
-            throw new IllegalStateException("the current user cannot be set !");
+            throw new IllegalStateException("The current user cannot be set !");
 
         CompletableFuture<User> result = new CompletableFuture<>();
         byte[] temporary = new byte[5]; //one more than the other to avoid collision
@@ -122,46 +137,50 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
-        if (email == null) throw new IllegalArgumentException("email cannot be null");
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set");
+        if (email == null) throw new IllegalArgumentException("Email cannot be null !");
+        if (getCurrentUser() == null) throw new IllegalStateException("Current user must be set !");
         CompletableFuture<Void> result = new CompletableFuture<>();
 
         for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
             if (entry.getValue().equals(currentUser)) {
                 users.remove(entry.getKey()); //remove the old mapping
-                users.put(new Pair<>(email, entry.getKey().second), currentUser); //refresh the new mapping
+                users.put(new Pair<>(email, entry.getKey().second), currentUser); //refresh the
+                // new mapping
                 currentUser.setUserEmail(email);
                 result.complete(null);
                 return result;
             }
         }
-        result.completeExceptionally(new MockLoginServiceException("failed to retrieve the main user in the mock login service"));
+        result.completeExceptionally(new MockLoginServiceException("Failed to retrieve the main " +
+                "user in the mock login service !"));
         return result;
     }
 
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
-        if (password == null) throw new IllegalArgumentException("password cannot be null");
-        if (getCurrentUser() == null) throw new IllegalStateException("current user must be set");
+        if (password == null) throw new IllegalArgumentException("Password cannot be null !");
+        if (getCurrentUser() == null) throw new IllegalStateException("Current user must be set !");
         CompletableFuture<Void> result = new CompletableFuture<>();
 
         for (Map.Entry<Pair<String, String>, User> entry : users.entrySet()) {
-            String entryPassword = entry.getKey().second;
             if (entry.getValue().equals(currentUser)) {
                 users.remove(entry.getKey()); //remove the old mapping
-                users.put(new Pair<>(currentUser.getUserEmail(), password), currentUser); //refresh the new mapping
+                users.put(new Pair<>(currentUser.getUserEmail(), password), currentUser);
+                //refresh the new mapping
                 result.complete(null);
                 return result;
             }
         }
-        result.completeExceptionally(new MockLoginServiceException("failed to retrieve the main user in the mock login service"));
+        result.completeExceptionally(new MockLoginServiceException("Failed to retrieve the main " +
+                "user in the mock login service !"));
         return result;
     }
 
     @Override
     public CompletableFuture<Void> sendEmailVerification() {
         if (getCurrentUser() == null)
-            throw new IllegalStateException("current user must be set when sending verification mail");
+            throw new IllegalStateException("Current user must be set when sending verification " +
+                    "mail !");
         CompletableFuture<Void> result = new CompletableFuture<>();
         result.complete(null);
         return result;
@@ -170,7 +189,7 @@ public class MockLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> deleteUser() {
         if (currentUser == null)
-            throw new IllegalStateException("current user must be set when deleting it");
+            throw new IllegalStateException("Current user must be set when deleting it !");
         CompletableFuture<Void> result = new CompletableFuture<>();
 
         Pair<String, String> keyToRemove = null;
@@ -192,16 +211,30 @@ public class MockLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
-        if (email == null) throw new IllegalArgumentException("password cannot be null");
-        if (password == null) throw new IllegalArgumentException("password cannot be null");
+        if (email == null) throw new IllegalArgumentException("Password cannot be null !");
+        if (password == null) throw new IllegalArgumentException("Password cannot be null !");
         if (getCurrentUser() == null)
-            throw new IllegalStateException("current user must be set when reAuthentication");
+            throw new IllegalStateException("Current user must be set when reAuthentication !");
 
         //note : this function will never fail beyond this point
         CompletableFuture<Void> result = new CompletableFuture<>();
         result.complete(null);
 
         return result;
+    }
+
+    @Override
+    public void signOut() {
+        currentUser = null;
+    }
+
+    @Override
+    public CompletableFuture<User> signInAnonymously() {
+        User anonymousUser = new AppUser("anonymousUser", "anonymous@testappart.ch");
+        CompletableFuture<User> futureAnonymous = new CompletableFuture<>();
+        futureAnonymous.complete(anonymousUser);
+        currentUser = anonymousUser;
+        return futureAnonymous;
     }
 
 
