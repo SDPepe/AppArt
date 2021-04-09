@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import ch.epfl.sdp.appart.user.UniversityEmailChecker;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
@@ -42,16 +41,12 @@ public class UniversityEmailCheckerTest {
 
     @Test
     public void hasMethodOfUniversityDatabaseFailsWithNullParameter() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UniversityEmailChecker.has(null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> UniversityEmailChecker.has(null));
     }
 
     @Test
     public void emailSyntaxIsValidMethodFailsWithNullParameter() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UniversityEmailChecker.emailSyntaxIsValid(null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> UniversityEmailChecker.emailSyntaxIsValid(null));
     }
 
     @Test

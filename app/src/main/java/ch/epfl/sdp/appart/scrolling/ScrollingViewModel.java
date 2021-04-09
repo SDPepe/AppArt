@@ -21,7 +21,7 @@ public class ScrollingViewModel extends ViewModel {
 
     private final MutableLiveData<List<Card>> mCards = new MutableLiveData<>();
 
-    DatabaseService db;
+    final DatabaseService db;
 
     @Inject
     public ScrollingViewModel(DatabaseService database) {

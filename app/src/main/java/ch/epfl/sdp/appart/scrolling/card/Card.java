@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
  * Firestore document containing data of the card.
  */
 public class Card {
+    private final String adId;
     private final String id;
     private final String ownerId;
     private String city;
@@ -29,7 +30,7 @@ public class Card {
      * @param imageUrl  the reference to the Firebase Storage image of this card
      * @param hasVRTour whether the apartment this card refers to offers a virtual tour
      */
-    public Card(@Nullable String id, String ownerId, String city, long price, String imageUrl,
+    public Card(@Nullable String id, String adId, String ownerId, String city, long price, String imageUrl,
                 boolean hasVRTour) {
         if (ownerId == null || city == null || imageUrl == null)
             throw new IllegalArgumentException("Argument is null!");
@@ -40,10 +41,11 @@ public class Card {
         this.price = price;
         this.imageUrl = imageUrl;
         this.hasVRTour = hasVRTour;
+        this.adId = adId;
     }
 
-    public Card(@Nullable String id, String ownerId, String city, long price, String imageUrl) {
-        this(id, ownerId, city, price, imageUrl, false);
+    public Card(@Nullable String id, String adId, String ownerId, String city, long price, String imageUrl) {
+        this(id, adId, ownerId, city, price, imageUrl, false);
     }
 
     // Getters
@@ -66,6 +68,10 @@ public class Card {
 
     public String getUserId() {
         return ownerId;
+    }
+
+    public String getAdId() {
+        return adId;
     }
 
     public boolean hasVRTour() {
@@ -99,7 +105,7 @@ public class Card {
     @Override
     public boolean equals(Object o) {
         if (this.id == null) return false;
-        if (o == null || !(o instanceof Card)) return false;
+        if (!(o instanceof Card)) return false;
         Card other = (Card) o;
         return this.id.equals(other.id);
     }

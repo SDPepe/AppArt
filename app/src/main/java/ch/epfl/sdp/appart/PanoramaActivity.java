@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
+
 import java.util.concurrent.CompletableFuture;
+
 import javax.inject.Inject;
+
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -40,7 +45,7 @@ public class PanoramaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panoramagl);
         plManager = new PLManager(this);
-        plManager.setContentView((ViewGroup) findViewById(R.id.content_Panorama_relativeLayout));
+        plManager.setContentView(findViewById(R.id.content_Panorama_relativeLayout));
         plManager.onCreate();
 
         plManager.setAccelerometerEnabled(false);

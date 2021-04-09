@@ -5,7 +5,8 @@ package ch.epfl.sdp.appart.database.firestorelayout;
  */
 public final class CardLayout {
 
-    private CardLayout() {}
+    private CardLayout() {
+    }
 
     /**
      * absolute path to the cards directory in Firestore
@@ -20,20 +21,20 @@ public final class CardLayout {
     /**
      * @apiNote : String on Firestore
      */
-    public final static String USER_ID    = "userId";
+    public final static String USER_ID = "userId";
 
     /**
      * @apiNote : String on Firestore
      */
-    public final static String CITY       = "city";
+    public final static String CITY = "city";
 
     /**
      * @apiNote : long on Firestore
      */
-    public final static String PRICE      = "price";
+    public final static String PRICE = "price";
 
     /**
      * @apiNote : String on Firestore
      */
-    public final static String IMAGE      = "imageUrl";
+    public final static String IMAGE = "imageUrl";
 }

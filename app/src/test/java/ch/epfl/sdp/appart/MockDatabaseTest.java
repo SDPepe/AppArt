@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class MockDataBaseTest {
+public class MockDatabaseTest {
 
     private MockDatabaseService dataBase;
 
@@ -30,23 +30,19 @@ public class MockDataBaseTest {
         try {
             List<Card> cards = dataBase.getCards().get();
             assertTrue(cards.size() > 0);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     @Test
     public void addCardAndUpdateToDatabase() {
-        Card test = new Card("unknown2", "unknown2", "Lausanne2", 10000, "file:///android_asset/apart_fake_image_1.jpeg");
+        Card test = new Card("unknown2", "unknown2", "unknown2", "Lausanne2", 10000, "file:///android_asset/apart_fake_image_1.jpeg");
         try {
             assertFalse(dataBase.updateCard(test).get());
-            assertTrue(dataBase.putCard(test).get().equals("unknown2"));
+            assertEquals("unknown2", dataBase.putCard(test).get());
             assertTrue(dataBase.updateCard(test).get());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 

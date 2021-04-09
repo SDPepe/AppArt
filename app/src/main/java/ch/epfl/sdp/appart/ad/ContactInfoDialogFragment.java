@@ -2,7 +2,6 @@ package ch.epfl.sdp.appart.ad;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import org.jetbrains.annotations.NotNull;
 
 import ch.epfl.sdp.appart.R;
 
@@ -20,29 +21,27 @@ import ch.epfl.sdp.appart.R;
  */
 public class ContactInfoDialogFragment extends DialogFragment {
 
-    private AdViewModel mViewModel;
-
     /**
      * Creates and returns a new instance of ContactInfoDialogFragment.
      *
      * @return an instance of the dialog fragment
      */
     public static ContactInfoDialogFragment newInstance() {
-        ContactInfoDialogFragment contactFrag = new ContactInfoDialogFragment();
-        return contactFrag;
+        return new ContactInfoDialogFragment();
     }
 
     /**
      * Build the dialog fetching the contact info from the ViewModel for the AnnounceActivity in
      * which this dialog is displayed.
      */
+    @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstances) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialog = inflater.inflate(R.layout.contactdialog_layout, null);
 
-        mViewModel = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
+        AdViewModel mViewModel = new ViewModelProvider(requireActivity()).get(AdViewModel.class);
 
         // fetch info about the user and set content
         TextView username = dialog.findViewById(R.id.username_ContactInfo_textView);
@@ -54,11 +53,7 @@ public class ContactInfoDialogFragment extends DialogFragment {
 
         // Return button
         builder.setView(dialog)
-                .setNegativeButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dismiss();
-                    }
-                });
+                .setNegativeButton(R.string.dialog_close, (dialog1, id) -> dismiss());
 
         return builder.create();
     }

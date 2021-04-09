@@ -40,7 +40,7 @@ import static org.hamcrest.Matchers.allOf;
 public class ToolbarUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule<ScrollingActivity> activityRule = new ActivityScenarioRule<>(ScrollingActivity.class);
@@ -71,7 +71,6 @@ public class ToolbarUITest {
     public void init() {
         hiltRule.inject();
         Intents.init();
-        //loginService.useEmulator("10.0.2.2", 9099);
     }
 
     @Test

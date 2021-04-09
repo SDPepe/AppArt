@@ -13,13 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.sdp.appart.AdActivity;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
-
-import static java.lang.String.format;
 
 /**
  * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView

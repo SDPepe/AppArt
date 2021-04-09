@@ -10,16 +10,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import dagger.hilt.android.AndroidEntryPoint;
+
 import static android.widget.Toast.makeText;
 
 /**
@@ -33,7 +35,6 @@ public class CameraActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 105;
     private static final String TAG = CameraActivity.class.getSimpleName();
 
-    private Button cameraBtn, galleryBtn;
     private String currentPhotoPath;
     private ImageView mImageView;
     //private StorageReference storagereference;
@@ -44,19 +45,11 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-
-        //storagereference = FirebaseStorage.getInstance().getReference();
-
         mImageView = findViewById(R.id.image_Camera_imageView);
-        cameraBtn = findViewById(R.id.camera_Camera_button);
-        galleryBtn = findViewById(R.id.gallery_Camera_button);
+        Button cameraBtn = findViewById(R.id.camera_Camera_button);
+        Button galleryBtn = findViewById(R.id.gallery_Camera_button);
 
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View w) {
-                askCamPermission();
-            }
-        });
+        cameraBtn.setOnClickListener(w -> askCamPermission());
 
         galleryBtn.setOnClickListener((v) -> {
             Intent gallery = new Intent(Intent.ACTION_PICK, Media.EXTERNAL_CONTENT_URI);
@@ -115,7 +108,7 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 }
-    //add image to storage database
+//add image to storage database
     /*
     private void uploadImageToFirebase(String name, Uri imageUri){
         StorageReference image = storagereference.child("pic/"+ name);

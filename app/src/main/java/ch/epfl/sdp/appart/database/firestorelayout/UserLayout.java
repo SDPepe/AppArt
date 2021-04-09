@@ -5,7 +5,8 @@ package ch.epfl.sdp.appart.database.firestorelayout;
  */
 public final class UserLayout {
 
-    private UserLayout() {}
+    private UserLayout() {
+    }
 
     /**
      * absolute path to the users directory in Firestore
@@ -15,31 +16,31 @@ public final class UserLayout {
     /**
      * @apiNote : long on Firestore
      */
-    public final static String AGE        = "age";
+    public final static String AGE = "age";
 
     /**
      * @apiNote : String on Firestore
      */
-    public final static String EMAIL      = "email";
+    public final static String EMAIL = "email";
 
     /**
      * @apiNote : long on Firestore
      */
-    public final static String GENDER     = "gender";
+    public final static String GENDER = "gender";
 
     /**
      * @apiNote : String on Firestore
      */
-    public final static String NAME       = "name";
+    public final static String NAME = "name";
 
     /**
      * @apiNote : String on Firestore
      */
-    public final static String PICTURE    = "pfpRef";
+    public final static String PICTURE = "pfpRef";
 
     /**
      * @apiNote : String on Firestore
      */
-    public final static String PHONE      = "phone";
+    public final static String PHONE = "phone";
 
 }

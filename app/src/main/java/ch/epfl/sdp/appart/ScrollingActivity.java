@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.scrolling.ScrollingViewModel;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -24,7 +28,6 @@ public class ScrollingActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
-    private ScrollingViewModel mViewModel;
     private RecyclerView recyclerView;
 
     @Override
@@ -32,10 +35,10 @@ public class ScrollingActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.login_Scrolling_toolbar);
+        Toolbar toolbar = findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
 
-        mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
+        ScrollingViewModel mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
 
         mViewModel.initHome();
 

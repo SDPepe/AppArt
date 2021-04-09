@@ -19,12 +19,12 @@
         android:id="@+id/camera_Camera_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Camera" />
+        android:text="@string/cameraButtonText" />
 
     <Button
         android:id="@+id/gallery_Camera_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gallery" />
+        android:text="@string/galleryButtonText" />
 
 </LinearLayout>
