@@ -51,6 +51,8 @@ public class MockLoginService implements LoginService {
         Pair<String, String> quentinEmailPassword = new Pair<>(quentin.getUserEmail(),
                 quentin.getUserId());
         users.put(quentinEmailPassword, quentin);
+        lorenzo.setName("Lorenzo");
+        lorenzo.setPhoneNumber("000");
     }
 
     /**

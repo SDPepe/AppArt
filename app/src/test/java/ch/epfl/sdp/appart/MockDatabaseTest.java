@@ -1,12 +1,15 @@
 package ch.epfl.sdp.appart;
 
-
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.ContactInfo;
+import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
@@ -14,7 +17,9 @@ import ch.epfl.sdp.appart.user.User;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 public class MockDatabaseTest {
 
@@ -57,6 +62,20 @@ public class MockDatabaseTest {
         assertEquals(user, dataBase.getUser("1234").join());
         User user3 = new AppUser("4321", "test.appart@epfl.ch");
         assertFalse(dataBase.updateUser(user3).join());
+    }
+
+    @Test
+    public void putAdWorksWithGoodValue() throws ExecutionException, InterruptedException {
+        Ad ad = new Ad("title", 1000, PricePeriod.DAY, "", "", "",
+                "", new ArrayList<>(), false, mock(ContactInfo.class));
+        assertEquals("1234", dataBase.putAd(ad).get());
+    }
+
+    @Test
+    public void putAdWorksThrowsOnBadValue() throws ExecutionException, InterruptedException {
+        Ad ad = new Ad("failing", 1000, PricePeriod.DAY, "", "", "",
+                "", new ArrayList<>(), false, mock(ContactInfo.class));
+        assertThrows(ExecutionException.class, () -> dataBase.putAd(ad).get());
     }
 
 }
