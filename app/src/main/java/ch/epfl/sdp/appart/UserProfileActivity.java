@@ -8,11 +8,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
-import java.util.concurrent.CompletableFuture;
-import javax.inject.Inject;
 import androidx.lifecycle.ViewModelProvider;
+
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
@@ -78,13 +78,17 @@ public class UserProfileActivity extends AppCompatActivity {
     /**
      * closes activity when back button pressed on UI
      */
-    public void goBack(View view) { finish(); }
+    public void goBack(View view) {
+        finish();
+    }
 
     /**
      * closes activity when back button pressed on phone
      */
     @Override
-    public void onBackPressed() { finish(); }
+    public void onBackPressed() {
+        finish();
+    }
 
     /**
      * edit user info, called by edit profile button
@@ -129,6 +133,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     /**
      * sets the updated user information to the firestore database
+     *
      * @return true if the update was correctly completed, false otherwise
      */
     private boolean setSessionUserToDatabase() {
@@ -158,7 +163,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         this.sessionUser.setName(((TextView) findViewById(R.id.name_UserProfile_editText)).getText().toString());
-        this.sessionUser.setGender(Gender.ALL.get(((Spinner)findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
+        this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
         this.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumber_UserProfile_editText)).getText().toString().trim());
     }
 

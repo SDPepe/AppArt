@@ -21,6 +21,7 @@ public class UniversityEmailChecker {
 
     /**
      * checker for university email
+     *
      * @param email the users email
      * @return true if the given email provider is in the trusted university providers accepted by AppArt, false otherwise
      */
@@ -42,6 +43,7 @@ public class UniversityEmailChecker {
 
     /**
      * email syntax checker
+     *
      * @param email the users email
      * @return true if the syntax of the email is correct, false otherwise
      */

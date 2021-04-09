@@ -10,12 +10,14 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/account_AdCreation_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <ScrollView
         android:id="@+id/horizontal_AdCreation_scrollView"
@@ -304,7 +306,7 @@
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/conformButtonAdCreation" />
+                android:text="@string/confirmButtonAdCreation" />
 
         </LinearLayout>
     </ScrollView>

@@ -7,10 +7,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.concurrent.CompletableFuture;
+import androidx.appcompat.widget.Toolbar;
 
 import javax.inject.Inject;
 
@@ -28,6 +25,10 @@ public class AdCreationActivity extends ToolbarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        Toolbar toolbar = findViewById(R.id.account_AdCreation_toolbar);
+        setSupportActionBar(toolbar);
+
         setContentView(R.layout.activity_adcreation);
         //mViewModel = new ViewModelProvider(this).get(AdCreationViewModel.class);
 

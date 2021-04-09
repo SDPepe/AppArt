@@ -8,14 +8,14 @@ public interface GlideBitmapLoaderVisitor {
     /**
      * Visit FirebaseDB for the GlideLoaderVisitor
      *
-     * @param database
+     * @param database the databse that will be visited
      */
     void visit(FirestoreDatabaseService database);
 
     /**
      * Visit MockDatabase for the GlideLoaderVisitor
      *
-     * @param database
+     * @param database the database that will be visited
      */
     void visit(MockDatabaseService database);
 
