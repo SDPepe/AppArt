@@ -8,6 +8,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -66,6 +67,7 @@ public class AdUITest {
     }
 
     @Test
+    @Ignore("contact information will be shown as the User profile UI of the announcer, the contact info dialog has been replaced")
     public void contactDialogTests() {
         onView(withId(R.id.contact_info_Ad_button)).perform(scrollTo()).perform(click());
         onView(withText("Close"))
@@ -76,6 +78,7 @@ public class AdUITest {
     }
 
     @Test
+    @Ignore("contact information will be shown as the User profile UI of the announcer, the contact info dialog has been replaced")
     public void displayAdInfoTest() {
         Ad testAd = database.getAd(cardID).join();
 

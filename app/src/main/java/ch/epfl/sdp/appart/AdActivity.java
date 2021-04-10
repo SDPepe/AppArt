@@ -125,9 +125,14 @@ public class AdActivity extends ToolbarActivity {
      * @param view
      */
     public void openContactInfo(View view) {
+        /*
         DialogFragment contactFrag = ContactInfoDialogFragment.newInstance();
         //contactFrag.getView().setBackgroundColor(Color.TRANSPARENT);
         contactFrag.show(getSupportFragmentManager(), "contact dialog");
+        */
+
+        Intent intent = new Intent(this, SimpleUserProfileActivity.class);
+        startActivity(intent);
     }
 
     /**

@@ -128,7 +128,7 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     private void getSessionUserFromDatabase() {
         this.sessionUser = new AppUser("1", "carlo.musso@epfl.ch");
-        // get session user from database
+        // TODO: get session user from database
     }
 
     /**
@@ -137,7 +137,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * @return true if the update was correctly completed, false otherwise
      */
     private boolean setSessionUserToDatabase() {
-        // set session user to database
+        // TODO: get session user from database
         return true;
     }
 
