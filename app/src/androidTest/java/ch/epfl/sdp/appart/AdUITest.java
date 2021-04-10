@@ -78,7 +78,6 @@ public class AdUITest {
     }
 
     @Test
-    @Ignore("contact information will be shown as the User profile UI of the announcer, the contact info dialog has been replaced")
     public void displayAdInfoTest() {
         Ad testAd = database.getAd(cardID).join();
 
@@ -92,6 +91,7 @@ public class AdUITest {
     }
 
     @Test
+    @Ignore("contact information will be shown as the User profile UI of the announcer, the contact info dialog has been replaced")
     public void displayContactInfoTest() {
         Ad testAd = database.getAd(cardID).join();
 
