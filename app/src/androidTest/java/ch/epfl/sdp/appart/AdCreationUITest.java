@@ -16,6 +16,7 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -78,19 +79,26 @@ public class AdCreationUITest {
     @Test
     public void photoButtonStartsCameraActivityTest() {
         onView(withId(R.id.addPhoto_AdCreation_button)).perform(scrollTo(), click());
-        intended(hasComponent(AdActivity.class.getName()));
+        intended(hasComponent(CameraActivity.class.getName()));
     }
 
     @Test
     public void successfulPostAdButtonShowsClosesActivityTest() {
         //populate ad info
         onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
         onView(withId(R.id.street_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
         onView(withId(R.id.city_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
         onView(withId(R.id.description_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
         onView(withId(R.id.number_AdCreation_ediText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
         onView(withId(R.id.npa_AdCreation_editText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
         onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
 
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
@@ -101,13 +109,19 @@ public class AdCreationUITest {
     public void failedPostAdButtonShowsSnackbarTest() {
         //populate ad info
         onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo(), typeText("failing"));
+        closeSoftKeyboard();
         onView(withId(R.id.street_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
         onView(withId(R.id.city_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
         onView(withId(R.id.description_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
         onView(withId(R.id.number_AdCreation_ediText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
         onView(withId(R.id.npa_AdCreation_editText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
         onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
-
+        closeSoftKeyboard();
 
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
