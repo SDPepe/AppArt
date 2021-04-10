@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="contactAdUser"
     tools:context=".SimpleUserProfileActivity">
+
 
     <Button
         android:id="@+id/back_SimpleUserProfile_button"
@@ -261,7 +261,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/gender_SimpleUserProfile_editText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="start"
                         android:layout_weight="1"
@@ -295,8 +295,8 @@
                 <Button
                     android:id="@+id/contact_SimpleUserProfile_button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="40dp"
                     android:layout_marginTop="40dp"
                     android:text="@string/contactAdUser"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -307,5 +307,4 @@
 
 
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

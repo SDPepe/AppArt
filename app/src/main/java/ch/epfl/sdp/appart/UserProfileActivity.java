@@ -137,7 +137,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * @return true if the update was correctly completed, false otherwise
      */
     private boolean setSessionUserToDatabase() {
-        // TODO: set session user to database
+        // TODO: get session user from database
         return true;
     }
 

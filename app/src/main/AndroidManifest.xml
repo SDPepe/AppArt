@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.sdp.appart">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.CAMERA" />
-
     <application
         android:name=".hilt.HiltApplication"
         android:allowBackup="true"
@@ -14,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SimpleUserProfileActivity"/>
+        <activity android:name=".SimpleUserProfileActivity"></activity>
         <activity android:name=".CameraActivity" />
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".CreateUserActivity" />
@@ -31,5 +28,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

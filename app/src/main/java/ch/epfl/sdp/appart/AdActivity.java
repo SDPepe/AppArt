@@ -23,7 +23,6 @@ import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.ad.ContactInfoDialogFragment;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
-import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -126,9 +125,12 @@ public class AdActivity extends ToolbarActivity {
      * @param view
      */
     public void openContactInfo(View view) {
-        //DialogFragment contactFrag = ContactInfoDialogFragment.newInstance();
+        /*
+        DialogFragment contactFrag = ContactInfoDialogFragment.newInstance();
         //contactFrag.getView().setBackgroundColor(Color.TRANSPARENT);
-        //contactFrag.show(getSupportFragmentManager(), "contact dialog");
+        contactFrag.show(getSupportFragmentManager(), "contact dialog");
+        */
+
         Intent intent = new Intent(this, SimpleUserProfileActivity.class);
         startActivity(intent);
     }
