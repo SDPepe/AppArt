@@ -29,7 +29,7 @@ public class AdCreationActivity extends ToolbarActivity {
     AdCreationViewModel mViewModel;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Toolbar toolbar = findViewById(R.id.account_AdCreation_toolbar);
@@ -68,22 +68,22 @@ public class AdCreationActivity extends ToolbarActivity {
         return true;
     }
 
-
-    private void createAd(){
-        // TODO call viewmodel to create ad
+    private void createAd() {
         CompletableFuture<Boolean> result = mViewModel.confirmCreation();
         result.thenAccept(completed -> {
-           if (completed){
-               finish();
-           } else {
-               Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
-                       "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                       .setAction("Action", null).show();
-           }
+            if (completed) {
+                Intent intent = new Intent(this, AdActivity.class);
+                intent.putExtra("fromAdCreation", true);
+                startActivity(intent);
+            } else {
+                Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                        getResources().getText(R.string.toolbarTitle_AdCreation),
+                        Snackbar.LENGTH_LONG).show();
+            }
         });
     }
 
-    private void takePhoto(){
+    private void takePhoto() {
         // TODO save photos path to VM photosRefs
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);

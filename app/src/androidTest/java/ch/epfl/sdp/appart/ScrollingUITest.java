@@ -136,7 +136,7 @@ public class ScrollingUITest {
 
         ViewInteraction viewGroup = onView(
                 allOf(withId(R.id.login_Scrolling_toolbar),
-                        withParent(withParent(withId(R.id.columnLayout_Scrolling_LinearLayout))),
+                        withParent(withId(R.id.columnLayout_Scrolling_LinearLayout)),
                         isDisplayed()));
         viewGroup.check(matches(isDisplayed()));
 
