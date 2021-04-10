@@ -12,7 +12,6 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
-import ch.epfl.sdp.appart.ad.ContactInfoDialogFragment;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import dagger.hilt.android.AndroidEntryPoint;
