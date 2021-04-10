@@ -42,7 +42,6 @@ public class VirtualTourUITest {
     }
 
     @Test
-    @Ignore
     public void backButtonClosesActivity() {
         onView(withId(R.id.back_Panorama_button)).perform(click());
         assertEquals(Activity.RESULT_CANCELED, vtourActivityRule.getScenario().getResult()
