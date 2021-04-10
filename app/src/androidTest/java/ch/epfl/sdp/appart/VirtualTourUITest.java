@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -41,6 +42,7 @@ public class VirtualTourUITest {
     }
 
     @Test
+    @Ignore
     public void backButtonClosesActivity() {
         onView(withId(R.id.back_Panorama_button)).perform(click());
         assertEquals(Activity.RESULT_CANCELED, vtourActivityRule.getScenario().getResult()
