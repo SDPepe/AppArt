@@ -51,6 +51,8 @@ public class MockLoginService implements LoginService {
         Pair<String, String> quentinEmailPassword = new Pair<>(quentin.getUserEmail(),
                 quentin.getUserId());
         users.put(quentinEmailPassword, quentin);
+        lorenzo.setName("Lorenzo");
+        lorenzo.setPhoneNumber("000");
     }
 
     /**
@@ -219,6 +221,20 @@ public class MockLoginService implements LoginService {
         result.complete(null);
 
         return result;
+    }
+
+    @Override
+    public void signOut() {
+        currentUser = null;
+    }
+
+    @Override
+    public CompletableFuture<User> signInAnonymously() {
+        User anonymousUser = new AppUser("anonymousUser", "anonymous@testappart.ch");
+        CompletableFuture<User> futureAnonymous = new CompletableFuture<>();
+        futureAnonymous.complete(anonymousUser);
+        currentUser = anonymousUser;
+        return futureAnonymous;
     }
 
 

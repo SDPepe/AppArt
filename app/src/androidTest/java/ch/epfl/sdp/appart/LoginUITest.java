@@ -40,19 +40,19 @@ import static org.junit.Assert.assertNull;
 public class LoginUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule<LoginActivity> loginActivityRule = new ActivityScenarioRule<>(LoginActivity.class);
 
     @BindValue
+    final
     LoginService loginService = new MockLoginService();
 
     @Before
     public void init() {
         hiltRule.inject();
         Intents.init();
-        //loginService.useEmulator("10.0.2.2", 9099);
     }
 
     @Test

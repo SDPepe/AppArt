@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.scrolling;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,12 +17,13 @@ public enum PricePeriod {
             .unmodifiableList(Arrays.asList(values()));
 
     public final static int COUNT = 3;
-    private String name;
+    private final String name;
 
     PricePeriod(String name) {
         this.name = name;
     }
 
+    @NotNull
     public String toString() {
         return name;
     }

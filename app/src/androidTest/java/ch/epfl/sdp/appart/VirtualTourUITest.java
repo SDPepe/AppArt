@@ -26,10 +26,10 @@ import static org.junit.Assert.assertEquals;
 public class VirtualTourUITest {
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityScenarioRule vtourActivityRule =
+    public final ActivityScenarioRule<PanoramaActivity> vtourActivityRule =
             new ActivityScenarioRule<>(PanoramaActivity.class);
 
     @BindValue

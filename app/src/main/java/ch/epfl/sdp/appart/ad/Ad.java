@@ -13,16 +13,16 @@ import ch.epfl.sdp.appart.scrolling.PricePeriod;
  */
 public class Ad {
 
-    private String title;
-    private long price;
-    private PricePeriod pricePeriod;
-    private String street;
-    private String city;
-    private String advertiserId;
-    private String description;
-    private List<String> photosRefs;
-    private boolean hasVRTour;
-    private ContactInfo contactInfo;
+    private final String title;
+    private final long price;
+    private final PricePeriod pricePeriod;
+    private final String street;
+    private final String city;
+    private final String advertiserId;
+    private final String description;
+    private final List<String> photosRefs;
+    private final boolean hasVRTour;
+    private final ContactInfo contactInfo;
 
     /**
      * Constructor of an ad.
@@ -154,9 +154,7 @@ public class Ad {
 
         public AdBuilder withPhotosIds(List<String> photosIds) {
             this.photosRefs = new ArrayList<>();
-            for (String id : photosIds) {
-                this.photosRefs.add(id);
-            }
+            this.photosRefs.addAll(photosIds);
             return this;
         }
 
@@ -172,7 +170,7 @@ public class Ad {
 
         public Ad build() {
 
-            Ad instance = new Ad(
+            return new Ad(
                     title,
                     price,
                     pricePeriod,
@@ -184,8 +182,6 @@ public class Ad {
                     hasVRTour,
                     contactInfo
             );
-
-            return instance;
         }
 
         public String getAdvertiserId() {

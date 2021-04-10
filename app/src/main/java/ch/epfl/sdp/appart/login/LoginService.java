@@ -106,5 +106,17 @@ public interface LoginService {
      */
     CompletableFuture<Void> reAuthenticateUser(String email, String password);
 
+    /**
+     * Signs out the currently logged in user if there is one.
+     */
+    void signOut();
+
+    /**
+     * Allow an anonymous login, which might be useful in some cases
+     *
+     * @return an empty completable future which will be complete when anonymously logged in.
+     */
+    CompletableFuture<User> signInAnonymously();
+
 
 }

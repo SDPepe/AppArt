@@ -10,11 +10,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.ad.ContactInfoDialogFragment;
 import ch.epfl.sdp.appart.database.DatabaseService;
@@ -38,7 +42,7 @@ public class AdActivity extends ToolbarActivity {
         AdViewModel mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.account_Ad_toolbar);
+        Toolbar toolbar = findViewById(R.id.account_Ad_toolbar);
         setSupportActionBar(toolbar);
 
         mViewModel.getTitle().observe(this, this::updateTitle);
@@ -63,7 +67,7 @@ public class AdActivity extends ToolbarActivity {
         for (int i = 0; i < references.size(); i++) {
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View myView = inflater.inflate(R.layout.photo_layout, null);
+            View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             database.accept(new GlideImageViewLoader(this, photo,
                     references.get(i)));
@@ -99,9 +103,9 @@ public class AdActivity extends ToolbarActivity {
         setIfNotNull(usernameView, username);
     }
 
-    private void setIfNotNull(TextView view, String content){
-        if (content == null){
-            view.setText("Loading...");
+    private void setIfNotNull(TextView view, String content) {
+        if (content == null) {
+            view.setText(R.string.loadingTextAdActivity);
         } else {
             view.setText(content);
         }

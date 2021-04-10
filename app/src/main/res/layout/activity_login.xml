@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="logIn"
-        android:text="Login"
+        android:text="@string/loginButtonText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:onClick="resetPassword"
-        android:text="Password forgotten"
+        android:text="@string/resetPasswordButtonText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,13 +38,14 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/prompt_email"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.44" />
+        app:layout_constraintVertical_bias="0.44"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/password_Login_editText"
@@ -58,14 +59,15 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_Login_editText"
-        app:layout_constraintVertical_bias="0.064" />
+        app:layout_constraintVertical_bias="0.064"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/create_account_Login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="createAccount"
-        android:text="Create account"
+        android:text="@string/createAccountFromLoginButtonText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
