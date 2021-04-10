@@ -97,7 +97,7 @@ public class ToolbarUITest {
 
         ViewInteraction viewGroup = onView(
                 allOf(withId(R.id.login_Scrolling_toolbar),
-                        withParent(withParent(withId(android.R.id.content))),
+                        withParent(withParent(withId(R.id.columnLayout_Scrolling_LinearLayout))),
                         isDisplayed()));
         viewGroup.check(matches(isDisplayed()));
 
@@ -123,7 +123,7 @@ public class ToolbarUITest {
 
         ViewInteraction button = onView(
                 allOf(withId(R.id.login_Login_button), withText("LOGIN"),
-                        withParent(withParent(withId(android.R.id.content))),
+                        withParent(withParent(withId(R.id.columnLayout_Scrolling_LinearLayout))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
     }
