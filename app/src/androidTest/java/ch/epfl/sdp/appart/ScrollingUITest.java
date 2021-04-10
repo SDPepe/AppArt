@@ -171,15 +171,5 @@ public class ScrollingUITest {
     public void release() {
         Intents.release();
     }
-    /*
-    @Test
-    public void clickOnFirstImageViewFromCardViewAfterScrollStartAnnounceActivity() {
-
-        Intents.init();
-        onView(withId(R.id.recycler_view))
-                .perform(actionOnItemAtPosition(256, scrollTo()));
-        Intents.release();
-
-    }*/
 
 }

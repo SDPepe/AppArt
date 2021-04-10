@@ -2,12 +2,10 @@ package ch.epfl.sdp.appart;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -21,7 +19,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class AdCreationActivity extends ToolbarActivity {
+public class AdCreationActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
@@ -31,10 +29,6 @@ public class AdCreationActivity extends ToolbarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toolbar toolbar = findViewById(R.id.account_AdCreation_toolbar);
-        setSupportActionBar(toolbar);
-        getActionBar().setTitle(getResources().getString(R.string.toolbarTitle_AdCreation));
 
         setContentView(R.layout.activity_adcreation);
         mViewModel = new ViewModelProvider(this).get(AdCreationViewModel.class);
@@ -54,18 +48,6 @@ public class AdCreationActivity extends ToolbarActivity {
                 takePhoto();
             }
         });
-    }
-
-    /**
-     * Initialize the contents of the Activity's standard options menu.
-     *
-     * @param menu The options menu in which you place your items.
-     * @return boolean return true for the menu to be displayed
-     */
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.actions_toolbar, menu);
-        return true;
     }
 
     private void createAd() {
