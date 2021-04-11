@@ -84,9 +84,9 @@ public class AdCreationActivity extends AppCompatActivity {
     private void setVMValues(){
         mViewModel.setTitle(((EditText) findViewById(R.id.title_AdCreation_editText)).getText().toString());
         mViewModel.setStreet(joinStrings(
-                R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText);
+                R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText));
         mViewModel.setCity(joinStrings(
-                R.id.npa_AdCreation_editText, R.id.city_AdCreation_editText);
+                R.id.npa_AdCreation_editText, R.id.city_AdCreation_editText));
         mViewModel.setPrice(Long.valueOf(Long.parseLong(
                 ((EditText) findViewById(R.id.price_AdCreation_editText)).getText().toString()
         )));
