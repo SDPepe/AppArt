@@ -64,15 +64,31 @@ public class AdCreationActivity extends AppCompatActivity {
      */
     private void createAd() {
         // set values to viewmodel
+        setVMValues();
+
+        // confirm creation and elaborate result
+        CompletableFuture<Boolean> result = mViewModel.confirmCreation();
+        result.thenAccept(completed -> {
+            if (completed) {
+                Intent intent = new Intent(this, AdActivity.class);
+                intent.putExtra("fromAdCreation", true);
+                startActivity(intent);
+            } else {
+                Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                        getResources().getText(R.string.toolbarTitle_AdCreation),
+                        Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setVMValues(){
         mViewModel.setTitle(((EditText) findViewById(R.id.title_AdCreation_editText)).getText().toString());
-        mViewModel.setStreet(
-                ((EditText) findViewById(R.id.street_AdCreation_editText)).getText().toString() +
-                        " " +
-                        ((EditText) findViewById(R.id.number_AdCreation_ediText)).getText().toString());
-        mViewModel.setCity(
-                ((EditText) findViewById(R.id.npa_AdCreation_editText)).getText().toString() +
-                        " " +
-                        ((EditText) findViewById(R.id.city_AdCreation_editText)).getText().toString());
+        mViewModel.setStreet(joinStrings(
+                ((EditText) findViewById(R.id.street_AdCreation_editText)).getText().toString(),
+                ((EditText) findViewById(R.id.number_AdCreation_ediText)).getText().toString()));
+        mViewModel.setCity(joinStrings(
+                ((EditText) findViewById(R.id.npa_AdCreation_editText)).getText().toString(),
+                ((EditText) findViewById(R.id.city_AdCreation_editText)).getText().toString()));
         mViewModel.setPrice(Long.valueOf(Long.parseLong(
                 ((EditText) findViewById(R.id.price_AdCreation_editText)).getText().toString()
         )));
@@ -88,20 +104,10 @@ public class AdCreationActivity extends AppCompatActivity {
         mViewModel.setVRTourEnable(false);
         // TODO modify whe logic for adding images is added
         mViewModel.setPhotosRefs(new ArrayList<>());
+    }
 
-        // confirm creation and elaborate result
-        CompletableFuture<Boolean> result = mViewModel.confirmCreation();
-        result.thenAccept(completed -> {
-            if (completed) {
-                Intent intent = new Intent(this, AdActivity.class);
-                intent.putExtra("fromAdCreation", true);
-                startActivity(intent);
-            } else {
-                Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
-                        getResources().getText(R.string.toolbarTitle_AdCreation),
-                        Snackbar.LENGTH_LONG).show();
-            }
-        });
+    private String joinStrings(String s1, String s2){
+        return s1 + " " + s2;
     }
 
     /**
