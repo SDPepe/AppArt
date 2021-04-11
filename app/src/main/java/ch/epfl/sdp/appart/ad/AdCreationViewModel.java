@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.adcreation;
+package ch.epfl.sdp.appart.ad;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,7 +12,7 @@ import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -69,8 +69,8 @@ public class AdCreationViewModel extends ViewModel {
         city.postValue(s);
     }
 
-    public void setPrice(String s) {
-        price.postValue(Long.valueOf(Long.parseLong(s)));
+    public void setPrice(Long l) {
+        price.postValue(l);
     }
 
     public void setPricePeriod(PricePeriod p) {

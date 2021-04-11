@@ -4,20 +4,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.adcreation.AdCreationViewModel;
+import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import dagger.hilt.android.AndroidEntryPoint;
 
+/**
+ * Activity for creating a new Ad.
+ * <p>
+ * It should be accessible only if the user is logged in.
+ */
 @AndroidEntryPoint
 public class AdCreationActivity extends AppCompatActivity {
 
@@ -50,7 +59,37 @@ public class AdCreationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Set values to viewmodel and confirm creation
+     */
     private void createAd() {
+        // set values to viewmodel
+        mViewModel.setTitle(((EditText) findViewById(R.id.title_AdCreation_editText)).getText().toString());
+        mViewModel.setStreet(
+                ((EditText) findViewById(R.id.street_AdCreation_editText)).getText().toString() +
+                        " " +
+                        ((EditText) findViewById(R.id.number_AdCreation_ediText)).getText().toString());
+        mViewModel.setCity(
+                ((EditText) findViewById(R.id.npa_AdCreation_editText)).getText().toString() +
+                        " " +
+                        ((EditText) findViewById(R.id.city_AdCreation_editText)).getText().toString());
+        mViewModel.setPrice(Long.valueOf(Long.parseLong(
+                ((EditText) findViewById(R.id.price_AdCreation_editText)).getText().toString()
+        )));
+        mViewModel.setPricePeriod(
+                PricePeriod.ALL.get(
+                        ((Spinner) findViewById(R.id.period_AdCreation_spinner))
+                                .getSelectedItemPosition())
+        );
+        mViewModel.setDescription(
+                ((EditText) findViewById(R.id.description_AdCreation_editText)).getText().toString()
+        );
+        // TODO modify when logic for adding vrtour is added
+        mViewModel.setVRTourEnable(false);
+        // TODO modify whe logic for adding images is added
+        mViewModel.setPhotosRefs(new ArrayList<>());
+
+        // confirm creation and elaborate result
         CompletableFuture<Boolean> result = mViewModel.confirmCreation();
         result.thenAccept(completed -> {
             if (completed) {
@@ -65,6 +104,9 @@ public class AdCreationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Opens camera activity to take/select images to add to the ad
+     */
     private void takePhoto() {
         // TODO save photos path to VM photosRefs
         Intent intent = new Intent(this, CameraActivity.class);

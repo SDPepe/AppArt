@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -11,6 +13,9 @@ import org.junit.Test;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LoginModule;
+import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.login.MockLoginService;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -28,7 +33,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-@UninstallModules(DatabaseModule.class)
+@UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest
 public class AdCreationUITest {
 
@@ -38,8 +43,13 @@ public class AdCreationUITest {
     @Rule(order = 1)
     public ActivityScenarioRule<AdCreationActivity> scrollingActivityRule = new ActivityScenarioRule<>(AdCreationActivity.class);
 
+    @Rule(order = 2)
+    public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
+
     @BindValue
     DatabaseService database = new MockDatabaseService();
+    @BindValue
+    LoginService login = new MockLoginService();
 
     @Before
     public void init() {
@@ -100,6 +110,8 @@ public class AdCreationUITest {
         onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
         closeSoftKeyboard();
 
+        login.loginWithEmail("lorenzo@epfl.ch", "2222");
+
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
         intended(hasComponent(AdActivity.class.getName()));
@@ -122,6 +134,8 @@ public class AdCreationUITest {
         closeSoftKeyboard();
         onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
         closeSoftKeyboard();
+
+        login.loginWithEmail("lorenzo@epfl.ch", "2222");
 
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
