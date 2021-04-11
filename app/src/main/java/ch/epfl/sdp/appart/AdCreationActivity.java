@@ -84,11 +84,9 @@ public class AdCreationActivity extends AppCompatActivity {
     private void setVMValues(){
         mViewModel.setTitle(((EditText) findViewById(R.id.title_AdCreation_editText)).getText().toString());
         mViewModel.setStreet(joinStrings(
-                ((EditText) findViewById(R.id.street_AdCreation_editText)).getText().toString(),
-                ((EditText) findViewById(R.id.number_AdCreation_ediText)).getText().toString()));
+                R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText);
         mViewModel.setCity(joinStrings(
-                ((EditText) findViewById(R.id.npa_AdCreation_editText)).getText().toString(),
-                ((EditText) findViewById(R.id.city_AdCreation_editText)).getText().toString()));
+                R.id.npa_AdCreation_editText, R.id.city_AdCreation_editText);
         mViewModel.setPrice(Long.valueOf(Long.parseLong(
                 ((EditText) findViewById(R.id.price_AdCreation_editText)).getText().toString()
         )));
@@ -106,8 +104,10 @@ public class AdCreationActivity extends AppCompatActivity {
         mViewModel.setPhotosRefs(new ArrayList<>());
     }
 
-    private String joinStrings(String s1, String s2){
-        return s1 + " " + s2;
+    private String joinStrings(int id1, int id2){
+        return ((EditText) findViewById(id1)).getText().toString() +
+                " " +
+                ((EditText) findViewById(id2)).getText().toString();
     }
 
     /**
