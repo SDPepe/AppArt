@@ -40,8 +40,9 @@ public class AdCreationViewModel extends ViewModel {
 
     /**
      * function to use when confirming the creation of the ad
+     *
      * @return a completable future with true if the ad has been successfully added to the database,
-     *  false if an exception was thrown
+     * false if an exception was thrown
      */
     public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
@@ -85,6 +86,8 @@ public class AdCreationViewModel extends ViewModel {
         photosRefs.postValue(ls);
     }
 
-    public void setVRTourEnable(boolean b) { VRTourEnable.postValue(Boolean.valueOf(b)); }
+    public void setVRTourEnable(boolean b) {
+        VRTourEnable.postValue(Boolean.valueOf(b));
+    }
 
 }
