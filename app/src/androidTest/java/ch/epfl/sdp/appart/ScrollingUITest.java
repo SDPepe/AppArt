@@ -134,12 +134,6 @@ public class ScrollingUITest {
                         isDisplayed()));
         appCompatTextView.perform(click());
 
-        ViewInteraction viewGroup = onView(
-                allOf(withId(R.id.login_Scrolling_toolbar),
-                        withParent(withId(R.id.columnLayout_Scrolling_LinearLayout)),
-                        isDisplayed()));
-        viewGroup.check(matches(isDisplayed()));
-
         ViewInteraction overflowMenuButton3 = onView(
                 allOf(withContentDescription("More options"),
                         childAtPosition(
@@ -162,7 +156,7 @@ public class ScrollingUITest {
 
         ViewInteraction button = onView(
                 allOf(withId(R.id.login_Login_button), withText("LOGIN"),
-                        withParent(withParent(withId(R.id.columnLayout_Scrolling_LinearLayout))),
+                        withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
     }
