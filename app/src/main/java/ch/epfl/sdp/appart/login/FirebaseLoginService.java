@@ -48,7 +48,13 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<User> loginWithEmail(String email, String password) {
         userChecker(true, "when authenticating");
-
+        try {
+            argsChecker(new String[]{email, password});
+        } catch(Exception e) {
+            CompletableFuture<User> failedLogin = new CompletableFuture<>();
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException("The email and/or password can't be empty or null"));
+            return failedLogin;
+        }
         return handleEmailAndPasswordMethod(email, password,
                 mAuth.signInWithEmailAndPassword(email, password));
     }
@@ -68,7 +74,13 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> resetPasswordWithEmail(String email) {
         String[] args = {email};
-        argsChecker(args);
+        try {
+            argsChecker(args);
+        } catch (Exception e) {
+            CompletableFuture<Void> failedLogin = new CompletableFuture<>();
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException("The email and/or password can't be empty or null"));
+            return failedLogin;
+        }
         return setUpFuture(mAuth.sendPasswordResetEmail(email),
                 result -> result);
     }
@@ -76,7 +88,13 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<User> createUser(String email, String password) {
         userChecker(true, "when creating new user");
-
+        try {
+            argsChecker(new String[]{email, password});
+        } catch (Exception e) {
+            CompletableFuture<User> failedLogin = new CompletableFuture<>();
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException("The email and/or password can't be empty or null"));
+            return failedLogin;
+        }
         return handleEmailAndPasswordMethod(email, password,
                 mAuth.createUserWithEmailAndPassword(email, password));
     }
@@ -100,7 +118,6 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> sendEmailVerification() {
         userChecker(false, "when sending verification email");
-
         return setUpFuture(getCurrentFirebaseUser().sendEmailVerification(),
                 result -> result);
     }
@@ -163,7 +180,7 @@ public class FirebaseLoginService implements LoginService {
      */
     private void argsChecker(String[] args) {
         for (String s : args) {
-            if (s == null) {
+            if (s == null || s.isEmpty()) {
                 throw new IllegalArgumentException("String argument cannot be null");
             }
         }
