@@ -7,12 +7,22 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.login.LoginService;
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Abstract class representing an activity that should have a toolbar.
  * This gives the default menu for the toolbar.
  * For now, the two main options of the toolbar are the logout button and the account button.
  */
+@AndroidEntryPoint
 public abstract class ToolbarActivity extends AppCompatActivity {
+
+
+    @Inject
+    LoginService loginService;
 
     /**
      * Sets the toolbar as the main menu
@@ -36,6 +46,7 @@ public abstract class ToolbarActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_logout) {
+            loginService.signOut();
             Intent intentLogout = new Intent(this, LoginActivity.class);
             startActivity(intentLogout);
         } else if (item.getItemId() == R.id.action_account) {
