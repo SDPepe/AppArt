@@ -109,19 +109,13 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        if (this.sessionUser.getProfileImage() != null) {
-            // TODO: set actual user-specific profile picture
-        } else {
-            int id;
-            if (this.sessionUser.getGender().equals(Gender.FEMALE.name())) {
-                id = R.drawable.user_example_female;
-            } else if (this.sessionUser.getGender().equals(Gender.MALE.name())) {
-                id = R.drawable.user_example_male;
-            } else {
-                id = R.drawable.user_example_no_gender;
-            }
+        String[] verifier = this.sessionUser.getProfileImage().split(":");
+        if (verifier[0].equals("userIcon")){
+            int id = Integer.parseInt(verifier[1]);
             Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
             this.imageView.setImageDrawable(iconImage);
+        } else {
+            // TODO: set actual user-specific profile picture with sessionUser.getProfileImage()
         }
     }
 
