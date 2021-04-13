@@ -53,14 +53,7 @@ public class ScrollingActivity extends ToolbarActivity {
 
         // init floating action button
         FloatingActionButton fab = findViewById(R.id.newAd_Scrolling_floatingActionButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onFloatingButtonAction();
-            }
-        });
-
-
+        fab.setOnClickListener((View view) -> onFloatingButtonAction());
     }
 
     /**
@@ -93,7 +86,7 @@ public class ScrollingActivity extends ToolbarActivity {
     /**
      * Opens the Ad creation activity.
      */
-    private void onFloatingButtonAction(){
+    private void onFloatingButtonAction() {
         Intent intent = new Intent(this, AdCreationActivity.class);
         startActivity(intent);
     }

@@ -44,19 +44,9 @@ public class AdCreationActivity extends AppCompatActivity {
 
         // init buttons
         Button confirmButton = findViewById(R.id.confirm_AdCreation_button);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createAd();
-            }
-        });
+        confirmButton.setOnClickListener((View view) -> createAd());
         Button addPhotoButton = findViewById(R.id.addPhoto_AdCreation_button);
-        addPhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePhoto();
-            }
-        });
+        addPhotoButton.setOnClickListener((View view) -> takePhoto());
     }
 
     /**
@@ -81,7 +71,7 @@ public class AdCreationActivity extends AppCompatActivity {
         });
     }
 
-    private void setVMValues(){
+    private void setVMValues() {
         mViewModel.setTitle(((EditText) findViewById(R.id.title_AdCreation_editText)).getText().toString());
         mViewModel.setStreet(joinStrings(
                 R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText));
@@ -104,7 +94,7 @@ public class AdCreationActivity extends AppCompatActivity {
         mViewModel.setPhotosRefs(new ArrayList<>());
     }
 
-    private String joinStrings(int id1, int id2){
+    private String joinStrings(int id1, int id2) {
         return ((EditText) findViewById(id1)).getText().toString() +
                 " " +
                 ((EditText) findViewById(id2)).getText().toString();
