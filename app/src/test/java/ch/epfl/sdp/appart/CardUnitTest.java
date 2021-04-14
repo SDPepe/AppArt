@@ -58,7 +58,6 @@ public class CardUnitTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    @Ignore("the card constructor fails when null check is performed on adId argument, thus the null check in constructor was commented out TEMPORARILY ")
     public void nullArgumentsConstructorTest4() {
         Card c = new Card(null, null, "user", "Lausanne", 0, "url");
     }
