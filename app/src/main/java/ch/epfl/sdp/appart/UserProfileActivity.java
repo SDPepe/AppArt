@@ -37,6 +37,9 @@ public class UserProfileActivity extends AppCompatActivity {
     /* temporary user */
     private User sessionUser;
 
+    /* User ViewModel */
+    UserViewModel mViewModel;
+
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
@@ -56,7 +59,7 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         /* User ViewModel */
-        UserViewModel mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.modifyButton);
@@ -116,8 +119,8 @@ public class UserProfileActivity extends AppCompatActivity {
         /* update the view with new attributes */
         getAndSetCurrentAttributes();
 
-        /* if true the update in firestore was correctly executed */
-        boolean updateIsDone = setSessionUserToDatabase();
+
+        setSessionUserToDatabase();
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
@@ -139,9 +142,14 @@ public class UserProfileActivity extends AppCompatActivity {
      *
      * @return true if the update was correctly completed, false otherwise
      */
-    private boolean setSessionUserToDatabase() {
-        // TODO: get session user from database
-        return true;
+    private void setSessionUserToDatabase() {
+      mViewModel.updateUser(this.sessionUser);
+      mViewModel.getUpdateCardConfirmed().observe(this, this::informationUpdateResult);
+    }
+
+    private void informationUpdateResult(Boolean b) {
+        //System.out.println(b);
+        // TODO: do something if needed
     }
 
     /**

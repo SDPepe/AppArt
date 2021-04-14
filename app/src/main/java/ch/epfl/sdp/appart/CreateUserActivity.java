@@ -26,9 +26,8 @@ public class CreateUserActivity extends AppCompatActivity {
     @Inject
     public LoginService loginService;
 
-    ///@Inject
-   // public DatabaseService databaseService;
-
+    @Inject
+    public DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class CreateUserActivity extends AppCompatActivity {
             return null;
         });
         futureUser.thenAccept(user -> {
-            //databaseService.putUser(user);
+            databaseService.putUser(user);
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         });
