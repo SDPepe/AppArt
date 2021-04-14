@@ -1,6 +1,5 @@
 package ch.epfl.sdp.appart;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.epfl.sdp.appart.scrolling.card.Card;
