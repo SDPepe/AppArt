@@ -9,10 +9,17 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.concurrent.CompletableFuture;
+
+import javax.inject.Inject;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.login.FirebaseLoginService;
+import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
@@ -29,9 +36,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
     /* temporary user */
     private User sessionUser;
-
-    /* User ViewModel */
-    UserViewModel mViewModel;
 
     /* UI components */
     private Button modifyButton;
@@ -51,7 +55,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        /* User ViewModel initialisation */
+        /* User ViewModel */
         UserViewModel mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         /* UI components initialisation */
@@ -67,12 +71,9 @@ public class UserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_UserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
 
-        /* retrieve session user copy for use info */
-        getSessionUserFromDatabase();
-
-        /* set attributes of session user to the UI components */
-        getAndSetCurrentAttributes();
-
+        /* get user from database from user ID */
+        mViewModel.getCurrentUser();
+        mViewModel.getUser().observe(this, this::setSessionUser);
     }
 
     /**
@@ -123,12 +124,14 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * retrieves the current user information from database
-     * and stores it in the session user instance
+     *
+     * @param user
      */
-    private void getSessionUserFromDatabase() {
-        this.sessionUser = new AppUser("1", "carlo.musso@epfl.ch");
-        // TODO: get session user from database
+    private void setSessionUser(User user){
+        this.sessionUser = user;
+
+        /* set attributes of session user to the UI components */
+        getAndSetCurrentAttributes();
     }
 
     /**

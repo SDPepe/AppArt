@@ -154,7 +154,6 @@ public class AppUser implements User {
 
     /**
      * getter for users age
-     *
      * @return the age of the user as int
      */
     @Override

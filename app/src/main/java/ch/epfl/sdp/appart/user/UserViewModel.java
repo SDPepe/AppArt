@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 
@@ -19,10 +20,13 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
     final DatabaseService db;
+    final LoginService ls;
 
     @Inject
-    public UserViewModel(DatabaseService database) {
+    public UserViewModel(DatabaseService database, LoginService loginService) {
+
         this.db = database;
+        this.ls = loginService;
     }
 
     /**
@@ -53,6 +57,14 @@ public class UserViewModel extends ViewModel {
     public void getUser(String userId) {
         CompletableFuture<User> getUser = db.getUser(userId);
         getUser.thenAccept(mUser::setValue);
+    }
+
+    /**
+     * Get the current user from the database and updates the LiveDatae
+     */
+    public void getCurrentUser() {
+        CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
+        getCurrentUser.thenAccept(mUser::setValue);
     }
 
     /*

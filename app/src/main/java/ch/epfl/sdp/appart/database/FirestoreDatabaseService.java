@@ -580,4 +580,3 @@ public class FirestoreDatabaseService implements DatabaseService {
     }
 
 }
-
