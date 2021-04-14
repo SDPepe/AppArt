@@ -200,7 +200,6 @@ public class UserProfileActivity extends AppCompatActivity {
         String[] verifier = this.sessionUser.getProfileImage().split(":");
         if (verifier[0].equals("userIcon")){
             int id = Integer.parseInt(verifier[1]);
-            System.out.println("======================== " + id + " ========================");
             Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
             this.imageView.setImageDrawable(iconImage);
         } else {
