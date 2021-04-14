@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -50,9 +51,18 @@ public class AdCreationActivity extends AppCompatActivity {
     }
 
     /**
-     * Set values to viewmodel and confirm creation
+     * Sets values to viewmodel and confirm creation. If some fields are not filled, it shows a
+     * snackbar message.
      */
     private void createAd() {
+        // if some fields are not filled, show snackbar
+        if (!everyFieldFilled()) {
+            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                    getResources().getText(R.string.snackbarNotFilled_AdCreation),
+                    Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
         // set values to viewmodel
         setVMValues();
 
@@ -71,23 +81,22 @@ public class AdCreationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Takes the values from the EditTexts of the activity and sets the values in the ViewModel
+     */
     private void setVMValues() {
-        mViewModel.setTitle(((EditText) findViewById(R.id.title_AdCreation_editText)).getText().toString());
+        mViewModel.setTitle(getContentOfEditText(R.id.title_AdCreation_editText));
         mViewModel.setStreet(joinStrings(
                 R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText));
         mViewModel.setCity(joinStrings(
                 R.id.npa_AdCreation_editText, R.id.city_AdCreation_editText));
-        mViewModel.setPrice(Long.valueOf(Long.parseLong(
-                ((EditText) findViewById(R.id.price_AdCreation_editText)).getText().toString()
-        )));
+        mViewModel.setPrice(Long.parseLong(getContentOfEditText(R.id.price_AdCreation_editText)));
         mViewModel.setPricePeriod(
                 PricePeriod.ALL.get(
                         ((Spinner) findViewById(R.id.period_AdCreation_spinner))
                                 .getSelectedItemPosition())
         );
-        mViewModel.setDescription(
-                ((EditText) findViewById(R.id.description_AdCreation_editText)).getText().toString()
-        );
+        mViewModel.setDescription(getContentOfEditText(R.id.description_AdCreation_editText));
         // TODO modify when logic for adding vrtour is added
         mViewModel.setVRTourEnable(false);
         // TODO modify whe logic for adding images is added
@@ -95,9 +104,44 @@ public class AdCreationActivity extends AppCompatActivity {
     }
 
     private String joinStrings(int id1, int id2) {
-        return ((EditText) findViewById(id1)).getText().toString() +
-                " " +
-                ((EditText) findViewById(id2)).getText().toString();
+        return getContentOfEditText(id1) + " " + getContentOfEditText(id2);
+    }
+
+    /**
+     * Checks that every text field is has been filled
+     *
+     * @return true if every string is valid, false otherwise
+     */
+    private boolean everyFieldFilled() {
+        if (stringIsInvalid(getContentOfEditText(R.id.title_AdCreation_editText)) ||
+                stringIsInvalid(getContentOfEditText(R.id.street_AdCreation_editText)) ||
+                stringIsInvalid(getContentOfEditText(R.id.number_AdCreation_ediText)) ||
+                stringIsInvalid(getContentOfEditText(R.id.npa_AdCreation_editText)) ||
+                stringIsInvalid(getContentOfEditText(R.id.city_AdCreation_editText)) ||
+                stringIsInvalid(getContentOfEditText(R.id.price_AdCreation_editText)) ||
+                stringIsInvalid(getContentOfEditText(R.id.description_AdCreation_editText)))
+            return false;
+        return true;
+    }
+
+    /**
+     * Gets the content of the EditText.
+     *
+     * @param id the id of the view
+     * @return the string content of the EditText
+     */
+    private String getContentOfEditText(int id) {
+        return ((EditText) findViewById(id)).getText().toString();
+    }
+
+    /**
+     * Checks whether the string is null or empty.
+     *
+     * @param s the string to check
+     * @return true if the string is null or empty, false otherwise
+     */
+    private boolean stringIsInvalid(String s) {
+        return s == null || s.equals("");
     }
 
     /**

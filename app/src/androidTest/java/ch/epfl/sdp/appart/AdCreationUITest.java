@@ -1,7 +1,5 @@
 package ch.epfl.sdp.appart;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -42,9 +40,6 @@ public class AdCreationUITest {
 
     @Rule(order = 1)
     public ActivityScenarioRule<AdCreationActivity> scrollingActivityRule = new ActivityScenarioRule<>(AdCreationActivity.class);
-
-    @Rule(order = 2)
-    public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
