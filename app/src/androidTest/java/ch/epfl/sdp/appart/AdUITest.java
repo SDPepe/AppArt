@@ -67,17 +67,6 @@ public class AdUITest {
     }
 
     @Test
-    @Ignore("contact information will be shown as the User profile UI of the announcer, the contact info dialog has been replaced")
-    public void contactDialogTests() {
-        onView(withId(R.id.contact_info_Ad_button)).perform(scrollTo()).perform(click());
-        onView(withText("Close"))
-                .inRoot(isDialog())
-                .check(matches(isDisplayed()))
-                .perform(click());
-        onView(withId(R.id.holder_ContactInfo_cardView)).check(doesNotExist());
-    }
-
-    @Test
     public void displayAdInfoTest() {
         Ad testAd = database.getAd(cardID).join();
 
@@ -88,20 +77,6 @@ public class AdUITest {
                 testAd.getPrice() + " / " + testAd.getPricePeriod().toString())));
         onView(withId(R.id.description_field_Ad_textView)).check(matches(withText(testAd.getDescription())));
         onView(withId(R.id.user_field_Ad_textView)).check(matches(withText(testAd.getContactInfo().name)));
-    }
-
-
-    @Test
-    @Ignore("contact information will be shown as the User profile UI of the announcer, the contact info dialog has been replaced")
-    public void displayContactInfoTest() {
-        Ad testAd = database.getAd(cardID).join();
-
-        onView(withId(R.id.contact_info_Ad_button)).perform(scrollTo(), click());
-
-
-        onView(withId(R.id.username_ContactInfo_textView)).check(matches(withText(testAd.getContactInfo().name)));
-        onView(withId(R.id.email_ContactInfo_textView)).check(matches(withText(testAd.getContactInfo().userEmail)));
-        onView(withId(R.id.phone_ContactInfo_textView)).check(matches(withText(testAd.getContactInfo().userPhoneNumber)));
     }
 
     @After
