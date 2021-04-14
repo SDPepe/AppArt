@@ -22,6 +22,7 @@ public class AppUser implements User {
     private String profilePicture;
     private List<String> adsIds;
 
+    private static final String PREFIX_FOR_ICON_IMAGE = "userIcon";
 
     /**
      * App user constructor
@@ -123,9 +124,9 @@ public class AppUser implements User {
      */
     @Override
     public String getProfileImage() {
-        if (profilePicture == null) {
+        if (profilePicture == null || profilePicture.split(":")[0].equals(PREFIX_FOR_ICON_IMAGE)) {
             int id = findDrawableIdByGender();
-            String userIcon = "userIcon:";
+            String userIcon = PREFIX_FOR_ICON_IMAGE+":";
             return userIcon.concat(String.valueOf(id));
         }
         return profilePicture;

@@ -116,10 +116,6 @@ public class UserProfileActivity extends AppCompatActivity {
         /* disable editing text in all UI components*/
         enableDisableEntries();
 
-        /* update the view with new attributes */
-        getAndSetCurrentAttributes();
-
-
         setSessionUserToDatabase();
 
         this.modifyButton.setVisibility(View.VISIBLE);
@@ -128,7 +124,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     /**
      *
-     * @param user
+     * @param user sets the value of the current user to the session user object
      */
     private void setSessionUser(User user){
         this.sessionUser = user;
@@ -139,12 +135,12 @@ public class UserProfileActivity extends AppCompatActivity {
 
     /**
      * sets the updated user information to the firestore database
-     *
-     * @return true if the update was correctly completed, false otherwise
      */
     private void setSessionUserToDatabase() {
       mViewModel.updateUser(this.sessionUser);
       mViewModel.getUpdateCardConfirmed().observe(this, this::informationUpdateResult);
+        /* update the view with new attributes */
+        getAndSetCurrentAttributes();
     }
 
     private void informationUpdateResult(Boolean b) {
@@ -204,6 +200,7 @@ public class UserProfileActivity extends AppCompatActivity {
         String[] verifier = this.sessionUser.getProfileImage().split(":");
         if (verifier[0].equals("userIcon")){
             int id = Integer.parseInt(verifier[1]);
+            System.out.println("======================== " + id + " ========================");
             Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
             this.imageView.setImageDrawable(iconImage);
         } else {
