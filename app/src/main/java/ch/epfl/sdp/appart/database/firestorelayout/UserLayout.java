@@ -36,7 +36,7 @@ public final class UserLayout {
     /**
      * @apiNote : String on Firestore
      */
-    public final static String PICTURE = "pfpRef";
+    public final static String PICTURE = "picture_id"; //pfpRef
 
     /**
      * @apiNote : String on Firestore
