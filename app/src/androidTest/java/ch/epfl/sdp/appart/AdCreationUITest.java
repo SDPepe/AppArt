@@ -50,6 +50,7 @@ public class AdCreationUITest {
     public void init() {
         Intents.init();
         hiltRule.inject();
+        login.loginWithEmail("lorenzo@epfl.ch", "2222");
     }
 
     @Test
@@ -105,8 +106,6 @@ public class AdCreationUITest {
         onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
         closeSoftKeyboard();
 
-        login.loginWithEmail("lorenzo@epfl.ch", "2222");
-
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
         intended(hasComponent(AdActivity.class.getName()));
@@ -130,12 +129,32 @@ public class AdCreationUITest {
         onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
         closeSoftKeyboard();
 
-        login.loginWithEmail("lorenzo@epfl.ch", "2222");
-
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
-                .check(matches(withText(R.string.toolbarTitle_AdCreation)));
+                .check(matches(withText(R.string.snackbarFailed_AdCreation)));
+    }
+
+    @Test
+    public void emptyFieldsShowSnackbarTest() {
+        //populate ad info
+        onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.street_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.city_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.number_AdCreation_ediText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
+        onView(withId(R.id.npa_AdCreation_editText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
+        onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
+
+        // description field not filled
+        onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.snackbarNotFilled_AdCreation)));
     }
 
     @After

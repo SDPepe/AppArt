@@ -75,7 +75,7 @@ public class AdCreationActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
-                        getResources().getText(R.string.toolbarTitle_AdCreation),
+                        getResources().getText(R.string.snackbarFailed_AdCreation),
                         Snackbar.LENGTH_LONG).show();
             }
         });
