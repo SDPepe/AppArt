@@ -40,6 +40,8 @@ public class PanoramaActivity extends AppCompatActivity {
     //private Bitmap bitmap;
     private PLManager plManager;
 
+    private Bitmap bitmap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,7 @@ public class PanoramaActivity extends AppCompatActivity {
         bitmapFuture.thenApply(bitmap -> {
             panorama.setImage(new PLImage(bitmap, true));
             plManager.setPanorama(panorama);
+            this.bitmap = bitmap;
             return bitmap;
         });
 
