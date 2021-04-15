@@ -28,7 +28,7 @@ public class CreateUserActivity extends AppCompatActivity {
     public LoginService loginService;
 
     @Inject
-    private DatabaseService databaseService;
+    public DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
