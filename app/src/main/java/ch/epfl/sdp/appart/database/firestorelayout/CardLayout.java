@@ -16,12 +16,12 @@ public final class CardLayout {
     /**
      * absolute path to the cards directory in Firestore
      */
-    public final static String AD_ID = "adId";
+    public final static String AD_ID = "ad_id"; //adId
 
     /**
      * @apiNote : String on Firestore
      */
-    public final static String USER_ID = "userId";
+    public final static String USER_ID = "user_id"; //userId
 
     /**
      * @apiNote : String on Firestore
@@ -36,5 +36,5 @@ public final class CardLayout {
     /**
      * @apiNote : String on Firestore
      */
-    public final static String IMAGE = "imageUrl";
+    public final static String IMAGE = "picture_id"; //imageUrl
 }
