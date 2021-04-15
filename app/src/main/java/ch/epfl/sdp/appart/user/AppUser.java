@@ -3,6 +3,8 @@ package ch.epfl.sdp.appart.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sdp.appart.R;
+
 /**
  * This class represents a generic user of our application - it is used to manage
  * a local copy of the users information in-app. The local copy will then be
@@ -115,11 +117,17 @@ public class AppUser implements User {
 
     /**
      * getter for user profile picture
-     *
-     * @return the profile picture as a path String
+     * @return a string with the profilePicture id if the user provided one,
+     * or else a concatenation of the string 'userIcon' and the id of the drawable
+     * of the gender user icon (e.g. "userIcon:R.drawable.user_example_female")
      */
     @Override
     public String getProfileImage() {
+        if (profilePicture == null) {
+            int id = findDrawableIdByGender();
+            String userIcon = "userIcon:";
+            return userIcon.concat(String.valueOf(id));
+        }
         return profilePicture;
     }
 
@@ -134,6 +142,14 @@ public class AppUser implements User {
             throw new IllegalArgumentException("ERROR - image parameter was null");
         }
         this.profilePicture = img;
+    }
+
+    /**
+     * removes the profile picture, thus sets the default user gender icon
+     */
+    @Override
+    public void removeProfileImage() {
+        this.profilePicture = null;
     }
 
     /**
@@ -209,6 +225,16 @@ public class AppUser implements User {
         if (id == null)
             throw new IllegalArgumentException("The argument is null");
         adsIds.add(id);
+    }
+
+    private int findDrawableIdByGender() {
+        if (gender == Gender.FEMALE) {
+            return R.drawable.user_example_female;
+        } else if (gender == Gender.MALE) {
+            return R.drawable.user_example_male;
+        } else {
+            return R.drawable.user_example_no_gender;
+        }
     }
 
 }

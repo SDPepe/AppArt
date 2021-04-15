@@ -68,6 +68,7 @@
         <item>Male</item>
         <item>Other</item>
     </string-array>
+    <string name="contactAdUser"> CONTACT ANNOUNCER </string>
 
     <!-- AdCreationActivity stuff -->
     <string name="editTitleAdCreation">Title</string>
@@ -98,5 +99,4 @@
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
-
 </resources>
