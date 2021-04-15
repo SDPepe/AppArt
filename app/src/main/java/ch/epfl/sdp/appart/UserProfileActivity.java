@@ -8,19 +8,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.util.concurrent.CompletableFuture;
-
-import javax.inject.Inject;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
-
-import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.login.FirebaseLoginService;
-import ch.epfl.sdp.appart.login.LoginService;
-import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
@@ -76,7 +66,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
-        mViewModel.getUser().observe(this, this::setSessionUser);
+        mViewModel.getUser().observe(this, this::setSessionUserToLocal);
     }
 
     /**
@@ -126,7 +116,7 @@ public class UserProfileActivity extends AppCompatActivity {
      *
      * @param user sets the value of the current user to the session user object
      */
-    private void setSessionUser(User user){
+    private void setSessionUserToLocal(User user){
         this.sessionUser = user;
 
         /* set attributes of session user to the UI components */

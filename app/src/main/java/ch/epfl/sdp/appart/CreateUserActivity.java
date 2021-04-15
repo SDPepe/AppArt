@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class CreateUserActivity extends AppCompatActivity {
 
+    //@LoginModule.CloudLoginService
     @Inject
     public LoginService loginService;
 
