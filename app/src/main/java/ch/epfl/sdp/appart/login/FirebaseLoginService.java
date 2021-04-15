@@ -11,7 +11,6 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.login.exceptions.LoginServiceRequestFailedException;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -38,8 +37,7 @@ public class FirebaseLoginService implements LoginService {
 
     private CompletableFuture<User> handleEmailAndPasswordMethod(String email, String password,
                                                                  Task<AuthResult> task) {
-        String[] args = {email, password};
-        argsChecker(args);
+        argsChecker(email, password);
         //Handle loss of network with https://firebase.google
         // .com/docs/database/android/offline-capabilities#section-connection-state
         return setUpFuture(task,
@@ -50,10 +48,10 @@ public class FirebaseLoginService implements LoginService {
     public CompletableFuture<User> loginWithEmail(String email, String password) {
         userChecker(true, "when authenticating");
         try {
-            argsChecker(new String[]{email, password});
+            argsChecker(email, password);
         } catch(Exception e) {
             CompletableFuture<User> failedLogin = new CompletableFuture<>();
-            failedLogin.completeExceptionally(new LoginServiceRequestFailedException("The email and/or password can't be empty or null"));
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
             return failedLogin;
         }
         return handleEmailAndPasswordMethod(email, password,
@@ -74,12 +72,11 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> resetPasswordWithEmail(String email) {
-        String[] args = {email};
         try {
-            argsChecker(args);
+            argsChecker(email);
         } catch (Exception e) {
             CompletableFuture<Void> failedLogin = new CompletableFuture<>();
-            failedLogin.completeExceptionally(new LoginServiceRequestFailedException("The email and/or password can't be empty or null"));
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
             return failedLogin;
         }
         return setUpFuture(mAuth.sendPasswordResetEmail(email),
@@ -90,10 +87,10 @@ public class FirebaseLoginService implements LoginService {
     public CompletableFuture<User> createUser(String email, String password) {
         userChecker(true, "when creating new user");
         try {
-            argsChecker(new String[]{email, password});
+            argsChecker(email, password);
         } catch (Exception e) {
             CompletableFuture<User> failedLogin = new CompletableFuture<>();
-            failedLogin.completeExceptionally(new LoginServiceRequestFailedException("The email and/or password can't be empty or null"));
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
             return failedLogin;
         }
         return handleEmailAndPasswordMethod(email, password,
@@ -102,8 +99,14 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> updateEmailAddress(String email) {
-        String[] args = {email};
-        fullChecker(args, "when updating the email");
+        try {
+            fullChecker(email, "when updating the email");
+        } catch (Exception e) {
+            CompletableFuture<Void> failedLogin = new CompletableFuture<>();
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
+            return failedLogin;
+        }
+
 
         return setUpFuture(getCurrentFirebaseUser().updateEmail(email), result -> result);
     }
@@ -111,21 +114,41 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
         String[] args = {password};
-        fullChecker(args, "when updating the password");
+        try {
+            fullChecker(password, "when updating the password");
+        } catch (Exception e) {
+            CompletableFuture<Void> failedLogin = new CompletableFuture<>();
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
+            return failedLogin;
+        }
+
+
 
         return setUpFuture(getCurrentFirebaseUser().updatePassword(password), result -> result);
     }
 
     @Override
     public CompletableFuture<Void> sendEmailVerification() {
-        userChecker(false, "when sending verification email");
+        try {
+            userChecker(false, "when sending verification email");
+        } catch (Exception e) {
+            CompletableFuture<Void> failedLogin = new CompletableFuture<>();
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
+            return failedLogin;
+        }
         return setUpFuture(getCurrentFirebaseUser().sendEmailVerification(),
                 result -> result);
     }
 
     @Override
     public CompletableFuture<Void> deleteUser() {
-        userChecker(false, "when deleting it");
+        try {
+            userChecker(false, "when deleting it");
+        } catch (Exception e) {
+            CompletableFuture<Void> failedLogin = new CompletableFuture<>();
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
+            return failedLogin;
+        }
 
         return setUpFuture(getCurrentFirebaseUser().delete(),
                 result -> result);
@@ -133,9 +156,16 @@ public class FirebaseLoginService implements LoginService {
 
     @Override
     public CompletableFuture<Void> reAuthenticateUser(String email, String password) {
-        String[] args = {email, password};
-        argsChecker(args);
-        userChecker(false, "when reAuthentication");
+        try {
+            argsChecker(email, password);
+            userChecker(false, "when reAuthentication");
+        } catch (Exception e) {
+            CompletableFuture<Void> failedLogin = new CompletableFuture<>();
+            failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
+            return failedLogin;
+        }
+
+
 
         return setUpFuture(getCurrentFirebaseUser().reauthenticate(
                 EmailAuthProvider.getCredential(email, password)),
@@ -179,7 +209,7 @@ public class FirebaseLoginService implements LoginService {
      * @param args the array containing the strings.
      * @throws IllegalArgumentException if one of the strings in args is null
      */
-    private void argsChecker(String[] args) {
+    private void argsChecker(String... args) {
         for (String s : args) {
             if (s == null || s.isEmpty()) {
                 throw new IllegalArgumentException("String argument cannot be null");
@@ -196,7 +226,7 @@ public class FirebaseLoginService implements LoginService {
      * @throws IllegalArgumentException if one of the arguments in args is null
      * @throws IllegalStateException    if the state of getCurrentUser is not valid for this method
      */
-    private void fullChecker(String[] args, String excMessage) {
+    private void fullChecker(String excMessage, String... args) {
         argsChecker(args);
         userChecker(false, excMessage);
     }
