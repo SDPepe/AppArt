@@ -32,5 +32,7 @@ I also added an icon to the cards UI, so that the user can know if an ad comes w
 
 
 ## Overall team
-Last week was about refactoring. This week the team worked on multiple tasks: logout feature and input robustness, synchronization between firebaseaAuth/firestore user and application, adjusting firestore field names, implementing a new UI to create an ad and adding camera access. As a summary for the last two weeks: project refactoring, naming conventions, added test coverage, completed some of the numerous tasks in the sprint backlog.
+Last week was about refactoring. This week the team worked on multiple tasks: logout feature and input robustness, synchronization between firebaseaAuth/firestore user and application, adjusting firestore field names, implementing a new UI to create an ad and adding camera access. 
+
+As a summary for the last two weeks: project refactoring, naming conventions, added test coverage, completed some of the numerous tasks in the sprint backlog.
 
