@@ -3,8 +3,6 @@ package ch.epfl.sdp.appart.ad;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
-
 /**
  * Object representing an ad of an apartment.
  * <p>
