@@ -3,6 +3,8 @@
 
 ## Antoine
 
+This week, I finally implemented the logout functionality. Also, I improved login robustness. Indeed, the app was crashing when given empty inputs in emails or passwords, this does not happen anymore. Finally, I added more tests for the LoginService. Especially, I wanted to test what happened on wrong inputs.
+Last week, I participated in the refactor but I also added all the tests for the DatabseService, using the emulator once again. This was quite more difficult than I thought and I ecountered initialization issues with Firebase.
 
 ## Carlo (scrum master)
 This week I concentrated on one important issue: **synch the authentication user with the database user**. The authentication user is the login user, the database user is the entry in firestore containing all the user information. 
