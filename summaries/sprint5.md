@@ -23,7 +23,8 @@ Furthermore I did a small refactoring on getProfileImage() method of the user wh
 
 
 ## Lorenzo 
-
+After finishing my part of the refactoring task, I kept on working on the page for creating an ad. I wrote the ViewModel, plus the activity and the layout. There wasn't much new for me so the coding part was without issues. I had troubles while testing the viewmodel, I lost a lot of time because I didn't know I needed a task executioner to correctly test livedata, and in the end it was even useless work because I removed all livedata from the class.
+I also added an icon to the cards UI, so that the user can know if an ad comes with a virtual tour.
 
 ## Quentin
 
