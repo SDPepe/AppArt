@@ -58,7 +58,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        /* User ViewModel */
+        /* User ViewModel initialization */
         mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         /* UI components initialisation */
@@ -106,7 +106,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * saves updated user information, called by the done button
+     * saves updated user information in firestore database, called by the done button
      */
     public void doneEditing(View view) {
 
@@ -149,7 +149,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * enables and disables UI components to edit
+     * enables and disables UI components when edit
      */
     private void enableDisableEntries() {
         this.nameEditText.setEnabled(!this.nameEditText.isEnabled());

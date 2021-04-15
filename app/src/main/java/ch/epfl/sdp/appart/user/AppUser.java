@@ -227,6 +227,11 @@ public class AppUser implements User {
         adsIds.add(id);
     }
 
+    /**
+     *
+     * @return the id of the drawable gender-icon corresponding
+     * to the gender selected by the user
+     */
     private int findDrawableIdByGender() {
         if (gender == Gender.FEMALE) {
             return R.drawable.user_example_female;
