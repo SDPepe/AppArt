@@ -44,8 +44,8 @@ public class CameraUITest {
 
     @Test
     public void clickOnCameraBtn() {
-        //onView(withId(R.id.camera_Camera_button)).perform(click());
-        onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+        onView(withId(R.id.camera_Camera_button)).perform(click());
+        /*onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
                 new ViewAction() {
                     @Override
                     public Matcher<View> getConstraints() {
@@ -62,13 +62,13 @@ public class CameraUITest {
                         view.performClick();
                     }
                 }
-        );
+        );*/
     }
 
     @Test
     public void clickOnGalleryBtn() {
-        //onView(withId(R.id.gallery_Camera_button)).perform(click());
-        onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+        onView(withId(R.id.gallery_Camera_button)).perform(click());
+        /*onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
                 new ViewAction() {
                     @Override
                     public Matcher<View> getConstraints() {
@@ -85,7 +85,7 @@ public class CameraUITest {
                         view.performClick();
                     }
                 }
-        );
+        );*/
     }
 
     @After
