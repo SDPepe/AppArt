@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;

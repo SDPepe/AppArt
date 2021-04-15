@@ -34,7 +34,7 @@ import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
 import ch.epfl.sdp.appart.database.firestorelayout.UserLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -322,7 +322,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                                           CompletableFuture<String> result) {
         for (int i = 0; i < actualRefs.size(); i++) {
             Map<String, Object> data = new HashMap<>();
-            data.put("ref", actualRefs.get(i));
+            data.put("id", actualRefs.get(i));
             DocumentReference photoRefDocReference = newAdRef.collection("photosRefs")
                     .document();
             photoRefDocReference.set(data).addOnCompleteListener(
@@ -439,7 +439,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                 QuerySnapshot snapshot = task.getResult();
                 List<DocumentSnapshot> documentSnapshots = snapshot.getDocuments();
                 List<String> result = documentSnapshots.stream().map(documentSnapshot ->
-                        "Ads/" + documentSnapshot.get("ref")).collect(Collectors.toList());
+                        "Ads/" + documentSnapshot.get("id")).collect(Collectors.toList());
                 photosReferencesListFuture.complete(result);
             } else {
                 photosReferencesListFuture.completeExceptionally(

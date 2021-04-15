@@ -23,7 +23,7 @@ import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
 import ch.epfl.sdp.appart.login.FirebaseLoginService;
 import ch.epfl.sdp.appart.login.LoginService;
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;

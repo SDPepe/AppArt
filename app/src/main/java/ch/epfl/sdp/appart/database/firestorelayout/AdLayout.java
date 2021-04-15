@@ -5,8 +5,10 @@ package ch.epfl.sdp.appart.database.firestorelayout;
  */
 public final class AdLayout {
 
-    private AdLayout() {
-    }
+
+    //WARNING : ref -> id
+
+    private AdLayout() {}
 
     /**
      * absolute path to the ads directory in Firestore
@@ -16,7 +18,7 @@ public final class AdLayout {
     /**
      * absolute path to the pictures directory of the ad in Firestore
      */
-    public final static String PICTURES_DIRECTORY = "photosRefs";
+    public final static String PICTURES_DIRECTORY = "pictures_ids"; //photosRefs
 
     /**
      * @apiNote : String on Firestore
@@ -41,7 +43,7 @@ public final class AdLayout {
     /**
      * @apiNote : String on Firestore
      */
-    public final static String ADVERTISER_ID = "advertiserId";
+    public final static String ADVERTISER_ID = "advertiser_id"; //advertiserId
 
     /**
      * @apiNote : String on Firestore
@@ -51,11 +53,11 @@ public final class AdLayout {
     /**
      * @apiNote : boolean on Firestore
      */
-    public final static String VR_TOUR = "hasVTour";
+    public final static String VR_TOUR = "has_vr_tour"; //hasVTour
 
     /**
      * @apiNote : long on Firestore
      */
-    public final static String PRICE_PERIOD = "pricePeriod";
+    public final static String PRICE_PERIOD = "price_period"; //price_period
 
 }
