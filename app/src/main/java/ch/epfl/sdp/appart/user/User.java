@@ -61,6 +61,11 @@ public interface User {
     void setProfileImage(String img);
 
     /**
+     * removes the profile picture, thus sets the default user gender icon
+     */
+    void removeProfileImage();
+
+    /**
      * getter for users age
      *
      * @return the age of the user as int
