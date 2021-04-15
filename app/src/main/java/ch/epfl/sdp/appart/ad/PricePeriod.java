@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.scrolling;
+package ch.epfl.sdp.appart.ad;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public enum PricePeriod {
 
-    DAY("day"), WEEK("week"), MONTH("month");
+    MONTH("month"), WEEK("week"), DAY("day");
 
     public static final List<PricePeriod> ALL = Collections
             .unmodifiableList(Arrays.asList(values()));
