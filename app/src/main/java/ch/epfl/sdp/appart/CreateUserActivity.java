@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.UIUtils;
@@ -25,6 +26,9 @@ public class CreateUserActivity extends AppCompatActivity {
     //@LoginModule.CloudLoginService
     @Inject
     public LoginService loginService;
+
+    @Inject
+    public DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public class CreateUserActivity extends AppCompatActivity {
             return null;
         });
         futureUser.thenAccept(user -> {
+            databaseService.putUser(user);
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         });

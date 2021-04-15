@@ -128,7 +128,7 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     private void getSessionUserFromDatabase() {
         this.sessionUser = new AppUser("1", "carlo.musso@epfl.ch");
-        // get session user from database
+        // TODO: get session user from database
     }
 
     /**
@@ -137,7 +137,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * @return true if the update was correctly completed, false otherwise
      */
     private boolean setSessionUserToDatabase() {
-        // set session user to database
+        // TODO: get session user from database
         return true;
     }
 
@@ -190,18 +190,14 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        if (this.sessionUser.getProfileImage() == null) {
-            int id;
-            if (this.sessionUser.getGender().equals(Gender.MALE.name())) {
-                id = R.drawable.user_example_male;
-            } else if (this.sessionUser.getGender().equals(Gender.FEMALE.name())) {
-                id = R.drawable.user_example_female;
-            } else {
-                id = R.drawable.user_example_no_gender;
-            }
+        String[] verifier = this.sessionUser.getProfileImage().split(":");
+        if (verifier[0].equals("userIcon")){
+            int id = Integer.parseInt(verifier[1]);
             Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
             this.imageView.setImageDrawable(iconImage);
-        } //   else { set actual user-specific profile picture }
+        } else {
+            // TODO: set actual user-specific profile picture with sessionUser.getProfileImage()
+        }
     }
 
 

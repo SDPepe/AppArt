@@ -1,6 +1,5 @@
-package ch.epfl.sdp.appart.adcreation;
+package ch.epfl.sdp.appart.ad;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -8,26 +7,28 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.ad.Ad;
-import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
+/**
+ * ViewModel for the ad creation activity.
+ * <p>
+ * It adds to the database a new ad with the information provided by the AdCreationActivity.
+ */
 @HiltViewModel
 public class AdCreationViewModel extends ViewModel {
 
-    private final MutableLiveData<String> title = new MutableLiveData<>();
-    private final MutableLiveData<String> street = new MutableLiveData<>();
-    private final MutableLiveData<String> city = new MutableLiveData<>();
-    private final MutableLiveData<Long> price = new MutableLiveData<>();
-    private final MutableLiveData<PricePeriod> pricePeriod = new MutableLiveData<>();
-    private final MutableLiveData<String> description = new MutableLiveData<>();
+    private String title;
+    private String street;
+    private String city;
+    private long price;
+    private PricePeriod pricePeriod;
+    private String description;
     // refs to files stored on the device. FirebaseDB will take care of loading them and uploading
-    private final MutableLiveData<List<String>> photosRefs = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> VRTourEnable = new MutableLiveData<>();
+    private List<String> photosRefs;
+    private boolean VRTourEnable;
 
     final DatabaseService db;
     final LoginService ls;
@@ -40,15 +41,15 @@ public class AdCreationViewModel extends ViewModel {
 
     /**
      * function to use when confirming the creation of the ad
+     *
      * @return a completable future with true if the ad has been successfully added to the database,
-     *  false if an exception was thrown
+     * false if an exception was thrown
      */
     public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
         ContactInfo ci = new ContactInfo(user.getUserEmail(), user.getPhoneNumber(), user.getName());
-        Ad ad = new Ad(title.getValue(), price.getValue(), pricePeriod.getValue(), street.getValue(),
-                city.getValue(), user.getUserId(), description.getValue(), photosRefs.getValue(),
-                VRTourEnable.getValue(), ci);
+        Ad ad = new Ad(title, price, pricePeriod, street, city, user.getUserId(), description,
+                photosRefs, VRTourEnable, ci);
         CompletableFuture<String> result = db.putAd(ad);
         return result.thenApply(s -> {
             user.addAdId(s);
@@ -57,34 +58,37 @@ public class AdCreationViewModel extends ViewModel {
 
     }
 
+    // setters
     public void setTitle(String s) {
-        title.postValue(s);
+        title = s;
     }
 
     public void setStreet(String s) {
-        street.postValue(s);
+        street = s;
     }
 
     public void setCity(String s) {
-        city.postValue(s);
+        city = s;
     }
 
-    public void setPrice(String s) {
-        price.postValue(Long.valueOf(Long.parseLong(s)));
+    public void setPrice(long l) {
+        price = l;
     }
 
     public void setPricePeriod(PricePeriod p) {
-        pricePeriod.postValue(p);
+        pricePeriod = p;
     }
 
     public void setDescription(String s) {
-        description.postValue(s);
+        description = s;
     }
 
     public void setPhotosRefs(List<String> ls) {
-        photosRefs.postValue(ls);
+        photosRefs = ls;
     }
 
-    public void setVRTourEnable(boolean b) { VRTourEnable.postValue(Boolean.valueOf(b)); }
+    public void setVRTourEnable(boolean b) {
+        VRTourEnable = b;
+    }
 
 }
