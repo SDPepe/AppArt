@@ -21,6 +21,7 @@
 
         <activity android:name=".LoginActivity" />
 
+        <activity android:name=".AdCreationActivity" />
 
         <activity android:name=".PanoramaActivity" />
 
