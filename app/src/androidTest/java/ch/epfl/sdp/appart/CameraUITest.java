@@ -13,6 +13,7 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @HiltAndroidTest
@@ -33,12 +34,12 @@ public class CameraUITest {
 
     @Test
     public void clickOnCameraBtn() {
-        onView(withId(R.id.camera_Camera_button)).perform(click());
+        onView(withId(R.id.camera_Camera_button)).perform(scrollTo(), click());
     }
 
     @Test
     public void clickOnGalleryBtn() {
-        onView(withId(R.id.gallery_Camera_button)).perform(click());
+        onView(withId(R.id.gallery_Camera_button)).perform(scrollTo(), click());
     }
 
     @After
