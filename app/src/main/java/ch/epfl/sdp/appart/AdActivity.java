@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
+import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -31,6 +32,8 @@ public class AdActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
+    @Inject
+    LoginService login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,14 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
 
-        mViewModel.initAd(getIntent().getStringExtra("adID"));
+        // if activity open by adcreation, load the last ad created by the user,
+        // otherwise load the id passed by scrollingactivity
+        if (getIntent().getBooleanExtra("fromAdCreation", false)) {
+            List<String> adIds = login.getCurrentUser().getAdsIds();
+            mViewModel.initAd(adIds.get(adIds.size() - 1));
+        } else {
+            mViewModel.initAd(getIntent().getStringExtra("adID"));
+        }
     }
 
     private void updateTitle(String title) {
@@ -110,11 +120,18 @@ public class AdActivity extends ToolbarActivity {
 
     /**
      * Method called when the activity is done and should be closed.
+     * <p>
+     * If the activity has been opened by AdCreationActivity, then it opens a new ScrollingActivity,
+     * otherwise it returns to the ScrollingActivity that opened this activity.
      *
      * @param view
      */
     public void goBack(View view) {
-        finish();
+        if (getIntent().getBooleanExtra("fromAdCreation", false)) {
+            startActivity(new Intent(this, ScrollingActivity.class));
+        } else {
+            finish();
+        }
     }
 
     /**

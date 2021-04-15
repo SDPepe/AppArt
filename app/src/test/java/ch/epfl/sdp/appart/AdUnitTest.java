@@ -8,7 +8,7 @@ import java.util.List;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
-import ch.epfl.sdp.appart.scrolling.PricePeriod;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
