@@ -13,6 +13,9 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -33,7 +36,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-@UninstallModules(LoginModule.class)
+@UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
 public class CreateUserAccountUITest {
 
@@ -46,6 +49,10 @@ public class CreateUserAccountUITest {
     @BindValue
     final
     LoginService loginService = new MockLoginService();
+
+    @BindValue
+    final
+    DatabaseService databaseService = new MockDatabaseService();
 
     @Before
     public void init() {
