@@ -29,6 +29,7 @@ After finishing my part of the refactoring task, I kept on working on the page f
 I also added an icon to the cards UI, so that the user can know if an ad comes with a virtual tour.
 
 ## Quentin
+This week I worked on refactoring the firebase cloud. I had to change the code conventions to a universal and consistent way of doing. Basically, we adopted, after a democrating vote, that we would use lower case letters separated by underscores. I duplicated all the fields because it was needed that the work from other would still work. My other task was debugging/fixing the bitmap loading with Glide that would fail if you kept a reference to the bitmap in the activity and both the activity and Glide would try to recycle it on the end of the activity. I aslo fixed the back button bug on panorama activity.
 
 
 ## Overall team
