@@ -19,6 +19,7 @@ Furthermore I did a small refactoring on getProfileImage() method of the user wh
 
 
 ## Émilien
+This week I worked on a few minor changes to the project. I had to change the creation of the user, so when a user is created, he is also stored in Firestore. I also started making the changes suggested by the TA in the code review. This is not totally finished, but it shouldn't take too long. 
 
 
 ## Filippo
