@@ -8,12 +8,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
-
-import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
@@ -51,8 +48,8 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        /* User ViewModel initialisation */
-        UserViewModel mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        /* User ViewModel initialization */
+        mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.modifyButton);
@@ -67,12 +64,9 @@ public class UserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_UserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
 
-        /* retrieve session user copy for use info */
-        getSessionUserFromDatabase();
-
-        /* set attributes of session user to the UI components */
-        getAndSetCurrentAttributes();
-
+        /* get user from database from user ID */
+        mViewModel.getCurrentUser();
+        mViewModel.getUser().observe(this, this::setSessionUserToLocal);
     }
 
     /**
@@ -102,7 +96,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * saves updated user information, called by the done button
+     * saves updated user information in firestore database, called by the done button
      */
     public void doneEditing(View view) {
 
@@ -112,37 +106,40 @@ public class UserProfileActivity extends AppCompatActivity {
         /* disable editing text in all UI components*/
         enableDisableEntries();
 
-        /* update the view with new attributes */
-        getAndSetCurrentAttributes();
-
-        /* if true the update in firestore was correctly executed */
-        boolean updateIsDone = setSessionUserToDatabase();
+        setSessionUserToDatabase();
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
     }
 
     /**
-     * retrieves the current user information from database
-     * and stores it in the session user instance
+     *
+     * @param user sets the value of the current user to the session user object
      */
-    private void getSessionUserFromDatabase() {
-        this.sessionUser = new AppUser("1", "carlo.musso@epfl.ch");
-        // TODO: get session user from database
+    private void setSessionUserToLocal(User user){
+        this.sessionUser = user;
+
+        /* set attributes of session user to the UI components */
+        getAndSetCurrentAttributes();
     }
 
     /**
      * sets the updated user information to the firestore database
-     *
-     * @return true if the update was correctly completed, false otherwise
      */
-    private boolean setSessionUserToDatabase() {
-        // TODO: get session user from database
-        return true;
+    private void setSessionUserToDatabase() {
+      mViewModel.updateUser(this.sessionUser);
+      mViewModel.getUpdateCardConfirmed().observe(this, this::informationUpdateResult);
+        /* update the view with new attributes */
+        getAndSetCurrentAttributes();
+    }
+
+    private void informationUpdateResult(Boolean b) {
+        //System.out.println(b);
+        // TODO: do something if needed
     }
 
     /**
-     * enables and disables UI components to edit
+     * enables and disables UI components when edit
      */
     private void enableDisableEntries() {
         this.nameEditText.setEnabled(!this.nameEditText.isEnabled());

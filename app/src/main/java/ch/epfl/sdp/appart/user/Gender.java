@@ -21,9 +21,6 @@ public enum Gender {
     public static final List<Gender> ALL = Collections
             .unmodifiableList(Arrays.asList(values()));
 
-    /* attribute COUNT tells us the number of enum values */
-    public final static int COUNT = 4;
-
     private final String name;
 
     Gender(String name) {
