@@ -22,6 +22,8 @@ Furthermore I did a small refactoring on getProfileImage() method of the user wh
 
 
 ## Filippo
+This week I mainly work on saving picture from gallery/camera to the storage of Firebase. At the moment the logic is implemented but I need to syncronizhe my work with the modify ad and modify user, and after also write the test for check that all work corectly. Secondarly I help Carlo for bind his job of modify the user information with the FaireBase Database. 
+For the next week I hope to finish all the implementation regarding the Camera/Gallery: for the create/modify AD and create/modify User.
 
 
 ## Lorenzo 
