@@ -99,4 +99,9 @@
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
+
+    <!-- ScrollingActivity stuff -->
+    <string name="leftButtonDescription_Panorama">Load previous image</string>
+    <string name="rightButtonDescription_Panorama">Load next image</string>
+
 </resources>

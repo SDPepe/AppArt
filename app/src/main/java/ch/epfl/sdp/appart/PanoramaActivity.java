@@ -1,17 +1,28 @@
 package ch.epfl.sdp.appart;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
+import com.panoramagl.utils.PLUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -39,32 +50,34 @@ public class PanoramaActivity extends AppCompatActivity {
     DatabaseService database;
     //private Bitmap bitmap;
     private PLManager plManager;
+    List<String> images;
+    int currImage;
+    ImageButton leftButton;
+    ImageButton rightButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panoramagl);
+        leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
+        rightButton =  (ImageButton) findViewById(R.id.rightImage_Panorama_imageButton);
+
+        getImages();
+        currImage = 0;
+
+
+        // init PL manager
         plManager = new PLManager(this);
         plManager.setContentView(findViewById(R.id.content_Panorama_relativeLayout));
         plManager.onCreate();
-
         plManager.setAccelerometerEnabled(false);
         plManager.setInertiaEnabled(false);
         plManager.setZoomEnabled(false);
 
-        //init camera parameter for the view
-        PLSphericalPanorama panorama = new PLSphericalPanorama();
-
-        panorama.getCamera().lookAtAndZoomFactor(30.0f, 90.0f, 0.5f, false);
-        CompletableFuture<Bitmap> bitmapFuture = new CompletableFuture<>();
-        database.accept(new GlideBitmapLoader(this, bitmapFuture, "file:///android_asset/panorama_test.jpg"));
-
-        bitmapFuture.thenApply(bitmap -> {
-            panorama.setImage(new PLImage(bitmap, true));
-            plManager.setPanorama(panorama);
-            return bitmap;
-        });
-
+        loadImage();
+        disableLeftButton();
+        if (images.size() < 2)
+            disableRightButton();
     }
 
 
@@ -72,6 +85,7 @@ public class PanoramaActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         plManager.onResume();
+
     }
 
     @Override
@@ -82,7 +96,6 @@ public class PanoramaActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-
         plManager.onDestroy();
         super.onDestroy();
     }
@@ -99,6 +112,95 @@ public class PanoramaActivity extends AppCompatActivity {
      */
     public void goBack(View view) {
         finish();
+    }
+
+    /**
+     * Load previous panorama image
+     *
+     * @param view
+     */
+    public void goLeft(View view) {
+        currImage--;
+        loadImage();
+        if (currImage == 0)
+            disableLeftButton();
+        if (currImage == images.size() - 2)
+            enableRightButton();
+    }
+
+    /**
+     * Load next panorama image
+     *
+     * @param view
+     */
+    public void goRight(View view) {
+        currImage++;
+        loadImage();
+        if (currImage == images.size() - 1)
+            disableRightButton();
+        if (currImage == 1)
+            enableLeftButton();
+    }
+
+    /**
+     * Init the list of panorama images, set the current image index to 0, load image.
+     */
+    private void getImages() {
+        images = new ArrayList<>();
+        // TODO change with database call to get image references
+        images.add("file:///android_asset/panorama_test.jpg");
+        images.add("file:///android_asset/panorama_test_2.jpg");
+        images.add("file:///android_asset/panorama_test_3.jpg");
+        images.add("file:///android_asset/panorama_test_4.jpg");
+    }
+
+    /**
+     * Load image at current index into panorama
+     */
+    private void loadImage() {
+        PLSphericalPanorama panorama = new PLSphericalPanorama();
+
+        CompletableFuture<Bitmap> bitmapFuture = new CompletableFuture<>();
+        database.accept(new GlideBitmapLoader(this, bitmapFuture, images.get(currImage)));
+
+        bitmapFuture.thenApply(bitmap -> {
+            panorama.setImage(new PLImage(bitmap, true));
+            panorama.getCamera().lookAtAndZoomFactor(30.0f, 90.0f, 0.5f, false);
+            plManager.setPanorama(panorama);
+            return bitmap;
+        });
+    }
+
+    /**
+     * Disable left button and make it invisible
+     */
+    private void disableLeftButton() {
+            leftButton.setEnabled(false);
+            leftButton.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Enable left button and make it visible
+     */
+    private void enableLeftButton(){
+            leftButton.setEnabled(true);
+            leftButton.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Disable right button and make it invisible
+     */
+    private void disableRightButton() {
+            rightButton.setEnabled(false);
+            rightButton.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Enable right button and make it visible
+     */
+    private void enableRightButton(){
+            rightButton.setEnabled(true);
+            rightButton.setVisibility(View.VISIBLE);
     }
 
 }

@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.glide.visitor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,12 +27,14 @@ import ch.epfl.sdp.appart.database.MockDatabaseService;
 public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoaderVisitor {
 
     private final CompletableFuture<Bitmap> bitmapFuture;
+    private final String imagePath;
 
     public GlideBitmapLoader(Context context, CompletableFuture<Bitmap> bitmapFuture, String imagePath) {
         super(context);
         if (imagePath == null) throw new IllegalArgumentException("image path cannot be null");
         if (bitmapFuture == null) throw new IllegalArgumentException("future cannot be null");
         this.bitmapFuture = bitmapFuture;
+        this.imagePath = imagePath;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
-                .load(R.drawable.panorama_test)
+                .load(Uri.parse(imagePath))
                 .into(target);
     }
 
@@ -56,7 +59,7 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
-                .load(R.drawable.panorama_test)
+                .load(Uri.parse(imagePath))
                 .into(target);
 
     }
