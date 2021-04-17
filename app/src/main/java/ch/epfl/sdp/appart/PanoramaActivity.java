@@ -1,9 +1,6 @@
 package ch.epfl.sdp.appart;
 
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,18 +8,12 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
-import com.panoramagl.utils.PLUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -60,7 +51,7 @@ public class PanoramaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panoramagl);
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
-        rightButton =  (ImageButton) findViewById(R.id.rightImage_Panorama_imageButton);
+        rightButton = (ImageButton) findViewById(R.id.rightImage_Panorama_imageButton);
 
         getImages();
         currImage = 0;
@@ -175,32 +166,32 @@ public class PanoramaActivity extends AppCompatActivity {
      * Disable left button and make it invisible
      */
     private void disableLeftButton() {
-            leftButton.setEnabled(false);
-            leftButton.setVisibility(View.INVISIBLE);
+        leftButton.setEnabled(false);
+        leftButton.setVisibility(View.INVISIBLE);
     }
 
     /**
      * Enable left button and make it visible
      */
-    private void enableLeftButton(){
-            leftButton.setEnabled(true);
-            leftButton.setVisibility(View.VISIBLE);
+    private void enableLeftButton() {
+        leftButton.setEnabled(true);
+        leftButton.setVisibility(View.VISIBLE);
     }
 
     /**
      * Disable right button and make it invisible
      */
     private void disableRightButton() {
-            rightButton.setEnabled(false);
-            rightButton.setVisibility(View.INVISIBLE);
+        rightButton.setEnabled(false);
+        rightButton.setVisibility(View.INVISIBLE);
     }
 
     /**
      * Enable right button and make it visible
      */
-    private void enableRightButton(){
-            rightButton.setEnabled(true);
-            rightButton.setVisibility(View.VISIBLE);
+    private void enableRightButton() {
+        rightButton.setEnabled(true);
+        rightButton.setVisibility(View.VISIBLE);
     }
 
 }
