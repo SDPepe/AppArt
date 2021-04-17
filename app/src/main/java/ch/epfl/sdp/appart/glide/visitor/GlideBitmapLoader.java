@@ -40,8 +40,7 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
     @Override
     public void visit(FirestoreDatabaseService database) {
         /*
-          WARNING : For simplicity we keep the loading on the drawable for now, will change
-          next week.
+          WARNING : For simplicity we keep the loading on the drawable for now, will change.
          */
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
@@ -53,8 +52,7 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
     @Override
     public void visit(MockDatabaseService database) {
         /*
-          WARNING : For simplicity we keep the loading on the drawable for now, will change
-          next week.
+          WARNING : For simplicity we keep the loading on the drawable for now, will change.
          */
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
@@ -78,12 +76,11 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
 
         @Override
         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-            targetFuture.complete(resource);
+            targetFuture.complete(resource.copy(resource.getConfig(), false));
         }
 
         @Override
-        public void onLoadCleared(@Nullable Drawable placeholder) {
-        }
+        public void onLoadCleared(@Nullable Drawable placeholder) {}
 
         /**
          * Return the bitmap that was inserted in the target

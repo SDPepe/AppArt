@@ -46,6 +46,8 @@ public class PanoramaActivity extends AppCompatActivity {
     ImageButton leftButton;
     ImageButton rightButton;
 
+    private Bitmap bitmap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,6 +160,7 @@ public class PanoramaActivity extends AppCompatActivity {
             panorama.setImage(new PLImage(bitmap, true));
             panorama.getCamera().lookAtAndZoomFactor(30.0f, 90.0f, 0.5f, false);
             plManager.setPanorama(panorama);
+            this.bitmap = bitmap;
             return bitmap;
         });
     }
