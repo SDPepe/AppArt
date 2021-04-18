@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart;
 import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,7 +22,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
 import dagger.hilt.android.AndroidEntryPoint;
+import java.util.concurrent.CompletableFuture;
+import javax.inject.Inject;
 
 import static android.widget.Toast.makeText;
 
@@ -35,12 +40,14 @@ public class CameraActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 105;
     private static final String TAG = CameraActivity.class.getSimpleName();
 
-    private String currentPhotoPath;
     private ImageView mImageView;
-    //private StorageReference storagereference;
     private Uri imageUri;
 
+    @Inject
+    DatabaseService database;
+
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
@@ -68,6 +75,7 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void startCamera() {
         ContentValues val = new ContentValues();
         val.put(MediaStore.Images.Media.TITLE, "new picture");
@@ -99,35 +107,35 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
-            mImageView.setImageURI(imageUri);
-        }
+        if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK)
+            uploadImage();
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
-            Uri imageUri = data.getData();
-            mImageView.setImageURI(imageUri);
+            imageUri = data.getData();
+            uploadImage();
         }
     }
-}
-//add image to storage database
-    /*
-    private void uploadImageToFirebase(String name, Uri imageUri){
-        StorageReference image = storagereference.child("pic/"+ name);
-        image.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<TaskSnapshot>() {
-            @Override
-            public void onSuccess(TaskSnapshot taskSnapshot) {
-                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.d(TAG, "Upload image URL is " + uri.toString());
-                    }
-                });
-                makeText(CameraActivity.this, "Image is uploaded!", Toast.LENGTH_SHORT).show();
+
+    private void uploadImage(){
+        CompletableFuture<Boolean> futureImage= database.putImage(imageUri, "test"+System.currentTimeMillis()+"." +getFileExtension(imageUri), "test/1234qwe123/photo0" );
+        futureImage.exceptionally(e -> {
+            Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
+            return null;
+        });
+        futureImage.thenAccept( res -> {
+            if(res == true){
+                Toast.makeText(CameraActivity.this, "Successfully upload image ", Toast.LENGTH_LONG).show();
+                mImageView.setImageURI(imageUri);
+            } else {
+                Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-        @Override
-        public void onFailure(@NonNull Exception e) {
-            makeText(CameraActivity.this, "Upload failled!", Toast.LENGTH_SHORT).show();
-        }
-    });
-  }
-*/
+        });
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+}
+
+
