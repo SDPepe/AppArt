@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.database;
 
+import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import java.util.List;
@@ -108,6 +109,20 @@ public interface DatabaseService extends DatabaseHostVisitor {
      */
     @NonNull
     CompletableFuture<String> putAd(Ad ad);
+
+    /**
+     * Upload a image
+     *
+     * @param uri a Uri of the image.
+     * @param name a String represent the name of image.
+     * @param path a String represent the path where store the image.
+     * @return A CompletableFuture<Boolean> that wraps a boolean if it
+     * stored the image on the database. If an error
+     * occurs, the future will deliver false.
+     */
+    @NonNull
+    CompletableFuture<Boolean> putImage(Uri uri, String name, String path);
+
 
     CompletableFuture<Void> clearCache();
 

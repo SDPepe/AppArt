@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.database;
 
+import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
@@ -83,6 +84,10 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     public CompletableFuture<String> putAd(Ad ad) {
         return db.putAd(ad);
     }
+
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) { return db.putImage(uri, name, path); }
 
     @Override
     public CompletableFuture<Void> clearCache() {

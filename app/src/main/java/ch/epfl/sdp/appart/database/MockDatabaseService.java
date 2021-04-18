@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.database;
 
+import android.net.Uri;
+import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -139,6 +141,14 @@ public class MockDatabaseService implements DatabaseService {
             result.complete("1234");
         }
         return result;
+    }
+
+
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
+        // TODO implement
+        return null;
     }
 
     @Override

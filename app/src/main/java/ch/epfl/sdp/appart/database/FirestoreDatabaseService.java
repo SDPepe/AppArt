@@ -293,6 +293,19 @@ public class FirestoreDatabaseService implements DatabaseService {
         return result;
     }
 
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
+        if (uri == null || name == null) {
+            throw new IllegalArgumentException("parameters cannot be null");
+        }
+        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(path); //Firebase Storage Name Folder: example: Ad/0AmzXBySMsOPL9dQ3yKG/photo1
+        StorageReference fileReference  = storageReference.child(name);       //System.currentTimeMillis() + "." + extension
+        fileReference.putFile(uri).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
+        return isFinishedFuture;
+    }
+
     @Override
     public CompletableFuture<Void> clearCache() {
         CompletableFuture<Void> futureClear = new CompletableFuture<>();
