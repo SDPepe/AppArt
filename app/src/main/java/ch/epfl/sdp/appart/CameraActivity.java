@@ -116,7 +116,11 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void uploadImage(){
-        CompletableFuture<Boolean> futureImage= database.putImage(imageUri, "test"+System.currentTimeMillis()+"." +getFileExtension(imageUri), "test/1234qwe123/photo0" );
+        Intent intent = getIntent();
+        String path = intent.getStringExtra("path");
+        String name = intent.getStringExtra("name");
+
+        CompletableFuture<Boolean> futureImage= database.putImage(imageUri, name +"." +getFileExtension(imageUri), path);
         futureImage.exceptionally(e -> {
             Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
             return null;

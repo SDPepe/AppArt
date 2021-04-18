@@ -161,6 +161,8 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openCamera(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra("path","test/1234qwe123/photo0");
+        intent.putExtra("name","test-time="+ System.currentTimeMillis());
         startActivity(intent);
     }
 
