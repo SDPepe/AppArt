@@ -118,7 +118,7 @@ public class CameraActivity extends AppCompatActivity {
     private void uploadImage(){
         Intent intent = getIntent();
         String path = intent.getStringExtra("path");
-        String name = intent.getStringExtra("name");
+        String name = intent.getStringExtra("name")+ "-time="+ System.currentTimeMillis();
 
         CompletableFuture<Boolean> futureImage= database.putImage(imageUri, name +"." +getFileExtension(imageUri), path);
         futureImage.exceptionally(e -> {
