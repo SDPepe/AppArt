@@ -130,10 +130,10 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
-    // TODO implement
+    // TODO implement uriList
     @NotNull
     @Override
-    public CompletableFuture<String> putAd(Ad ad) {
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
         CompletableFuture<String> result = new CompletableFuture<>();
         if (ad.getTitle().equals("failing")){
             result.completeExceptionally(new IllegalStateException());
