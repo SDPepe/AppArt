@@ -1,8 +1,10 @@
 package ch.epfl.sdp.appart.ad;
 
 import android.net.Uri;
+
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -39,6 +41,9 @@ public class AdCreationViewModel extends ViewModel {
     public AdCreationViewModel(DatabaseService db, LoginService ls) {
         this.db = db;
         this.ls = ls;
+        // left empty, the images of the add are passed to the database through the photosUri list
+        photosRefs = new ArrayList<>();
+        photosUri = new ArrayList<>();
     }
 
     /**
@@ -52,7 +57,7 @@ public class AdCreationViewModel extends ViewModel {
         ContactInfo ci = new ContactInfo(user.getUserEmail(), user.getPhoneNumber(), user.getName());
         Ad ad = new Ad(title, price, pricePeriod, street, city, user.getUserId(), description,
                 photosRefs, VRTourEnable, ci);
-        CompletableFuture<String> result = db.putAd(ad);
+        CompletableFuture<String> result = db.putAd(ad, photosUri);
         return result.thenApply(s -> {
             user.addAdId(s);
             return true;
@@ -85,14 +90,16 @@ public class AdCreationViewModel extends ViewModel {
         description = s;
     }
 
-    public void setPhotosRefs(List<String> ls) {
-        photosRefs = ls;
-    }
-
     public void setVRTourEnable(boolean b) {
         VRTourEnable = b;
     }
 
-    public void setUri(List<Uri> uri){ photosUri = uri;}
+    public void setUri(List<Uri> uri) {
+        photosUri = uri;
+    }
+
+    public boolean hasPhotos() {
+        return photosUri != null && photosUri.size() >= 1;
+    }
 
 }

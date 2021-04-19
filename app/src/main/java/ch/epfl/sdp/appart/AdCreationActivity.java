@@ -99,8 +99,6 @@ public class AdCreationActivity extends AppCompatActivity {
         mViewModel.setDescription(getContentOfEditText(R.id.description_AdCreation_editText));
         // TODO modify when logic for adding vrtour is added
         mViewModel.setVRTourEnable(false);
-        // TODO modify whe logic for adding images is added
-        mViewModel.setPhotosRefs(new ArrayList<>());
     }
 
     private String joinStrings(int id1, int id2) {
