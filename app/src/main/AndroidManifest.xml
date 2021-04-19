@@ -14,18 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SimpleUserProfileActivity"/>
+        <activity android:name=".PanoramaTourCreationActivity"></activity>
+        <activity android:name=".SimpleUserProfileActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".CreateUserActivity" />
         <activity android:name=".ResetActivity" />
-
         <activity android:name=".LoginActivity" />
-
         <activity android:name=".AdCreationActivity" />
-
         <activity android:name=".PanoramaActivity" />
-
         <activity android:name=".AdActivity" />
         <activity android:name=".ScrollingActivity" />
         <activity android:name=".MainActivity">
@@ -36,4 +33,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

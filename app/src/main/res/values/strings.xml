@@ -50,6 +50,7 @@
     <string name="genderText"> Gender </string>
     <string name="nonUniAccountClaimer">  Regular account </string>
     <string name="cameraAdButtonDesc">Add Picture</string>
+    <string name="createPanoramaTourButton">Create Panorama tour</string>
     <string name="cameraButtonText">Camera</string>
     <string name="galleryButtonText">Gallery</string>
     <string name="createAccountPasswordFieldHint">Enter a password</string>

@@ -287,6 +287,15 @@
                 android:text="@string/cameraButtonAdCreation" />
 
             <Button
+                android:id="@+id/createVirtualTour_AdCreation_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="024dp"
+                android:text="@string/createPanoramaTourButton" />
+
+            <Button
                 android:id="@+id/confirm_AdCreation_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -48,6 +48,11 @@ public class AdCreationActivity extends AppCompatActivity {
         confirmButton.setOnClickListener((View view) -> createAd());
         Button addPhotoButton = findViewById(R.id.addPhoto_AdCreation_button);
         addPhotoButton.setOnClickListener((View view) -> takePhoto());
+        Button createPanoramaTourButton = findViewById(R.id.createVirtualTour_AdCreation_button);
+        createPanoramaTourButton.setOnClickListener((View view) -> {
+            Intent intent = new Intent(this, PanoramaTourCreationActivity.class);
+            startActivity(intent);
+        });
     }
 
     /**
