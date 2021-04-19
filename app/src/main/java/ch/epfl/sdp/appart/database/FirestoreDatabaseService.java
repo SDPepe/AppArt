@@ -300,7 +300,7 @@ public class FirestoreDatabaseService implements DatabaseService {
             throw new IllegalArgumentException("parameters cannot be null");
         }
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(path); //Firebase Storage Name Folder: example: Ad/0AmzXBySMsOPL9dQ3yKG/photo1
+        StorageReference storageReference = storage.getReference(path); //Firebase Storage Name Folder: example: Ad/0AmzXBySMsOPL9dQ3yKG/photo1
         StorageReference fileReference  = storageReference.child(name);       //System.currentTimeMillis() + "." + extension
         fileReference.putFile(uri).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;

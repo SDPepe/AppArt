@@ -22,8 +22,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import androidx.lifecycle.ViewModelProvider;
+import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import dagger.hilt.android.AndroidEntryPoint;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
@@ -42,15 +46,19 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageView mImageView;
     private Uri imageUri;
+    private List<Uri> listImageUri;
 
     @Inject
     DatabaseService database;
+    
 
     @Override
     @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        listImageUri = new ArrayList<>();
 
         mImageView = findViewById(R.id.image_Camera_imageView);
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
@@ -116,10 +124,9 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void uploadImage(){
-        Intent intent = getIntent();
-        String path = intent.getStringExtra("path");
-        String name = intent.getStringExtra("name")+ "-time="+ System.currentTimeMillis();
-
+        listImageUri.add(imageUri);
+        mImageView.setImageURI(imageUri);
+        /*
         CompletableFuture<Boolean> futureImage= database.putImage(imageUri, name +"." +getFileExtension(imageUri), path);
         futureImage.exceptionally(e -> {
             Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
@@ -133,6 +140,20 @@ public class CameraActivity extends AppCompatActivity {
                 Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
             }
         });
+        */
+    }
+    @Override
+    public void onBackPressed(){
+        Intent intent = getIntent();
+        String activity = intent.getStringExtra("Activity");
+        if(activity.equals("Ads")) {
+            AdCreationViewModel mViewModel = new ViewModelProvider(this)
+                .get(AdCreationViewModel.class);
+            mViewModel.setUri(listImageUri);
+            finish();
+        } else if (activity == "User") {
+
+        }
     }
 
     private String getFileExtension(Uri uri) {
@@ -140,6 +161,7 @@ public class CameraActivity extends AppCompatActivity {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
+
 }
 
 

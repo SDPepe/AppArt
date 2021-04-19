@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.ad;
 
+import android.net.Uri;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class AdCreationViewModel extends ViewModel {
     // refs to files stored on the device. FirebaseDB will take care of loading them and uploading
     private List<String> photosRefs;
     private boolean VRTourEnable;
+    private List<Uri> photosUri;
 
     final DatabaseService db;
     final LoginService ls;
@@ -90,5 +92,7 @@ public class AdCreationViewModel extends ViewModel {
     public void setVRTourEnable(boolean b) {
         VRTourEnable = b;
     }
+
+    public void setUri(List<Uri> uri){ photosUri = uri;}
 
 }

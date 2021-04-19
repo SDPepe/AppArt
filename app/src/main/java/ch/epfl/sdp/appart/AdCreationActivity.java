@@ -33,8 +33,8 @@ public class AdCreationActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
-
     AdCreationViewModel mViewModel;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,8 +148,8 @@ public class AdCreationActivity extends AppCompatActivity {
      * Opens camera activity to take/select images to add to the ad
      */
     private void takePhoto() {
-        // TODO save photos path to VM photosRefs
         Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra("Activity","Ads");
         startActivity(intent);
     }
 }
