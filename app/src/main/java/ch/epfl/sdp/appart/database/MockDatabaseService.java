@@ -147,8 +147,13 @@ public class MockDatabaseService implements DatabaseService {
     @NonNull
     @Override
     public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
-        // TODO implement
-        return null;
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        if (uri == null || name == null || path == null){
+            result.completeExceptionally(new IllegalArgumentException());
+        } else {
+            result.complete(true);
+        }
+        return result;
     }
 
     @Override

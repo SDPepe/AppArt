@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import android.net.Uri;
+import java.net.URI;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,6 +78,21 @@ public class MockDatabaseTest {
         Ad ad = new Ad("failing", 1000, PricePeriod.DAY, "", "", "",
                 "", new ArrayList<>(), false, mock(ContactInfo.class));
         assertThrows(ExecutionException.class, () -> dataBase.putAd(ad).get());
+    }
+
+    @Test
+    public void putImageThrowsOnNullUri() throws ExecutionException, InterruptedException {
+        assertThrows(ExecutionException.class, () -> dataBase.putImage(null, "", "").get());
+    }
+    @Test
+    public void putImageThrowsOnNullName() throws ExecutionException, InterruptedException {
+        Uri uri = mock(Uri.class);
+        assertThrows(ExecutionException.class, () -> dataBase.putImage(uri, null, "").get());
+    }
+    @Test
+    public void putImageThrowsOnNullUser() throws ExecutionException, InterruptedException {
+        Uri uri = mock(Uri.class);
+        assertThrows(ExecutionException.class, () -> dataBase.putImage(uri, "", null).get());
     }
 
 }
