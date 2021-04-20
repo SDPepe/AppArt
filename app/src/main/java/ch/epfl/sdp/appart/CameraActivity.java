@@ -5,15 +5,22 @@ import android.Manifest.permission;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +32,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +52,6 @@ public class CameraActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 105;
     private static final String TAG = CameraActivity.class.getSimpleName();
 
-    private ImageView mImageView;
     private Uri imageUri;
     private List<Uri> listImageUri;
 
@@ -60,7 +67,6 @@ public class CameraActivity extends AppCompatActivity {
 
         listImageUri = new ArrayList<>();
 
-        mImageView = findViewById(R.id.image_Camera_imageView);
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
 
@@ -115,8 +121,12 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Intent intent = getIntent();
+        String activity = intent.getStringExtra("Activity");
+
         if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK)
             uploadImage();
+
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
             imageUri = data.getData();
             uploadImage();
@@ -125,7 +135,20 @@ public class CameraActivity extends AppCompatActivity {
 
     private void uploadImage(){
         listImageUri.add(imageUri);
-        mImageView.setImageURI(imageUri);
+        LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
+        horizontalLayout.removeAllViews();
+
+        for (Uri i: listImageUri) {
+            LayoutInflater inflater =
+                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
+            ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
+            photo.setImageURI(i);
+            photo.setPadding(16,0,16,0);
+            horizontalLayout.addView(myView);
+
+        }
+    }
         /*
         CompletableFuture<Boolean> futureImage= database.putImage(imageUri, name +"." +getFileExtension(imageUri), path);
         futureImage.exceptionally(e -> {
@@ -141,7 +164,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
         */
-    }
+
     @Override
     public void onBackPressed(){
         Intent intent = getIntent();
