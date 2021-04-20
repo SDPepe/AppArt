@@ -70,14 +70,14 @@ public class MockDatabaseTest {
     public void putAdWorksWithGoodValue() throws ExecutionException, InterruptedException {
         Ad ad = new Ad("title", 1000, PricePeriod.DAY, "", "", "",
                 "", new ArrayList<>(), false, mock(ContactInfo.class));
-        assertEquals("1234", dataBase.putAd(ad).get());
+        assertEquals("1234", dataBase.putAd(ad, new ArrayList<>()).get());
     }
 
     @Test
     public void putAdWorksThrowsOnBadValue() throws ExecutionException, InterruptedException {
         Ad ad = new Ad("failing", 1000, PricePeriod.DAY, "", "", "",
                 "", new ArrayList<>(), false, mock(ContactInfo.class));
-        assertThrows(ExecutionException.class, () -> dataBase.putAd(ad).get());
+        assertThrows(ExecutionException.class, () -> dataBase.putAd(ad, new ArrayList<>()).get());
     }
 
     @Test
