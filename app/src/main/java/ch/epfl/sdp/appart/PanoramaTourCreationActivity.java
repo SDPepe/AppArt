@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -17,7 +18,7 @@ import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 
 public class PanoramaTourCreationActivity extends AppCompatActivity {
 
-    private static int RESULT_LOAD_IMAGE = 1;
+    private static final int RESULT_LOAD_IMAGE = 1;
     private RecyclerView recyclerView;
     private PanoramaPictureCardAdapter adapter;
 
@@ -29,6 +30,7 @@ public class PanoramaTourCreationActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView_PanoramaTourCreation);
         adapter = new PanoramaPictureCardAdapter();
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
         Button plusButton = findViewById(R.id.plus_PanoramaCreation);
@@ -49,6 +51,7 @@ public class PanoramaTourCreationActivity extends AppCompatActivity {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             adapter.addPicture(data.getData());
+            adapter.notifyDataSetChanged();
             // String picturePath contains the path of selected Image
         } else if (resultCode != RESULT_OK || null == data) {
             throw new IllegalStateException("failed to retrieve the picture");

@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 
 public class PanoramaPictureCardAdapter extends RecyclerView.Adapter<PanoramaPictureCardAdapter.CardViewHolder> {
 
     List<PanoramaPictureCard> cards;
+    private PanoramaPictureCard selectedCard;
 
     public PanoramaPictureCardAdapter() {
         cards = new ArrayList<>();
@@ -37,10 +37,17 @@ public class PanoramaPictureCardAdapter extends RecyclerView.Adapter<PanoramaPic
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         PanoramaPictureCard picture = cards.get(position);
         holder.sphericalImageView.setImageURI(picture.getImageUri());
+        holder.cardIndexTextView.setText(Integer.toString(picture.getIndex()));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedCard = cards.get(position);
+            }
+        });
     }
 
     public void addPicture(Uri uri) {
-        cards.add(new PanoramaPictureCard(uri));
+        cards.add(new PanoramaPictureCard(uri, cards.size() + 1));
     }
 
     public void swap(int first, int second) {
@@ -72,10 +79,12 @@ public class PanoramaPictureCardAdapter extends RecyclerView.Adapter<PanoramaPic
     protected static class CardViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView sphericalImageView;
+        private final TextView cardIndexTextView;
 
         public CardViewHolder(View view) {
             super(view);
             sphericalImageView = view.findViewById(R.id.panoramaCardimageView_PanoramaCreation);
+            cardIndexTextView = view.findViewById(R.id.panorama_card_index_textView);
         }
 
     }
