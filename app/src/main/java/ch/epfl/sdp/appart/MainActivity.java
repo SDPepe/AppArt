@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -24,15 +25,6 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     LocationService locationService;
 
-    ActivityResultLauncher<String[]> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
-                if (isGranted.get(Manifest.permission.ACCESS_COARSE_LOCATION) && isGranted.get(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    //Continue app workfwlo
-                } else {
-                    //Tell the user the feature can't be used
-                }
-            });
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +32,14 @@ public class MainActivity extends AppCompatActivity {
 
         PermissionRequest.askForLocationPermission(this, () -> {
             Log.d("PERMISSION_DEBUG_INFO", "Permission granted");
+            locationService.setupLocationUpdate();
         }, () -> {
             Log.d("PERMISSION_DEBUG_INFO", "Permission refused");
         }, () -> {
             Log.d("PERMISSION_DEBUG_INFO", "Educational popup");
         });
+
+        Location loc = locationService.getCurrentLocation();
 
 
         /*Intent intent = new Intent(this, LoginActivity.class);

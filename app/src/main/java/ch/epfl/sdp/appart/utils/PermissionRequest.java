@@ -38,5 +38,8 @@ public class PermissionRequest {
                 requestPermissionLauncher.launch(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION});
             }
         }
+        else {
+            permissionGranted.run();
+        }
     }
 }

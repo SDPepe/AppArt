@@ -6,5 +6,7 @@ package ch.epfl.sdp.appart.location;
  * transforming an address into latitude and longitude...
  */
 public interface LocationService {
+
     Location getCurrentLocation();
+    void setupLocationUpdate();
 }
