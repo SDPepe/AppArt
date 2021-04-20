@@ -97,6 +97,7 @@
     <string name="toolbarTitle_AdCreation">Create an ad</string>
     <string name="snackbarFailed_AdCreation">There was an error while posting your ad, please try again later</string>
     <string name="snackbarNotFilled_AdCreation">Some fields haven\'t been filled!</string>
+    <string name="snackbarNoPhotos_AdCreation">Please add at least one image!</string>
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>

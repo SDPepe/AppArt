@@ -67,6 +67,12 @@ public class AdCreationActivity extends AppCompatActivity {
                     Snackbar.LENGTH_SHORT).show();
             return;
         }
+        if (!mViewModel.hasPhotos()){
+            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                    getResources().getText(R.string.snackbarNoPhotos_AdCreation),
+                    Snackbar.LENGTH_SHORT).show();
+            return;
+        }
 
         // set values to viewmodel
         setVMValues();
