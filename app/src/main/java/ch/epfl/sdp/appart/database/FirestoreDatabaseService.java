@@ -209,17 +209,26 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<Boolean> updateUser(@NonNull User user) {
+    public CompletableFuture<Boolean> updateUser(@NonNull User user, Uri uri) {
 
         if (user == null) {
             throw new IllegalArgumentException("user cannot bu null");
         }
 
+        String name = "photo" + getTypeFromUri(uri);
+        String path = "User" + "/" + user.getUserId();
+
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(UserLayout.DIRECTORY)
-                .document(user.getUserId())
-                .set(extractUserInfo(user))
-                .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
+
+        putImage(uri, name, path).thenAccept(res -> {
+            if (!res) {
+                isFinishedFuture.completeExceptionally(
+                new UnsupportedOperationException("Ad upload failed!"));
+                db.collection(UserLayout.DIRECTORY)
+                    .document(user.getUserId())
+                    .set(extractUserInfo(user))
+                    .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
+        }});
         return isFinishedFuture;
     }
 

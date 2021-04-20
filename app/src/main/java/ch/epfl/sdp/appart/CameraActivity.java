@@ -175,7 +175,6 @@ public class CameraActivity extends AppCompatActivity {
             mViewModel.setUri(listImageUri);
             finish();
         } else if (activity == "User") {
-
         }
     }
 
