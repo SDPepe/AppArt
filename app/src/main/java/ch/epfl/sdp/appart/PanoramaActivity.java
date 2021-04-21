@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
@@ -162,6 +163,12 @@ public class PanoramaActivity extends AppCompatActivity {
             plManager.setPanorama(panorama);
             this.bitmap = bitmap;
             return bitmap;
+        });
+        bitmapFuture.exceptionally(e -> {
+            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                    getResources().getText(R.string.snackbarError_Panorama),
+                    Snackbar.LENGTH_SHORT).show();
+            return null;
         });
     }
 
