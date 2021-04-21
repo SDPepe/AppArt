@@ -54,9 +54,9 @@ public class PanoramaActivity extends AppCompatActivity {
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
         rightButton = (ImageButton) findViewById(R.id.rightImage_Panorama_imageButton);
 
+        // TODO will have to switch to future when it will load from db
         getImages();
         currImage = 0;
-
 
         // init PL manager
         plManager = new PLManager(this);
@@ -162,12 +162,12 @@ public class PanoramaActivity extends AppCompatActivity {
             this.bitmap = bitmap;
             return bitmap;
         });
-        /*bitmapFuture.exceptionally(e -> {
+        bitmapFuture.exceptionally(e -> {
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarError_Panorama),
                     Snackbar.LENGTH_SHORT).show();
             return null;
-        });*/
+        });
     }
 
     /**

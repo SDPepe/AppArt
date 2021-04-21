@@ -1,8 +1,5 @@
 package ch.epfl.sdp.appart;
 
-import android.widget.ImageButton;
-
-import androidx.annotation.ContentView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.Before;
