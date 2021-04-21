@@ -1,5 +1,8 @@
 package ch.epfl.sdp.appart.location;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+
 /**
  * The location service interface that any real location service must implement.
  * This provides an API for getting the current location of the user,
@@ -7,6 +10,6 @@ package ch.epfl.sdp.appart.location;
  */
 public interface LocationService {
 
-    Location getCurrentLocation();
-    void setupLocationUpdate();
+    CompletableFuture<Location> getCurrentLocation();
+    void setupLocationUpdate(Consumer<Location> callback);
 }

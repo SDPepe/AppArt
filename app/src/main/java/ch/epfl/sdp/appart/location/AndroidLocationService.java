@@ -1,14 +1,23 @@
 package ch.epfl.sdp.appart.location;
 
+import android.content.Context;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.CancellationSignal;
+import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -22,49 +31,39 @@ import ch.epfl.sdp.appart.hilt.LocationModule;
 
 @Singleton
 public final class AndroidLocationService implements LocationService {
-    private final LocationManager locationManager;
-    private final String locationProvider;
-    private final Criteria locationCriteria;
+   private final FusedLocationProviderClient locationProvider;
 
-    private CompletableFuture<Location> firstLocation = new CompletableFuture<>();
-
-    private Location location = new Location();
+    private LocationCallback callback;
 
     @Inject
-    AndroidLocationService(LocationManager locationManager, @LocationModule.LocationProvider @Nullable String locationProvider, Criteria locationCriteria) {
-
-        this.locationManager = locationManager;
+    AndroidLocationService(FusedLocationProviderClient locationProvider) {
+        if(locationProvider == null) throw new IllegalArgumentException();
         this.locationProvider = locationProvider;
-        this.locationCriteria = locationCriteria;
 
-
-
-    }
-
-    private String getLocationProvider() {
-        if (this.locationProvider != null) {
-            return this.locationProvider;
-        }
-
-        return this.locationManager.getBestProvider(this.locationCriteria, true);
     }
 
     @Override
-    public Location getCurrentLocation() {
-        Location locationReturn = new Location();
-        locationReturn.latitude = location.latitude;
-        locationReturn.longitude = location.longitude;
-        return locationReturn;
+    public CompletableFuture<Location> getCurrentLocation() {
+       CompletableFuture<Location> futureLocation = new CompletableFuture<>();
+
     }
 
     @Override
-    public void setupLocationUpdate() {
+    public void setupLocationUpdate(Consumer<Location> callback) {
          try {
-            locationManager.requestLocationUpdates(locationProvider, 100, 100, location -> {
-                this.location.latitude = location.getLatitude();
-                this.location.longitude = location.getLongitude();
-                this.firstLocation.complete(this.location);
-            });
+             LocationRequest request = LocationRequest.create();
+             this.callback = new LocationCallback() {
+                 @Override
+                 public void onLocationResult(@NonNull LocationResult locationResult) {
+                     android.location.Location loc = locationResult.getLastLocation();
+                     
+                     Location myLocation = new Location();
+                     myLocation.latitude = loc.getLatitude();
+                     myLocation.longitude = loc.getLongitude();
+                     callback.accept(myLocation);
+                 }
+             };
+            locationProvider.requestLocationUpdates(request, this.callback, Looper.getMainLooper());
         } catch(SecurityException e) {
             throw e;
         }

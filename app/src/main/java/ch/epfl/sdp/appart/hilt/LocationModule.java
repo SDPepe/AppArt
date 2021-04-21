@@ -6,6 +6,9 @@ import android.location.LocationManager;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -25,32 +28,13 @@ import dagger.hilt.components.SingletonComponent;
 @InstallIn(SingletonComponent.class)
 public abstract class LocationModule {
 
-    @Qualifier
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface LocationProvider {}
-
     @Singleton
     @Binds
     public abstract LocationService bindLocationService(AndroidLocationService locationService);
 
     @Singleton
     @Provides
-    public static LocationManager provideLocationManager(@ApplicationContext Context context) {
-        return (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-    }
-
-    @Provides
-    @LocationProvider
-    @Nullable
-    public static String provideLocationProvider(LocationManager locationManager, Criteria locationCriteria) {
-        return locationManager.getBestProvider(locationCriteria, true);
-    }
-
-    @Singleton
-    @Provides
-    public static Criteria provideCriteria() {
-        Criteria criteria = new Criteria();
-        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
-        return criteria;
+    public static FusedLocationProviderClient provideLocationProvider(@ApplicationContext Context context) {
+        return LocationServices.getFusedLocationProviderClient(context);
     }
 }

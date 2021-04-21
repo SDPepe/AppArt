@@ -7,7 +7,16 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
+import com.google.android.gms.tasks.Task;
 
 import javax.inject.Inject;
 
@@ -32,14 +41,40 @@ public class MainActivity extends AppCompatActivity {
 
         PermissionRequest.askForLocationPermission(this, () -> {
             Log.d("PERMISSION_DEBUG_INFO", "Permission granted");
-            locationService.setupLocationUpdate();
+            //locationService.setupLocationUpdate();
         }, () -> {
             Log.d("PERMISSION_DEBUG_INFO", "Permission refused");
         }, () -> {
             Log.d("PERMISSION_DEBUG_INFO", "Educational popup");
         });
+        FusedLocationProviderClient test = LocationServices.getFusedLocationProviderClient(this);
+        try {
+            test.getLastLocation().addOnCompleteListener(task -> {
+                if(task.isSuccessful()) {
+                    Location location = new Location();
+                    location.longitude = task.getResult().getLongitude();
+                    location.latitude = task.getResult().getLatitude();
+                    Log.d("LOCATION", "TEST");
+                }
+            });
+        } catch(SecurityException e) {
+            throw e;
+        }
 
-        Location loc = locationService.getCurrentLocation();
+        try {
+            test.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnCompleteListener(task -> {
+                if(task.isSuccessful()) {
+                    Location location = new Location();
+                    location.longitude = task.getResult().getLongitude();
+                    location.latitude = task.getResult().getLatitude();
+                    Log.d("LOCATION", "TEST");
+                }
+            });
+        } catch(SecurityException e) {
+            throw e;
+        }
+
+
 
 
         /*Intent intent = new Intent(this, LoginActivity.class);
