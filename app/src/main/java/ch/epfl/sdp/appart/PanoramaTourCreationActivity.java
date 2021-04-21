@@ -35,6 +35,10 @@ public class PanoramaTourCreationActivity extends AppCompatActivity {
 
         Button plusButton = findViewById(R.id.plus_PanoramaCreation);
         Button minusButton = findViewById(R.id.minus_PanoramaCreation);
+
+        plusButton.setOnClickListener(v -> adapter.swapSelectedPicturesWithAbove());
+        minusButton.setOnClickListener(v -> adapter.swapSelectedPictureWithBellow());
+
         Button addPanoramaButton = findViewById(R.id.add_PanoramaCreation);
 
         addPanoramaButton.setOnClickListener((View view) -> {
