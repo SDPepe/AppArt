@@ -18,6 +18,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.location.Location;
@@ -28,57 +31,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 /**
  * The main UI class.
  */
-@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
-
-    @Inject
-    LocationService locationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        PermissionRequest.askForLocationPermission(this, () -> {
-            Log.d("PERMISSION_DEBUG_INFO", "Permission granted");
-            //locationService.setupLocationUpdate();
-        }, () -> {
-            Log.d("PERMISSION_DEBUG_INFO", "Permission refused");
-        }, () -> {
-            Log.d("PERMISSION_DEBUG_INFO", "Educational popup");
-        });
-        FusedLocationProviderClient test = LocationServices.getFusedLocationProviderClient(this);
-        try {
-            test.getLastLocation().addOnCompleteListener(task -> {
-                if(task.isSuccessful()) {
-                    Location location = new Location();
-                    location.longitude = task.getResult().getLongitude();
-                    location.latitude = task.getResult().getLatitude();
-                    Log.d("LOCATION", "TEST");
-                }
-            });
-        } catch(SecurityException e) {
-            throw e;
-        }
-
-        try {
-            test.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnCompleteListener(task -> {
-                if(task.isSuccessful()) {
-                    Location location = new Location();
-                    location.longitude = task.getResult().getLongitude();
-                    location.latitude = task.getResult().getLatitude();
-                    Log.d("LOCATION", "TEST");
-                }
-            });
-        } catch(SecurityException e) {
-            throw e;
-        }
-
-
-
-
-        /*Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);*/
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
 
     }
 }

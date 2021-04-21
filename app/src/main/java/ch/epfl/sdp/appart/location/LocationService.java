@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.location;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -11,5 +12,5 @@ import java.util.function.Consumer;
 public interface LocationService {
 
     CompletableFuture<Location> getCurrentLocation();
-    void setupLocationUpdate(Consumer<Location> callback);
+    void setupLocationUpdate(Consumer<List<Location>> callback);
 }
