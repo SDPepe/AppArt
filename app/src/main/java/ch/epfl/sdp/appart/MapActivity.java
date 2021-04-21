@@ -83,7 +83,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             return;
         }
-        mMap.setMyLocationEnabled(true);
+
+        try {
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        } catch (SecurityException e) {
+            throw e;
+        }
+
 
         // Add a marker in Sydney and move the camera
        /* LatLng sydney = new LatLng(-34, 151);
