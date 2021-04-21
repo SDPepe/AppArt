@@ -67,8 +67,8 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     @NotNull
     @NonNull
     @Override
-    public CompletableFuture<Boolean> updateUser(User user) {
-        return db.updateUser(user);
+    public CompletableFuture<Boolean> updateUser(User user, Uri uri) {
+        return db.updateUser(user, uri);
     }
 
     @NotNull

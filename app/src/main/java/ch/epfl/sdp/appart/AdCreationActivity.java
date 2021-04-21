@@ -1,12 +1,16 @@
 package ch.epfl.sdp.appart;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import android.widget.Toast;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,6 +18,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -53,6 +58,8 @@ public class AdCreationActivity extends AppCompatActivity {
             Intent intent = new Intent(this, PanoramaTourCreationActivity.class);
             startActivity(intent);
         });
+
+
     }
 
     /**
@@ -61,6 +68,13 @@ public class AdCreationActivity extends AppCompatActivity {
      */
     private void createAd() {
         // if some fields are not filled, show snackbar
+
+        String log = null;
+        if(mViewModel.getUri() != null){
+            log = mViewModel.getUri().toString();
+        }
+        Log.d("TEST","URI = "+log);
+
         if (!everyFieldFilled()) {
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarNotFilled_AdCreation),
@@ -159,6 +173,22 @@ public class AdCreationActivity extends AppCompatActivity {
     private void takePhoto() {
         Intent intent = new Intent(this, CameraActivity.class);
         intent.putExtra("Activity","Ads");
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1){
+            if (resultCode == RESULT_OK){
+                int size = data.getIntExtra("size", 0);
+                List<Uri> listUri = new ArrayList<>();
+                for(int i = 0; i< size; i++){
+                 listUri.add(data.getParcelableExtra("imageUri"+i));
+                }
+                mViewModel.setUri(listUri);
+            }
+        }
+    }
+
 }

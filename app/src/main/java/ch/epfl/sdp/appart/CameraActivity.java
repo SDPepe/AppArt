@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModelProvider;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
+import ch.epfl.sdp.appart.user.UserViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private Uri imageUri;
     private List<Uri> listImageUri;
+    private String activity;
 
     @Inject
     DatabaseService database;
@@ -63,9 +65,12 @@ public class CameraActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_camera);
 
         listImageUri = new ArrayList<>();
+        Intent intent = getIntent();
+        activity = intent.getStringExtra("Activity");
 
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
@@ -121,19 +126,28 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Intent intent = getIntent();
-        String activity = intent.getStringExtra("Activity");
 
         if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK)
-            uploadImage();
+            if(activity.equals("Ads")) {
+                uploadListImage();
+            } else if (activity.equals("User")){
+                uploadImage();
+            }
+
 
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
+
             imageUri = data.getData();
-            uploadImage();
+
+            if(activity.equals("Ads")) {
+                uploadListImage();
+            } else if (activity.equals("User")) {
+                uploadImage();
+            }
         }
     }
 
-    private void uploadImage(){
+    private void uploadListImage(){
         listImageUri.add(imageUri);
         LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
         horizontalLayout.removeAllViews();
@@ -148,6 +162,20 @@ public class CameraActivity extends AppCompatActivity {
             horizontalLayout.addView(myView);
 
         }
+    }
+
+    private void uploadImage(){
+        LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
+        horizontalLayout.removeAllViews();
+
+        LayoutInflater inflater =
+                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
+        ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
+        photo.setImageURI(imageUri);
+        horizontalLayout.addView(myView);
+
+
     }
         /*
         CompletableFuture<Boolean> futureImage= database.putImage(imageUri, name +"." +getFileExtension(imageUri), path);
@@ -170,11 +198,21 @@ public class CameraActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String activity = intent.getStringExtra("Activity");
         if(activity.equals("Ads")) {
-            AdCreationViewModel mViewModel = new ViewModelProvider(this)
-                .get(AdCreationViewModel.class);
-            mViewModel.setUri(listImageUri);
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("size",1);
+            int count= 0;
+            for (Uri i: listImageUri) {
+                resultIntent.putExtra("imageUri"+count, i);
+                count++;
+            }
+            setResult(RESULT_OK, resultIntent);
             finish();
-        } else if (activity == "User") {
+        } else if (activity.equals("User")) {
+            UserViewModel mViewModel = new ViewModelProvider(this)
+                .get(UserViewModel.class);
+            mViewModel.setUri(imageUri);
+
+
         }
     }
 

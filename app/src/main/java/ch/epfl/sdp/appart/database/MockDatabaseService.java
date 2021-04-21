@@ -119,7 +119,7 @@ public class MockDatabaseService implements DatabaseService {
 
     @NotNull
     @Override
-    public CompletableFuture<Boolean> updateUser(User user) {
+    public CompletableFuture<Boolean> updateUser(User user, Uri uri) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         if (users.containsValue(user)) {
             users.put(user.getUserId(), user);

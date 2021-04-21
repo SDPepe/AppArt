@@ -60,6 +60,13 @@ public class AdCreationViewModel extends ViewModel {
         }).exceptionally(e -> false);
 
     }
+    //getters
+    public Uri getUri(){
+        if (photosUri != null && photosUri.size() > 1) {
+            return photosUri.get(0);
+        } else {
+            return null;}
+    }
 
     // setters
     public void setTitle(String s) {
@@ -97,5 +104,7 @@ public class AdCreationViewModel extends ViewModel {
     public boolean hasPhotos() {
         return photosUri != null && photosUri.size() >= 1;
     }
+
+
 
 }
