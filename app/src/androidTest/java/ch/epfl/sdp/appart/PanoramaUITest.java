@@ -35,19 +35,19 @@ public class PanoramaUITest {
     int rightButtonID;
 
     @Before
-    public void init(){
+    public void init() {
         leftButtonID = R.id.leftImage_Panorama_imageButton;
-        rightButtonID =R.id.rightImage_Panorama_imageButton;
+        rightButtonID = R.id.rightImage_Panorama_imageButton;
     }
 
     @Test
-    public void buttonVisibilityOnFirstImageTest(){
+    public void buttonVisibilityOnFirstImageTest() {
         onView(withId(leftButtonID)).check(matches(not(isDisplayed())));
         onView(withId(rightButtonID)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void buttonVisibilityOnSecondImageTest(){
+    public void buttonVisibilityOnSecondImageTest() {
         onView(withId(rightButtonID)).perform(click());
 
         onView(withId(leftButtonID)).check(matches(isDisplayed()));
@@ -55,7 +55,7 @@ public class PanoramaUITest {
     }
 
     @Test
-    public void buttonVisibilityOnLastImageTest(){
+    public void buttonVisibilityOnLastImageTest() {
         onView(withId(rightButtonID)).perform(click());
         onView(withId(rightButtonID)).perform(click());
         onView(withId(rightButtonID)).perform(click());
