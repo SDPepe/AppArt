@@ -40,13 +40,11 @@ public class PanoramaActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
-    //private Bitmap bitmap;
     private PLManager plManager;
     List<String> images;
     int currImage;
     ImageButton leftButton;
     ImageButton rightButton;
-
     private Bitmap bitmap;
 
     @Override
@@ -164,12 +162,12 @@ public class PanoramaActivity extends AppCompatActivity {
             this.bitmap = bitmap;
             return bitmap;
         });
-        bitmapFuture.exceptionally(e -> {
+        /*bitmapFuture.exceptionally(e -> {
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarError_Panorama),
                     Snackbar.LENGTH_SHORT).show();
             return null;
-        });
+        });*/
     }
 
     /**
