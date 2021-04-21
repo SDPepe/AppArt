@@ -2,12 +2,12 @@ package ch.epfl.sdp.appart.panorama;
 
 import android.net.Uri;
 
-public class PanoramaPictureCard {
+public class PictureCard {
 
     private final Uri imageUri;
     private int index;
 
-    public PanoramaPictureCard(Uri imageUri, int index) {
+    public PictureCard(Uri imageUri, int index) {
         this.imageUri = imageUri;
         this.index = index;
     }

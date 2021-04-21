@@ -7,20 +7,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-
-import ch.epfl.sdp.appart.panorama.PanoramaPictureCardAdapter;
-import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
+import ch.epfl.sdp.appart.panorama.PictureCardAdapter;
 
 public class PanoramaTourCreationActivity extends AppCompatActivity {
 
     private static final int RESULT_LOAD_IMAGE = 1;
     private RecyclerView recyclerView;
-    private PanoramaPictureCardAdapter adapter;
+    private PictureCardAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,16 +24,13 @@ public class PanoramaTourCreationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_panorama_tour_creation);
 
         recyclerView = findViewById(R.id.recyclerView_PanoramaTourCreation);
-        adapter = new PanoramaPictureCardAdapter();
+        adapter = new PictureCardAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
         Button plusButton = findViewById(R.id.plus_PanoramaCreation);
         Button minusButton = findViewById(R.id.minus_PanoramaCreation);
-
-        plusButton.setOnClickListener(v -> adapter.swapSelectedPicturesWithAbove());
-        minusButton.setOnClickListener(v -> adapter.swapSelectedPictureWithBellow());
 
         Button addPanoramaButton = findViewById(R.id.add_PanoramaCreation);
 
