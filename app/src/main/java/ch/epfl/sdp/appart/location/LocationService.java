@@ -13,5 +13,7 @@ public interface LocationService {
 
     CompletableFuture<Location> getCurrentLocation();
 
-    void setupLocationUpdate(Consumer<List<Location>> callback);
+    CompletableFuture<Void> setupLocationUpdate(Consumer<List<Location>> callback);
+
+    CompletableFuture<Void> teardownLocationUpdate();
 }

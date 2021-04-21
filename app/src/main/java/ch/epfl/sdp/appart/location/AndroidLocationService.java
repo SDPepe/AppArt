@@ -53,7 +53,8 @@ public final class AndroidLocationService implements LocationService {
     }
 
     @Override
-    public void setupLocationUpdate(Consumer<List<Location>> callback) {
+    public CompletableFuture<Void> setupLocationUpdate(Consumer<List<Location>> callback) {
+        CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
         try {
             LocationRequest request = LocationRequest.create();
             this.locationCallback = new LocationCallback() {
@@ -62,18 +63,38 @@ public final class AndroidLocationService implements LocationService {
                     super.onLocationResult(locationResult);
                     List<Location> locations =
                             locationResult.getLocations().stream().map(androidLocation -> {
-                        Location loc = new Location();
-                        loc.longitude = androidLocation.getLongitude();
-                        loc.latitude = androidLocation.getLatitude();
-                        return loc;
-                    }).collect(Collectors.toList());
+                                Location loc = new Location();
+                                loc.longitude = androidLocation.getLongitude();
+                                loc.latitude = androidLocation.getLatitude();
+                                return loc;
+                            }).collect(Collectors.toList());
                     callback.accept(locations);
                 }
             };
             locationProvider.requestLocationUpdates(request,
-                    this.locationCallback, Looper.getMainLooper());
+                    this.locationCallback, Looper.getMainLooper()).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    futureSuccess.complete(null);
+                } else {
+                    futureSuccess.completeExceptionally(task.getException());
+                }
+            });
+            return futureSuccess;
         } catch (SecurityException e) {
             throw e;
         }
+    }
+
+    @Override
+    public CompletableFuture<Void> teardownLocationUpdate() {
+        CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
+        locationProvider.removeLocationUpdates(this.locationCallback).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                futureSuccess.complete(null);
+            } else {
+                futureSuccess.completeExceptionally(task.getException());
+            }
+        });
+        return futureSuccess;
     }
 }

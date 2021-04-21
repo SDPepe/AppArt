@@ -13,11 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 /**
  * The main UI class.
  */
-@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
-
-    @Inject
-    LocationService locationService;
 
 
     @Override
