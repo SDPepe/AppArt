@@ -12,5 +12,6 @@ import java.util.function.Consumer;
 public interface LocationService {
 
     CompletableFuture<Location> getCurrentLocation();
+
     void setupLocationUpdate(Consumer<List<Location>> callback);
 }
