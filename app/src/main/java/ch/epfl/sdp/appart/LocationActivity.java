@@ -60,4 +60,16 @@ public class LocationActivity extends AppCompatActivity {
         locationService.setupLocationUpdate(callback);
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        locationService.teardownLocationUpdate();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationService.teardownLocationUpdate();
+    }
 }

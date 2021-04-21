@@ -5,11 +5,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import javax.inject.Inject;
-
-import ch.epfl.sdp.appart.location.LocationService;
-import dagger.hilt.android.AndroidEntryPoint;
-
 /**
  * The main UI class.
  */
@@ -23,4 +18,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+
 }
