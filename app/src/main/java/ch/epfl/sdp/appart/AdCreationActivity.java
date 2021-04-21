@@ -81,12 +81,13 @@ public class AdCreationActivity extends AppCompatActivity {
                     Snackbar.LENGTH_SHORT).show();
             return;
         }
-        if (!mViewModel.hasPhotos()){
+        // TODO add back when new loading image system is finished
+        /*if (!mViewModel.hasPhotos()){
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarNoPhotos_AdCreation),
                     Snackbar.LENGTH_SHORT).show();
             return;
-        }
+        }*/
 
         // set values to viewmodel
         setVMValues();
@@ -95,9 +96,11 @@ public class AdCreationActivity extends AppCompatActivity {
         CompletableFuture<Boolean> result = mViewModel.confirmCreation();
         result.thenAccept(completed -> {
             if (completed) {
-                Intent intent = new Intent(this, AdActivity.class);
-                intent.putExtra("fromAdCreation", true);
-                startActivity(intent);
+                // TODO switch back when user is synced with firestore
+                finish();
+                //Intent intent = new Intent(this, AdActivity.class);
+                //intent.putExtra("fromAdCreation", true);
+                //startActivity(intent);
             } else {
                 Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                         getResources().getText(R.string.snackbarFailed_AdCreation),

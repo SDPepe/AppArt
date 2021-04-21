@@ -20,7 +20,6 @@ public class Ad {
     private final String description;
     private final List<String> photosRefs;
     private final boolean hasVRTour;
-    private final ContactInfo contactInfo;
 
     /**
      * Constructor of an ad.
@@ -34,14 +33,11 @@ public class Ad {
      * @param description  the description of the ad
      * @param photosRefs   the list of references to the ad images
      * @param hasVRTour    whether the apartment offers a VR tour
-     * @param contactInfo  name, phone number and email address of the user that created the ad
      */
     public Ad(String title, long price, PricePeriod pricePeriod, String street, String city,
-              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour,
-              ContactInfo contactInfo) {
+              String advertiserId, String description, List<String> photosRefs, boolean hasVRTour) {
         if (title == null || pricePeriod == null || street == null || city == null ||
-                advertiserId == null || description == null || photosRefs == null ||
-                contactInfo == null)
+                advertiserId == null || description == null || photosRefs == null)
             throw new IllegalArgumentException("An argument is null!");
 
         this.title = title;
@@ -53,7 +49,6 @@ public class Ad {
         this.description = description;
         this.photosRefs = photosRefs;
         this.hasVRTour = hasVRTour;
-        this.contactInfo = contactInfo;
     }
 
     // Getters
@@ -93,9 +88,6 @@ public class Ad {
         return hasVRTour;
     }
 
-    public ContactInfo getContactInfo() {
-        return contactInfo;
-    }
 
     /**
      * A inner Builder class to avoid the creation of an Ad
@@ -113,7 +105,6 @@ public class Ad {
         private String description;
         private List<String> photosRefs;
         private boolean hasVRTour;
-        private ContactInfo contactInfo;
 
         public AdBuilder withTitle(String title) {
             this.title = title;
@@ -161,11 +152,6 @@ public class Ad {
             return this;
         }
 
-        public AdBuilder withContactInfo(ContactInfo contactInfo) {
-            this.contactInfo = new ContactInfo(contactInfo);
-            return this;
-        }
-
         public Ad build() {
 
             return new Ad(
@@ -177,8 +163,7 @@ public class Ad {
                     advertiserId,
                     description,
                     photosRefs,
-                    hasVRTour,
-                    contactInfo
+                    hasVRTour
             );
         }
 

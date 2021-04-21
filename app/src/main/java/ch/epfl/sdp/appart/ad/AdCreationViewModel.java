@@ -50,9 +50,8 @@ public class AdCreationViewModel extends ViewModel {
      */
     public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
-        ContactInfo ci = new ContactInfo(user.getUserEmail(), user.getPhoneNumber(), user.getName());
         Ad ad = new Ad(title, price, pricePeriod, street, city, user.getUserId(), description,
-                new ArrayList<>(), VRTourEnable, ci);
+                new ArrayList<>(), VRTourEnable);
         CompletableFuture<String> result = db.putAd(ad, photosUri);
         return result.thenApply(s -> {
             user.addAdId(s);
@@ -60,12 +59,14 @@ public class AdCreationViewModel extends ViewModel {
         }).exceptionally(e -> false);
 
     }
+
     //getters
-    public Uri getUri(){
+    public Uri getUri() {
         if (photosUri != null && photosUri.size() > 1) {
             return photosUri.get(0);
         } else {
-            return null;}
+            return null;
+        }
     }
 
     // setters
@@ -104,7 +105,6 @@ public class AdCreationViewModel extends ViewModel {
     public boolean hasPhotos() {
         return photosUri != null && photosUri.size() >= 1;
     }
-
 
 
 }

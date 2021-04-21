@@ -52,7 +52,7 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
 
-        // if activity open by adcreation, load the last ad created by the user,
+        // if activity opened by adcreation, load the last ad created by the user,
         // otherwise load the id passed by scrollingactivity
         if (getIntent().getBooleanExtra("fromAdCreation", false)) {
             List<String> adIds = login.getCurrentUser().getAdsIds();

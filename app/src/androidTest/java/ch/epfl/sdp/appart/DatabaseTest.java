@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import android.net.Uri;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Before;
@@ -36,6 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.mock;
 
 @UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest
@@ -57,6 +60,7 @@ public class DatabaseTest {
     @Before
     public void setup() {
         db.clearCache().join();
+        System.out.println("Cache cleared");
     }
 
     public void verifyCard(Card retrievedCard, String city, long price, String ownerID) {
@@ -105,7 +109,7 @@ public class DatabaseTest {
         user.setName(name);
         user.setUserEmail(email);
 
-        db.updateUser(user).join();
+        db.updateUser(user, Uri.parse("/")).join();
 
         retrievedUser = db.getUser(user.getUserId()).join();
 
@@ -120,9 +124,6 @@ public class DatabaseTest {
         assertThat(retrievedAd.getCity(), is(city));
         assertThat(retrievedAd.getDescription(), is(desc));
         assertThat(retrievedAd.getPrice(), is(price));
-        assertThat(retrievedAd.getContactInfo().name, is(contactInfo.name));
-        assertThat(retrievedAd.getContactInfo().userEmail, is(contactInfo.userEmail));
-        assertThat(retrievedAd.getContactInfo().userPhoneNumber, is(contactInfo.userPhoneNumber));
         assertThat(retrievedAd.getPricePeriod(), is(pricePeriod));
         assertThat(retrievedAd.hasVRTour(), is(hasVRTour));
     }
@@ -163,13 +164,12 @@ public class DatabaseTest {
         builder.withCity(city);
         builder.withDescription(desc);
         builder.withPrice(price);
-        builder.withContactInfo(contactInfo);
         builder.withPhotosIds(photoIds);
         builder.withPricePeriod(pricePeriod);
         builder.hasVRTour(hasVRTour);
 
         Ad ad = builder.build();
-        db.putAd(ad).join();
+        db.putAd(ad, new ArrayList<>()).join();
 
         List<Card> retrievedCards = this.db.getCards().join();
         assertThat(retrievedCards.size(), is(1));

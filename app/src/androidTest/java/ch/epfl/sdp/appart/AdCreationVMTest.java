@@ -55,7 +55,6 @@ public class AdCreationVMTest {
         vm.setPrice(1000L);
         vm.setPricePeriod(PricePeriod.MONTH);
         vm.setDescription("description");
-        vm.setPhotosRefs(new ArrayList<>());
         vm.setVRTourEnable(true);
     }
 

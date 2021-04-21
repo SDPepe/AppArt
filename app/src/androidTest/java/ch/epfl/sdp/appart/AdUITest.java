@@ -65,19 +65,6 @@ public class AdUITest {
         intended(hasComponent(PanoramaActivity.class.getName()));
     }
 
-    @Test
-    public void displayAdInfoTest() {
-        Ad testAd = database.getAd(cardID).join();
-
-        onView(withId(R.id.title_Ad_textView)).check(matches(withText(testAd.getTitle())));
-        onView(withId(R.id.address_field_Ad_textView)).check(matches(withText(
-                testAd.getStreet() + ", " + testAd.getCity())));
-        onView(withId(R.id.price_field_Ad_textView)).check(matches(withText(
-                testAd.getPrice() + " / " + testAd.getPricePeriod().toString())));
-        onView(withId(R.id.description_field_Ad_textView)).check(matches(withText(testAd.getDescription())));
-        onView(withId(R.id.user_field_Ad_textView)).check(matches(withText(testAd.getContactInfo().name)));
-    }
-
     @After
     public void release() {
         Intents.release();

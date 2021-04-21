@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import android.app.Instrumentation;
+
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -19,6 +21,7 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -30,6 +33,8 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest
@@ -39,7 +44,7 @@ public class AdCreationUITest {
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityScenarioRule<AdCreationActivity> scrollingActivityRule = new ActivityScenarioRule<>(AdCreationActivity.class);
+    public ActivityScenarioRule<AdCreationActivity> adCreationActivityRule = new ActivityScenarioRule<>(AdCreationActivity.class);
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
@@ -89,7 +94,7 @@ public class AdCreationUITest {
     }
 
     @Test
-    public void successfulPostAdButtonShowsClosesActivityTest() {
+    public void successfulPostAdButtonClosesActivityTest() {
         //populate ad info
         onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo(), typeText("a"));
         closeSoftKeyboard();
@@ -108,7 +113,9 @@ public class AdCreationUITest {
 
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
-        intended(hasComponent(AdActivity.class.getName()));
+        // TODO go back to adactivity when user is synced with firestore
+        //intended(hasComponent(AdActivity.class.getName()));
+        assertEquals(adCreationActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
     }
 
     @Test

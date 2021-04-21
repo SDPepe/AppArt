@@ -264,7 +264,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
 
         CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
-            adBuilder.withContactInfo(contactInfo).withPhotosIds(photosReferences);
+            adBuilder.withPhotosIds(photosReferences);
             return adBuilder.build();
         }));
 
@@ -327,8 +327,10 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         StorageReference storeRef = storage.getReference(path);
         StorageReference fileReference = storeRef.child(name);
-        fileReference.putFile(uri).addOnCompleteListener(
-                task -> isFinishedFuture.complete(task.isSuccessful()));
+        // fileReference.putFile(uri).addOnCompleteListener(
+        //        task -> isFinishedFuture.complete(task.isSuccessful()));
+        // TODO discuss issue 146, solve putFile problem, then uncomment above lines and remove .complete below
+        isFinishedFuture.complete(true);
 
         return isFinishedFuture;
     }
@@ -350,9 +352,9 @@ public class FirestoreDatabaseService implements DatabaseService {
      * Returns as string the type of the file of this uri
      */
     private String getTypeFromUri(Uri uri) {
-        String[] split1 = uri.toString().split("/");
-        String[] split2 = split1[split1.length - 1].split(".");
-        return split2[split2.length - 1];
+        String ext = uri.toString().substring(uri.toString().lastIndexOf("."));
+        if (ext == null) throw new IllegalStateException("Uri does not contain a dot");
+        return ext;
     }
 
     /**
@@ -624,7 +626,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         CompletableFuture<ContactInfo> result = new CompletableFuture<>();
         //once the partial ad has be retrieve we query the user that is providing the ad
-        partialAdFuture.thenAccept(partialAd -> db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
+        /*partialAdFuture.thenAccept(partialAd -> db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
                 String userEmail = (String) documentSnapshot.get(UserLayout.EMAIL);
@@ -640,7 +642,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         partialAdFuture.exceptionally(exception -> {
             result.completeExceptionally(exception);
             return null;
-        });
+        });*/
 
         return result;
     }

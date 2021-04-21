@@ -30,8 +30,6 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adDescription = new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiser = new MutableLiveData<>(); // name of user
     private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
-    private final MutableLiveData<String> userPhone = new MutableLiveData<>();
-    private final MutableLiveData<String> userEmail = new MutableLiveData<>();
 
     @Inject
     public AdViewModel(DatabaseService db) {
@@ -55,10 +53,8 @@ public class AdViewModel extends ViewModel {
             this.adTitle.setValue(ad.getTitle());
             this.adPrice.setValue(ad.getPrice() + " / " + ad.getPricePeriod().toString());
             this.adDescription.setValue(ad.getDescription());
-            this.adAdvertiser.setValue(ad.getContactInfo().name);
+            this.adAdvertiser.setValue(ad.getAdvertiserId());
             this.adPhotosRefs.setValue(ad.getPhotosRefs());
-            this.userEmail.setValue(ad.getContactInfo().userEmail);
-            this.userPhone.setValue(ad.getContactInfo().userPhoneNumber);
         });
     }
 
@@ -85,14 +81,6 @@ public class AdViewModel extends ViewModel {
 
     public LiveData<String> getAdvertiser() {
         return adAdvertiser;
-    }
-
-    public LiveData<String> getPhoneNumber() {
-        return userPhone;
-    }
-
-    public LiveData<String> getEmailAddress() {
-        return userEmail;
     }
 
 }

@@ -199,7 +199,7 @@ public class CameraActivity extends AppCompatActivity {
         String activity = intent.getStringExtra("Activity");
         if(activity.equals("Ads")) {
             Intent resultIntent = new Intent();
-            resultIntent.putExtra("size",1);
+            resultIntent.putExtra("size",listImageUri.size());
             int count= 0;
             for (Uri i: listImageUri) {
                 resultIntent.putExtra("imageUri"+count, i);
