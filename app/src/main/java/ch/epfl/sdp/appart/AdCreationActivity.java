@@ -3,13 +3,11 @@ package ch.epfl.sdp.appart;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -73,7 +71,7 @@ public class AdCreationActivity extends AppCompatActivity {
         if(mViewModel.getUri() != null){
             log = mViewModel.getUri().toString();
         }
-        Log.d("TEST","URI = "+log);
+
 
         if (!everyFieldFilled()) {
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),

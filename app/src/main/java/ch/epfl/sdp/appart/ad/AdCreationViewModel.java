@@ -50,7 +50,7 @@ public class AdCreationViewModel extends ViewModel {
      */
     public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
-        ContactInfo ci = new ContactInfo(user.getUserEmail(), user.getPhoneNumber(), user.getName());
+        ContactInfo ci = new ContactInfo("test@gmail.ch", "09122233319","prova");//user.getUserEmail(), user.getPhoneNumber(), user.getName());
         Ad ad = new Ad(title, price, pricePeriod, street, city, user.getUserId(), description,
                 new ArrayList<>(), VRTourEnable, ci);
         CompletableFuture<String> result = db.putAd(ad, photosUri);
