@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".hilt.HiltApplication"
@@ -15,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".PanoramaTourCreationActivity"></activity>
+        <activity android:name=".LocationActivity"></activity>
         <activity android:name=".SimpleUserProfileActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".UserProfileActivity" />
