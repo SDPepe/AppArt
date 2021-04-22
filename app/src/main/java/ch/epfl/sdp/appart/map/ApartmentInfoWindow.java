@@ -62,26 +62,26 @@ public class ApartmentInfoWindow implements GoogleMap.InfoWindowAdapter {
             databaseService.accept(new GlideImageViewLoaderListener(activity,
                     photo, "Cards/" + card.getImageUrl(),
                     new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e,
-                                            Object model,
-                                            Target<Drawable> target,
-                                            boolean isFirstResource) {
-                    e.printStackTrace();
-                    return false;
-                }
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e,
+                                                    Object model,
+                                                    Target<Drawable> target,
+                                                    boolean isFirstResource) {
+                            e.printStackTrace();
+                            return false;
+                        }
 
-                @Override
-                public boolean onResourceReady(Drawable resource,
-                                               Object model,
-                                               Target<Drawable> target,
-                                               DataSource dataSource,
-                                               boolean isFirstResource) {
-                    if (!dataSource.equals(DataSource.MEMORY_CACHE))
-                        marker.showInfoWindow();
-                    return false;
-                }
-            }));
+                        @Override
+                        public boolean onResourceReady(Drawable resource,
+                                                       Object model,
+                                                       Target<Drawable> target,
+                                                       DataSource dataSource,
+                                                       boolean isFirstResource) {
+                            if (!dataSource.equals(DataSource.MEMORY_CACHE))
+                                marker.showInfoWindow();
+                            return false;
+                        }
+                    }));
         }
 
 

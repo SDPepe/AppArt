@@ -34,6 +34,7 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
@@ -42,9 +43,10 @@ public class MapActivity extends AppCompatActivity {
 
         Runnable onMapReadyCallback;
 
-        String address = getIntent().getStringExtra(getString(R.string.intentLocationForMap));
+        String address =
+                getIntent().getStringExtra(getString(R.string.intentLocationForMap));
 
-        if(address != null) {
+        if (address != null) {
             mapWrapper =
                     new GoogleMapWrapper(null);
             onMapReadyCallback = () -> {
@@ -73,18 +75,17 @@ public class MapActivity extends AppCompatActivity {
             };
         }
 
-
-        mapWrapper.setOnReadyCallback(onMapReadyCallback);
-
         PermissionRequest.askForLocationPermission(this, () -> {
             Log.d("PERMISSION", "Location permission granted");
             mapFragment.getMapAsync(mapWrapper);
         }, () -> {
             Log.d("PERMISSION", "Refused");
             finish();
-        }, () -> {
-            Log.d("PERMISSION", "Popup");
-        });
+        }, () -> Log.d("PERMISSION", "Popup"));
+
+
+
+        mapWrapper.setOnReadyCallback(onMapReadyCallback);
 
     }
 

@@ -23,7 +23,7 @@ public class GoogleMapWrapper implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        if(infoWindowAdapter != null) {
+        if (infoWindowAdapter != null) {
             map.setInfoWindowAdapter(infoWindowAdapter);
         }
 
@@ -33,31 +33,13 @@ public class GoogleMapWrapper implements OnMapReadyCallback {
         } catch (SecurityException e) {
             throw e;
         }
-
-       /* CompletableFuture<List<Card>> futureCards = databaseService
-       .getCards();
-        futureCards.exceptionally(e -> {
-            Log.d("EXCEPTION_DB", e.getMessage());
-            return null;
-        });
-
-        futureCards.thenAccept(cards -> {
-            for(Card card : cards) {
-                Location apartmentLoc = locationService.getLocationFromName
-                (card.getCity());
-                Marker cardMarker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(apartmentLoc.latitude, apartmentLoc
-                .longitude)).title(card.getCity()));
-                cardMarker.setTag(card);
-
-            }
-        });*/
-        if(onReadyCallback != null) {
+        if (onReadyCallback != null) {
             onReadyCallback.run();
         }
     }
 
-    public void addMarker(Location location, Object tag, boolean centerOnMarker) {
+    public void addMarker(Location location, Object tag,
+                          boolean centerOnMarker) {
         if (location == null) {
             throw new IllegalArgumentException();
         }
@@ -67,7 +49,7 @@ public class GoogleMapWrapper implements OnMapReadyCallback {
 
         cardMarker.setTag(tag);
 
-        if(centerOnMarker) {
+        if (centerOnMarker) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(cardMarker.getPosition(), 12.0f));
         }
     }
