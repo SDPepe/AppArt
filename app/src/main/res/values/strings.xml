@@ -104,5 +104,17 @@
     <string name="leftButtonDescription_Panorama">Load previous image</string>
     <string name="rightButtonDescription_Panorama">Load next image</string>
     <string name="snackbarError_Panorama">There was an error loading the image, please try again later.</string>
+  
+    <!-- LocationActivity stuff -->
+    <string name="permissionGranted">Permission granted</string>
+    <string name="permissionRefused">Permission refused</string>
+    <string name="educationalPopup">Educational popup</string>
+    <string name="setCallbackTextView">set</string>
+    <string name="notSetCallbackTextView">not set</string>
+    <string name="permissionDefault">Permission</string>
+    <string name="currentLocation">Current location :</string>
+    <string name="locationUnknown">unknown</string>
+    <string name="getLocationButton">Get location</string>
+    <string name="locationDefault">0.0</string>
 
 </resources>

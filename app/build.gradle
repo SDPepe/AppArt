@@ -72,10 +72,11 @@ dependencies {
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     androidTestAnnotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
-    compileOnly 'com.google.android.wearable:wearable:2.8.1'
     implementation 'com.google.vr:sdk-panowidget:1.180.0'
     implementation 'com.github.hannesa2:panoramagl:1.4'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
 }
 
 tasks.withType(Test) {
