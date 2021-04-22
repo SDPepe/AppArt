@@ -18,6 +18,14 @@ android {
         versionName "1.0"
         testInstrumentationRunner "ch.epfl.sdp.appart.CustomTestRunner"
         //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner" //replaced when using hilt
+
+        Properties properties = new Properties();
+        if(rootProject.file("local.properties").exists()) {
+            properties.load(rootProject.file("local.properties").newDataInputStream())
+            manifestPlaceholders =  [ mapsApiKey : properties.getProperty("MAPS_API_KEY", "")]
+        } else {
+            manifestPlaceholders = [ mapsApiKey : apikeyProperties['MAPS_API_KEY']]
+        }
     }
 
     buildTypes {
