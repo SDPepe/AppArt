@@ -99,4 +99,14 @@
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
+    <string name="permissionGranted">Permission granted</string>
+    <string name="permissionRefused">Permission refused</string>
+    <string name="educationalPopup">Educational popup</string>
+    <string name="setCallbackTextView">set</string>
+    <string name="notSetCallbackTextView">not set</string>
+    <string name="permissionDefault">Permission</string>
+    <string name="currentLocation">Current location :</string>
+    <string name="locationUnknown">unknown</string>
+    <string name="getLocationButton">Get location</string>
+    <string name="locationDefault">0.0</string>
 </resources>
