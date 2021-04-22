@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.User;
@@ -98,4 +99,7 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     public void accept(GlideBitmapLoaderVisitor visitor) {
         db.accept(visitor);
     }
+
+    @Override
+    public void accept(GlideLoaderListenerVisitor visitor) { db.accept(visitor); }
 }
