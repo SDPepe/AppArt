@@ -169,6 +169,7 @@ public class AdCreationActivity extends AppCompatActivity {
     /**
      * Opens camera activity to take/select images to add to the ad
      */
+    @SuppressWarnings("deprecation")
     private void takePhoto() {
         Intent intent = new Intent(this, CameraActivity.class);
         intent.putExtra("Activity","Ads");

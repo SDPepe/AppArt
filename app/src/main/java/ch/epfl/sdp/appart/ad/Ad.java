@@ -141,6 +141,7 @@ public class Ad {
             return this;
         }
 
+
         public AdBuilder withPhotosIds(List<String> photosIds) {
             this.photosRefs = new ArrayList<>();
             this.photosRefs.addAll(photosIds);

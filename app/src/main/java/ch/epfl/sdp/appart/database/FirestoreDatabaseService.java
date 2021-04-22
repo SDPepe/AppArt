@@ -265,8 +265,11 @@ public class FirestoreDatabaseService implements DatabaseService {
                 = getContactInfoFromFuturePartialAd(partialAdFuture);
 
 
-        CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
-            adBuilder.withPhotosIds(photosReferences);
+        CompletableFuture<CompletableFuture<Ad>> chain =
+            adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences)
+                -> partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo)
+                -> {
+                        adBuilder.withPhotosIds(photosReferences);
             return adBuilder.build();
         }));
 
@@ -307,7 +310,6 @@ public class FirestoreDatabaseService implements DatabaseService {
             imagesUploadResults.add(putImage(uriList.get(i), name, "Ads"));
             if(i == 0){
                 imagesUploadResults.add(putImage(uriList.get(0), name, "Cards"));
-
             }
         }
         // check whether any of the uploads failed
@@ -386,7 +388,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         for (int i = 0; i < actualRefs.size(); i++) {
             Map<String, Object> data = new HashMap<>();
             data.put("id", actualRefs.get(i));
-            DocumentReference photoRefDocReference = newAdRef.collection("photosRefs")
+            DocumentReference photoRefDocReference = newAdRef.collection(AdLayout.PICTURES_DIRECTORY)
                     .document();
             photoRefDocReference.set(data); // TODO check all uploads
         }
@@ -439,7 +441,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     private void finalizeAdUpload(CompletableFuture<String> result, CompletableFuture<Void> imagesResult,
                                   CompletableFuture<Void> adResult, CompletableFuture<Void> cardResult,
                                   DocumentReference adRef) {
-        CompletableFuture<Void> allOf = CompletableFuture.allOf(imagesResult, adResult, cardResult);
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(adResult, cardResult);
         allOf.thenAccept(res -> result.complete(adRef.getId()));
         allOf.exceptionally(e -> {
             result.completeExceptionally(e);
