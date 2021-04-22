@@ -25,11 +25,15 @@ public class LoginActivity extends AppCompatActivity {
     @Inject
     LoginService loginService;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Bundle extras = this.getIntent().getExtras();
+        if(extras.containsKey("email")  && extras.containsKey("password")){
+            ((EditText)findViewById(R.id.email_Login_editText)).setText(extras.getString("email"));
+            ((EditText)findViewById(R.id.password_Login_editText)).setText(extras.getString("password"));
+        }
     }
 
     /**
@@ -44,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
 
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
-
 
         CompletableFuture<User> loginFuture = loginService.loginWithEmail(email, password);
         loginFuture.exceptionally(e -> {
