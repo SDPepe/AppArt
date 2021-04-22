@@ -1,6 +1,9 @@
 package ch.epfl.sdp.appart;
 
+import android.Manifest;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,6 +26,10 @@ public class LocationUITest {
     @Rule(order = 1)
     public ActivityScenarioRule<LocationActivity> locationActivityRule =
             new ActivityScenarioRule<>(LocationActivity.class);
+
+    @Rule(order = 2)
+    public GrantPermissionRule mRuntimePermissionRule =
+            GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Test
     public void permissionIsGranted() {
