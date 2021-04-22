@@ -152,6 +152,8 @@ public class DatabaseTest {
         InputStream input = InstrumentationRegistry.getInstrumentation().getContext().getResources().getAssets().open("panorama_test.jpg");
         File copy = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getCacheDir() + "/panorama_test.jpg");
         writeCopy(input, copy);
+        List<Uri> uriList = new ArrayList<>();
+        uriList.add(Uri.fromFile(copy));
 
         loginService.signInAnonymously().join();
 
@@ -169,7 +171,7 @@ public class DatabaseTest {
         builder.hasVRTour(hasVRTour);
 
         Ad ad = builder.build();
-        db.putAd(ad, new ArrayList<>()).join();
+        db.putAd(ad, uriList).join();
 
         List<Card> retrievedCards = this.db.getCards().join();
         assertThat(retrievedCards.size(), is(1));
