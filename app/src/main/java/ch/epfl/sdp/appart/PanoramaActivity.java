@@ -142,8 +142,8 @@ public class PanoramaActivity extends AppCompatActivity {
         // TODO change with database call to get image references
         images.add("file:///android_asset/panorama_test.jpg");
         images.add("file:///android_asset/panorama_test_2.jpg");
-        images.add("file:///android_asset/panorama_test_3.jpg");
-        images.add("file:///android_asset/panorama_test_4.jpg");
+        //images.add("file:///android_asset/panorama_test_3.jpg");
+        //images.add("file:///android_asset/panorama_test_4.jpg");
     }
 
     /**

@@ -64,19 +64,7 @@ public class PanoramaUITest {
         onView(withId(rightButtonID)).perform(click());
 
         onView(withId(leftButtonID)).check(matches(isDisplayed()));
-        onView(withId(rightButtonID)).check(matches(isDisplayed()));
-    }
-
-    /*@Test
-    public void buttonVisibilityOnLastImageTest() throws InterruptedException {
-        onView(withId(rightButtonID)).perform(click());
-        Thread.sleep(200l);
-        onView(withId(rightButtonID)).perform(click());
-        Thread.sleep(200l);
-        onView(withId(rightButtonID)).perform(click());
-
-        onView(withId(leftButtonID)).check(matches(isDisplayed()));
         onView(withId(rightButtonID)).check(matches(not(isDisplayed())));
-    }*/
+    }
 
 }
