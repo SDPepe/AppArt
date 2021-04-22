@@ -24,7 +24,7 @@ public final class AndroidLocationService implements LocationService {
     private LocationCallback locationCallback;
 
     @Inject
-    AndroidLocationService(FusedLocationProviderClient locationProvider) {
+    public AndroidLocationService(FusedLocationProviderClient locationProvider) {
         if (locationProvider == null) throw new IllegalArgumentException();
         this.locationProvider = locationProvider;
 

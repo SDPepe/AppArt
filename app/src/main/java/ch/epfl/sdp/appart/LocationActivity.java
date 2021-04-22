@@ -42,34 +42,5 @@ public class LocationActivity extends AppCompatActivity {
                 findViewById(R.id.callback_location_textview);
 
         PermissionRequest.askForLocationPermission(this, () -> permissionTextView.setText(R.string.permissionGranted), () -> permissionTextView.setText(R.string.permissionRefused), () -> permissionTextView.setText(R.string.educationalPopup));
-
-        locationService.getCurrentLocation().thenAccept(location -> {
-            longitudeTextView.setText("" + location.longitude);
-            latitudeTextView.setText("" + location.latitude);
-        });
-
-        Consumer<List<Location>> callback = locationList -> {
-            if (!locationList.isEmpty()) {
-                Location myLoc = locationList.get(locationList.size() - 1);
-                longitudeTextView.setText("" + myLoc.longitude);
-                latitudeTextView.setText("" + myLoc.latitude);
-                callbackTextView.setText(R.string.setCallbackTextView);
-            }
-        };
-
-        locationService.setupLocationUpdate(callback);
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        locationService.teardownLocationUpdate();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        locationService.teardownLocationUpdate();
     }
 }
