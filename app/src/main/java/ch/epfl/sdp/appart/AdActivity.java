@@ -164,4 +164,11 @@ public class AdActivity extends ToolbarActivity {
         startActivity(intent);
     }
 
+    public void onSeeLocationClick(View view) {
+        Intent intent = new Intent(this, MapActivity.class);
+        TextView addressView = findViewById(R.id.address_field_Ad_textView);
+        intent.putExtra(getString(R.string.intentLocationForMap), addressView.getText().toString());
+        startActivity(intent);
+    }
+
 }

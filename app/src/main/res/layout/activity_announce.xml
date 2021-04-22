@@ -170,6 +170,13 @@
                 android:onClick="openContactInfo"
                 android:text="@string/contactbutton_text" />
 
+            <Button
+                android:id="@+id/seeLocation_Ad_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onSeeLocationClick"
+                android:text="@string/seeLocationText" />
+
         </LinearLayout>
     </ScrollView>
 

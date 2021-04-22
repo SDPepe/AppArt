@@ -21,6 +21,8 @@
     <string name="description">Description:</string>
     <string name="user">Advertiser:</string>
     <string name="contactbutton_text">show contact info</string>
+    <string name="seeLocationText">See location</string>
+    <string name="intentLocationForMap">LOCATION</string>
 
     <!-- Mock ad stuff -->
 
@@ -99,6 +101,8 @@
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
+
+    <!-- Permission and location strings -->
     <string name="permissionGranted">Permission granted</string>
     <string name="permissionRefused">Permission refused</string>
     <string name="educationalPopup">Educational popup</string>
@@ -109,4 +113,5 @@
     <string name="locationUnknown">unknown</string>
     <string name="getLocationButton">Get location</string>
     <string name="locationDefault">0.0</string>
+
 </resources>
