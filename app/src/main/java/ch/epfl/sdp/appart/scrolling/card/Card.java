@@ -32,8 +32,8 @@ public class Card {
      */
     public Card(@Nullable String id, String adId, String ownerId, String city, long price, String imageUrl,
                 boolean hasVRTour) {
-        /*if (ownerId == null || city == null || imageUrl == null || adId == null)
-            throw new IllegalArgumentException("Argument is null!");*/
+        if (ownerId == null || city == null || imageUrl == null || adId == null)
+            throw new IllegalArgumentException("Argument is null!");
 
         this.id = id;
         this.ownerId = ownerId;
