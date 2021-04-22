@@ -94,7 +94,7 @@ public class AdCreationUITest {
     }
 
     @Test
-    public void successfulPostAdButtonClosesActivityTest() {
+    public void successfulPostAdButtonOpensScrollingActivityTest() {
         //populate ad info
         onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo(), typeText("a"));
         closeSoftKeyboard();
@@ -115,7 +115,7 @@ public class AdCreationUITest {
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
         // TODO go back to adactivity when user is synced with firestore
         //intended(hasComponent(AdActivity.class.getName()));
-        assertEquals(adCreationActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
+        intended(hasComponent(ScrollingActivity.class.getName()));
     }
 
     @Test
