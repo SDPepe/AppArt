@@ -631,10 +631,9 @@ public class FirestoreDatabaseService implements DatabaseService {
         if (partialAdFuture == null) {
             throw new IllegalArgumentException("partial ad future cannot be null");
         }
-
         CompletableFuture<ContactInfo> result = new CompletableFuture<>();
         //once the partial ad has be retrieve we query the user that is providing the ad
-        /*partialAdFuture.thenAccept(partialAd -> db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
+        partialAdFuture.thenAccept(partialAd -> db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
                 String userEmail = (String) documentSnapshot.get(UserLayout.EMAIL);
@@ -650,7 +649,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         partialAdFuture.exceptionally(exception -> {
             result.completeExceptionally(exception);
             return null;
-        });*/
+        });
 
         return result;
     }
