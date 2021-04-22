@@ -5,19 +5,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
- * This activity only serves to test the actual implementation of the Android
- * location service.
+ * This activity only serves to test the permission request, specifically on cirrus ci.
  * For now, we do not have any activity that actually uses the location.
  * Once the activity with the map is created this will probably disappear.
  */
@@ -41,6 +36,9 @@ public class LocationActivity extends AppCompatActivity {
         TextView callbackTextView =
                 findViewById(R.id.callback_location_textview);
 
-        PermissionRequest.askForLocationPermission(this, () -> permissionTextView.setText(R.string.permissionGranted), () -> permissionTextView.setText(R.string.permissionRefused), () -> permissionTextView.setText(R.string.educationalPopup));
+        PermissionRequest.askForLocationPermission(this,
+                () -> permissionTextView.setText(R.string.permissionGranted),
+                () -> permissionTextView.setText(R.string.permissionRefused),
+                () -> permissionTextView.setText(R.string.educationalPopup));
     }
 }
