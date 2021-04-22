@@ -61,12 +61,8 @@ public class AdCreationViewModel extends ViewModel {
     }
 
     //getters
-    public Uri getUri() {
-        if (photosUri != null && photosUri.size() > 1) {
-            return photosUri.get(0);
-        } else {
-            return null;
-        }
+    public List<Uri> getUri() {
+        return photosUri;
     }
 
     // setters

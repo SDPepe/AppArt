@@ -101,4 +101,5 @@
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
+  <string name="confirmCameraButtonText">Confirm</string>
 </resources>

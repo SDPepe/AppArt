@@ -1,11 +1,16 @@
 package ch.epfl.sdp.appart;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
@@ -66,13 +71,6 @@ public class AdCreationActivity extends AppCompatActivity {
      */
     private void createAd() {
         // if some fields are not filled, show snackbar
-
-        String log = null;
-        if(mViewModel.getUri() != null){
-            log = mViewModel.getUri().toString();
-        }
-
-
         if (!everyFieldFilled()) {
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarNotFilled_AdCreation),
@@ -95,10 +93,10 @@ public class AdCreationActivity extends AppCompatActivity {
         result.thenAccept(completed -> {
             if (completed) {
                 // TODO switch back when user is synced with firestore
-                finish();
-                //Intent intent = new Intent(this, AdActivity.class);
+                Intent intent = new Intent(this, ScrollingActivity.class);
                 //intent.putExtra("fromAdCreation", true);
-                //startActivity(intent);
+                startActivity(intent);
+
             } else {
                 Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                         getResources().getText(R.string.snackbarFailed_AdCreation),
@@ -188,6 +186,19 @@ public class AdCreationActivity extends AppCompatActivity {
                  listUri.add(data.getParcelableExtra("imageUri"+i));
                 }
                 mViewModel.setUri(listUri);
+
+                LinearLayout horizontalLayout = findViewById(R.id.photos_AdCreation_linearLayout);
+                horizontalLayout.removeAllViews();
+
+                for (Uri i: mViewModel.getUri()) {
+                    LayoutInflater inflater =
+                        (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
+                    ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
+                    photo.setImageURI(i);
+                    photo.setPadding(16,0,16,0);
+                    horizontalLayout.addView(myView);
+                }
             }
         }
     }

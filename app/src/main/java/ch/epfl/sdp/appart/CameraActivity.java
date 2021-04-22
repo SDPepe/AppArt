@@ -74,12 +74,32 @@ public class CameraActivity extends AppCompatActivity {
 
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
+        Button confirmBtn = findViewById(R.id.confirm_Camera_button);
 
         cameraBtn.setOnClickListener(w -> askCamPermission());
 
         galleryBtn.setOnClickListener((v) -> {
-            Intent gallery = new Intent(Intent.ACTION_PICK, Media.EXTERNAL_CONTENT_URI);
+            Intent gallery = new Intent(Intent.ACTION_OPEN_DOCUMENT, Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+        });
+        confirmBtn.setOnClickListener(v -> {
+            if(listImageUri.size() >= 1) {
+                if (activity.equals("Ads")) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("size", listImageUri.size());
+                    int count = 0;
+                    for (Uri i : listImageUri) {
+                        resultIntent.putExtra("imageUri" + count, i);
+                        count++;
+                    }
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
+                } else if (activity.equals("User")) {
+
+                }
+            } else {
+                Toast.makeText(getApplicationContext(),"You need to upload some image...",Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -193,27 +213,8 @@ public class CameraActivity extends AppCompatActivity {
         });
         */
 
-    @Override
-    public void onBackPressed(){
-        Intent intent = getIntent();
-        String activity = intent.getStringExtra("Activity");
-        if(activity.equals("Ads")) {
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("size",listImageUri.size());
-            int count= 0;
-            for (Uri i: listImageUri) {
-                resultIntent.putExtra("imageUri"+count, i);
-                count++;
-            }
-            setResult(RESULT_OK, resultIntent);
-            finish();
-        } else if (activity.equals("User")) {
-            UserViewModel mViewModel = new ViewModelProvider(this)
-                .get(UserViewModel.class);
-            mViewModel.setUri(imageUri);
-
-
-        }
+    public void goBack(View view) {
+        finish();
     }
 
     private String getFileExtension(Uri uri) {

@@ -1,6 +1,8 @@
 package ch.epfl.sdp.appart.database;
 
+import android.content.ContentResolver;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
@@ -218,7 +220,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
 
         if (uri != null) {
-            String name = "photo" + getTypeFromUri(uri);
+            String name = "photo" + ".jpeg"; // getTypeFromUri(uri);
             String path = "User" + "/" + user.getUserId();
 
             putImage(uri, name, path).thenAccept(res -> {
@@ -294,23 +296,26 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Void> cardResult = new CompletableFuture<>();
         DocumentReference newAdRef = db.collection(AdLayout.DIRECTORY).document();
         DocumentReference cardRef = db.collection(CardLayout.DIRECTORY).document();
-        String path = AdLayout.DIRECTORY + "/" + newAdRef.toString();
-        StorageReference storageRef = storage.getReference(path);
 
         // upload photos
         List<String> actualRefs = new ArrayList<>();
         List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
+        Log.d("URI", "size"+uriList.size());
         for (int i = 0; i < uriList.size(); i++) {
-            String name = "photo" + i + getTypeFromUri(uriList.get(i));
+            String name = "photo" + ad.getAdvertiserId() + System.currentTimeMillis() + i + ".jpeg"; // getTypeFromUri(uriList.get(i));
             actualRefs.add(name);
-            imagesUploadResults.add(putImage(uriList.get(i), name, path));
+            imagesUploadResults.add(putImage(uriList.get(i), name, "Ads"));
+            if(i == 0){
+                imagesUploadResults.add(putImage(uriList.get(0), name, "Cards"));
+
+            }
         }
         // check whether any of the uploads failed
-        checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storageRef);
+        //checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storageRef);
 
         // build and send card / ad
-        checkCardUpload(cardResult, ad, newAdRef, cardRef, storageRef, actualRefs.get(0));
-        checkAdUpload(adResult, ad, newAdRef, cardRef, storageRef, actualRefs);
+        checkCardUpload(cardResult, ad, newAdRef, cardRef, null, actualRefs.get(0));
+        checkAdUpload(adResult, ad, newAdRef, cardRef, null, actualRefs);
 
         // check if everything succeeded
         finalizeAdUpload(result, imagesResult, adResult, cardResult, newAdRef);
@@ -327,10 +332,10 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         StorageReference storeRef = storage.getReference(path);
         StorageReference fileReference = storeRef.child(name);
-        // fileReference.putFile(uri).addOnCompleteListener(
-        //        task -> isFinishedFuture.complete(task.isSuccessful()));
+        fileReference.putFile(uri).addOnCompleteListener(
+                task -> isFinishedFuture.complete(task.isSuccessful()));
         // TODO discuss issue 146, solve putFile problem, then uncomment above lines and remove .complete below
-        isFinishedFuture.complete(true);
+       // isFinishedFuture.complete(true);
 
         return isFinishedFuture;
     }
@@ -352,9 +357,10 @@ public class FirestoreDatabaseService implements DatabaseService {
      * Returns as string the type of the file of this uri
      */
     private String getTypeFromUri(Uri uri) {
-        String ext = uri.toString().substring(uri.toString().lastIndexOf("."));
+        String ext = uri.getPath().substring(uri.toString().lastIndexOf("."));
         if (ext == null) throw new IllegalStateException("Uri does not contain a dot");
         return ext;
+
     }
 
     /**
