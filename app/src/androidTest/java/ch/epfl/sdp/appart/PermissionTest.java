@@ -33,6 +33,6 @@ public class PermissionTest {
 
     @Test
     public void permissionTest() {
-        onView(withId(R.id.permission_location_textview)).check(matches(withText(R.string.permissionGranted)));
+        onView(withId(R.id.permission_Location_textView)).check(matches(withText(R.string.permissionGranted)));
     }
 }

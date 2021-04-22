@@ -28,13 +28,13 @@ public class LocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
         TextView longitudeTextView =
-                findViewById(R.id.longitude_location_textview);
+                findViewById(R.id.longitude_Location_textView);
         TextView latitudeTextView =
-                findViewById(R.id.latitude_location_textview);
+                findViewById(R.id.latitude_Location_textView);
         TextView permissionTextView =
-                findViewById(R.id.permission_location_textview);
+                findViewById(R.id.permission_Location_textView);
         TextView callbackTextView =
-                findViewById(R.id.callback_location_textview);
+                findViewById(R.id.callback_Location_textView);
 
         PermissionRequest.askForLocationPermission(this,
                 () -> permissionTextView.setText(R.string.permissionGranted),

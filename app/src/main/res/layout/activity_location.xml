@@ -7,7 +7,7 @@
     tools:context=".LocationActivity">
 
     <Button
-        android:id="@+id/getlocation_location_button"
+        android:id="@+id/getLocation_Location_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/getLocationButton"
@@ -17,31 +17,31 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/current_location_location_textview"
+        android:id="@+id/currentLocation_Location_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/currentLocation"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/longitude_location_textview"
+        app:layout_constraintEnd_toStartOf="@+id/longitude_Location_textView"
         app:layout_constraintHorizontal_bias="0.416"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.169" />
 
     <TextView
-        android:id="@+id/longitude_location_textview"
+        android:id="@+id/longitude_Location_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/locationUnknown"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/latitude_location_textview"
+        app:layout_constraintEnd_toStartOf="@+id/latitude_Location_textView"
         app:layout_constraintHorizontal_bias="0.805"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.168" />
 
     <TextView
-        android:id="@+id/latitude_location_textview"
+        android:id="@+id/latitude_Location_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/locationUnknown"
@@ -53,7 +53,7 @@
         app:layout_constraintVertical_bias="0.168" />
 
     <TextView
-        android:id="@+id/permission_location_textview"
+        android:id="@+id/permission_Location_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/permissionDefault"
@@ -65,7 +65,7 @@
         app:layout_constraintVertical_bias="0.066" />
 
     <TextView
-        android:id="@+id/callback_location_textview"
+        android:id="@+id/callback_Location_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/notSetCallbackTextView"
