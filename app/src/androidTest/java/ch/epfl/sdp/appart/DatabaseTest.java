@@ -100,7 +100,7 @@ public class DatabaseTest {
 
         verifyUser(retrievedUser, age, name, userId, email, phoneNb);
 
-
+/*
         email = "newFakeEmail@testappart.ch";
         name = "TestName2";
         age = 30;
@@ -114,7 +114,7 @@ public class DatabaseTest {
         retrievedUser = db.getUser(user.getUserId()).join();
 
         verifyUser(retrievedUser, age, name, userId, email, phoneNb);
-        globalUser = retrievedUser;
+        */globalUser = retrievedUser;
     }
 
     public void verifyAd(Ad retrievedAd, String title, String street, String city, String desc, long price, String advertiserId, ContactInfo contactInfo, PricePeriod pricePeriod, boolean hasVRTour) {
