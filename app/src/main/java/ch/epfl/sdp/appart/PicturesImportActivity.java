@@ -12,7 +12,10 @@ import android.widget.Button;
 
 import ch.epfl.sdp.appart.panorama.PictureCardAdapter;
 
-public class PanoramaTourCreationActivity extends AppCompatActivity {
+/**
+ * Manager for the importation of pictures.
+ */
+public class PicturesImportActivity extends AppCompatActivity {
 
     private static final int RESULT_LOAD_IMAGE = 1;
     private RecyclerView recyclerView;
@@ -21,25 +24,37 @@ public class PanoramaTourCreationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_panorama_tour_creation);
+        setContentView(R.layout.activity_pictures_import);
 
-        recyclerView = findViewById(R.id.recyclerView_PanoramaTourCreation);
+        recyclerView = findViewById(R.id.recyclerView_PictureImport);
         adapter = new PictureCardAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        Button plusButton = findViewById(R.id.plus_PanoramaCreation);
-        Button minusButton = findViewById(R.id.minus_PanoramaCreation);
+        Button addButton = findViewById(R.id.add_PictureImport_button);
+        Button importButton = findViewById(R.id.finish_PictureImport_button);
 
-        Button addPanoramaButton = findViewById(R.id.add_PanoramaCreation);
-
-        addPanoramaButton.setOnClickListener((View view) -> {
+        addButton.setOnClickListener((View view) -> {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
             startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
         });
 
+        importButton.setOnClickListener((View view) -> {
+            Intent intent = new Intent(this, AdCreationActivity.class);
+            startActivity(intent);
+        });
+
+    }
+
+    /**
+     * This function is only meant for testing to isolate the camera
+     * @param uri
+     */
+    public void addPictureToAdapterAndNotify(Uri uri) {
+        adapter.addPictureCard(uri);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -47,7 +62,7 @@ public class PanoramaTourCreationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            adapter.addPicture(data.getData());
+            adapter.addPictureCard(data.getData());
             adapter.notifyDataSetChanged();
             // String picturePath contains the path of selected Image
         } else if (resultCode != RESULT_OK || null == data) {

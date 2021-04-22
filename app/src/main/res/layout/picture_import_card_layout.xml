@@ -26,7 +26,7 @@
             android:layout_margin="5dp">
 
             <ImageView
-                android:id="@+id/panoramaCardimageView_PanoramaCreation"
+                android:id="@+id/image_view_PictureImport"
                 android:layout_width="417dp"
                 android:layout_height="270dp"
                 android:layout_margin="5dp"
@@ -46,7 +46,7 @@
             android:layout_margin="5dp">
 
             <Button
-                android:id="@+id/up_button_card_PanoramaCreation"
+                android:id="@+id/up_button_card_PictureImport"
                 android:layout_width="61dp"
                 android:layout_height="50dp"
                 android:text="+"
@@ -58,7 +58,7 @@
                 app:layout_constraintVertical_bias="0.693" />
 
             <Button
-                android:id="@+id/down_button_card_PanoramaCreation"
+                android:id="@+id/down_button_card_PictureImport"
                 android:layout_width="61dp"
                 android:layout_height="43dp"
                 android:text="-"
@@ -71,7 +71,7 @@
                 app:layout_constraintVertical_bias="0.895" />
 
             <TextView
-                android:id="@+id/panorama_card_index_textView"
+                android:id="@+id/index_textView_PictureImport"
                 android:layout_width="80dp"
                 android:layout_height="49dp"
                 android:text="Index"

@@ -2,6 +2,10 @@ package ch.epfl.sdp.appart.panorama;
 
 import android.net.Uri;
 
+/**
+ * Container class containing the URI of the picture in the card and
+ * its index in the layout.
+ */
 public class PictureCard {
 
     private final Uri imageUri;

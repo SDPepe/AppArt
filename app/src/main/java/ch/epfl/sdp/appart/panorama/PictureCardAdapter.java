@@ -16,6 +16,9 @@ import java.util.List;
 
 import ch.epfl.sdp.appart.R;
 
+/**
+ * Adapter class that convert PictureCard into View viewable by the recycler view.
+ */
 public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.CardViewHolder>
     implements SwapNotifiable {
 
@@ -34,7 +37,7 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View adapterLayout = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.panorama_card_layout, parent, false);
+                .inflate(R.layout.picture_import_card_layout, parent, false);
         CardViewHolder holder = new PictureCardAdapter.CardViewHolder(adapterLayout, this);
         viewHolders.add(holder);
         return holder;
@@ -61,10 +64,20 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
          */
     }
 
-    public void addPicture(Uri uri) {
+    /**
+     * Add a card to the Adapter dataset.
+     * @apiNote a call to notifyDataSetChanged() is required for the cards change to
+     * take effect.
+     * @param uri The URI of the image that will be loaded into the added card.
+     */
+    public void addPictureCard(Uri uri) {
         cards.add(new PictureCard(uri, cards.size() + 1));
     }
 
+    /**
+     * Retrieve the URI of the cards in the order they are displayed.
+     * @return A List<URI> containing the ordered URI
+     */
     public List<Uri> getOrderedPicturesUris() {
         List<Uri> result = new ArrayList<>();
         for (PictureCard card : cards) {
@@ -73,7 +86,13 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
         return result;
     }
 
-    public void swap(int first, int second) {
+    /**
+     * This internal function is used to swap two cards together and
+     * notify the change in data for it to take effect.
+     * @param first
+     * @param second
+     */
+    private void swap(int first, int second) {
 
         PictureCard temp = cards.get(first);
         cards.set(first, cards.get(second));
@@ -82,20 +101,6 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
         cards.get(second).setIndex(second + 1);
 
         notifyDataSetChanged();
-    }
-
-    public void swapSelectedPicturesWithAbove() {
-        if (selectedIndex > 0) {
-            swap(selectedIndex, selectedIndex - 1);
-            //selectedIndex = selectedIndex - 1;
-        }
-    }
-
-    public void swapSelectedPictureWithBellow() {
-        if (selectedIndex < getItemCount() - 1 && selectedIndex >= 0) {
-            swap(selectedIndex, selectedIndex + 1);
-            //selectedIndex = selectedIndex + 1;
-        }
     }
 
     @Override
@@ -118,7 +123,7 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
     }
 
     /**
-     * ScrollingView tile
+     * Class encapsulating the view of a single card.
      */
     protected static class CardViewHolder extends RecyclerView.ViewHolder {
 
@@ -130,10 +135,10 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
 
         public CardViewHolder(View view, SwapNotifiable swapper) {
             super(view);
-            sphericalImageView = view.findViewById(R.id.panoramaCardimageView_PanoramaCreation);
-            cardIndexTextView = view.findViewById(R.id.panorama_card_index_textView);
-            upButton = view.findViewById(R.id.up_button_card_PanoramaCreation);
-            downButton = view.findViewById(R.id.down_button_card_PanoramaCreation);
+            sphericalImageView = view.findViewById(R.id.image_view_PictureImport);
+            cardIndexTextView = view.findViewById(R.id.index_textView_PictureImport);
+            upButton = view.findViewById(R.id.up_button_card_PictureImport);
+            downButton = view.findViewById(R.id.down_button_card_PictureImport);
             upButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -160,6 +165,11 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
             pictureCard = null;
         }
 
+        /**
+         * Bind the displayed card with its view. This function is used to
+         * keep track of the index of the view contained in the PictureCard.
+         * @param pictureCard the picture card that we bind
+         */
         void bindPictureCard(PictureCard pictureCard) {
             this.pictureCard = pictureCard;
         }
