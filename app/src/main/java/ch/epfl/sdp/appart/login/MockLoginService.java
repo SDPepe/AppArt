@@ -53,6 +53,7 @@ public class MockLoginService implements LoginService {
         users.put(quentinEmailPassword, quentin);
         lorenzo.setName("Lorenzo");
         lorenzo.setPhoneNumber("000");
+        lorenzo.addAdId("id0");
     }
 
     /**
