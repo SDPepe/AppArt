@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Bundle extras = this.getIntent().getExtras();
         Intent intent = new Intent(this, LoginActivity.class);
-        if(extras.containsKey("email")  && extras.containsKey("password")){
+        if(extras != null && extras.containsKey("email")  && extras.containsKey("password")){
             intent.putExtra("email", extras.getString("email"));
             intent.putExtra("password", extras.getString("password"));
         }
