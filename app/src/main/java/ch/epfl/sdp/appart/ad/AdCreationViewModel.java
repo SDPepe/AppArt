@@ -29,8 +29,6 @@ public class AdCreationViewModel extends ViewModel {
     private long price;
     private PricePeriod pricePeriod;
     private String description;
-    // refs to files stored on the device. FirebaseDB will take care of loading them and uploading
-    private List<String> photosRefs;
     private boolean VRTourEnable;
     private List<Uri> photosUri;
 
@@ -41,8 +39,6 @@ public class AdCreationViewModel extends ViewModel {
     public AdCreationViewModel(DatabaseService db, LoginService ls) {
         this.db = db;
         this.ls = ls;
-        // left empty, the images of the add are passed to the database through the photosUri list
-        photosRefs = new ArrayList<>();
         photosUri = new ArrayList<>();
     }
 
@@ -54,15 +50,19 @@ public class AdCreationViewModel extends ViewModel {
      */
     public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
-        ContactInfo ci = new ContactInfo(user.getUserEmail(), user.getPhoneNumber(), user.getName());
         Ad ad = new Ad(title, price, pricePeriod, street, city, user.getUserId(), description,
-                photosRefs, VRTourEnable, ci);
+                new ArrayList<>(), VRTourEnable);
         CompletableFuture<String> result = db.putAd(ad, photosUri);
         return result.thenApply(s -> {
             user.addAdId(s);
             return true;
         }).exceptionally(e -> false);
 
+    }
+
+    //getters
+    public List<Uri> getUri() {
+        return photosUri;
     }
 
     // setters
@@ -101,5 +101,6 @@ public class AdCreationViewModel extends ViewModel {
     public boolean hasPhotos() {
         return photosUri != null && photosUri.size() >= 1;
     }
+
 
 }

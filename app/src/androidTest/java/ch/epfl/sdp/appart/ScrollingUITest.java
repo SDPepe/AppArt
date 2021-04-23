@@ -68,6 +68,13 @@ public class ScrollingUITest {
     }
 
     @Test
+    public void clickOnFABStartsCreationActivity() {
+        onView(withId(R.id.newAd_Scrolling_floatingActionButton)).perform(click());
+        intended(hasComponent(AdCreationActivity.class.getName()));
+
+    }
+
+    @Test
     public void toolbarTest() {
         ViewInteraction overflowMenuButton = onView(
                 allOf(withContentDescription("More options"),

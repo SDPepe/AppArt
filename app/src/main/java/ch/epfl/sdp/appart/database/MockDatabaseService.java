@@ -54,7 +54,6 @@ public class MockDatabaseService implements DatabaseService {
                 .withDescription("Ever wanted the EPFL campus all for yourself?")
                 .withPhotosIds(picturesReferences)
                 .hasVRTour(false)
-                .withContactInfo(new ContactInfo("fake@appart.ch", "000000", "test_user"))
                 .build();
 
         users.put("id0", new AppUser("id0", "test0@epfl.ch"));
@@ -119,7 +118,7 @@ public class MockDatabaseService implements DatabaseService {
 
     @NotNull
     @Override
-    public CompletableFuture<Boolean> updateUser(User user) {
+    public CompletableFuture<Boolean> updateUser(User user, Uri uri) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         if (users.containsValue(user)) {
             users.put(user.getUserId(), user);

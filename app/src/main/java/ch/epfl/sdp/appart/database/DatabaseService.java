@@ -89,7 +89,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
      * @throws IllegalArgumentException if user is null.
      */
     @NonNull
-    CompletableFuture<Boolean> updateUser(User user);
+    CompletableFuture<Boolean> updateUser(User user, Uri uri);
 
 
     /**

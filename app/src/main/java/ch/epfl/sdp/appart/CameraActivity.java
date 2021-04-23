@@ -5,15 +5,22 @@ import android.Manifest.permission;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +32,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
+import ch.epfl.sdp.appart.user.UserViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +53,9 @@ public class CameraActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 105;
     private static final String TAG = CameraActivity.class.getSimpleName();
 
-    private ImageView mImageView;
     private Uri imageUri;
     private List<Uri> listImageUri;
+    private String activity;
 
     @Inject
     DatabaseService database;
@@ -57,19 +66,38 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-
         listImageUri = new ArrayList<>();
+        Intent intent = getIntent();
+        activity = intent.getStringExtra("Activity");
 
-        mImageView = findViewById(R.id.image_Camera_imageView);
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
+        Button confirmBtn = findViewById(R.id.confirm_Camera_button);
 
         cameraBtn.setOnClickListener(w -> askCamPermission());
-
         galleryBtn.setOnClickListener((v) -> {
-            Intent gallery = new Intent(Intent.ACTION_PICK, Media.EXTERNAL_CONTENT_URI);
+            Intent gallery = new Intent(Intent.ACTION_OPEN_DOCUMENT, Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(gallery, GALLERY_REQUEST_CODE);
         });
+        confirmBtn.setOnClickListener(v -> confirm());
+    }
+
+    private void confirm(){
+        if(listImageUri.size() >= 1) {
+            if (activity.equals("Ads")) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("size", listImageUri.size());
+                int count = 0;
+                for (Uri i : listImageUri) {
+                    resultIntent.putExtra("imageUri" + count, i);
+                    count++;
+                }
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            } else if (activity.equals("User")) { }
+        } else {
+            Toast.makeText(getApplicationContext(),"You need to upload some image...",Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void askCamPermission() {
@@ -115,45 +143,51 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK)
-            uploadImage();
+            setDisplayAction();
+
+
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
+
             imageUri = data.getData();
-            uploadImage();
+            setDisplayAction();
         }
     }
 
-    private void uploadImage(){
-        listImageUri.add(imageUri);
-        mImageView.setImageURI(imageUri);
-        /*
-        CompletableFuture<Boolean> futureImage= database.putImage(imageUri, name +"." +getFileExtension(imageUri), path);
-        futureImage.exceptionally(e -> {
-            Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
-            return null;
-        });
-        futureImage.thenAccept( res -> {
-            if(res == true){
-                Toast.makeText(CameraActivity.this, "Successfully upload image ", Toast.LENGTH_LONG).show();
-                mImageView.setImageURI(imageUri);
-            } else {
-                Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
-            }
-        });
-        */
-    }
-    @Override
-    public void onBackPressed(){
-        Intent intent = getIntent();
-        String activity = intent.getStringExtra("Activity");
+    private void  setDisplayAction(){
         if(activity.equals("Ads")) {
-            AdCreationViewModel mViewModel = new ViewModelProvider(this)
-                .get(AdCreationViewModel.class);
-            mViewModel.setUri(listImageUri);
-            finish();
-        } else if (activity == "User") {
-
+            displayListImage();
+        } else if (activity.equals("User")) {
+            displayImage();
         }
+    }
+
+    private void displayImage(){
+        LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
+        horizontalLayout.removeAllViews();
+        horizontalLayout.addView(uploadImage(imageUri));
+    }
+    private void displayListImage(){
+        listImageUri.add(imageUri);
+        LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
+        horizontalLayout.removeAllViews();
+        for (Uri i: listImageUri) {
+            horizontalLayout.addView(uploadImage(i));
+        }
+    }
+    private View uploadImage(Uri uri){
+        LayoutInflater inflater =
+            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
+        ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
+        photo.setImageURI(uri);
+        photo.setPadding(16,0,16,0);
+        return myView;
+    }
+    
+    public void goBack(View view) {
+        finish();
     }
 
     private String getFileExtension(Uri uri) {
