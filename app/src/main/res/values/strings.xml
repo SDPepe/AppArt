@@ -39,6 +39,7 @@
     <!-- VirtualTourActivity stuff -->
     <string name="action_account">Account</string>
     <string name="action_logout">Log Out</string>
+    <string name="action_map">Map</string>
 
     <!-- Strings for User Profile UI -->
     <string name="uniAccountClaimer">  UNI account  </string>
