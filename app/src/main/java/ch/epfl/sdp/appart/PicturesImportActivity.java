@@ -56,7 +56,7 @@ public class PicturesImportActivity extends AppCompatActivity {
     }
 
     /**
-     * For testing only !
+     * For testing only ! Only !
      * @return
      */
     public SwapNotifiable getAdapter() {
