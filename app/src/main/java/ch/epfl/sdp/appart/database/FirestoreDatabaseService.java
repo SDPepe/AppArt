@@ -1,6 +1,9 @@
 package ch.epfl.sdp.appart.database;
 
+import android.content.ContentResolver;
 import android.net.Uri;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +19,7 @@ import com.google.firebase.storage.StorageReference;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -208,18 +212,40 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<Boolean> updateUser(@NonNull User user) {
+    public CompletableFuture<Boolean> updateUser(@NonNull User user, Uri uri) {
 
-        if (user == null) {
+        /*if (user == null) {
             throw new IllegalArgumentException("user cannot bu null");
         }
 
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(UserLayout.DIRECTORY)
-                .document(user.getUserId())
-                .set(extractUserInfo(user))
-                .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
-        return isFinishedFuture;
+
+        if (uri != null) {
+            String name = "photo" + ".jpeg"; // getTypeFromUri(uri);
+            String path = "User" + "/" + user.getUserId();
+
+            putImage(uri, name, path).thenAccept(res -> {
+                if (!res) {
+                    isFinishedFuture.completeExceptionally(
+                        new UnsupportedOperationException("Ad upload failed!"));
+                }
+            });
+        } else {
+            return updateUserDb(isFinishedFuture, user);
+        }
+        return updateUserDb(isFinishedFuture, user);*/
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        result.complete(true);
+        return result;
+
+    }
+
+    private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user){
+            db.document(user.getUserId())
+            .set(extractUserInfo(user))
+            .addOnCompleteListener(
+                task -> res.complete(task.isSuccessful()));
+            return res;
     }
 
     @NotNull
@@ -243,8 +269,11 @@ public class FirestoreDatabaseService implements DatabaseService {
                 = getContactInfoFromFuturePartialAd(partialAdFuture);
 
 
-        CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
-            adBuilder.withContactInfo(contactInfo).withPhotosIds(photosReferences);
+        CompletableFuture<CompletableFuture<Ad>> chain =
+            adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences)
+                -> partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo)
+                -> {
+                        adBuilder.withPhotosIds(photosReferences);
             return adBuilder.build();
         }));
 
@@ -267,31 +296,54 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<String> putAd(Ad ad) {
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
         CompletableFuture<String> result = new CompletableFuture<>();
-        DocumentReference newAdRef = db.collection("ads").document();
+        CompletableFuture<Void> imagesResult = new CompletableFuture<>();
+        CompletableFuture<Void> adResult = new CompletableFuture<>();
+        CompletableFuture<Void> cardResult = new CompletableFuture<>();
+        DocumentReference newAdRef = db.collection(AdLayout.DIRECTORY).document();
+        DocumentReference cardRef = db.collection(CardLayout.DIRECTORY).document();
 
-        // upload photos TODO go parallel ?
+        // upload photos
         List<String> actualRefs = new ArrayList<>();
-        uploadAdPhotos(ad, actualRefs, newAdRef, result);
+        List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
+        Log.d("URI", "size"+uriList.size());
+        for (int i = 0; i < uriList.size(); i++) {
+            String name = "photo" + ad.getAdvertiserId() + System.currentTimeMillis() + i + ".jpeg"; // getTypeFromUri(uriList.get(i));
+            actualRefs.add(name);
+            imagesUploadResults.add(putImage(uriList.get(i), name, "Ads"));
+            if(i == 0){
+                imagesUploadResults.add(putImage(uriList.get(0), name, "Cards"));
+            }
+        }
+        // check whether any of the uploads failed
+        //checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storageRef);
 
-        // TODO separate street and city of address
-        // build and send card
-        //Is it normal that card is built with the AdId and not the cardRef.getId() ?
+        // build and send card / ad
+        checkCardUpload(cardResult, ad, newAdRef, cardRef, null, actualRefs.get(0));
+        checkAdUpload(adResult, ad, newAdRef, cardRef, null, actualRefs);
 
-        DocumentReference cardRef = db.collection("cards").document();
-        Card c = new Card(cardRef.getId(), newAdRef.getId(), ad.getAdvertiserId(), ad.getCity(),
-                ad.getPrice(), actualRefs.get(0), ad.hasVRTour());
-        cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
-                task -> onCompleteAdOp(task, newAdRef, result));
-
-        // build and send ad
-        newAdRef.set(extractAdInfo(ad)).addOnCompleteListener(
-                task -> onCompleteAdOp(task, newAdRef, result));
-        setPhotosReferencesForAd(actualRefs, newAdRef, result);
-
-        result.complete(newAdRef.getId());
+        // check if everything succeeded
+        finalizeAdUpload(result, imagesResult, adResult, cardResult, newAdRef);
         return result;
+    }
+
+    @NotNull
+    @Override
+    @NonNull
+    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
+        if (uri == null || name == null) {
+            throw new IllegalArgumentException("parameters cannot be null");
+        }
+        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
+        StorageReference storeRef = storage.getReference(path);
+        StorageReference fileReference = storeRef.child(name);
+        fileReference.putFile(uri).addOnCompleteListener(
+                task -> isFinishedFuture.complete(task.isSuccessful()));
+        // TODO discuss issue 146, solve putFile problem, then uncomment above lines and remove .complete below
+       // isFinishedFuture.complete(true);
+
+        return isFinishedFuture;
     }
 
     @Override
@@ -307,37 +359,99 @@ public class FirestoreDatabaseService implements DatabaseService {
         return futureClear;
     }
 
-    private void uploadAdPhotos(Ad ad, List<String> actualRefs, DocumentReference newAdRef,
-                                CompletableFuture<String> result) {
-        for (int i = 0; i < ad.getPhotosRefs().size(); i++) {
-            Uri fileUri = Uri.fromFile(new File(ad.getPhotosRefs().get(i)));
-            StorageReference storeRef = storage.getReference()
-                    .child("Ads/" + newAdRef.getId() + "/photo" + i);
-            actualRefs.add(storeRef.getName());
-            storeRef.putFile(fileUri).addOnCompleteListener(
-                    task -> onCompleteAdOp(task, newAdRef, result));
+    /**
+     * Returns as string the type of the file of this uri
+     */
+    private String getTypeFromUri(Uri uri) {
+        String ext = uri.getPath().substring(uri.toString().lastIndexOf("."));
+        if (ext == null) throw new IllegalStateException("Uri does not contain a dot");
+        return ext;
+
+    }
+
+    /**
+     * If failed, deletes from firebase the given references and completes exceptionally
+     */
+    private void cleanUpIfFailed(boolean taskSuccessful, CompletableFuture<Void> result, DocumentReference adRef,
+                                 DocumentReference cardRef, StorageReference imagesRef) {
+        if (!taskSuccessful) {
+            adRef.delete();
+            cardRef.delete();
+            imagesRef.delete();
+            // TODO create exception
+            result.completeExceptionally(
+                    new UnsupportedOperationException("Ad upload failed!"));
         }
     }
 
+    /**
+     * Adds to the ad a collection with the ids of the images. Cleans up if it fails.
+     */
     private void setPhotosReferencesForAd(List<String> actualRefs, DocumentReference newAdRef,
-                                          CompletableFuture<String> result) {
+                                          DocumentReference cardRef, StorageReference storageRef) {
         for (int i = 0; i < actualRefs.size(); i++) {
             Map<String, Object> data = new HashMap<>();
             data.put("id", actualRefs.get(i));
-            DocumentReference photoRefDocReference = newAdRef.collection("photosRefs")
+            DocumentReference photoRefDocReference = newAdRef.collection(AdLayout.PICTURES_DIRECTORY)
                     .document();
-            photoRefDocReference.set(data).addOnCompleteListener(
-                    task -> onCompleteAdOp(task, newAdRef, result));
+            photoRefDocReference.set(data); // TODO check all uploads
         }
     }
 
-    private void onCompleteAdOp(Task<?> task, DocumentReference newAdRef,
-                                CompletableFuture<String> result) {
-        if (!task.isSuccessful()) {
-            storage.getReference().child("Ads/" + newAdRef).delete();
-            result.completeExceptionally(
-                    new UnsupportedOperationException("Failed to put Ad in database"));
-        }
+    /**
+     * Checks whether all image uploads completed successfully. If they didn't, cleans up and
+     * completes exceptionally
+     */
+    private void checkPhotosUpload(List<CompletableFuture<Boolean>> futures,
+                                   CompletableFuture<Void> result, DocumentReference adRef,
+                                   DocumentReference cardRef, StorageReference imagesRef) {
+        CompletableFuture<Boolean>[] resultsArray = new CompletableFuture[futures.size()];
+        futures.toArray(resultsArray);
+        CompletableFuture.allOf(resultsArray).thenAccept(res -> {
+            boolean successful = true;
+            List<Boolean> completedUploadResults = futures.stream()
+                    .map(future -> future.join()).collect(Collectors.toList());
+            for (boolean b : completedUploadResults) {
+                successful = successful && b;
+                cleanUpIfFailed(successful, result, adRef, cardRef, imagesRef);
+            }
+            result.complete(null);
+        });
+    }
+
+    private void checkAdUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
+                               DocumentReference cardRef, StorageReference imagesRef,
+                               List<String> imagesRefsList) {
+        adRef.set(extractAdInfo(ad)).addOnCompleteListener(
+                task -> {
+                    cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
+                    result.complete(null);
+                });
+        setPhotosReferencesForAd(imagesRefsList, adRef, cardRef, imagesRef);
+    }
+
+    private void checkCardUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
+                                 DocumentReference cardRef, StorageReference imagesRef,
+                                 String firstImageRef) {
+        Card c = new Card(cardRef.getId(), adRef.getId(), ad.getAdvertiserId(), ad.getCity(),
+                ad.getPrice(), firstImageRef, ad.hasVRTour());
+        cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
+                task -> {
+                    cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
+                    result.complete(null);
+                });
+    }
+
+    private void finalizeAdUpload(CompletableFuture<String> result, CompletableFuture<Void> imagesResult,
+                                  CompletableFuture<Void> adResult, CompletableFuture<Void> cardResult,
+                                  DocumentReference adRef) {
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(adResult, cardResult);
+        allOf.thenAccept(res -> result.complete(adRef.getId()));
+        allOf.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+
     }
 
     @Override
@@ -526,7 +640,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         if (partialAdFuture == null) {
             throw new IllegalArgumentException("partial ad future cannot be null");
         }
-
         CompletableFuture<ContactInfo> result = new CompletableFuture<>();
         //once the partial ad has be retrieve we query the user that is providing the ad
         partialAdFuture.thenAccept(partialAd -> db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {

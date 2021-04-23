@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.database;
 
+import android.net.Uri;
+import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -53,7 +55,6 @@ public class MockDatabaseService implements DatabaseService {
                 .withDescription("Ever wanted the EPFL campus all for yourself?")
                 .withPhotosIds(picturesReferences)
                 .hasVRTour(false)
-                .withContactInfo(new ContactInfo("fake@appart.ch", "000000", "test_user"))
                 .build();
 
         users.put("id0", new AppUser("id0", "test0@epfl.ch"));
@@ -118,7 +119,7 @@ public class MockDatabaseService implements DatabaseService {
 
     @NotNull
     @Override
-    public CompletableFuture<Boolean> updateUser(User user) {
+    public CompletableFuture<Boolean> updateUser(User user, Uri uri) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         if (users.containsValue(user)) {
             users.put(user.getUserId(), user);
@@ -129,15 +130,28 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
-    // TODO implement
+    // TODO implement uriList
     @NotNull
     @Override
-    public CompletableFuture<String> putAd(Ad ad) {
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
         CompletableFuture<String> result = new CompletableFuture<>();
         if (ad.getTitle().equals("failing")){
             result.completeExceptionally(new IllegalStateException());
         } else {
             result.complete("1234");
+        }
+        return result;
+    }
+
+
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        if (uri == null || name == null || path == null){
+            result.completeExceptionally(new IllegalArgumentException());
+        } else {
+            result.complete(true);
         }
         return result;
     }

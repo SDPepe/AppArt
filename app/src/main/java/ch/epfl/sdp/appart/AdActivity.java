@@ -52,14 +52,17 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
 
-        // if activity open by adcreation, load the last ad created by the user,
+        // if activity opened by adcreation, load the last ad created by the user,
         // otherwise load the id passed by scrollingactivity
+        /*
         if (getIntent().getBooleanExtra("fromAdCreation", false)) {
             List<String> adIds = login.getCurrentUser().getAdsIds();
             mViewModel.initAd(adIds.get(adIds.size() - 1));
         } else {
             mViewModel.initAd(getIntent().getStringExtra("adID"));
         }
+        */
+        mViewModel.initAd(getIntent().getStringExtra("adID"));
     }
 
     private void updateTitle(String title) {
@@ -151,16 +154,6 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Method called when you want open the camera.
-     *
-     * @param view
-     */
-    public void openCamera(View view) {
-        Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
 
