@@ -21,6 +21,8 @@
     <string name="description">Description:</string>
     <string name="user">Advertiser:</string>
     <string name="contactbutton_text">show contact info</string>
+    <string name="seeLocationText">See location</string>
+    <string name="intentLocationForMap">LOCATION</string>
 
     <!-- Mock ad stuff -->
 
@@ -37,6 +39,7 @@
     <!-- VirtualTourActivity stuff -->
     <string name="action_account">Account</string>
     <string name="action_logout">Log Out</string>
+    <string name="action_map">Map</string>
 
     <!-- Strings for User Profile UI -->
     <string name="uniAccountClaimer">  UNI account  </string>
@@ -102,6 +105,7 @@
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
     
+
     <!-- CameraActivity stuff -->
     <string name="confirmCameraButtonText">Confirm</string>
 

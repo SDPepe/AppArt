@@ -12,4 +12,6 @@ public interface DatabaseHostVisitor {
     void accept(GlideLoaderVisitor visitor);
 
     void accept(GlideBitmapLoaderVisitor visitor);
+
+    void accept(GlideLoaderListenerVisitor visitor);
 }

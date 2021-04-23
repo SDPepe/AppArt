@@ -18,6 +18,14 @@ android {
         versionName "1.0"
         testInstrumentationRunner "ch.epfl.sdp.appart.CustomTestRunner"
         //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner" //replaced when using hilt
+
+        Properties properties = new Properties();
+        if(rootProject.file("local.properties").exists()) {
+            properties.load(rootProject.file("local.properties").newDataInputStream())
+            manifestPlaceholders =  [ mapsApiKey : properties.getProperty("MAPS_API_KEY", "")]
+        } else {
+            manifestPlaceholders = [ mapsApiKey : System.getenv('MAPS_API_KEY')]
+        }
     }
 
     buildTypes {
@@ -48,10 +56,10 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
-    implementation 'androidx.wear:wear:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.github.bumptech.glide:annotations:4.12.0'
     implementation 'com.google.firebase:firebase-storage:19.2.2'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.mockito:mockito-core:2.+"

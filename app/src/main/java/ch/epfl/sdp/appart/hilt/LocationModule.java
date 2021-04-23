@@ -1,16 +1,20 @@
 package ch.epfl.sdp.appart.hilt;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.LocationManager;
 
 import androidx.annotation.Nullable;
+import androidx.core.os.ConfigurationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Locale;
 
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
@@ -36,5 +40,12 @@ public abstract class LocationModule {
     @Provides
     public static FusedLocationProviderClient provideLocationProvider(@ApplicationContext Context context) {
         return LocationServices.getFusedLocationProviderClient(context);
+    }
+
+    @Singleton
+    @Provides
+    public static Geocoder provideGeocoder(@ApplicationContext Context context) {
+        //TODO: For now, this uses the current user locale
+        return new Geocoder(context, ConfigurationCompat.getLocales(context.getResources().getConfiguration()).get(0));
     }
 }
