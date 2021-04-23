@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -67,7 +68,10 @@ public class UserProfileActivity extends AppCompatActivity {
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
         mViewModel.getUser().observe(this, this::setSessionUserToLocal);
+
+        mViewModel.getUri().observe(this, this::setProfileImage);
     }
+
 
     /**
      * closes activity when back button pressed on UI
@@ -195,6 +199,13 @@ public class UserProfileActivity extends AppCompatActivity {
         } else {
             // TODO: set actual user-specific profile picture with sessionUser.getProfileImage()
         }
+    }
+
+    /**
+     * Set user profile image
+     */
+    private void setProfileImage(Uri uri){
+        imageView.setImageURI(uri);
     }
 
 

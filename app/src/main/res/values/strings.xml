@@ -50,6 +50,7 @@
     <string name="genderText"> Gender </string>
     <string name="nonUniAccountClaimer">  Regular account </string>
     <string name="cameraAdButtonDesc">Add Picture</string>
+    <string name="createPanoramaTourButton">Create Panorama tour</string>
     <string name="cameraButtonText">Camera</string>
     <string name="galleryButtonText">Gallery</string>
     <string name="createAccountPasswordFieldHint">Enter a password</string>
@@ -96,9 +97,20 @@
     <string name="toolbarTitle_AdCreation">Create an ad</string>
     <string name="snackbarFailed_AdCreation">There was an error while posting your ad, please try again later</string>
     <string name="snackbarNotFilled_AdCreation">Some fields haven\'t been filled!</string>
+    <string name="snackbarNoPhotos_AdCreation">Please add at least one image!</string>
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
+    
+    <!-- CameraActivity stuff -->
+    <string name="confirmCameraButtonText">Confirm</string>
+
+    <!-- PanoramaActivity stuff -->
+    <string name="leftButtonDescription_Panorama">Load previous image</string>
+    <string name="rightButtonDescription_Panorama">Load next image</string>
+    <string name="snackbarError_Panorama">There was an error loading the image, please try again later.</string>
+  
+    <!-- LocationActivity stuff -->
     <string name="permissionGranted">Permission granted</string>
     <string name="permissionRefused">Permission refused</string>
     <string name="educationalPopup">Educational popup</string>
@@ -109,4 +121,5 @@
     <string name="locationUnknown">unknown</string>
     <string name="getLocationButton">Get location</string>
     <string name="locationDefault">0.0</string>
+
 </resources>

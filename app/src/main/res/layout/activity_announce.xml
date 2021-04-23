@@ -7,7 +7,7 @@
     tools:context=".AdActivity">
 
     <ImageButton
-        android:id="@+id/back_UserProfile_button"
+        android:id="@+id/back_Ad_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -32,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_UserProfile_button" />
+        app:layout_constraintTop_toBottomOf="@+id/back_Ad_button" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -76,12 +76,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="openVirtualTour"
                 android:text="@string/vtourbutton_text" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="openCamera"
-                android:text="@string/cameraAdButtonDesc" />
 
             <Space
                 android:layout_width="match_parent"

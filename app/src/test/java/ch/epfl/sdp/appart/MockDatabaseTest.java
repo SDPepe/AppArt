@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import android.net.Uri;
+import java.net.URI;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,24 +60,39 @@ public class MockDatabaseTest {
         User user = new AppUser("1234", "test.appart@epfl.ch");
         assertTrue(dataBase.putUser(user).join());
         assertEquals(user, dataBase.getUser("1234").join());
-        assertTrue(dataBase.updateUser(user).join());
+        assertTrue(dataBase.updateUser(user, mock(Uri.class)).join());
         assertEquals(user, dataBase.getUser("1234").join());
         User user3 = new AppUser("4321", "test.appart@epfl.ch");
-        assertFalse(dataBase.updateUser(user3).join());
+        assertFalse(dataBase.updateUser(user3, mock(Uri.class)).join());
     }
 
     @Test
     public void putAdWorksWithGoodValue() throws ExecutionException, InterruptedException {
         Ad ad = new Ad("title", 1000, PricePeriod.DAY, "", "", "",
-                "", new ArrayList<>(), false, mock(ContactInfo.class));
-        assertEquals("1234", dataBase.putAd(ad).get());
+                "", new ArrayList<>(), false);
+        assertEquals("1234", dataBase.putAd(ad, new ArrayList<>()).get());
     }
 
     @Test
     public void putAdWorksThrowsOnBadValue() throws ExecutionException, InterruptedException {
         Ad ad = new Ad("failing", 1000, PricePeriod.DAY, "", "", "",
-                "", new ArrayList<>(), false, mock(ContactInfo.class));
-        assertThrows(ExecutionException.class, () -> dataBase.putAd(ad).get());
+                "", new ArrayList<>(), false);
+        assertThrows(ExecutionException.class, () -> dataBase.putAd(ad, new ArrayList<>()).get());
+    }
+
+    @Test
+    public void putImageThrowsOnNullUri() throws ExecutionException, InterruptedException {
+        assertThrows(ExecutionException.class, () -> dataBase.putImage(null, "", "").get());
+    }
+    @Test
+    public void putImageThrowsOnNullName() throws ExecutionException, InterruptedException {
+        Uri uri = mock(Uri.class);
+        assertThrows(ExecutionException.class, () -> dataBase.putImage(uri, null, "").get());
+    }
+    @Test
+    public void putImageThrowsOnNullUser() throws ExecutionException, InterruptedException {
+        Uri uri = mock(Uri.class);
+        assertThrows(ExecutionException.class, () -> dataBase.putImage(uri, "", null).get());
     }
 
 }

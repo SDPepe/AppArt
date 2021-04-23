@@ -86,7 +86,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         // load image from database into ImageView
         database.accept(new GlideImageViewLoader(context, holder.cardImageView,
                 "Cards/" + card.getImageUrl()));
-
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(String.format("%d.-/mo", card.getPrice()));
         if (!card.hasVRTour())
