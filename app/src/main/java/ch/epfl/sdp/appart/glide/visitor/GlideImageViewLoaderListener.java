@@ -4,28 +4,21 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 
 import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 
-/**
- * Implementation of the Visitor that helps to select the right reference
- * in function of the bound database.
- * This class is encapsulating the loading with Glide
- */
-public final class GlideImageViewLoader extends GlideVisitor implements GlideLoaderVisitor {
+public class GlideImageViewLoaderListener extends GlideVisitor implements GlideLoaderListenerVisitor {
 
     private final ImageView view;
     private final String imageReference;
+    private final RequestListener<Drawable> listener;
 
-    public GlideImageViewLoader(Context context, ImageView view, String imageReference) {
+    public GlideImageViewLoaderListener(Context context, ImageView view,
+                                        String imageReference,
+                                        RequestListener<Drawable> listener) {
         super(context);
 
         if (view == null) {
@@ -36,22 +29,26 @@ public final class GlideImageViewLoader extends GlideVisitor implements GlideLoa
             throw new IllegalArgumentException("imageReference cannot be null");
         }
 
+        if (listener == null) {
+            throw new IllegalArgumentException("listener can't be null");
+        }
+
         this.view = view;
         this.imageReference = imageReference;
+        this.listener = listener;
     }
 
     @Override
     public void visit(FirestoreDatabaseService database) {
         Glide.with(context)
-                .load(database.getStorageReference(imageReference))
+                .load(database.getStorageReference(imageReference)).listener(this.listener)
                 .into(view);
     }
 
     @Override
     public void visit(MockDatabaseService database) {
         Glide.with(context)
-                .load(imageReference)
+                .load(imageReference).listener(this.listener)
                 .into(view);
     }
-
 }

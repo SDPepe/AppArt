@@ -55,6 +55,9 @@ public abstract class ToolbarActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == R.id.action_settings) {
             return true;
+        } else if(item.getItemId() == R.id.map_Toolbar_item) {
+            Intent intentMap = new Intent(this, MapActivity.class);
+            startActivity(intentMap);
         }
         // If we got here, the user's action was not recognized.
         // Invoke the superclass to handle it.
