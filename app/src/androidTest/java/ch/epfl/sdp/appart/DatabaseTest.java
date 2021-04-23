@@ -69,10 +69,6 @@ public class DatabaseTest {
         assertThat(retrievedCard.getUserId(), is(ownerID));
     }
 
-    public void putCardThrowsOnNull() {
-        assertThrows(IllegalArgumentException.class, () -> db.putCard(null));
-    }
-
     public void verifyUser(User retrievedUser, long age, String name, String id, String email, String phoneNB) {
         assertThat(retrievedUser.getUserEmail(), is(email));
         assertThat(retrievedUser.getName(), is(name));
@@ -207,45 +203,10 @@ public class DatabaseTest {
 
     }
 
-    public void putCardTest() {
-        String id = "fakeId";
-        String adId = "fakeAdId";
-        String ownerId = "fakeOwnerID";
-        String city = "fakeCity";
-        long price = 1000;
-        boolean hasVRTour = false;
-
-        Card card = new Card(id, adId, ownerId, city, price, "", hasVRTour);
-
-        List<Card> cards = db.getCards().join();
-        assertThat(cards.size(), is(1));
-
-        String otherCardId = cards.get(0).getId();
-
-        String cardId = db.putCard(card).join();
-
-        cards = db.getCards().join();
-
-        Card wantedCard = null;
-        for (Card retrievedCard : cards) {
-            if (retrievedCard.getId().equals(id) || !retrievedCard.getId().equals(otherCardId) || retrievedCard.getId().equals(cardId)) {
-                wantedCard = retrievedCard;
-                break;
-            }
-        }
-
-        assertNotNull(wantedCard);
-
-        verifyCard(wantedCard, city, price, ownerId);
-
-    }
-
     @Test
     public void databaseTest() throws IOException {
         addingUsersAndUpdateTest();
         addingAdAndGetTest();
-        putCardThrowsOnNull();
         updateCardTest();
-        putCardTest();
     }
 }

@@ -101,30 +101,6 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<String> putCard(@NotNull @NonNull Card card) {
-
-        if (card == null) {
-            throw new IllegalArgumentException("card cannot be null");
-        }
-
-        CompletableFuture<String> resultIdFuture = new CompletableFuture<>();
-        db.collection(CardLayout.DIRECTORY)
-                .add(extractCardsInfo(card)).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                resultIdFuture.complete(task.getResult().getId());
-            } else {
-                resultIdFuture
-                        .completeExceptionally(
-                                new DatabaseServiceException(task.getException().getMessage())
-                        );
-            }
-        });
-        return resultIdFuture;
-    }
-
-    @NotNull
-    @Override
-    @NonNull
     public CompletableFuture<Boolean> updateCard(@NotNull @NonNull Card card) {
 
         if (card == null) {
@@ -309,14 +285,14 @@ public class FirestoreDatabaseService implements DatabaseService {
         List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
         Log.d("URI", "size"+uriList.size());
         for (int i = 0; i < uriList.size(); i++) {
-            String name = "photo" + ad.getAdvertiserId() + System.currentTimeMillis() + i + ".jpeg"; // getTypeFromUri(uriList.get(i));
+            String name = "photo" + i + ".jpeg"; // TODO modify to support other extensions
             actualRefs.add(name);
-            imagesUploadResults.add(putImage(uriList.get(i), name, "Ads"));
+            imagesUploadResults.add(putImage(uriList.get(i), name, AdLayout.DIRECTORY + "/" + newAdRef.toString()));
             if(i == 0){
-                imagesUploadResults.add(putImage(uriList.get(0), name, "Cards"));
+                imagesUploadResults.add(putImage(uriList.get(0), name, CardLayout.DIRECTORY));
             }
         }
-        // check whether any of the uploads failed
+        // check whether any of the uploads failed TODO check
         //checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storageRef);
 
         // build and send card / ad
@@ -340,9 +316,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         StorageReference fileReference = storeRef.child(name);
         fileReference.putFile(uri).addOnCompleteListener(
                 task -> isFinishedFuture.complete(task.isSuccessful()));
-        // TODO discuss issue 146, solve putFile problem, then uncomment above lines and remove .complete below
-       // isFinishedFuture.complete(true);
-
         return isFinishedFuture;
     }
 
@@ -357,16 +330,6 @@ public class FirestoreDatabaseService implements DatabaseService {
             }
         });
         return futureClear;
-    }
-
-    /**
-     * Returns as string the type of the file of this uri
-     */
-    private String getTypeFromUri(Uri uri) {
-        String ext = uri.getPath().substring(uri.toString().lastIndexOf("."));
-        if (ext == null) throw new IllegalStateException("Uri does not contain a dot");
-        return ext;
-
     }
 
     /**

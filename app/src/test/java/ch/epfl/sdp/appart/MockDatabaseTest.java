@@ -16,6 +16,7 @@ import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+import kotlin.NotImplementedError;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -44,14 +45,15 @@ public class MockDatabaseTest {
 
     @Test
     public void addCardAndUpdateToDatabase() {
-        Card test = new Card("unknown2", "unknown2", "unknown2", "Lausanne2", 10000, "file:///android_asset/apart_fake_image_1.jpeg");
+        throw new NotImplementedError("Redefine test for updateCard!");
+        /*Card test = new Card("unknown2", "unknown2", "unknown2", "Lausanne2", 10000, "file:///android_asset/apart_fake_image_1.jpeg");
         try {
             assertFalse(dataBase.updateCard(test).get());
             assertEquals("unknown2", dataBase.putCard(test).get());
             assertTrue(dataBase.updateCard(test).get());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 

@@ -73,15 +73,6 @@ public class MockDatabaseService implements DatabaseService {
 
     @NotNull
     @Override
-    public CompletableFuture<String> putCard(@NotNull Card card) {
-        CompletableFuture<String> result = new CompletableFuture<>();
-        cards.add(card);
-        result.complete(card.getId());
-        return result;
-    }
-
-    @NotNull
-    @Override
     public CompletableFuture<Boolean> updateCard(@NotNull Card card) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         if (cards.contains(card)) {

@@ -31,19 +31,6 @@ public interface DatabaseService extends DatabaseHostVisitor {
     CompletableFuture<List<Card>> getCards();
 
     /**
-     * Store the card given as argument in the database.
-     *
-     * @param card the Card that will be stored
-     * @return A future that wraps a String representing
-     * the new id of the card stored on the database. If an error
-     * occurs, the future will complete exceptionally by holding a
-     * DatabaseServiceException.
-     * @throws IllegalArgumentException if card is null.
-     */
-    @NonNull
-    CompletableFuture<String> putCard(@NonNull Card card);
-
-    /**
      * Update the card given as argument in the database.
      *
      * @param card the Card that will be updated in the database

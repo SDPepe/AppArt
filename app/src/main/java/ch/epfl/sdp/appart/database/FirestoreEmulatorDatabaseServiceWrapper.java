@@ -40,13 +40,6 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     @NotNull
     @NonNull
     @Override
-    public CompletableFuture<String> putCard(@NotNull @NonNull Card card) {
-        return this.db.putCard(card);
-    }
-
-    @NotNull
-    @NonNull
-    @Override
     public CompletableFuture<Boolean> updateCard(@NotNull @NonNull Card card) {
         return db.updateCard(card);
     }
