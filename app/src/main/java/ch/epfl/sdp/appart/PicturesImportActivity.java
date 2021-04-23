@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.List;
+
 import ch.epfl.sdp.appart.panorama.PictureCardAdapter;
+import ch.epfl.sdp.appart.panorama.SwapNotifiable;
 
 /**
  * Manager for the importation of pictures.
@@ -46,6 +49,18 @@ public class PicturesImportActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+    }
+
+    public List<Uri> getOrderedPictures() {
+        return adapter.getOrderedPicturesUris();
+    }
+
+    /**
+     * For testing only !
+     * @return
+     */
+    public SwapNotifiable getAdapter() {
+        return adapter;
     }
 
     /**
