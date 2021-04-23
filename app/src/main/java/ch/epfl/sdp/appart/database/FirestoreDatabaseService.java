@@ -287,9 +287,6 @@ public class FirestoreDatabaseService implements DatabaseService {
             String name = "photo" + i + ".jpeg"; // TODO modify to support other extensions
             actualRefs.add(name);
             imagesUploadResults.add(putImage(uriList.get(i), name, AdLayout.DIRECTORY + "/" + newAdRef.getId()));
-            if (i == 0) {
-                imagesUploadResults.add(putImage(uriList.get(0), name, CardLayout.DIRECTORY));
-            }
         }
         // check whether any of the uploads failed TODO check
         //checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storageRef);
