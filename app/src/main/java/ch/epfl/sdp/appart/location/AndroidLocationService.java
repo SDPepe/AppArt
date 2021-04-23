@@ -29,7 +29,8 @@ public final class AndroidLocationService implements LocationService {
 
     @Inject
     public AndroidLocationService(FusedLocationProviderClient locationProvider, Geocoder geocoder) {
-        if (locationProvider == null || geocoder == null) throw new IllegalArgumentException();
+        if (locationProvider == null || geocoder == null)
+            throw new IllegalArgumentException();
         this.locationProvider = locationProvider;
         this.geocoder = geocoder;
     }
@@ -106,7 +107,7 @@ public final class AndroidLocationService implements LocationService {
 
     @Override
     public Location getLocationFromName(String name) {
-        if(name == null) return null;
+        if (name == null) return null;
 
         final List<Address> addresses;
         try {
@@ -115,7 +116,7 @@ public final class AndroidLocationService implements LocationService {
             e.printStackTrace();
             return null;
         }
-        if(addresses.isEmpty()) return null;
+        if (addresses.isEmpty()) return null;
 
         Location cityLoc = new Location();
         cityLoc.latitude = addresses.get(0).getLatitude();

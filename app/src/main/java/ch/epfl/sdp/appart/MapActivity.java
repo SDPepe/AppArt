@@ -84,7 +84,6 @@ public class MapActivity extends AppCompatActivity {
         }, () -> Log.d("PERMISSION", "Popup"));
 
 
-
         mapWrapper.setOnReadyCallback(onMapReadyCallback);
 
     }
