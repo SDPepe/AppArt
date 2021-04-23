@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Bundle extras = this.getIntent().getExtras();
-        if(extras.containsKey("email")  && extras.containsKey("password")){
+        if(extras != null && extras.containsKey("email")  && extras.containsKey("password")){
             ((EditText)findViewById(R.id.email_Login_editText)).setText(extras.getString("email"));
             ((EditText)findViewById(R.id.password_Login_editText)).setText(extras.getString("password"));
         }
