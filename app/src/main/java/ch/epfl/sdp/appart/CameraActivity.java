@@ -148,71 +148,47 @@ public class CameraActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK)
-            if(activity.equals("Ads")) {
-                uploadListImage();
-            } else if (activity.equals("User")){
-                uploadImage();
-            }
+            setDisplayAction();
 
 
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
 
             imageUri = data.getData();
-
-            if(activity.equals("Ads")) {
-                uploadListImage();
-            } else if (activity.equals("User")) {
-                uploadImage();
-            }
+            setDisplayAction();
         }
     }
 
-    private void uploadListImage(){
+    private void  setDisplayAction(){
+        if(activity.equals("Ads")) {
+            displayListImage();
+        } else if (activity.equals("User")) {
+            displayImage();
+        }
+    }
+
+    private void displayImage(){
+        LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
+        horizontalLayout.removeAllViews();
+        horizontalLayout.addView(uploadImage(imageUri));
+    }
+    private void displayListImage(){
         listImageUri.add(imageUri);
         LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
         horizontalLayout.removeAllViews();
-
         for (Uri i: listImageUri) {
-            LayoutInflater inflater =
-                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
-            ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
-            photo.setImageURI(i);
-            photo.setPadding(16,0,16,0);
-            horizontalLayout.addView(myView);
-
+            horizontalLayout.addView(uploadImage(i));
         }
     }
-
-    private void uploadImage(){
-        LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
-        horizontalLayout.removeAllViews();
-
+    private View uploadImage(Uri uri){
         LayoutInflater inflater =
-                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
         ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
-        photo.setImageURI(imageUri);
-        horizontalLayout.addView(myView);
-
-
+        photo.setImageURI(uri);
+        photo.setPadding(16,0,16,0);
+        return myView;
     }
-        /*
-        CompletableFuture<Boolean> futureImage= database.putImage(imageUri, name +"." +getFileExtension(imageUri), path);
-        futureImage.exceptionally(e -> {
-            Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
-            return null;
-        });
-        futureImage.thenAccept( res -> {
-            if(res == true){
-                Toast.makeText(CameraActivity.this, "Successfully upload image ", Toast.LENGTH_LONG).show();
-                mImageView.setImageURI(imageUri);
-            } else {
-                Toast.makeText(CameraActivity.this, "Upload of image fail", Toast.LENGTH_LONG).show();
-            }
-        });
-        */
-
+    
     public void goBack(View view) {
         finish();
     }
