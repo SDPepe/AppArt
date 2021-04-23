@@ -51,51 +51,6 @@ public class ScrollingUITest {
     @BindValue
     DatabaseService database = new MockDatabaseService();
 
-    /**
-     * taken from :
-     * https://stackoverflow.com/questions/29378552/in-espresso-how-to-avoid-ambiguousviewmatcherexception-when-multiple-views-matc
-     * Allows to select the index th view.
-     *
-     * @param matcher the matcher on the view
-     * @param index   the index of the view we want to match
-     * @return a Matcher on the View
-     */
-    public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
-        return new TypeSafeMatcher<View>() {
-            int currentIndex = 0;
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("with index: ");
-                description.appendValue(index);
-                matcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                return matcher.matches(view) && currentIndex++ == index;
-            }
-        };
-    }
-
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
-    }
 
     @Before
     public void init() {
@@ -106,7 +61,7 @@ public class ScrollingUITest {
     @Test
     public void clickOnImageViewFromCardViewStartAnnounceActivity() {
 
-        ViewInteraction card = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
+        ViewInteraction card = onView(ViewUtils.withIndex(withId(R.id.image_CardLayout_imageView), 0));
         card.perform(click());
         intended(hasComponent(AdActivity.class.getName()));
 
@@ -123,8 +78,8 @@ public class ScrollingUITest {
     public void toolbarTest() {
         ViewInteraction overflowMenuButton = onView(
                 allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
+                        ViewUtils.childAtPosition(
+                                ViewUtils.childAtPosition(
                                         withId(R.id.login_Scrolling_toolbar),
                                         1),
                                 0),
@@ -133,8 +88,8 @@ public class ScrollingUITest {
 
         ViewInteraction appCompatTextView = onView(
                 allOf(withId(R.id.title), withText("Settings"),
-                        childAtPosition(
-                                childAtPosition(
+                        ViewUtils.childAtPosition(
+                                ViewUtils.childAtPosition(
                                         withId(R.id.content),
                                         0),
                                 0),
@@ -143,8 +98,8 @@ public class ScrollingUITest {
 
         ViewInteraction overflowMenuButton3 = onView(
                 allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
+                        ViewUtils.childAtPosition(
+                                ViewUtils.childAtPosition(
                                         withId(R.id.login_Scrolling_toolbar),
                                         1),
                                 0),
@@ -153,8 +108,8 @@ public class ScrollingUITest {
 
         ViewInteraction appCompatTextView3 = onView(
                 allOf(withId(R.id.title), withText("Log Out"),
-                        childAtPosition(
-                                childAtPosition(
+                        ViewUtils.childAtPosition(
+                                ViewUtils.childAtPosition(
                                         withId(R.id.content),
                                         0),
                                 0),

@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class AdCreationActivity extends AppCompatActivity {
         addPhotoButton.setOnClickListener((View view) -> takePhoto());
         Button createPanoramaTourButton = findViewById(R.id.createVirtualTour_AdCreation_button);
         createPanoramaTourButton.setOnClickListener((View view) -> {
-            Intent intent = new Intent(this, PanoramaTourCreationActivity.class);
+            Intent intent = new Intent(this, PicturesImportActivity.class);
             startActivity(intent);
         });
 
