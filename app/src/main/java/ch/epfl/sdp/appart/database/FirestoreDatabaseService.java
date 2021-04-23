@@ -518,7 +518,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                 QuerySnapshot snapshot = task.getResult();
                 List<DocumentSnapshot> documentSnapshots = snapshot.getDocuments();
                 List<String> result = documentSnapshots.stream().map(documentSnapshot ->
-                        AdLayout.DIRECTORY + documentSnapshot.get("id")).collect(Collectors.toList());
+                        (String) documentSnapshot.get("id")).collect(Collectors.toList());
                 photosReferencesListFuture.complete(result);
             } else {
                 photosReferencesListFuture.completeExceptionally(

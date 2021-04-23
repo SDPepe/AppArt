@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firestorelayout.AdLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -34,6 +35,7 @@ public class AdActivity extends ToolbarActivity {
     DatabaseService database;
     @Inject
     LoginService login;
+    String adId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,8 @@ public class AdActivity extends ToolbarActivity {
             mViewModel.initAd(getIntent().getStringExtra("adID"));
         }
         */
-        mViewModel.initAd(getIntent().getStringExtra("adID"));
+        adId = getIntent().getStringExtra("adID");
+        mViewModel.initAd(getIntent().getStringExtra("cardID"));
     }
 
     private void updateTitle(String title) {
@@ -80,7 +83,7 @@ public class AdActivity extends ToolbarActivity {
             View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             database.accept(new GlideImageViewLoader(this, photo,
-                    references.get(i)));
+                    AdLayout.DIRECTORY + "/" + adId + "/" + references.get(i)));
             horizontalLayout.addView(myView);
             if (i != 4) {
                 Space hspacer = new Space(this);
