@@ -1,7 +1,11 @@
 # Summary of week 6
 
 ## Antoine
+This week I worked on the map features of the app. It actually consists in two separate features. First, we want the user to be able to see all ads on a map, and click on the markers to get the relevant informations. Secondly, we want the user to be able to see the location of an ad on the ad page. For now, this is done through a see location button that launches an entirely different activity but the end goal is to have it directly on the ad page. 
 
+I didn't realize implementing this would take me so long. I had to create a location service, which I didn't plan to add at first, and get familiar with the Google maps APIs.
+
+Right now, the UI is not nice looking and not particularly user friendly but I think this can be improved quite easily.
 ## Carlo
 
 ## Émilien
