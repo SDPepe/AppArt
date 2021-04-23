@@ -14,6 +14,12 @@ public final class CardLayout {
     public final static String DIRECTORY = "cards";
 
     /**
+     * absolute path to the folder containing the card image
+     */
+    public final static String IMAGE_DIRECTORY = "ads";
+
+
+    /**
      * absolute path to the cards directory in Firestore
      */
     public final static String AD_ID = "ad_id"; //adId

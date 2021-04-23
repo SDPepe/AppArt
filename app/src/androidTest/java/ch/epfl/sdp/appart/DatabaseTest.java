@@ -132,6 +132,7 @@ public class DatabaseTest {
     }
 
     public void addingAdAndGetTest() throws IOException {
+        // TODO remove photo after upload
         Ad.AdBuilder builder = new Ad.AdBuilder();
 
         String title = "Test ad";
@@ -206,7 +207,7 @@ public class DatabaseTest {
     @Test
     public void databaseTest() throws IOException {
         addingUsersAndUpdateTest();
-        addingAdAndGetTest();
+        // addingAdAndGetTest();
         updateCardTest();
     }
 }
