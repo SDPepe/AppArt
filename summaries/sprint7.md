@@ -9,6 +9,7 @@ Right now, the UI is not nice looking and not particularly user friendly but I t
 ## Carlo
 
 ## Émilien
+This week I've been working on a new favorite feature. The goal is to allow the user to save its favorites announces and check them when they want. For now, there is multiple issues with firestore, especially because for now the users in the database seem to not be updated when a new favorite is given, even though they should be. Aside from that, I've been working on doing the serializers, as suggested in the coding review. There are still a few issues with those, but it shouldn't take too much time to fix it. 
 
 ## Filippo (scrum master)
 This week I worked on several parts. First of all, I added the possibility to use the application with Launch Options that allow you to automate the login on the emulator. Secondly I finished the CameraActivity which can be used in different situations. Finally I worked with Lorenzo, Carlo to allow you to add photos to your Ad or your Profile. For the moment we have found a solution to manage the database when we store an Ad but in the coming weeks we will have to do a refactor.
