@@ -55,7 +55,7 @@ public class AdViewModel extends ViewModel {
             this.adPrice.setValue(ad.getPrice() + " / " + ad.getPricePeriod().toString());
             this.adDescription.setValue(ad.getDescription());
 
-            this.adAdvertiser.setValue(ad.getContactInfo().name);
+            //this.adAdvertiser.setValue(ad.getContactInfo().name);
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
 
             this.adPhotosRefs.setValue(ad.getPhotosRefs());
