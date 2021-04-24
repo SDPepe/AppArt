@@ -71,7 +71,7 @@ public class SimpleUserProfileActivityTest {
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
-                                17)));
+                                16)));
         appCompatButton.perform(scrollTo(), click());
 
         ViewInteraction textView = onView(
