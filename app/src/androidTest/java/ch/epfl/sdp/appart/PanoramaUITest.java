@@ -61,6 +61,11 @@ public class PanoramaUITest {
         onView(withId(rightButtonID)).perform(click());
         onView(withId(leftButtonID)).check(matches(isDisplayed()));
         onView(withId(rightButtonID)).check(matches(not(isDisplayed())));
+
+        onView(withId(leftButtonID)).perform(click());
+        onView(withId(leftButtonID)).check(matches(not(isDisplayed())));
+        onView(withId(rightButtonID)).check(matches(isDisplayed()));
+
     }
 
 }
