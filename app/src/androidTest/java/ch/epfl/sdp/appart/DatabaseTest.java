@@ -20,7 +20,8 @@ import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreEmulatorDatabaseServiceWrapper;
-import ch.epfl.sdp.appart.database.firestorelayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
@@ -182,7 +183,8 @@ public class DatabaseTest {
         Ad retrievedAd = db.getAd(card.getId()).join();
         verifyAd(retrievedAd, title, street, city, desc, price, globalUser.getUserId(), contactInfo, pricePeriod, hasVRTour);
 
-        database.removeFromStorage(database.getStorageReference(AdLayout.DIRECTORY + "/" + adId + "photo0.jpeg"));
+        database.removeFromStorage(database.getStorageReference(
+                FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR + adId + "photo0.jpeg"));
     }
 
     public void updateCardTest() {

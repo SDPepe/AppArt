@@ -1,13 +1,10 @@
 package ch.epfl.sdp.appart.database;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,8 +15,6 @@ import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +28,10 @@ import javax.inject.Singleton;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
-import ch.epfl.sdp.appart.database.firestorelayout.AdLayout;
-import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
-import ch.epfl.sdp.appart.database.firestorelayout.UserLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
@@ -69,7 +65,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //ask firebase async to get the cards objects and notify the future
         //when they have been fetched
-        db.collection(CardLayout.DIRECTORY).get().addOnCompleteListener(
+        db.collection(FirebaseLayout.CARDS_DIRECTORY).get().addOnCompleteListener(
                 task -> {
 
                     List<Card> queriedCards = new ArrayList<>();
@@ -108,7 +104,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
 
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(CardLayout.DIRECTORY)
+        db.collection(FirebaseLayout.CARDS_DIRECTORY)
                 .document(card.getId())
                 .set(extractCardsInfo(card))
                 .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
@@ -128,7 +124,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //ask firebase asynchronously to get the associated user object and notify the future
         //when they have been fetched
-        db.collection(UserLayout.DIRECTORY).document(userId).get().addOnCompleteListener(
+        db.collection(FirebaseLayout.USERS_DIRECTORY).document(userId).get().addOnCompleteListener(
                 task -> {
                     if (task.isSuccessful()) {
                         Map<String, Object> data = task.getResult().getData();
@@ -179,7 +175,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NonNull
     public CompletableFuture<Boolean> putUser(@NonNull User user) {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(UserLayout.DIRECTORY)
+        db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
                 .set(extractUserInfo(user)).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
@@ -276,17 +272,18 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Void> imagesResult = new CompletableFuture<>();
         CompletableFuture<Void> adResult = new CompletableFuture<>();
         CompletableFuture<Void> cardResult = new CompletableFuture<>();
-        DocumentReference newAdRef = db.collection(AdLayout.DIRECTORY).document();
-        DocumentReference cardRef = db.collection(CardLayout.DIRECTORY).document();
+        DocumentReference newAdRef = db.collection(FirebaseLayout.ADS_DIRECTORY).document();
+        DocumentReference cardRef = db.collection(FirebaseLayout.CARDS_DIRECTORY).document();
 
         // upload photos
         List<String> actualRefs = new ArrayList<>();
         List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
         Log.d("URI", "size" + uriList.size());
         for (int i = 0; i < uriList.size(); i++) {
-            String name = "photo" + i + ".jpeg"; // TODO modify to support other extensions
+            String name = FirebaseLayout.PHOTO_NAME + i + ".jpeg"; // TODO modify to support other extensions
             actualRefs.add(name);
-            imagesUploadResults.add(putImage(uriList.get(i), name, AdLayout.DIRECTORY + "/" + newAdRef.getId()));
+            imagesUploadResults.add(putImage(uriList.get(i), name,
+                    FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR + newAdRef.getId()));
         }
         // check whether any of the uploads failed TODO check
         //checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storageRef);
@@ -479,7 +476,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
 
         CompletableFuture<String> result = new CompletableFuture<>();
-        db.collection(CardLayout.DIRECTORY).document(cardId).get().addOnCompleteListener(task -> {
+        db.collection(FirebaseLayout.CARDS_DIRECTORY).document(cardId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 result.complete((String) task.getResult().get(CardLayout.AD_ID));
             } else {
@@ -507,7 +504,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<DocumentReference> adReferenceFuture = new CompletableFuture<>();
         CompletableFuture<List<String>> photosReferencesListFuture = new CompletableFuture<>();
 
-        adIdFuture.thenAccept(adId -> this.db.collection(AdLayout.DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
+        adIdFuture.thenAccept(adId -> this.db.collection(FirebaseLayout.ADS_DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 adReferenceFuture.complete(task.getResult().getReference());
             } else {
@@ -556,7 +553,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Ad.AdBuilder> result = new CompletableFuture<>();
 
         //once the ad id is available we query the right ad to get its detailed fields
-        adIdFuture.thenAccept(adId -> db.collection(AdLayout.DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
+        adIdFuture.thenAccept(adId -> db.collection(FirebaseLayout.ADS_DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
 
@@ -610,14 +607,14 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
         CompletableFuture<ContactInfo> result = new CompletableFuture<>();
         //once the partial ad has be retrieve we query the user that is providing the ad
-        partialAdFuture.thenAccept(partialAd -> db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
+        partialAdFuture.thenAccept(partialAd -> db.collection(FirebaseLayout.USERS_DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = task.getResult();
+                /*DocumentSnapshot documentSnapshot = task.getResult();
                 String userEmail = (String) documentSnapshot.get(UserLayout.EMAIL);
                 String userPhoneNumber = (String) documentSnapshot.get(UserLayout.PHONE);
                 String name = (String) documentSnapshot.get(UserLayout.NAME);
-                ContactInfo contactInfo = new ContactInfo(userEmail, userPhoneNumber, name);
-                result.complete(contactInfo);
+                ContactInfo contactInfo = new ContactInfo(userEmail, userPhoneNumber, name);*/
+                result.complete(null);
             } else {
                 result.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
             }
