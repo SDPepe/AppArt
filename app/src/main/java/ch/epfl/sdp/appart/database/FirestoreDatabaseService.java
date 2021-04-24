@@ -37,6 +37,7 @@ import ch.epfl.sdp.appart.database.firestorelayout.AdLayout;
 import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
 import ch.epfl.sdp.appart.database.firestorelayout.UserLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -460,6 +461,11 @@ public class FirestoreDatabaseService implements DatabaseService {
 
     @Override
     public void accept(GlideBitmapLoaderVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public void accept(GlideLoaderListenerVisitor visitor) {
         visitor.visit(this);
     }
 

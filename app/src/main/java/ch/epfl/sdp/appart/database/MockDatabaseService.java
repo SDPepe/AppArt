@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -177,6 +178,11 @@ public class MockDatabaseService implements DatabaseService {
     }
 
     public void accept(GlideBitmapLoaderVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public void accept(GlideLoaderListenerVisitor visitor) {
         visitor.visit(this);
     }
 }
