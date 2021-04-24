@@ -113,7 +113,8 @@ public class DatabaseTest {
         retrievedUser = db.getUser(user.getUserId()).join();
 
         verifyUser(retrievedUser, age, name, userId, email, phoneNb);
-        */globalUser = retrievedUser;
+        */
+        globalUser = retrievedUser;
     }
 
     public void verifyAd(Ad retrievedAd, String title, String street, String city, String desc, long price, String advertiserId, ContactInfo contactInfo, PricePeriod pricePeriod, boolean hasVRTour) {
@@ -181,7 +182,7 @@ public class DatabaseTest {
         Ad retrievedAd = db.getAd(card.getId()).join();
         verifyAd(retrievedAd, title, street, city, desc, price, globalUser.getUserId(), contactInfo, pricePeriod, hasVRTour);
 
-        database.removeFromStorage(database.getStorageReference(AdLayout.DIRECTORY + "/" + adId));
+        database.removeFromStorage(database.getStorageReference(AdLayout.DIRECTORY + "/" + adId + "photo0.jpeg"));
     }
 
     public void updateCardTest() {
