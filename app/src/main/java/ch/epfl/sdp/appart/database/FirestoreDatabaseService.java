@@ -451,6 +451,15 @@ public class FirestoreDatabaseService implements DatabaseService {
     }
 
     /**
+     * Utility function to clean up storage database
+     *
+     * @param ref reference to the folder/file to delete
+     */
+    public void removeFromStorage(StorageReference ref) {
+        ref.delete();
+    }
+
+    /**
      * Takes a cardId and fetch the adId for the corresponding card.
      * Indeed, all the cards that are showed in the scrolling menu
      * refers to an ad by an AdId. So in order to query the right

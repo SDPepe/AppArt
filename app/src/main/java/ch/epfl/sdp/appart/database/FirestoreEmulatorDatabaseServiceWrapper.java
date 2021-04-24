@@ -1,7 +1,10 @@
 package ch.epfl.sdp.appart.database;
 
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
+
+import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -81,11 +84,21 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
 
     @NonNull
     @Override
-    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) { return db.putImage(uri, name, path); }
+    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
+        return db.putImage(uri, name, path);
+    }
 
     @Override
     public CompletableFuture<Void> clearCache() {
         return db.clearCache();
+    }
+
+    public void removeFromStorage(StorageReference ref) {
+        db.removeFromStorage(ref);
+    }
+
+    public StorageReference getStorageReference(String path){
+        return db.getStorageReference(path);
     }
 
     @Override
@@ -99,5 +112,7 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     }
 
     @Override
-    public void accept(GlideLoaderListenerVisitor visitor) { db.accept(visitor); }
+    public void accept(GlideLoaderListenerVisitor visitor) {
+        db.accept(visitor);
+    }
 }

@@ -20,6 +20,7 @@ import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreEmulatorDatabaseServiceWrapper;
+import ch.epfl.sdp.appart.database.firestorelayout.AdLayout;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
@@ -49,7 +50,7 @@ public class DatabaseTest {
 
     @BindValue
     final
-    DatabaseService db = new FirestoreEmulatorDatabaseServiceWrapper(new FirestoreDatabaseService());
+    FirestoreEmulatorDatabaseServiceWrapper db = new FirestoreEmulatorDatabaseServiceWrapper(new FirestoreDatabaseService());
 
     @BindValue
     final
@@ -132,7 +133,6 @@ public class DatabaseTest {
     }
 
     public void addingAdAndGetTest() throws IOException {
-        // TODO remove photo after upload
         Ad.AdBuilder builder = new Ad.AdBuilder();
 
         String title = "Test ad";
@@ -168,7 +168,7 @@ public class DatabaseTest {
         builder.hasVRTour(hasVRTour);
 
         Ad ad = builder.build();
-        db.putAd(ad, uriList).join();
+        String adId = db.putAd(ad, uriList).join();
 
         List<Card> retrievedCards = this.db.getCards().join();
         assertThat(retrievedCards.size(), is(1));
@@ -179,7 +179,7 @@ public class DatabaseTest {
         Ad retrievedAd = db.getAd(card.getId()).join();
         verifyAd(retrievedAd, title, street, city, desc, price, globalUser.getUserId(), contactInfo, pricePeriod, hasVRTour);
 
-
+        db.removeFromStorage(db.getStorageReference(AdLayout.DIRECTORY + "/" + adId));
     }
 
     public void updateCardTest() {
@@ -207,7 +207,7 @@ public class DatabaseTest {
     @Test
     public void databaseTest() throws IOException {
         addingUsersAndUpdateTest();
-        // addingAdAndGetTest();
+        addingAdAndGetTest();
         updateCardTest();
     }
 }
