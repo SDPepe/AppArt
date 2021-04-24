@@ -76,12 +76,6 @@ public class AdUITest {
     }
 
     @Test
-    public void clickOnAddPhotoOpensCameraActivity() {
-        onView(withId(R.id.tempphoto_Ad_button)).perform(scrollTo(), click());
-        intended(hasComponent(CameraActivity.class.getName()));
-    }
-
-    @Test
     public void clickOnGoBackFinishes() {
         onView(withId(R.id.back_Ad_button)).perform(click());
         assertEquals(adActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
@@ -97,7 +91,6 @@ public class AdUITest {
         onView(withId(R.id.price_field_Ad_textView)).check(matches(withText(
                 testAd.getPrice() + " / " + testAd.getPricePeriod().toString())));
         onView(withId(R.id.description_field_Ad_textView)).check(matches(withText(testAd.getDescription())));
-        onView(withId(R.id.user_field_Ad_textView)).check(matches(withText(testAd.getContactInfo().name)));
     }
 
     @After

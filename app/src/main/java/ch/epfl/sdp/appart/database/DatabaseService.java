@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.database;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import java.util.List;
@@ -87,7 +89,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
      * @throws IllegalArgumentException if user is null.
      */
     @NonNull
-    CompletableFuture<Boolean> updateUser(User user);
+    CompletableFuture<Boolean> updateUser(User user, Uri uri);
 
 
     /**
@@ -101,13 +103,28 @@ public interface DatabaseService extends DatabaseHostVisitor {
     CompletableFuture<Ad> getAd(String id);
 
     /**
-     * Not completed
+     * Stores the ad in the database
      *
-     * @param ad
-     * @return
+     * @param ad      the ad to add to the database
+     * @param uriList the list of images to add to the ad
+     * @return a future that wraps the ID of the new ad
      */
     @NonNull
-    CompletableFuture<String> putAd(Ad ad);
+    CompletableFuture<String> putAd(Ad ad, List<Uri> uriList);
+
+    /**
+     * Upload a image
+     *
+     * @param uri  a Uri of the image.
+     * @param name a String represent the name of image.
+     * @param path a String represent the path where store the image.
+     * @return A CompletableFuture<Boolean> that wraps a boolean if it
+     * stored the image on the database. If an error
+     * occurs, the future will deliver false.
+     */
+    @NonNull
+    CompletableFuture<Boolean> putImage(Uri uri, String name, String path);
+
 
     CompletableFuture<Void> clearCache();
 

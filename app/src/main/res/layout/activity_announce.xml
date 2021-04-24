@@ -77,13 +77,6 @@
                 android:onClick="openVirtualTour"
                 android:text="@string/vtourbutton_text" />
 
-            <Button
-                android:id="@+id/tempphoto_Ad_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="openCamera"
-                android:text="@string/cameraAdButtonDesc" />
-
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
@@ -170,6 +163,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="openContactInfo"
                 android:text="@string/contactbutton_text" />
+
+            <Button
+                android:id="@+id/seeLocation_Ad_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onSeeLocationClick"
+                android:text="@string/seeLocationText" />
 
         </LinearLayout>
     </ScrollView>

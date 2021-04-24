@@ -1,19 +1,27 @@
 package ch.epfl.sdp.appart;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -33,8 +41,8 @@ public class AdCreationActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
-
     AdCreationViewModel mViewModel;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,13 @@ public class AdCreationActivity extends AppCompatActivity {
         confirmButton.setOnClickListener((View view) -> createAd());
         Button addPhotoButton = findViewById(R.id.addPhoto_AdCreation_button);
         addPhotoButton.setOnClickListener((View view) -> takePhoto());
+        Button createPanoramaTourButton = findViewById(R.id.createVirtualTour_AdCreation_button);
+        createPanoramaTourButton.setOnClickListener((View view) -> {
+            Intent intent = new Intent(this, PicturesImportActivity.class);
+            startActivity(intent);
+        });
+
+
     }
 
     /**
@@ -62,6 +77,13 @@ public class AdCreationActivity extends AppCompatActivity {
                     Snackbar.LENGTH_SHORT).show();
             return;
         }
+        // TODO add back when new loading image system is finished
+        /*if (!mViewModel.hasPhotos()){
+            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                    getResources().getText(R.string.snackbarNoPhotos_AdCreation),
+                    Snackbar.LENGTH_SHORT).show();
+            return;
+        }*/
 
         // set values to viewmodel
         setVMValues();
@@ -70,9 +92,11 @@ public class AdCreationActivity extends AppCompatActivity {
         CompletableFuture<Boolean> result = mViewModel.confirmCreation();
         result.thenAccept(completed -> {
             if (completed) {
-                Intent intent = new Intent(this, AdActivity.class);
-                intent.putExtra("fromAdCreation", true);
+                // TODO switch back when user is synced with firestore
+                Intent intent = new Intent(this, ScrollingActivity.class);
+                //intent.putExtra("fromAdCreation", true);
                 startActivity(intent);
+
             } else {
                 Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                         getResources().getText(R.string.snackbarFailed_AdCreation),
@@ -99,8 +123,6 @@ public class AdCreationActivity extends AppCompatActivity {
         mViewModel.setDescription(getContentOfEditText(R.id.description_AdCreation_editText));
         // TODO modify when logic for adding vrtour is added
         mViewModel.setVRTourEnable(false);
-        // TODO modify whe logic for adding images is added
-        mViewModel.setPhotosRefs(new ArrayList<>());
     }
 
     private String joinStrings(int id1, int id2) {
@@ -147,9 +169,39 @@ public class AdCreationActivity extends AppCompatActivity {
     /**
      * Opens camera activity to take/select images to add to the ad
      */
+    @SuppressWarnings("deprecation")
     private void takePhoto() {
-        // TODO save photos path to VM photosRefs
         Intent intent = new Intent(this, CameraActivity.class);
-        startActivity(intent);
+        intent.putExtra("Activity","Ads");
+        startActivityForResult(intent, 1);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1){
+            if (resultCode == RESULT_OK){
+                int size = data.getIntExtra("size", 0);
+                List<Uri> listUri = new ArrayList<>();
+                for(int i = 0; i< size; i++){
+                 listUri.add(data.getParcelableExtra("imageUri"+i));
+                }
+                mViewModel.setUri(listUri);
+
+                LinearLayout horizontalLayout = findViewById(R.id.photos_AdCreation_linearLayout);
+                horizontalLayout.removeAllViews();
+
+                for (Uri i: mViewModel.getUri()) {
+                    LayoutInflater inflater =
+                        (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
+                    ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
+                    photo.setImageURI(i);
+                    photo.setPadding(16,0,16,0);
+                    horizontalLayout.addView(myView);
+                }
+            }
+        }
+    }
+
 }
