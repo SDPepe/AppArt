@@ -12,8 +12,8 @@ import android.widget.Button;
 
 import java.util.List;
 
-import ch.epfl.sdp.appart.panorama.PictureCardAdapter;
-import ch.epfl.sdp.appart.panorama.SwapNotifiable;
+import ch.epfl.sdp.appart.picturesimport.PictureCardAdapter;
+import ch.epfl.sdp.appart.picturesimport.SwapNotifiable;
 
 /**
  * Manager for the importation of pictures.

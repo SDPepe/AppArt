@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.panorama;
+package ch.epfl.sdp.appart.picturesimport;
 
 /**
  * Interface to include only necessary behavior in the CardViewHolder of the

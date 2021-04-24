@@ -1,7 +1,5 @@
 package ch.epfl.sdp.appart;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import androidx.test.core.app.ActivityScenario;
@@ -17,8 +15,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
-import ch.epfl.sdp.appart.panorama.PictureCardAdapter;
-import ch.epfl.sdp.appart.panorama.SwapNotifiable;
+import ch.epfl.sdp.appart.picturesimport.SwapNotifiable;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 

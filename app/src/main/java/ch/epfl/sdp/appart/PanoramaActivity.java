@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
+import com.panoramagl.hotspots.PLHotspot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class PanoramaActivity extends AppCompatActivity {
         plManager.setAccelerometerEnabled(false);
         plManager.setInertiaEnabled(false);
         plManager.setZoomEnabled(false);
-
+        PLHotspot hotspot;
         loadImage();
         disableLeftButton();
         if (images.size() < 2)

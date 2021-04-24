@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.panorama;
+package ch.epfl.sdp.appart.picturesimport;
 
 import android.net.Uri;
 
