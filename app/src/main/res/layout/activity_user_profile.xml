@@ -284,7 +284,7 @@
                 <Button
                     android:id="@+id/doneButton"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="#8D0AE112"
                     android:gravity="center"
                     android:onClick="doneEditing"
@@ -298,7 +298,7 @@
                     android:id="@+id/modifyButton"
                     style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:onClick="editProfile"
                     android:text="@string/editProfileButtonText"
