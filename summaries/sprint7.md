@@ -6,7 +6,9 @@ This week I worked on the map features of the app. It actually consists in two s
 I didn't realize implementing this would take me so long. I had to create a location service, which I didn't plan to add at first, and get familiar with the Google maps APIs.
 
 Right now, the UI is not nice looking and not particularly user friendly but I think this can be improved quite easily.
+
 ## Carlo
+This week I mainly worked on synching the contact info on ad with the actual firestore user which posted the ad. This is now done and **tested**. Now, once a user taps the **contact info** button on ad the announcer's information gets fetched from firestore and displayed on the SimpleUserProfileActivity. I also worked with Filippo on the storing and retrieving of images in database for the user profile: this task was longer and more cumbersome than expected initially because of code adaptations, thus will be continued through next week. In the upcoming week I will merge the PR introducing sync between contact info and firestore (which is already done) and I will keep working on the per-user storage of images in firestore.
 
 ## Émilien
 This week I've been working on a new favorite feature. The goal is to allow the user to save its favorites announces and check them when they want. For now, there is multiple issues with firestore, especially because for now the users in the database seem to not be updated when a new favorite is given, even though they should be. Aside from that, I've been working on doing the serializers, as suggested in the coding review. There are still a few issues with those, but it shouldn't take too much time to fix it. 
