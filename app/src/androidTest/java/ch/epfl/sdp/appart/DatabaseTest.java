@@ -50,16 +50,18 @@ public class DatabaseTest {
 
     @BindValue
     final
-    FirestoreEmulatorDatabaseServiceWrapper db = new FirestoreEmulatorDatabaseServiceWrapper(new FirestoreDatabaseService());
+    DatabaseService db = new FirestoreEmulatorDatabaseServiceWrapper(new FirestoreDatabaseService());
 
     @BindValue
     final
     LoginService loginService = new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
 
     User globalUser = null;
+    FirestoreEmulatorDatabaseServiceWrapper database;
 
     @Before
     public void setup() {
+        database = (FirestoreEmulatorDatabaseServiceWrapper) db;
         db.clearCache().join();
         System.out.println("Cache cleared");
     }
@@ -179,7 +181,7 @@ public class DatabaseTest {
         Ad retrievedAd = db.getAd(card.getId()).join();
         verifyAd(retrievedAd, title, street, city, desc, price, globalUser.getUserId(), contactInfo, pricePeriod, hasVRTour);
 
-        db.removeFromStorage(db.getStorageReference(AdLayout.DIRECTORY + "/" + adId));
+        database.removeFromStorage(database.getStorageReference(AdLayout.DIRECTORY + "/" + adId));
     }
 
     public void updateCardTest() {
