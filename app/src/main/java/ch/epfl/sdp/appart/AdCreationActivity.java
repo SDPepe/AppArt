@@ -89,6 +89,7 @@ public class AdCreationActivity extends AppCompatActivity {
         setVMValues();
 
         // confirm creation and elaborate result
+        // TODO show a loading box and disable modifiying field / click buttons -> maybe a loading screen?
         CompletableFuture<Boolean> result = mViewModel.confirmCreation();
         result.thenAccept(completed -> {
             if (completed) {

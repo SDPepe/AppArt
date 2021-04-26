@@ -334,22 +334,15 @@ public class FirestoreDatabaseService implements DatabaseService {
     private void cleanUpIfFailed(boolean taskSuccessful, CompletableFuture<Void> result, DocumentReference adRef,
                                  DocumentReference cardRef, StorageReference imagesRef) {
         if (!taskSuccessful) {
+            Log.d("Ad creation", "ad upload failed");
             adRef.delete();
             cardRef.delete();
-            imagesRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                @Override
-                public void onSuccess(ListResult listResult) {
-                    List<StorageReference> items = listResult.getItems();
-                    for (StorageReference item : items){
-                        item.delete();
-                    }
+            imagesRef.listAll().addOnSuccessListener(listResult -> {
+                List<StorageReference> items = listResult.getItems();
+                for (StorageReference item : items){
+                    item.delete();
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("Ad upload", "Failed to cleanup after failed upload");
-                }
-            });
+            }).addOnFailureListener(e -> Log.d("Ad upload", "Failed to cleanup after failed upload"));
 
             // TODO create exception
             result.completeExceptionally(
@@ -383,7 +376,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture.allOf(resultsArray).thenAccept(res -> {
             boolean successful = true;
             List<Boolean> completedUploadResults = futures.stream()
-                    .map(future -> future.join()).collect(Collectors.toList());
+                    .map(CompletableFuture::join).collect(Collectors.toList());
             for (boolean b : completedUploadResults) {
                 successful = successful && b;
                 cleanUpIfFailed(successful, result, adRef, cardRef, imagesRef);
