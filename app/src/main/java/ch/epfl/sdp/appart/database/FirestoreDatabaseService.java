@@ -339,7 +339,7 @@ public class FirestoreDatabaseService implements DatabaseService {
             cardRef.delete();
             imagesRef.listAll().addOnSuccessListener(listResult -> {
                 List<StorageReference> items = listResult.getItems();
-                for (StorageReference item : items){
+                for (StorageReference item : items) {
                     item.delete();
                 }
             }).addOnFailureListener(e -> Log.d("Ad upload", "Failed to cleanup after failed upload"));
