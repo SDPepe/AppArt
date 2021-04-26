@@ -35,8 +35,8 @@ public class GoogleMapWrapper implements OnMapReadyCallback {
         }
 
         try {
-            map.setMyLocationEnabled(true);
-            map.getUiSettings().setMyLocationButtonEnabled(true);
+            //map.setMyLocationEnabled(true);
+            //map.getUiSettings().setMyLocationButtonEnabled(true);
         } catch (SecurityException e) {
             throw e;
         }
