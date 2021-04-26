@@ -5,12 +5,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
@@ -274,6 +277,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Void> cardResult = new CompletableFuture<>();
         DocumentReference newAdRef = db.collection(FirebaseLayout.ADS_DIRECTORY).document();
         DocumentReference cardRef = db.collection(FirebaseLayout.CARDS_DIRECTORY).document();
+        String storagePath = FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR + newAdRef.getId();
 
         // upload photos
         List<String> actualRefs = new ArrayList<>();
@@ -282,11 +286,10 @@ public class FirestoreDatabaseService implements DatabaseService {
         for (int i = 0; i < uriList.size(); i++) {
             String name = FirebaseLayout.PHOTO_NAME + i + ".jpeg"; // TODO modify to support other extensions
             actualRefs.add(name);
-            imagesUploadResults.add(putImage(uriList.get(i), name,
-                    FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR + newAdRef.getId()));
+            imagesUploadResults.add(putImage(uriList.get(i), name, storagePath));
         }
-        // check whether any of the uploads failed TODO check
-        //checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storageRef);
+        // check whether any of the uploads failed
+        checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storage.getReference(storagePath));
 
         // build and send card / ad
         checkCardUpload(cardResult, ad, newAdRef, cardRef, null, actualRefs.get(0));
@@ -333,7 +336,21 @@ public class FirestoreDatabaseService implements DatabaseService {
         if (!taskSuccessful) {
             adRef.delete();
             cardRef.delete();
-            imagesRef.delete();
+            imagesRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                @Override
+                public void onSuccess(ListResult listResult) {
+                    List<StorageReference> items = listResult.getItems();
+                    for (StorageReference item : items){
+                        item.delete();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("Ad upload", "Failed to cleanup after failed upload");
+                }
+            });
+
             // TODO create exception
             result.completeExceptionally(
                     new UnsupportedOperationException("Ad upload failed!"));
