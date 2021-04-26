@@ -37,7 +37,6 @@ public class UserProfileActivity extends AppCompatActivity {
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
-    private Button backButton;
     private EditText nameEditText;
     private EditText ageEditText;
     private EditText phoneNumberEditText;
@@ -58,7 +57,6 @@ public class UserProfileActivity extends AppCompatActivity {
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.modifyButton);
         this.doneButton = findViewById(R.id.doneButton);
-        this.backButton = findViewById(R.id.back_UserProfile_button);
         this.nameEditText = findViewById(R.id.name_UserProfile_editText);
         this.ageEditText = findViewById(R.id.age_UserProfile_editText);
         this.emailTextView = findViewById(R.id.emailText_UserProfile_textView);
@@ -154,7 +152,6 @@ public class UserProfileActivity extends AppCompatActivity {
         this.nameEditText.setEnabled(!this.nameEditText.isEnabled());
         this.ageEditText.setEnabled(!this.ageEditText.isEnabled());
         this.genderSpinner.setEnabled(!this.genderSpinner.isEnabled());
-        this.backButton.setEnabled(!this.backButton.isEnabled());
         this.phoneNumberEditText.setEnabled(!this.phoneNumberEditText.isEnabled());
         /* email is never enabled since another process is required to edit it */
     }
