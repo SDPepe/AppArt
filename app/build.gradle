@@ -24,7 +24,8 @@ android {
             properties.load(rootProject.file("local.properties").newDataInputStream())
             manifestPlaceholders =  [ mapsApiKey : properties.getProperty("MAPS_API_KEY", "")]
         } else {
-            manifestPlaceholders = [ mapsApiKey : System.getenv('MAPS_API_KEY')]
+            println System.getenv("MAPS_API_KEY")
+            manifestPlaceholders = [ mapsApiKey : System.getenv("MAPS_API_KEY")]
         }
     }
 
