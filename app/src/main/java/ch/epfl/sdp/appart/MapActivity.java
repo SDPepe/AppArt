@@ -38,6 +38,7 @@ public class MapActivity extends AppCompatActivity {
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
+        mapFragment.getView().setContentDescription("WAITING");
 
         GoogleMapWrapper mapWrapper;
 
@@ -48,15 +49,15 @@ public class MapActivity extends AppCompatActivity {
 
         if (address != null) {
             mapWrapper =
-                    new GoogleMapWrapper(null);
+                    new GoogleMapWrapper(null, mapFragment);
             onMapReadyCallback = () -> {
                 Location apartmentLoc =
                         locationService.getLocationFromName(address);
-                mapWrapper.addMarker(apartmentLoc, null, true);
+                mapWrapper.addMarker(apartmentLoc, null, true, null);
             };
         } else {
             mapWrapper = new GoogleMapWrapper(new ApartmentInfoWindow(this,
-                    databaseService));
+                    databaseService), mapFragment);
             onMapReadyCallback = () -> {
                 CompletableFuture<List<Card>> futureCards = databaseService
                         .getCards();
@@ -69,7 +70,7 @@ public class MapActivity extends AppCompatActivity {
                     for (Card card : cards) {
                         Location apartmentLoc =
                                 locationService.getLocationFromName(card.getCity());
-                        mapWrapper.addMarker(apartmentLoc, card, false);
+                        mapWrapper.addMarker(apartmentLoc, card, false, card.getCity());
                     }
                 });
             };
