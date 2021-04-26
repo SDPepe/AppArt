@@ -51,7 +51,7 @@ public class MapUITest {
     DatabaseService databaseService = new MockDatabaseService();
 
     @Test
-    public void markerTest() throws UiObjectNotFoundException {
+    public void markerTest() {
 
         UiDevice device =
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
