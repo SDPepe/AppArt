@@ -15,7 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
+import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static ch.epfl.sdp.appart.utils.UIUtils.makeSnakeForUserUpdateFailed;
 
 /**
  * This class manages the UI of the user profile, the user may edit
@@ -110,7 +113,7 @@ public class UserProfileActivity extends AppCompatActivity {
         /* disable editing text in all UI components*/
         enableDisableEntries();
 
-        setSessionUserToDatabase();
+        setSessionUserToDatabase(view);
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
@@ -130,16 +133,18 @@ public class UserProfileActivity extends AppCompatActivity {
     /**
      * sets the updated user information to the firestore database
      */
-    private void setSessionUserToDatabase() {
+    private void setSessionUserToDatabase(View view) {
       mViewModel.updateUser(this.sessionUser);
       mViewModel.getUpdateCardConfirmed().observe(this, this::informationUpdateResult);
-        /* update the view with new attributes */
-        getAndSetCurrentAttributes();
     }
 
-    private void informationUpdateResult(Boolean b) {
-        //System.out.println(b);
-        // TODO: do something if needed
+    private void informationUpdateResult(Boolean updateResult) {
+        if (updateResult) {
+            /* update the view with new attributes */
+            getAndSetCurrentAttributes();
+        } else {
+            UIUtils.makeSnakeForUserUpdateFailed(this.doneButton, R.string.updateUserFailedInDB);
+        }
     }
 
     /**

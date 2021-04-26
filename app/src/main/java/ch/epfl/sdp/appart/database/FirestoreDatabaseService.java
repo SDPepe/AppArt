@@ -210,17 +210,17 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
         return updateUserDb(isFinishedFuture, user);*/
         CompletableFuture<Boolean> result = new CompletableFuture<>();
-        result.complete(true);
-        return result;
+        return updateUserDb(result, user);
 
     }
 
-    private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user) {
-        db.document(user.getUserId())
-                .set(extractUserInfo(user))
-                .addOnCompleteListener(
-                        task -> res.complete(task.isSuccessful()));
-        return res;
+    private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user){
+            db.collection(UserLayout.DIRECTORY)
+                    .document(user.getUserId())
+                    .set(extractUserInfo(user))
+                    .addOnCompleteListener(
+                            task -> res.complete(task.isSuccessful()));
+            return res;
     }
 
     @NotNull

@@ -10,14 +10,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.res.ResourcesCompat;
-import ch.epfl.sdp.appart.user.AppUser;
-import ch.epfl.sdp.appart.user.Gender;
+import androidx.lifecycle.ViewModelProvider;
 import ch.epfl.sdp.appart.user.User;
+import ch.epfl.sdp.appart.user.UserViewModel;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class SimpleUserProfileActivity extends AppCompatActivity {
 
     /* temporary user */
-    private User sessionUser;
+    private User advertiserUser;
+
+    /* User ViewModel */
+    UserViewModel mViewModel;
 
     /* UI components */
     private Button backButton;
@@ -34,6 +39,10 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_user_profile);
 
+        /* User ViewModel initialization */
+        mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+
         /* UI components initialisation */
         this.backButton = findViewById(R.id.back_SimpleUserProfile_button);
         this.nameText = findViewById(R.id.name_SimpleUserProfile_editText);
@@ -44,11 +53,11 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_SimpleUserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_SimpleUserProfile_imageView);
 
-        /* retrieve session user copy for use info */
-        getAdUserFromDatabase();
+        String advertiserId = getIntent().getStringExtra("advertiserId");
 
-        /* set attributes of session user to the UI components */
-        getAndSetCurrentAttributes();
+        /* get user from database from user ID */
+        mViewModel.getUser(advertiserId);
+        mViewModel.getUser().observe(this, this::setAdUserToLocal);
     }
 
 
@@ -70,35 +79,32 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         // TODO: send message to user
     }
 
-
     /**
-     * retrieves the current user information from database
-     * and stores it in the session user instance
+     *
+     * @param user sets the value of the current user to the session user object
      */
-    private void getAdUserFromDatabase() {
-        this.sessionUser = new AppUser("1", "marie.bernard@gmail.com");
-        this.sessionUser.setName("Marie Bernard");
-        this.sessionUser.setAge(25);
-        this.sessionUser.setGender(Gender.FEMALE.name());
-        this.sessionUser.setPhoneNumber("+41 7666666666");
-        // TODO: get actual ad user from database
+    private void setAdUserToLocal(User user){
+        this.advertiserUser = user;
+
+        /* set attributes of session user to the UI components */
+        getAndSetCurrentAttributes();
     }
 
     /**
      * sets the current session User attributes to the UI components
      */
     private void getAndSetCurrentAttributes() {
-        this.nameText.setText(this.sessionUser.getName());
-        this.emailTextView.setText(this.sessionUser.getUserEmail());
-        this.uniAccountClaimer.setText((this.sessionUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
-        if (this.sessionUser.getAge() != 0) {
-            this.ageText.setText(String.valueOf(this.sessionUser.getAge()));
+        this.nameText.setText(this.advertiserUser.getName());
+        this.emailTextView.setText(this.advertiserUser.getUserEmail());
+        this.uniAccountClaimer.setText((this.advertiserUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
+        if (this.advertiserUser.getAge() != 0) {
+            this.ageText.setText(String.valueOf(this.advertiserUser.getAge()));
         }
-        if (this.sessionUser.getPhoneNumber() != null) {
-            this.phoneNumberText.setText(this.sessionUser.getPhoneNumber());
+        if (this.advertiserUser.getPhoneNumber() != null) {
+            this.phoneNumberText.setText(this.advertiserUser.getPhoneNumber());
         }
-        if (this.sessionUser.getGender() != null) {
-            this.genderText.setText(this.sessionUser.getGender());
+        if (this.advertiserUser.getGender() != null) {
+            this.genderText.setText(this.advertiserUser.getGender());
         }
         setPictureToImageComponent();
     }
@@ -107,7 +113,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        String[] verifier = this.sessionUser.getProfileImage().split(":");
+        String[] verifier = this.advertiserUser.getProfileImage().split(":");
         if (verifier[0].equals("userIcon")){
             int id = Integer.parseInt(verifier[1]);
             Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);

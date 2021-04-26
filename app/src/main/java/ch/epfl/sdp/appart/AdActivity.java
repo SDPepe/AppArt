@@ -37,6 +37,8 @@ public class AdActivity extends ToolbarActivity {
     LoginService login;
     String adId;
 
+    private String advertiserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,7 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getPrice().observe(this, this::updatePrice);
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
+        mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
 
         // if activity opened by adcreation, load the last ad created by the user,
         // otherwise load the id passed by scrollingactivity
@@ -117,6 +120,10 @@ public class AdActivity extends ToolbarActivity {
         setIfNotNull(usernameView, username);
     }
 
+    private void updateAdvertiserId(String advertiserId) {
+        this.advertiserId = advertiserId;
+    }
+
     private void setIfNotNull(TextView view, String content) {
         if (content == null) {
             view.setText(R.string.loadingTextAdActivity);
@@ -148,6 +155,7 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openContactInfo(View view) {
         Intent intent = new Intent(this, SimpleUserProfileActivity.class);
+        intent.putExtra("advertiserId", this.advertiserId);
         startActivity(intent);
     }
 

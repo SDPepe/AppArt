@@ -29,6 +29,7 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
     private final MutableLiveData<String> adDescription = new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiser = new MutableLiveData<>(); // name of user
+    private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>(); // id of announcer
     private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
 
     @Inject
@@ -53,34 +54,27 @@ public class AdViewModel extends ViewModel {
             this.adTitle.setValue(ad.getTitle());
             this.adPrice.setValue(ad.getPrice() + " / " + ad.getPricePeriod().toString());
             this.adDescription.setValue(ad.getDescription());
-            this.adAdvertiser.setValue(ad.getAdvertiserId());
+
+            //this.adAdvertiser.setValue(ad.getContactInfo().name);
+            this.adAdvertiserId.setValue(ad.getAdvertiserId());
+
             this.adPhotosRefs.setValue(ad.getPhotosRefs());
         });
     }
 
     // Getters
-    public LiveData<String> getTitle() {
-        return adTitle;
-    }
+    public LiveData<String> getTitle() { return adTitle; }
 
-    public LiveData<List<String>> getPhotosRefs() {
-        return adPhotosRefs;
-    }
+    public LiveData<List<String>> getPhotosRefs() { return adPhotosRefs; }
 
-    public LiveData<String> getAddress() {
-        return adAddress;
-    }
+    public LiveData<String> getAddress() { return adAddress; }
 
-    public LiveData<String> getPrice() {
-        return adPrice;
-    }
+    public LiveData<String> getPrice() { return adPrice; }
 
-    public LiveData<String> getDescription() {
-        return adDescription;
-    }
+    public LiveData<String> getDescription() { return adDescription; }
 
-    public LiveData<String> getAdvertiser() {
-        return adAdvertiser;
-    }
+    public LiveData<String> getAdvertiser() { return adAdvertiser; }
+
+    public LiveData<String> getAdvertiserId() { return adAdvertiserId; }
 
 }
