@@ -52,6 +52,16 @@
     <string name="emailText"> Email </string>
     <string name="genderText"> Gender </string>
     <string name="nonUniAccountClaimer">  Regular account </string>
+    <string name="updateUserFailedInDB">  Information update failed, try again </string>
+    <string-array name="genderList">
+        <item> </item>
+        <item>Female</item>
+        <item>Male</item>
+        <item>Other</item>
+    </string-array>
+    <string name="contactAdUser"> CONTACT ANNOUNCER </string>
+
+    <!--  -->
     <string name="cameraAdButtonDesc">Add Picture</string>
     <string name="createPanoramaTourButton">Create Panorama tour</string>
     <string name="cameraButtonText">Camera</string>
@@ -66,13 +76,6 @@
     <string name="resetConfirmationViewText">If this address is valid, you will receive a link to change your password</string>
     <string name="goToLoginFromResetButtonText">Log In Menu</string>
     <string name="loadingTextAdActivity">Loading…</string>
-    <string-array name="genderList">
-        <item> </item>
-        <item>Female</item>
-        <item>Male</item>
-        <item>Other</item>
-    </string-array>
-    <string name="contactAdUser"> CONTACT ANNOUNCER </string>
 
     <!-- AdCreationActivity stuff -->
     <string name="editTitleAdCreation">Title</string>
