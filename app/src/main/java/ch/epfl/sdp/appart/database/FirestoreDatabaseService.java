@@ -215,7 +215,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     }
 
     private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user){
-            db.collection(UserLayout.DIRECTORY)
+            db.collection(FirebaseLayout.USERS_DIRECTORY)
                     .document(user.getUserId())
                     .set(extractUserInfo(user))
                     .addOnCompleteListener(
