@@ -1,13 +1,10 @@
 package ch.epfl.sdp.appart.database;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,8 +15,6 @@ import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -235,16 +230,16 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
         return updateUserDb(isFinishedFuture, user);*/
         CompletableFuture<Boolean> result = new CompletableFuture<>();
-        result.complete(true);
-        return result;
+        return updateUserDb(result, user);
 
     }
 
     private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user){
-            db.document(user.getUserId())
-            .set(extractUserInfo(user))
-            .addOnCompleteListener(
-                task -> res.complete(task.isSuccessful()));
+            db.collection(UserLayout.DIRECTORY)
+                    .document(user.getUserId())
+                    .set(extractUserInfo(user))
+                    .addOnCompleteListener(
+                            task -> res.complete(task.isSuccessful()));
             return res;
     }
 

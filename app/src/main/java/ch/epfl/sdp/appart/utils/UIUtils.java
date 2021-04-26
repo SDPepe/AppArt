@@ -14,4 +14,8 @@ public class UIUtils {
         Log.d("LOGIN", e.getMessage());
         Snackbar.make(view, id, BaseTransientBottomBar.LENGTH_SHORT).show();
     }
+
+    public static void makeSnakeForUserUpdateFailed(View view, @StringRes int id) {
+        Snackbar.make(view, id, BaseTransientBottomBar.LENGTH_SHORT).show();
+    }
 }
