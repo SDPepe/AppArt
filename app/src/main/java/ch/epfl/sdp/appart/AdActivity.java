@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -34,6 +35,7 @@ public class AdActivity extends ToolbarActivity {
     DatabaseService database;
     @Inject
     LoginService login;
+    String adId;
 
     private String advertiserId;
 
@@ -65,7 +67,8 @@ public class AdActivity extends ToolbarActivity {
             mViewModel.initAd(getIntent().getStringExtra("adID"));
         }
         */
-        mViewModel.initAd(getIntent().getStringExtra("adID"));
+        adId = getIntent().getStringExtra("adID");
+        mViewModel.initAd(getIntent().getStringExtra("cardID"));
     }
 
     private void updateTitle(String title) {
@@ -82,8 +85,9 @@ public class AdActivity extends ToolbarActivity {
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
+            String sep = FirebaseLayout.SEPARATOR;
             database.accept(new GlideImageViewLoader(this, photo,
-                    references.get(i)));
+                    FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i)));
             horizontalLayout.addView(myView);
             if (i != 4) {
                 Space hspacer = new Space(this);

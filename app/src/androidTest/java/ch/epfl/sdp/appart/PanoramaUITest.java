@@ -54,17 +54,18 @@ public class PanoramaUITest {
     }
 
     @Test
-    public void buttonVisibilityOnFirstImageTest() {
+    public void buttonVisibilityTest() {
         onView(withId(leftButtonID)).check(matches(not(isDisplayed())));
         onView(withId(rightButtonID)).check(matches(isDisplayed()));
-    }
 
-    @Test
-    public void buttonVisibilityOnSecondImageTest() {
         onView(withId(rightButtonID)).perform(click());
-
         onView(withId(leftButtonID)).check(matches(isDisplayed()));
         onView(withId(rightButtonID)).check(matches(not(isDisplayed())));
+
+        onView(withId(leftButtonID)).perform(click());
+        onView(withId(leftButtonID)).check(matches(not(isDisplayed())));
+        onView(withId(rightButtonID)).check(matches(isDisplayed()));
+
     }
 
 }

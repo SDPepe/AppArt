@@ -20,6 +20,8 @@ import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreEmulatorDatabaseServiceWrapper;
+import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
@@ -56,9 +58,11 @@ public class DatabaseTest {
     LoginService loginService = new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
 
     User globalUser = null;
+    FirestoreEmulatorDatabaseServiceWrapper database;
 
     @Before
     public void setup() {
+        database = (FirestoreEmulatorDatabaseServiceWrapper) db;
         db.clearCache().join();
         System.out.println("Cache cleared");
     }
@@ -67,10 +71,6 @@ public class DatabaseTest {
         assertThat(retrievedCard.getCity(), is(city));
         assertThat(retrievedCard.getPrice(), is(price));
         assertThat(retrievedCard.getUserId(), is(ownerID));
-    }
-
-    public void putCardThrowsOnNull() {
-        assertThrows(IllegalArgumentException.class, () -> db.putCard(null));
     }
 
     public void verifyUser(User retrievedUser, long age, String name, String id, String email, String phoneNB) {
@@ -114,7 +114,8 @@ public class DatabaseTest {
         retrievedUser = db.getUser(user.getUserId()).join();
 
         verifyUser(retrievedUser, age, name, userId, email, phoneNb);
-        */globalUser = retrievedUser;
+        */
+        globalUser = retrievedUser;
     }
 
     public void verifyAd(Ad retrievedAd, String title, String street, String city, String desc, long price, String advertiserId, ContactInfo contactInfo, PricePeriod pricePeriod, boolean hasVRTour) {
@@ -171,7 +172,7 @@ public class DatabaseTest {
         builder.hasVRTour(hasVRTour);
 
         Ad ad = builder.build();
-        db.putAd(ad, uriList).join();
+        String adId = db.putAd(ad, uriList).join();
 
         List<Card> retrievedCards = this.db.getCards().join();
         assertThat(retrievedCards.size(), is(1));
@@ -182,7 +183,8 @@ public class DatabaseTest {
         Ad retrievedAd = db.getAd(card.getId()).join();
         verifyAd(retrievedAd, title, street, city, desc, price, globalUser.getUserId(), contactInfo, pricePeriod, hasVRTour);
 
-
+        database.removeFromStorage(database.getStorageReference(
+                FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR + adId + "photo0.jpeg"));
     }
 
     public void updateCardTest() {
@@ -207,45 +209,10 @@ public class DatabaseTest {
 
     }
 
-    public void putCardTest() {
-        String id = "fakeId";
-        String adId = "fakeAdId";
-        String ownerId = "fakeOwnerID";
-        String city = "fakeCity";
-        long price = 1000;
-        boolean hasVRTour = false;
-
-        Card card = new Card(id, adId, ownerId, city, price, "", hasVRTour);
-
-        List<Card> cards = db.getCards().join();
-        assertThat(cards.size(), is(1));
-
-        String otherCardId = cards.get(0).getId();
-
-        String cardId = db.putCard(card).join();
-
-        cards = db.getCards().join();
-
-        Card wantedCard = null;
-        for (Card retrievedCard : cards) {
-            if (retrievedCard.getId().equals(id) || !retrievedCard.getId().equals(otherCardId) || retrievedCard.getId().equals(cardId)) {
-                wantedCard = retrievedCard;
-                break;
-            }
-        }
-
-        assertNotNull(wantedCard);
-
-        verifyCard(wantedCard, city, price, ownerId);
-
-    }
-
     @Test
     public void databaseTest() throws IOException {
         addingUsersAndUpdateTest();
         addingAdAndGetTest();
-        putCardThrowsOnNull();
         updateCardTest();
-        putCardTest();
     }
 }
