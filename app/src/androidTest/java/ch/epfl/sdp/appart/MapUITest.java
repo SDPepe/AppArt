@@ -56,7 +56,8 @@ public class MapUITest {
         UiDevice device =
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-        device.wait(Until.hasObject(By.desc("MAP READY")), 1000);
+        boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")), 1000);
+        assertThat(foundMap, is(true));
 
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
