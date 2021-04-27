@@ -38,12 +38,12 @@ import static org.junit.Assert.assertEquals;
 @HiltAndroidTest
 public class AdUITest {
 
-    static final String cardID = "1PoUWbeNHvMNotxwAui5";
+    static final String testId = "1PoUWbeNHvMNotxwAui5";
     static final Intent intent;
 
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(), AdActivity.class);
-        intent.putExtra("cardID", cardID);
+        intent.putExtra("cardID", testId);
     }
 
     @BindValue
@@ -83,7 +83,7 @@ public class AdUITest {
 
     @Test
     public void displayAdInfoTest() {
-        Ad testAd = database.getAd(cardID).join();
+        Ad testAd = database.getAd(testId).join();
 
         onView(withId(R.id.title_Ad_textView)).check(matches(withText(testAd.getTitle())));
         onView(withId(R.id.address_field_Ad_textView)).check(matches(withText(

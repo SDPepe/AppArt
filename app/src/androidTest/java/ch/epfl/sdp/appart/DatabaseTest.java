@@ -180,7 +180,7 @@ public class DatabaseTest {
 
         verifyCard(card, city, price, globalUser.getUserId());
 
-        Ad retrievedAd = db.getAd(card.getId()).join();
+        Ad retrievedAd = db.getAd(card.getAdId()).join();
         verifyAd(retrievedAd, title, street, city, desc, price, globalUser.getUserId(), contactInfo, pricePeriod, hasVRTour);
 
         database.removeFromStorage(database.getStorageReference(

@@ -6,22 +6,26 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
@@ -45,15 +49,36 @@ public class FirestoreAdHelper {
         storage = FirebaseStorage.getInstance();
         imageHelper = new FirestoreImageHelper();
         cardHelper = new FirestoreCardHelper();
-        adsPath = FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR;
+        adsPath = FirebaseLayout.ADS_DIRECTORY;
     }
 
-    // TODO rewrite getAd so that it takes the ad id in argument
     @NotNull
     @NonNull
     public CompletableFuture<Ad> getAd(String adId) {
         CompletableFuture<Ad> result = new CompletableFuture<>();
-        result.complete(null);
+        CompletableFuture<Ad.AdBuilder> partialAdResult = new CompletableFuture<>();
+        CompletableFuture<List<String>> imagesIdsResult = new CompletableFuture<>();
+
+        // get images, if successful try to retrieve the other ad fields
+        getAndCheckImagesIds(imagesIdsResult, adId);
+        imagesIdsResult.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+        imagesIdsResult.thenAccept(imagesIds -> {
+            // get remaining ad fields, if successful add images ids to the ad and build it
+            getAndCheckPartialAd(partialAdResult, adId);
+            partialAdResult.exceptionally(e -> {
+                result.completeExceptionally(e);
+                return null;
+            });
+            partialAdResult.thenAccept(adBuilder -> {
+                adBuilder.withPhotosIds(imagesIds);
+                result.complete(adBuilder.build());
+            });
+
+        });
+
         return result;
     }
 
@@ -66,7 +91,7 @@ public class FirestoreAdHelper {
         CompletableFuture<Void> cardResult = new CompletableFuture<>();
         DocumentReference newAdRef = db.collection(FirebaseLayout.ADS_DIRECTORY).document();
         DocumentReference cardRef = db.collection(FirebaseLayout.CARDS_DIRECTORY).document();
-        String storagePath = adsPath + newAdRef.getId();
+        String storagePath = adsPath + FirebaseLayout.SEPARATOR + newAdRef.getId();
 
         // upload photos
         List<String> actualRefs = new ArrayList<>();
@@ -90,6 +115,44 @@ public class FirestoreAdHelper {
     }
 
     /* <--- getAd private methods --->*/
+
+    private void getAndCheckImagesIds(CompletableFuture<List<String>> result,
+                                      String adId) {
+        db.collection(adsPath).document(adId).collection(AdLayout.PICTURES_DIRECTORY)
+                .get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                result.completeExceptionally(new DatabaseServiceException("Failed to get pictures ids."));
+            } else {
+                result.complete(task.getResult().getDocuments().stream().map(documentSnapshot ->
+                        (String) documentSnapshot.get("id")).collect(Collectors.toList()));
+            }
+        });
+    }
+
+    private void getAndCheckPartialAd(CompletableFuture<Ad.AdBuilder> result,
+                                      String adId) {
+        db.collection(adsPath).document(adId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+
+                Ad.AdBuilder builder = new Ad.AdBuilder()
+                        .withTitle((String) documentSnapshot.get(AdLayout.TITLE))
+                        .withPrice((long) documentSnapshot.get(AdLayout.PRICE))
+                        .withPricePeriod(PricePeriod.ALL.get(
+                                Math.toIntExact((long) documentSnapshot.get(AdLayout.PRICE_PERIOD))))
+                        .withStreet((String) documentSnapshot.get(AdLayout.STREET))
+                        .withCity((String) documentSnapshot.get(AdLayout.CITY))
+                        .withAdvertiserId((String) documentSnapshot.get(AdLayout.ADVERTISER_ID))
+                        .withDescription((String) documentSnapshot.get(AdLayout.DESCRIPTION))
+                        .hasVRTour((boolean) documentSnapshot.get(AdLayout.VR_TOUR));
+
+                result.complete(builder);
+            } else {
+                result.completeExceptionally(new DatabaseServiceException(Objects.requireNonNull(
+                        task.getException()).getMessage()));
+            }
+        });
+    }
 
     /* <--- putAd private methods --->*/
 
@@ -211,19 +274,5 @@ public class FirestoreAdHelper {
         adData.put(AdLayout.TITLE, ad.getTitle());
         return adData;
     }
-
-    /**
-     * Serializes card information for upload on Firestore
-     */
-    private Map<String, Object> extractCardsInfo(Card card) {
-        Map<String, Object> docData = new HashMap<>();
-        docData.put(CardLayout.USER_ID, card.getUserId());
-        docData.put(CardLayout.CITY, card.getCity());
-        docData.put(CardLayout.PRICE, card.getPrice());
-        docData.put(CardLayout.IMAGE, card.getImageUrl());
-        docData.put(CardLayout.AD_ID, card.getAdId());
-        return docData;
-    }
-
 
 }
