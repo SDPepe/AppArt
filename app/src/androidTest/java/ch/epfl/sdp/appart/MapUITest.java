@@ -44,7 +44,7 @@ public class MapUITest {
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
-            GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
+            GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET);
 
     @BindValue
     final
@@ -57,7 +57,7 @@ public class MapUITest {
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
         boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")), 10000);
-        assertThat(foundMap, is(true));
+        assertThat(foundMap, is(false));
 
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
