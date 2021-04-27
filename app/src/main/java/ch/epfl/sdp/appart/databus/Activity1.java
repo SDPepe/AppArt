@@ -4,10 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.hilt.annotations.IntegerDataBus;
-import ch.epfl.sdp.appart.hilt.annotations.StringDataBus;
-import ch.epfl.sdp.appart.hilt.annotations.StringMutableDataBus;
-import ch.epfl.sdp.appart.hilt.annotations.UriListDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.IntegerDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.StringDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.UriListDataBus;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import android.content.Intent;
@@ -35,11 +34,12 @@ public class Activity1 extends AppCompatActivity {
     @Inject
     DataBus<List<Uri>> uriListBus;
 
-    @StringMutableDataBus
+    @UriListDataBus
     @Inject
-    ActivityMutableDataBus<String> stringMutableDataBus;
+    PrivateDataBus<List<Uri>> uriPrivateDataBus;
 
-    private MutableLiveData<String> stringMutableData;
+    private PrivateDataBusToken token =
+            PrivateDataBusTokenFactory.makeToken(Activity1.class, Activity2.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +47,17 @@ public class Activity1 extends AppCompatActivity {
         setContentView(R.layout.activity_1);
         Button gotoActivity2Button = findViewById(R.id.goto_activity_2_button);
 
-        //we fill the busses with non-trivial data
+        /**
+         * Solution 1 : basic bus
+         */
         integerBus.setData(1234);
         stringBus.setData("coucou !");
         uriListBus.setData(Arrays.asList(Uri.parse("abc"), Uri.parse("1234"), Uri.parse("cool")));
 
-        //setting ownership of the bus by Activity1
-        stringMutableDataBus.bind(Activity1.class, stringMutableData);
+        /**
+         * Solution 2 : private bus
+         */
+        uriPrivateDataBus.setData(token, Arrays.asList(Uri.parse("so"), Uri.parse("private")));
 
         gotoActivity2Button.setOnClickListener(v -> {
             Intent intent = new Intent(this, Activity2.class);

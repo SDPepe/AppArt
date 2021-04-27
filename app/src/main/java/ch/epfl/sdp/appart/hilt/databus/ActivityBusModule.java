@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.hilt;
+package ch.epfl.sdp.appart.hilt.databus;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,9 +9,9 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.databus.DataBus;
-import ch.epfl.sdp.appart.hilt.annotations.IntegerDataBus;
-import ch.epfl.sdp.appart.hilt.annotations.StringDataBus;
-import ch.epfl.sdp.appart.hilt.annotations.UriListDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.IntegerDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.StringDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.UriListDataBus;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;

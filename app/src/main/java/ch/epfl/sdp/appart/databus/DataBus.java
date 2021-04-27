@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
+ * Solution 1
  * Class that allows activities to talk to each other with a bus. All classes that
  * utilise this class defined for some type T will utilize the same class.
  * @param <T> The type of the data that will be exchangeable over the bus.

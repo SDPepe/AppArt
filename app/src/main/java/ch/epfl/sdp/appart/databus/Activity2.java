@@ -10,10 +10,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.hilt.annotations.IntegerDataBus;
-import ch.epfl.sdp.appart.hilt.annotations.StringDataBus;
-import ch.epfl.sdp.appart.hilt.annotations.StringMutableDataBus;
-import ch.epfl.sdp.appart.hilt.annotations.UriListDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.IntegerDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.StringDataBus;
+import ch.epfl.sdp.appart.hilt.databus.annotations.UriListDataBus;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -22,7 +21,6 @@ public class Activity2 extends AppCompatActivity {
     /**
      * Bellow we declare the bus we want to use
      */
-
     @IntegerDataBus
     @Inject
     DataBus<Integer> integerBus;
@@ -35,9 +33,16 @@ public class Activity2 extends AppCompatActivity {
     @Inject
     DataBus<List<Uri>> uriListBus;
 
-    @StringMutableDataBus
+    /**
+     * Solution 2 : private databus
+     */
+
+    @UriListDataBus
     @Inject
-    ActivityMutableDataBus<String> stringMutableDataBus;
+    PrivateDataBus<List<Uri>> uriPrivateDataBus;
+
+    private PrivateDataBusToken token =
+            PrivateDataBusTokenFactory.makeToken(Activity1.class, Activity2.class);
 
     private Integer a;
     private String b;
@@ -48,10 +53,14 @@ public class Activity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_2);
 
-        //we retrieve the data sent by activity 1
+        /**
+         * Solution 1 and 2 get data
+         */
         a = integerBus.getData();
         b = stringBus.getData();
         c = uriListBus.getData();
+
+        c = uriPrivateDataBus.getData(token);
 
     }
 }

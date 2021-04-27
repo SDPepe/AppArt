@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.databus;
 
 /**
+ * Solution 2
  * This class allows for two classes to exchange data by allowing exactly two classes to
  * talk with each other.
  * @param <T> the type of parameters
