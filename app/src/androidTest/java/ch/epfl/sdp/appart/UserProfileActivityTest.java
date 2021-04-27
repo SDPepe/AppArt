@@ -414,13 +414,6 @@ public class UserProfileActivityTest {
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
-
-        ViewInteraction button2 = onView(
-                allOf(withId(R.id.back_UserProfile_button), withText("BACK"),
-                        withParent(allOf(withId(R.id.infoLayout),
-                                withParent(withId(android.R.id.content)))),
-                        isDisplayed()));
-        button2.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(
