@@ -38,7 +38,7 @@ check_android_task:
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
   setup_location_script: |
-    adb -e geo fix 45.6790 4.9426
+    adb -e emu geo fix 45.6790 4.9426
     adb -e settings put secure location_providers_allowed +gps
     adb -e settings put secure location_providers_allowed +network
   logcat_background_script: adb -e logcat *:W
