@@ -214,16 +214,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         ref.delete();
     }
 
-    private Map<String, Object> extractCardsInfo(Card card) {
-        Map<String, Object> docData = new HashMap<>();
-        docData.put(CardLayout.USER_ID, card.getUserId());
-        docData.put(CardLayout.CITY, card.getCity());
-        docData.put(CardLayout.PRICE, card.getPrice());
-        docData.put(CardLayout.IMAGE, card.getImageUrl());
-        docData.put(CardLayout.AD_ID, card.getAdId());
-        return docData;
-    }
-
     /**
      * Takes a cardId and fetch the adId for the corresponding card.
      * Indeed, all the cards that are showed in the scrolling menu

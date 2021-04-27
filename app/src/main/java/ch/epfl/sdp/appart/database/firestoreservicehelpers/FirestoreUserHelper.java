@@ -21,6 +21,9 @@ import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
+/**
+ * Helper class to add users to and retrieve them from Firestore.
+ */
 public class FirestoreUserHelper {
 
     private final FirebaseFirestore db;
@@ -38,7 +41,7 @@ public class FirestoreUserHelper {
 
     @NotNull
     @NonNull
-    public CompletableFuture<User> getUser(String userId){
+    public CompletableFuture<User> getUser(String userId) {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
         }
@@ -95,7 +98,7 @@ public class FirestoreUserHelper {
 
     @NotNull
     @NonNull
-    public CompletableFuture<Boolean> putUser(User user){
+    public CompletableFuture<Boolean> putUser(User user) {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
@@ -110,9 +113,9 @@ public class FirestoreUserHelper {
         return updateUserDb(result, user);
     }
 
-    /** <--- updateUser private methods --->*/
+    /* <--- updateUser private methods ---> */
 
-    private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user){
+    private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user) {
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
                 .set(extractUserInfo(user))
@@ -121,7 +124,7 @@ public class FirestoreUserHelper {
         return res;
     }
 
-    /** <--- general util private methods --->*/
+    /* <--- general util private methods ---> */
 
     private Map<String, Object> extractUserInfo(User user) {
         Map<String, Object> docData = new HashMap<>();

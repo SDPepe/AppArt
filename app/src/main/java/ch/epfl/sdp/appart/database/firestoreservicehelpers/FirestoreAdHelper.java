@@ -89,9 +89,9 @@ public class FirestoreAdHelper {
         return result;
     }
 
-    /** <--- getAd private methods --->*/
+    /* <--- getAd private methods --->*/
 
-    /** <--- putAd private methods --->*/
+    /* <--- putAd private methods --->*/
 
     /**
      * Adds to the ad a collection with the ids of the images. Cleans up if it fails.

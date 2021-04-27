@@ -22,6 +22,9 @@ import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
+/**
+ * Helper class to add cards to and retrieve them from Firestore.
+ */
 public class FirestoreCardHelper {
 
     private final FirebaseFirestore db;
@@ -37,7 +40,7 @@ public class FirestoreCardHelper {
 
     @NotNull
     @NonNull
-    public CompletableFuture<List<Card>> getCards(){
+    public CompletableFuture<List<Card>> getCards() {
         CompletableFuture<List<Card>> result = new CompletableFuture<>();
 
         //ask firebase async to get the cards objects and notify the future
@@ -96,7 +99,7 @@ public class FirestoreCardHelper {
         return result;
     }
 
-    /** <--- general util private methods --->*/
+    /* <--- general util private methods ---> */
 
     private Map<String, Object> extractCardsInfo(Card card) {
         Map<String, Object> docData = new HashMap<>();
