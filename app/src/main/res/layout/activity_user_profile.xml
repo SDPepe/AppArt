@@ -63,6 +63,7 @@
                     android:layout_height="150dp"
                     android:layout_gravity="start"
                     android:contentDescription="profile picture"
+                    android:onClick="changeProfileImage"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
@@ -75,12 +76,19 @@
                 <TextView
                     android:id="@+id/uniAccountClaimer_UserProfile_textView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="43dp"
                     android:layout_gravity="center_horizontal"
                     android:paddingTop="10dp"
                     android:textAlignment="center"
                     android:textSize="12sp"
                     android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/removeImage_UserProfile_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:onClick="removeProfileImage"
+                    android:text="@string/removeProfilePicture" />
             </LinearLayout>
         </LinearLayout>
 

@@ -1,6 +1,6 @@
 package ch.epfl.sdp.appart;
 
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -9,16 +9,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
-
-import static ch.epfl.sdp.appart.utils.UIUtils.makeSnakeForUserUpdateFailed;
 
 /**
  * This class manages the UI of the user profile, the user may edit
@@ -37,6 +36,7 @@ public class UserProfileActivity extends AppCompatActivity {
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
+    private Button removeImageButton;
     private EditText nameEditText;
     private EditText ageEditText;
     private EditText phoneNumberEditText;
@@ -45,6 +45,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView emailTextView;
     private ImageView imageView;
 
+    /* */
+    String profileImageUriPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class UserProfileActivity extends AppCompatActivity {
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.modifyButton);
         this.doneButton = findViewById(R.id.doneButton);
+        this.removeImageButton = findViewById(R.id.removeImage_UserProfile_button);
         this.nameEditText = findViewById(R.id.name_UserProfile_editText);
         this.ageEditText = findViewById(R.id.age_UserProfile_editText);
         this.emailTextView = findViewById(R.id.emailText_UserProfile_textView);
@@ -65,12 +68,12 @@ public class UserProfileActivity extends AppCompatActivity {
         this.genderSpinner.setEnabled(ageEditText.isEnabled());
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_UserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
+        this.imageView.setEnabled(false);
+        this.removeImageButton.setVisibility(View.GONE);
 
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
         mViewModel.getUser().observe(this, this::setSessionUserToLocal);
-
-        mViewModel.getUri().observe(this, this::setProfileImage);
     }
 
     /**
@@ -87,9 +90,34 @@ public class UserProfileActivity extends AppCompatActivity {
     public void editProfile(View view) {
         this.modifyButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
+        if (!this.sessionUser.getProfileImage().contains("resource")) {
+            this.removeImageButton.setVisibility(View.VISIBLE);
+        }
 
         /* enable editing in all UI components */
         enableDisableEntries();
+    }
+
+    public void removeProfileImage(View view) {
+        this.sessionUser.setDefaultProfileImage();
+        this.profileImageUriPath = null;
+    }
+
+    public void changeProfileImage(View view) {
+        Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra("Activity", "User");
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK){
+                Uri profileUri = data.getParcelableExtra("profileUri");
+                this.profileImageUriPath = profileUri.getPath();
+            }
+        }
     }
 
     /**
@@ -107,6 +135,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
+        this.removeImageButton.setVisibility(View.GONE);
     }
 
     /**
@@ -145,6 +174,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.ageEditText.setEnabled(!this.ageEditText.isEnabled());
         this.genderSpinner.setEnabled(!this.genderSpinner.isEnabled());
         this.phoneNumberEditText.setEnabled(!this.phoneNumberEditText.isEnabled());
+        this.imageView.setEnabled(!this.imageView.isEnabled());
         /* email is never enabled since another process is required to edit it */
     }
 
@@ -160,6 +190,12 @@ public class UserProfileActivity extends AppCompatActivity {
         this.sessionUser.setName(((TextView) findViewById(R.id.name_UserProfile_editText)).getText().toString());
         this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
         this.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumber_UserProfile_editText)).getText().toString().trim());
+
+        if (this.profileImageUriPath == null) {
+            this.sessionUser.setDefaultProfileImage();
+        } else {
+            this.sessionUser.setProfileImage(this.profileImageUriPath);
+        }
     }
 
     /**
@@ -185,22 +221,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        String[] verifier = this.sessionUser.getProfileImage().split(":");
-        if (verifier[0].equals("userIcon")){
-            int id = Integer.parseInt(verifier[1]);
-            Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
-            this.imageView.setImageDrawable(iconImage);
-        } else {
-            // TODO: set actual user-specific profile picture with sessionUser.getProfileImage()
-        }
+        Uri profileImageUri = Uri.parse(this.sessionUser.getProfileImage());
+        this.imageView.setImageURI(profileImageUri);
     }
-
-    /**
-     * Set user profile image
-     */
-    private void setProfileImage(Uri uri){
-        imageView.setImageURI(uri);
-    }
-
-
 }

@@ -83,8 +83,8 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void confirm(){
-        if(listImageUri.size() >= 1) {
-            if (activity.equals("Ads")) {
+        if (activity.equals("Ads")) {
+            if(listImageUri.size() >= 1)  {
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("size", listImageUri.size());
                 int count = 0;
@@ -94,9 +94,14 @@ public class CameraActivity extends AppCompatActivity {
                 }
                 setResult(RESULT_OK, resultIntent);
                 finish();
-            } else if (activity.equals("User")) { }
-        } else {
-            Toast.makeText(getApplicationContext(),"You need to upload some image...",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(),"You need to upload some image...",Toast.LENGTH_SHORT).show();
+            }
+        } else if (activity.equals("User")) {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("profileUri", imageUri);
+            setResult(RESULT_OK, resultIntent);
+            finish();
         }
     }
 
@@ -155,7 +160,7 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    private void  setDisplayAction(){
+    private void setDisplayAction(){
         if(activity.equals("Ads")) {
             displayListImage();
         } else if (activity.equals("User")) {

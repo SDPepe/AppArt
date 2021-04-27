@@ -19,10 +19,10 @@ public class AppUser implements User {
     private String phoneNumber;
     private long age;
     private Gender gender;
-    private String profilePicture;
+    private String profileImage;
     private List<String> adsIds;
 
-    private static final String PREFIX_FOR_ICON_IMAGE = "userIcon";
+    private static final String RESOURCE_PATH_USER_ICON = "android.resource://ch.epfl.sdp.appart/";
 
     /**
      * App user constructor
@@ -38,6 +38,7 @@ public class AppUser implements User {
         this.email = email;
         this.gender = Gender.NOT_SELECTED;
         this.adsIds = new ArrayList<>();
+        setDefaultProfileImage();
 
         /* As default, everything before '@' in email is selected as name,
         this is overwritten by the name setter once the user specifies it */
@@ -124,12 +125,7 @@ public class AppUser implements User {
      */
     @Override
     public String getProfileImage() {
-        if (profilePicture == null || profilePicture.split(":")[0].equals(PREFIX_FOR_ICON_IMAGE)) {
-            int id = findDrawableIdByGender();
-            String userIcon = PREFIX_FOR_ICON_IMAGE+":";
-            return userIcon.concat(String.valueOf(id));
-        }
-        return profilePicture;
+        return profileImage;
     }
 
     /**
@@ -142,15 +138,7 @@ public class AppUser implements User {
         if (img == null) {
             throw new IllegalArgumentException("ERROR - image parameter was null");
         }
-        this.profilePicture = img;
-    }
-
-    /**
-     * removes the profile picture, thus sets the default user gender icon
-     */
-    @Override
-    public void removeProfileImage() {
-        this.profilePicture = null;
+        this.profileImage = img;
     }
 
     /**
@@ -240,6 +228,10 @@ public class AppUser implements User {
         } else {
             return R.drawable.user_example_no_gender;
         }
+    }
+
+    public void setDefaultProfileImage(){
+        this.profileImage = RESOURCE_PATH_USER_ICON + findDrawableIdByGender();
     }
 
 }

@@ -52,6 +52,7 @@
     <string name="emailText"> Email </string>
     <string name="genderText"> Gender </string>
     <string name="nonUniAccountClaimer">  Regular account </string>
+    <string name="removeProfilePicture"> REMOVE </string>
     <string name="updateUserFailedInDB">  Information update failed, try again </string>
     <string-array name="genderList">
         <item> </item>
