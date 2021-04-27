@@ -68,7 +68,7 @@ public class UserViewModel extends ViewModel {
     }
 
     /**
-     * Get the current user from the database and updates the LiveDatae
+     * Get the current user from the database and updates the LiveData
      */
     public void getCurrentUser() {
         CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());

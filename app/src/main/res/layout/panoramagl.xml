@@ -16,21 +16,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/back_Panorama_button"
-            android:layout_width="84dp"
-            android:layout_height="98dp"
-            android:background="#00FFFFFF"
-            android:contentDescription="@string/backbutton_desc"
-            android:onClick="goBack"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-
-        <ImageButton
             android:id="@+id/leftImage_Panorama_imageButton"
             android:layout_width="48dp"
             android:layout_height="43dp"

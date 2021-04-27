@@ -32,11 +32,11 @@ public class MockDatabaseService implements DatabaseService {
 
     public MockDatabaseService() {
 
-        cards.add(new Card("unknown", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
-        cards.add(new Card("unknown", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
-        cards.add(new Card("unknown", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
-        cards.add(new Card("unknown", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
-        cards.add(new Card("unknown", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown1", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown2", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown3", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown4", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("unknown5", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
 
         List<String> picturesReferences = Arrays.asList(
                 "file:///android_asset/fake_ad_1.jpg",
@@ -60,6 +60,15 @@ public class MockDatabaseService implements DatabaseService {
         users.put("id0", new AppUser("id0", "test0@epfl.ch"));
         users.put("id1", new AppUser("id1", "test1@epfl.ch"));
         users.put("id2", new AppUser("id2", "test2@epfl.ch"));
+
+        /* for UserProfileActivity and SimpleUserProfileActivity testing */
+        User vetterli = new AppUser("vetterli-id", "vetterli@epfl.ch");
+        vetterli.setName("Martin Vetterli");
+        vetterli.setAge(40);
+        vetterli.setGender("MALE");
+        vetterli.setPhoneNumber("0777777777");
+
+        users.put("vetterli-id", vetterli);
         users.put("3333", new AppUser("3333", "carlo@epfl.ch"));
     }
 
@@ -68,15 +77,6 @@ public class MockDatabaseService implements DatabaseService {
     public CompletableFuture<List<Card>> getCards() {
         CompletableFuture<List<Card>> result = new CompletableFuture<>();
         result.complete(cards);
-        return result;
-    }
-
-    @NotNull
-    @Override
-    public CompletableFuture<String> putCard(@NotNull Card card) {
-        CompletableFuture<String> result = new CompletableFuture<>();
-        cards.add(card);
-        result.complete(card.getId());
         return result;
     }
 

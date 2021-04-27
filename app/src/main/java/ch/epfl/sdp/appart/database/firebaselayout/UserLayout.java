@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.database.firestorelayout;
+package ch.epfl.sdp.appart.database.firebaselayout;
 
 /**
  * Un-instantiable Holder for the layout of the fields for a User on Firestore.
@@ -7,11 +7,6 @@ public final class UserLayout {
 
     private UserLayout() {
     }
-
-    /**
-     * absolute path to the users directory in Firestore
-     */
-    public final static String DIRECTORY = "users";
 
     /**
      * @apiNote : long on Firestore
