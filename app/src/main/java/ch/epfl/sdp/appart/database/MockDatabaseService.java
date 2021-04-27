@@ -80,6 +80,12 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
+    @NonNull
+    @Override
+    public CompletableFuture<List<Card>> getCardsFilter(@NonNull String location) {
+        return null;
+    }
+
     @NotNull
     @Override
     public CompletableFuture<Boolean> updateCard(@NotNull Card card) {

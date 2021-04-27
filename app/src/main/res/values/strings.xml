@@ -107,6 +107,9 @@
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
+    <string name="searchDescription_Scrolling">Where are you going?</string>
+    <string name="confirm_Scrolling">Search</string>
+
     
 
     <!-- CameraActivity stuff -->
@@ -128,5 +131,6 @@
     <string name="locationUnknown">unknown</string>
     <string name="getLocationButton">Get location</string>
     <string name="locationDefault">0.0</string>
+
 
 </resources>

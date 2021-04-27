@@ -2,11 +2,15 @@ package ch.epfl.sdp.appart;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 
+import android.widget.Button;
+import android.widget.EditText;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,6 +58,32 @@ public class ScrollingActivity extends ToolbarActivity {
         // init floating action button
         FloatingActionButton fab = findViewById(R.id.newAd_Scrolling_floatingActionButton);
         fab.setOnClickListener((View view) -> onFloatingButtonAction());
+
+        //search bar
+        mViewModel.getCardsFilter().observe(this, this::updateList);
+
+        EditText searchText = (EditText) findViewById(R.id.search_bar_Scrolling_EditText);
+
+        searchText.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                mViewModel.filter(
+                    ((EditText) findViewById(R.id.search_bar_Scrolling_EditText)).getText().toString());
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        /*Button searchBtn = findViewById(R.id.confirm_Scrolling_Button);
+        searchBtn.setOnClickListener(w ->
+            mViewModel.filter(
+                ((EditText) findViewById(R.id.search_bar_Scrolling_EditText)).getText().toString()));
+
+         */
+
+
     }
 
     /**
@@ -90,4 +120,5 @@ public class ScrollingActivity extends ToolbarActivity {
         Intent intent = new Intent(this, AdCreationActivity.class);
         startActivity(intent);
     }
+
 }

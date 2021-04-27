@@ -40,6 +40,12 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
         return this.db.getCards();
     }
 
+    @NonNull
+    @Override
+    public CompletableFuture<List<Card>> getCardsFilter(@NonNull String location) {
+       return this.db.getCardsFilter(location);
+    }
+
     @NotNull
     @NonNull
     @Override
