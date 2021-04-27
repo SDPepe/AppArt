@@ -56,18 +56,6 @@ public class ScrollingActivity extends ToolbarActivity {
         fab.setOnClickListener((View view) -> onFloatingButtonAction());
     }
 
-    /**
-     * Initialize the contents of the Activity's standard options menu.
-     *
-     * @param menu The options menu in which you place your items.
-     * @return boolean return true for the menu to be displayed
-     */
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.actions_toolbar, menu);
-        return true;
-    }
-
     @Override
     public void onStop() {
         super.onStop();

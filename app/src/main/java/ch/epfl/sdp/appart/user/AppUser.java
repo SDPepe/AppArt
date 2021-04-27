@@ -1,9 +1,12 @@
 package ch.epfl.sdp.appart.user;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 
 /**
  * This class represents a generic user of our application - it is used to manage
@@ -21,6 +24,7 @@ public class AppUser implements User {
     private Gender gender;
     private String profilePicture;
     private List<String> adsIds;
+    private List<String> favoritesIds;
 
     private static final String PREFIX_FOR_ICON_IMAGE = "userIcon";
 
@@ -38,6 +42,7 @@ public class AppUser implements User {
         this.email = email;
         this.gender = Gender.NOT_SELECTED;
         this.adsIds = new ArrayList<>();
+        favoritesIds = new ArrayList<>();
 
         /* As default, everything before '@' in email is selected as name,
         this is overwritten by the name setter once the user specifies it */
@@ -225,6 +230,21 @@ public class AppUser implements User {
         if (id == null)
             throw new IllegalArgumentException("The argument is null");
         adsIds.add(id);
+    }
+
+    @Override
+    public List<String> getFavoritesIds() {
+        return adsIds;
+    }
+
+    @Override
+    public void addFavorite(String id) {
+        if (id == null)
+            throw new IllegalArgumentException("id can't be null");
+        favoritesIds.add(id);
+        for (String fid: favoritesIds) {
+            Log.d("favorites id", fid + " ");
+        }
     }
 
     /**

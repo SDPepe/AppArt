@@ -2,12 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.sdp.appart">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
-
     <application
         android:name=".hilt.HiltApplication"
         android:allowBackup="true"
@@ -17,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LocationActivity"></activity>
+        <activity android:name=".FavoriteActivity"></activity>
+        <activity android:name=".LocationActivity" />
         <activity android:name=".SimpleUserProfileActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".UserProfileActivity" />
@@ -36,5 +31,11 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>

@@ -3,7 +3,11 @@ package ch.epfl.sdp.appart;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
@@ -22,6 +27,7 @@ import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -34,6 +40,8 @@ public class AdActivity extends ToolbarActivity {
     DatabaseService database;
     @Inject
     LoginService login;
+
+    private String adId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +64,11 @@ public class AdActivity extends ToolbarActivity {
         // otherwise load the id passed by scrollingactivity
         if (getIntent().getBooleanExtra("fromAdCreation", false)) {
             List<String> adIds = login.getCurrentUser().getAdsIds();
-            mViewModel.initAd(adIds.get(adIds.size() - 1));
-        } else {
-            mViewModel.initAd(getIntent().getStringExtra("adID"));
-        }
+            adId = adIds.get(adIds.size() - 1);
+        } else
+            adId = getIntent().getStringExtra("adID");
+
+        mViewModel.initAd(adId);
     }
 
     private void updateTitle(String title) {
@@ -163,5 +172,28 @@ public class AdActivity extends ToolbarActivity {
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.ad_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO check the user is logged in
+        if (item.getItemId() == R.id.action_add_favorite) {
+            // TODO handle the exceptions for realsies
+            database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
+                Log.d("favorites", u.getUserId() + " " + u.getFavoritesIds().size());
+                u.addFavorite(adId);
+                database.updateUser(u);
+            });
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

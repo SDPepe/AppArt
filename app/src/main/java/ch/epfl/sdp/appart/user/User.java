@@ -121,4 +121,16 @@ public interface User {
      */
     void addAdId(String id);
 
+    /**
+     * getter method for the list of the favorite ads of the user
+     * @return a list of the ids of the ads the user has marked as favorites
+     */
+    List<String> getFavoritesIds();
+
+    /**
+     * adds the ad id to the list of the favorite ads of this user
+     * @param id, the id of the ad
+     */
+    void addFavorite(String id);
+
 }

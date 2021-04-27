@@ -43,4 +43,14 @@ public final class UserLayout {
      */
     public final static String PHONE = "phone";
 
+    /**
+     * @apiNote : List<String> on Firestore
+     */
+    public final static String AD_IDS = "ad_ids";
+
+    /**
+     * @apiNote : List<String> on Firestore
+     */
+    public final static String FAVORITE_IDS = "favorite_ids";
+
 }

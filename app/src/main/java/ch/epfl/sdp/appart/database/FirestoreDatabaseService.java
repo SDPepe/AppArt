@@ -179,6 +179,18 @@ public class FirestoreDatabaseService implements DatabaseService {
                             user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
                         }
 
+                        Object rawAdsIds = data.get(UserLayout.AD_IDS);
+                        if (rawAdsIds !=  null) {
+                            for (String id : (List<String>) rawAdsIds)
+                                user.addAdId(id);
+                        }
+
+                        Object rawFavoriteIds = data.get(UserLayout.FAVORITE_IDS);
+                        if (rawFavoriteIds !=  null) {
+                            for (String id : (List<String>) rawFavoriteIds)
+                                user.addFavorite(id);
+                        }
+
                         result.complete(user);
 
                     } else {
@@ -565,6 +577,8 @@ public class FirestoreDatabaseService implements DatabaseService {
         docData.put(UserLayout.NAME, user.getName());
         docData.put(UserLayout.PHONE, user.getPhoneNumber());
         docData.put(UserLayout.PICTURE, user.getProfileImage());
+        docData.put(UserLayout.AD_IDS, user.getAdsIds());
+        docData.put(UserLayout.FAVORITE_IDS, user.getFavoritesIds());
         return docData;
     }
 

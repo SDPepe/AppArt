@@ -62,16 +62,10 @@
     <string name="resetConfirmationViewText">If this address is valid, you will receive a link to change your password</string>
     <string name="goToLoginFromResetButtonText">Log In Menu</string>
     <string name="loadingTextAdActivity">Loading…</string>
-    <string-array name="genderList">
-        <item> </item>
-        <item>Female</item>
-        <item>Male</item>
-        <item>Other</item>
-    </string-array>
     <string name="contactAdUser"> CONTACT ANNOUNCER </string>
+    <string name="editTitleAdCreation">Title</string>
 
     <!-- AdCreationActivity stuff -->
-    <string name="editTitleAdCreation">Title</string>
     <string name="streetAdCreation">Street:</string>
     <string name="numberAdCreation">Number:</string>
     <string name="editStreetAdCreation">Street address</string>
@@ -84,11 +78,6 @@
     <string name="periodAdCreation">Each:</string>
     <string name="editPriceAdCreation">00000</string>
     <string name="francsAdCreation">Fr.</string>
-    <string-array name="periodList">
-        <item>Month</item>
-        <item>Week</item>
-        <item>Day</item>
-    </string-array>
     <string name="descriptionAdCreation">Description:</string>
     <string name="editDescriptionAdCreation">A cool description</string>
     <string name="cameraButtonAdCreation">Add Photos</string>
@@ -96,10 +85,10 @@
     <string name="toolbarTitle_AdCreation">Create an ad</string>
     <string name="snackbarFailed_AdCreation">There was an error while posting your ad, please try again later</string>
     <string name="snackbarNotFilled_AdCreation">Some fields haven\'t been filled!</string>
-
-    <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
     <string name="permissionGranted">Permission granted</string>
+
+    <!-- ScrollingActivity stuff -->
     <string name="permissionRefused">Permission refused</string>
     <string name="educationalPopup">Educational popup</string>
     <string name="setCallbackTextView">set</string>
@@ -109,4 +98,17 @@
     <string name="locationUnknown">unknown</string>
     <string name="getLocationButton">Get location</string>
     <string name="locationDefault">0.0</string>
+    <string name="add_to_favorites">Add to Favorites</string>
+    <string name="favorites">Favorites</string>
+    <string-array name="genderList">
+        <item> </item>
+        <item>Female</item>
+        <item>Male</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="periodList">
+        <item>Month</item>
+        <item>Week</item>
+        <item>Day</item>
+    </string-array>
 </resources>
