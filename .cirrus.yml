@@ -2,7 +2,7 @@ check_android_task:
   name: Run Android tests
   env:
     API_LEVEL: 29
-    TARGET: default
+    TARGET: google_apis_playstore
     ARCH: x86
     CC_TEST_REPORTER_ID: ENCRYPTED[6770a26c58a75c6cd70782dcb463e28fca45e9c25eb04028e3bb17ba2740442e2b5d3c50602172f9f39a2456c4b8af3a]
     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
