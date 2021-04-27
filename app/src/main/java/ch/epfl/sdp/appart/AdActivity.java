@@ -67,7 +67,8 @@ public class AdActivity extends ToolbarActivity {
             mViewModel.initAd(getIntent().getStringExtra("adID"));
         }
         */
-        mViewModel.initAd(getIntent().getStringExtra("adID"));
+        adId = getIntent().getStringExtra("adID");
+        mViewModel.initAd(adId);
     }
 
     private void updateTitle(String title) {

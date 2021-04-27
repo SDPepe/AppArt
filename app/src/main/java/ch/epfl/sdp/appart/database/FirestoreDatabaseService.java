@@ -154,7 +154,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     public void accept(GlideLoaderListenerVisitor visitor) {
         visitor.visit(this);
     }
-    
+
     /**
      * Returns the storage reference of a stored firebase object
      *
