@@ -27,7 +27,7 @@ public abstract class TransferModule {
 
     @Singleton
     @Provides
-    public static DataTransfer provideLocationProvider(@ApplicationContext Context context) {
+    public static DataTransfer provideDataTransferService(@ApplicationContext Context context) {
         return new DataTransfer();
     }
 }
