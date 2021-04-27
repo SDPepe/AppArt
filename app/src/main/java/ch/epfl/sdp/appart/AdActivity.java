@@ -133,19 +133,13 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Method called when the activity is done and should be closed.
+     * Method called when the device back button is pressed.
      * <p>
-     * If the activity has been opened by AdCreationActivity, then it opens a new ScrollingActivity,
-     * otherwise it returns to the ScrollingActivity that opened this activity.
-     *
-     * @param view
+     * It goes back to the scrolling activity.
      */
-    public void goBack(View view) {
-        if (getIntent().getBooleanExtra("fromAdCreation", false)) {
-            startActivity(new Intent(this, ScrollingActivity.class));
-        } else {
-            finish();
-        }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     /**
