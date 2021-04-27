@@ -36,7 +36,9 @@ import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.database.firestoreservicehelpers.FirestoreAdHelper;
+import ch.epfl.sdp.appart.database.firestoreservicehelpers.FirestoreCardHelper;
 import ch.epfl.sdp.appart.database.firestoreservicehelpers.FirestoreImageHelper;
+import ch.epfl.sdp.appart.database.firestoreservicehelpers.FirestoreUserHelper;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
@@ -56,6 +58,8 @@ public class FirestoreDatabaseService implements DatabaseService {
     private final FirebaseStorage storage;
     private final FirestoreAdHelper adHelper;
     private final FirestoreImageHelper imageHelper;
+    private final FirestoreUserHelper userHelper;
+    private final FirestoreCardHelper cardHelper;
 
     @Inject
     public FirestoreDatabaseService() {
@@ -63,6 +67,8 @@ public class FirestoreDatabaseService implements DatabaseService {
         storage = FirebaseStorage.getInstance();
         adHelper = new FirestoreAdHelper();
         imageHelper = new FirestoreImageHelper();
+        userHelper = new FirestoreUserHelper();
+        cardHelper = new FirestoreCardHelper();
     }
 
     @NotNull
@@ -124,109 +130,21 @@ public class FirestoreDatabaseService implements DatabaseService {
     @Override
     @NonNull
     public CompletableFuture<User> getUser(@NonNull String userId) {
-
-        if (userId == null) {
-            throw new IllegalArgumentException("userId cannot be null");
-        }
-
-        CompletableFuture<User> result = new CompletableFuture<>();
-
-        //ask firebase asynchronously to get the associated user object and notify the future
-        //when they have been fetched
-        db.collection(FirebaseLayout.USERS_DIRECTORY).document(userId).get().addOnCompleteListener(
-                task -> {
-                    if (task.isSuccessful()) {
-                        Map<String, Object> data = task.getResult().getData();
-                        //TODO: Handle case where the string does not match a gender
-                        AppUser user = new AppUser(userId, (String) data.get(UserLayout.EMAIL));
-                        user.setUserEmail((String) data.get(UserLayout.EMAIL));
-                        Object rawAge = data.get(UserLayout.AGE);
-                        if (rawAge != null) {
-                            user.setAge((long) rawAge);
-                        }
-
-                        Object rawGender = data.get(UserLayout.GENDER);
-                        if (rawGender != null) {
-                            user.setGender((String) rawGender);
-                        }
-
-                        Object rawName = data.get(UserLayout.NAME);
-                        if (rawName != null) {
-                            user.setName((String) rawName);
-                        }
-
-                        Object rawPhoneNumber = data.get(UserLayout.PHONE);
-                        if (rawPhoneNumber != null) {
-                            user.setPhoneNumber((String) rawPhoneNumber);
-                        }
-
-                        Object rawPfpRef = data.get(UserLayout.PICTURE);
-                        if (rawPfpRef != null) {
-                            user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
-                        }
-
-                        result.complete(user);
-
-                    } else {
-                        result.completeExceptionally(
-                                new DatabaseServiceException(
-                                        "failed to request the user from firebase"
-                                )
-                        );
-                    }
-                }
-        );
-        return result;
+        return userHelper.getUser(userId);
     }
 
     @NotNull
     @Override
     @NonNull
     public CompletableFuture<Boolean> putUser(@NonNull User user) {
-        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(FirebaseLayout.USERS_DIRECTORY)
-                .document(user.getUserId())
-                .set(extractUserInfo(user)).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
-        return isFinishedFuture;
+        return userHelper.putUser(user);
     }
 
     @NotNull
     @Override
     @NonNull
     public CompletableFuture<Boolean> updateUser(@NonNull User user, Uri uri) {
-
-        /*if (user == null) {
-            throw new IllegalArgumentException("user cannot bu null");
-        }
-
-        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-
-        if (uri != null) {
-            String name = "photo" + ".jpeg"; // getTypeFromUri(uri);
-            String path = "User" + "/" + user.getUserId();
-
-            putImage(uri, name, path).thenAccept(res -> {
-                if (!res) {
-                    isFinishedFuture.completeExceptionally(
-                        new UnsupportedOperationException("Ad upload failed!"));
-                }
-            });
-        } else {
-            return updateUserDb(isFinishedFuture, user);
-        }
-        return updateUserDb(isFinishedFuture, user);*/
-        CompletableFuture<Boolean> result = new CompletableFuture<>();
-        return updateUserDb(result, user);
-
-    }
-
-    private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user){
-            db.collection(FirebaseLayout.USERS_DIRECTORY)
-                    .document(user.getUserId())
-                    .set(extractUserInfo(user))
-                    .addOnCompleteListener(
-                            task -> res.complete(task.isSuccessful()));
-            return res;
+        return userHelper.updateUser(user, uri);
     }
 
     @NotNull
