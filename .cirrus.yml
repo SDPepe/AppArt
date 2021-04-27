@@ -39,8 +39,8 @@ check_android_task:
     ./cc-test-reporter before-build
   setup_location_script: |
     adb -e emu geo fix 45.6790 4.9426
-    adb -e settings put secure location_providers_allowed +gps
-    adb -e settings put secure location_providers_allowed +network
+    adb -e emu settings put secure location_providers_allowed +gps
+    adb -e emu settings put secure location_providers_allowed +network
   logcat_background_script: adb -e logcat *:W
   check_script: |
     ./gradlew check connectedCheck --stacktrace
