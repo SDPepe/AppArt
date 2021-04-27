@@ -39,6 +39,7 @@ public class LocationActivity extends AppCompatActivity {
                 findViewById(R.id.permission_Location_textView);
         TextView callbackTextView =
                 findViewById(R.id.callback_Location_textView);
+        TextView locationTextView = findViewById(R.id.currentLocation_Location_textView);
 
         PermissionRequest.askForLocationPermission(this,
                 () -> permissionTextView.setText(R.string.permissionGranted),
@@ -48,11 +49,14 @@ public class LocationActivity extends AppCompatActivity {
         locationService.getCurrentLocation().thenAccept(location -> {
             longitudeTextView.setText("" + location.longitude);
             latitudeTextView.setText("" + location.latitude);
+            locationTextView.setContentDescription("LOCATION READY");
+
         });
 
         locationService.setupLocationUpdate(locations -> {
             if(locations != null) {
                 callbackTextView.setText(R.string.setCallbackTextView);
+                callbackTextView.setContentDescription("CALLBACK READY");
             }
         });
     }
