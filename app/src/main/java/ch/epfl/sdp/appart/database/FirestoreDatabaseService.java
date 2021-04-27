@@ -38,6 +38,7 @@ import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
 import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
 import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
@@ -51,11 +52,13 @@ public class FirestoreDatabaseService implements DatabaseService {
     private final FirebaseFirestore db;
     private final FirebaseStorage storage;
 
-    @Inject
-    public UserSerializer userSerializer;
+    private final UserSerializer userSerializer = new UserSerializer();
 
-    @Inject
-    public CardSerializer cardSerializer;
+    private final CardSerializer cardSerializer = new CardSerializer();
+
+    private final AdSerializer adSerializer = new AdSerializer();
+
+
 
     @Inject
     public FirestoreDatabaseService() {
@@ -79,10 +82,9 @@ public class FirestoreDatabaseService implements DatabaseService {
 
                     if (task.isSuccessful()) {
 
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-
+                        for (QueryDocumentSnapshot document : task.getResult())
                             queriedCards.add(cardSerializer.deserialize(document.getId(), document.getData()));
-                        }
+
                         result.complete(queriedCards);
 
                     } else {
@@ -263,7 +265,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                 task -> onCompleteAdOp(task, newAdRef, result));
 
         // build and send ad
-        newAdRef.set(extractAdInfo(ad)).addOnCompleteListener(
+        newAdRef.set(adSerializer.serialize(ad)).addOnCompleteListener(
                 task -> onCompleteAdOp(task, newAdRef, result));
         setPhotosReferencesForAd(actualRefs, newAdRef, result);
 
@@ -510,19 +512,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         });
 
         return result;
-    }
-
-    private Map<String, Object> extractAdInfo(Ad ad) {
-        Map<String, Object> adData = new HashMap<>();
-        adData.put(AdLayout.ADVERTISER_ID, ad.getAdvertiserId());
-        adData.put(AdLayout.CITY, ad.getCity());
-        adData.put(AdLayout.DESCRIPTION, ad.getDescription());
-        adData.put(AdLayout.VR_TOUR, ad.hasVRTour());
-        adData.put(AdLayout.PRICE, ad.getPrice());
-        adData.put(AdLayout.PRICE_PERIOD, ad.getPricePeriod().ordinal());
-        adData.put(AdLayout.STREET, ad.getStreet());
-        adData.put(AdLayout.TITLE, ad.getTitle());
-        return adData;
     }
 
     /**

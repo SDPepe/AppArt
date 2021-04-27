@@ -9,13 +9,7 @@ import javax.inject.Singleton;
 import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
-@Singleton
 public class CardSerializer implements Serializer<Card> {
-
-    @Inject
-    public CardSerializer() {
-
-    }
 
     @Override
     public Map<String, Object> serialize(Card data) {

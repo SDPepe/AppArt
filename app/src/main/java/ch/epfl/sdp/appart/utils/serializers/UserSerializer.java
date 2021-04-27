@@ -12,13 +12,7 @@ import ch.epfl.sdp.appart.database.firestorelayout.UserLayout;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
-@Singleton
 public class UserSerializer implements Serializer<User> {
-
-    @Inject
-    public UserSerializer() {
-
-    }
 
     @Override
     public Map<String, Object> serialize(User data) {
