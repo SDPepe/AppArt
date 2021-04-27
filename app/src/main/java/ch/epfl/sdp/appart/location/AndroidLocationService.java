@@ -10,6 +10,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +41,7 @@ public final class AndroidLocationService implements LocationService {
     public CompletableFuture<Location> getCurrentLocation() {
         CompletableFuture<Location> futureLocation = new CompletableFuture<>();
         try {
-            locationProvider.getLastLocation().addOnCompleteListener(task -> {
+            locationProvider.getCurrentLocation(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY, null).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     android.location.Location androidLoc = task.getResult();
                     Location myLocation = new Location();
