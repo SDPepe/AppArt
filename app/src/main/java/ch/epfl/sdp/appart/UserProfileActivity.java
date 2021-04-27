@@ -73,14 +73,6 @@ public class UserProfileActivity extends AppCompatActivity {
         mViewModel.getUri().observe(this, this::setProfileImage);
     }
 
-
-    /**
-     * closes activity when back button pressed on UI
-     */
-    public void goBack(View view) {
-        finish();
-    }
-
     /**
      * closes activity when back button pressed on phone
      */
