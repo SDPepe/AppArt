@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -34,6 +35,9 @@ public class AdActivity extends ToolbarActivity {
     DatabaseService database;
     @Inject
     LoginService login;
+    String adId;
+
+    private String advertiserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +55,20 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getPrice().observe(this, this::updatePrice);
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
+        mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
 
-        // if activity open by adcreation, load the last ad created by the user,
+        // if activity opened by adcreation, load the last ad created by the user,
         // otherwise load the id passed by scrollingactivity
+        /*
         if (getIntent().getBooleanExtra("fromAdCreation", false)) {
             List<String> adIds = login.getCurrentUser().getAdsIds();
             mViewModel.initAd(adIds.get(adIds.size() - 1));
         } else {
             mViewModel.initAd(getIntent().getStringExtra("adID"));
         }
+        */
+        adId = getIntent().getStringExtra("adID");
+        mViewModel.initAd(getIntent().getStringExtra("cardID"));
     }
 
     private void updateTitle(String title) {
@@ -76,8 +85,9 @@ public class AdActivity extends ToolbarActivity {
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
+            String sep = FirebaseLayout.SEPARATOR;
             database.accept(new GlideImageViewLoader(this, photo,
-                    references.get(i)));
+                    FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i)));
             horizontalLayout.addView(myView);
             if (i != 4) {
                 Space hspacer = new Space(this);
@@ -110,6 +120,10 @@ public class AdActivity extends ToolbarActivity {
         setIfNotNull(usernameView, username);
     }
 
+    private void updateAdvertiserId(String advertiserId) {
+        this.advertiserId = advertiserId;
+    }
+
     private void setIfNotNull(TextView view, String content) {
         if (content == null) {
             view.setText(R.string.loadingTextAdActivity);
@@ -119,19 +133,13 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Method called when the activity is done and should be closed.
+     * Method called when the device back button is pressed.
      * <p>
-     * If the activity has been opened by AdCreationActivity, then it opens a new ScrollingActivity,
-     * otherwise it returns to the ScrollingActivity that opened this activity.
-     *
-     * @param view
+     * It goes back to the scrolling activity.
      */
-    public void goBack(View view) {
-        if (getIntent().getBooleanExtra("fromAdCreation", false)) {
-            startActivity(new Intent(this, ScrollingActivity.class));
-        } else {
-            finish();
-        }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     /**
@@ -141,6 +149,7 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openContactInfo(View view) {
         Intent intent = new Intent(this, SimpleUserProfileActivity.class);
+        intent.putExtra("advertiserId", this.advertiserId);
         startActivity(intent);
     }
 
@@ -154,13 +163,10 @@ public class AdActivity extends ToolbarActivity {
         startActivity(intent);
     }
 
-    /**
-     * Method called when you want open the camera.
-     *
-     * @param view
-     */
-    public void openCamera(View view) {
-        Intent intent = new Intent(this, CameraActivity.class);
+    public void onSeeLocationClick(View view) {
+        Intent intent = new Intent(this, MapActivity.class);
+        TextView addressView = findViewById(R.id.address_field_Ad_textView);
+        intent.putExtra(getString(R.string.intentLocationForMap), addressView.getText().toString());
         startActivity(intent);
     }
 

@@ -1,21 +1,23 @@
 package ch.epfl.sdp.appart.database;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +31,12 @@ import javax.inject.Singleton;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
-import ch.epfl.sdp.appart.database.firestorelayout.AdLayout;
-import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
-import ch.epfl.sdp.appart.database.firestorelayout.UserLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
+import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -75,13 +79,12 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //ask firebase async to get the cards objects and notify the future
         //when they have been fetched
-        db.collection(CardLayout.DIRECTORY).get().addOnCompleteListener(
+        db.collection(FirebaseLayout.CARDS_DIRECTORY).get().addOnCompleteListener(
                 task -> {
 
                     List<Card> queriedCards = new ArrayList<>();
 
                     if (task.isSuccessful()) {
-
                         for (QueryDocumentSnapshot document : task.getResult())
                             queriedCards.add(cardSerializer.deserialize(document.getId(), document.getData()));
 
@@ -133,7 +136,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
 
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(CardLayout.DIRECTORY)
+        db.collection(FirebaseLayout.CARDS_DIRECTORY)
                 .document(card.getId())
                 .set(cardSerializer.serialize(card))
                 .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
@@ -153,7 +156,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //ask firebase asynchronously to get the associated user object and notify the future
         //when they have been fetched
-        db.collection(UserLayout.DIRECTORY).document(userId).get().addOnCompleteListener(
+        db.collection(FirebaseLayout.USERS_DIRECTORY).document(userId).get().addOnCompleteListener(
                 task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot data = task.getResult();
@@ -178,7 +181,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NonNull
     public CompletableFuture<Boolean> putUser(@NonNull User user) {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(UserLayout.DIRECTORY)
+        db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
                 .set(userSerializer.serialize(user)).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
@@ -187,25 +190,20 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<Boolean> updateUser(@NonNull User user) {
-
-        if (user == null) {
-            throw new IllegalArgumentException("user cannot bu null");
-        }
-
-        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(UserLayout.DIRECTORY)
+    public CompletableFuture<Boolean> updateUser(@NonNull User user, Uri uri) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
                 .set(userSerializer.serialize(user))
-                .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
-        return isFinishedFuture;
+                .addOnCompleteListener(
+                        task -> result.complete(task.isSuccessful()));
+        return result;
     }
 
     @NotNull
     @Override
     @NonNull
     public CompletableFuture<Ad> getAd(String cardId) {
-
         if (cardId == null) {
             throw new IllegalArgumentException("card id cannot be null");
         }
@@ -222,10 +220,13 @@ public class FirestoreDatabaseService implements DatabaseService {
                 = getContactInfoFromFuturePartialAd(partialAdFuture);
 
 
-        CompletableFuture<CompletableFuture<Ad>> chain = adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences) -> partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo) -> {
-            adBuilder.withContactInfo(contactInfo).withPhotosIds(photosReferences);
-            return adBuilder.build();
-        }));
+        CompletableFuture<CompletableFuture<Ad>> chain =
+                adIdFuture.thenCombine(photosReferencesFuture, (adId, photosReferences)
+                        -> partialAdFuture.thenCombine(contactInfoFuture, (adBuilder, contactInfo)
+                        -> {
+                    adBuilder.withPhotosIds(photosReferences);
+                    return adBuilder.build();
+                }));
 
         chain.thenAccept(topmost -> {
             topmost.thenAccept(result::complete);
@@ -246,31 +247,50 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<String> putAd(Ad ad) {
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
         CompletableFuture<String> result = new CompletableFuture<>();
-        DocumentReference newAdRef = db.collection("ads").document();
+        CompletableFuture<Void> imagesResult = new CompletableFuture<>();
+        CompletableFuture<Void> adResult = new CompletableFuture<>();
+        CompletableFuture<Void> cardResult = new CompletableFuture<>();
+        DocumentReference newAdRef = db.collection(FirebaseLayout.ADS_DIRECTORY).document();
+        DocumentReference cardRef = db.collection(FirebaseLayout.CARDS_DIRECTORY).document();
+        String storagePath = FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR + newAdRef.getId();
 
-        // upload photos TODO go parallel ?
+        // upload photos
         List<String> actualRefs = new ArrayList<>();
-        uploadAdPhotos(ad, actualRefs, newAdRef, result);
 
-        // TODO separate street and city of address
-        // build and send card
-        //Is it normal that card is built with the AdId and not the cardRef.getId() ?
+        List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
+        Log.d("URI", "size" + uriList.size());
+        for (int i = 0; i < uriList.size(); i++) {
+            String name = FirebaseLayout.PHOTO_NAME + i + ".jpeg"; // TODO modify to support other extensions
+            actualRefs.add(name);
+            imagesUploadResults.add(putImage(uriList.get(i), name, storagePath));
+        }
+        // check whether any of the uploads failed
+        checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storage.getReference(storagePath));
 
-        DocumentReference cardRef = db.collection("cards").document();
-        Card c = new Card(cardRef.getId(), newAdRef.getId(), ad.getAdvertiserId(), ad.getCity(),
-                ad.getPrice(), actualRefs.get(0), ad.hasVRTour());
-        cardRef.set(cardSerializer.serialize(c)).addOnCompleteListener(
-                task -> onCompleteAdOp(task, newAdRef, result));
+        // build and send card / ad
+        checkCardUpload(cardResult, ad, newAdRef, cardRef, null, actualRefs.get(0));
+        checkAdUpload(adResult, ad, newAdRef, cardRef, null, actualRefs);
 
-        // build and send ad
-        newAdRef.set(adSerializer.serialize(ad)).addOnCompleteListener(
-                task -> onCompleteAdOp(task, newAdRef, result));
-        setPhotosReferencesForAd(actualRefs, newAdRef, result);
-
-        result.complete(newAdRef.getId());
+        // check if everything succeeded
+        finalizeAdUpload(result, imagesResult, adResult, cardResult, newAdRef);
         return result;
+    }
+
+    @NotNull
+    @Override
+    @NonNull
+    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
+        if (uri == null || name == null) {
+            throw new IllegalArgumentException("parameters cannot be null");
+        }
+        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
+        StorageReference storeRef = storage.getReference(path);
+        StorageReference fileReference = storeRef.child(name);
+        fileReference.putFile(uri).addOnCompleteListener(
+                task -> isFinishedFuture.complete(task.isSuccessful()));
+        return isFinishedFuture;
     }
 
     @Override
@@ -286,37 +306,96 @@ public class FirestoreDatabaseService implements DatabaseService {
         return futureClear;
     }
 
-    private void uploadAdPhotos(Ad ad, List<String> actualRefs, DocumentReference newAdRef,
-                                CompletableFuture<String> result) {
-        for (int i = 0; i < ad.getPhotosRefs().size(); i++) {
-            Uri fileUri = Uri.fromFile(new File(ad.getPhotosRefs().get(i)));
-            StorageReference storeRef = storage.getReference()
-                    .child("Ads/" + newAdRef.getId() + "/photo" + i);
-            actualRefs.add(storeRef.getName());
-            storeRef.putFile(fileUri).addOnCompleteListener(
-                    task -> onCompleteAdOp(task, newAdRef, result));
+    /**
+     * If failed, deletes from firebase the given references and completes exceptionally
+     */
+    private void cleanUpIfFailed(boolean taskSuccessful, CompletableFuture<Void> result, DocumentReference adRef,
+                                 DocumentReference cardRef, StorageReference imagesRef) {
+        if (!taskSuccessful) {
+            Log.d("Ad creation", "ad upload failed");
+            adRef.delete();
+            cardRef.delete();
+            imagesRef.listAll().addOnSuccessListener(listResult -> {
+                List<StorageReference> items = listResult.getItems();
+                for (StorageReference item : items) {
+                    item.delete();
+                }
+            }).addOnFailureListener(e -> Log.d("Ad upload", "Failed to cleanup after failed upload"));
+
+            // TODO create exception
+            result.completeExceptionally(
+                    new UnsupportedOperationException("Ad upload failed!"));
         }
     }
 
+    /**
+     * Adds to the ad a collection with the ids of the images. Cleans up if it fails.
+     */
     private void setPhotosReferencesForAd(List<String> actualRefs, DocumentReference newAdRef,
-                                          CompletableFuture<String> result) {
+                                          DocumentReference cardRef, StorageReference storageRef) {
         for (int i = 0; i < actualRefs.size(); i++) {
             Map<String, Object> data = new HashMap<>();
             data.put("id", actualRefs.get(i));
-            DocumentReference photoRefDocReference = newAdRef.collection("photosRefs")
+            DocumentReference photoRefDocReference = newAdRef.collection(AdLayout.PICTURES_DIRECTORY)
                     .document();
-            photoRefDocReference.set(data).addOnCompleteListener(
-                    task -> onCompleteAdOp(task, newAdRef, result));
+            photoRefDocReference.set(data); // TODO check all uploads
         }
     }
 
-    private void onCompleteAdOp(Task<?> task, DocumentReference newAdRef,
-                                CompletableFuture<String> result) {
-        if (!task.isSuccessful()) {
-            storage.getReference().child("Ads/" + newAdRef).delete();
-            result.completeExceptionally(
-                    new UnsupportedOperationException("Failed to put Ad in database"));
-        }
+    /**
+     * Checks whether all image uploads completed successfully. If they didn't, cleans up and
+     * completes exceptionally
+     */
+    private void checkPhotosUpload(List<CompletableFuture<Boolean>> futures,
+                                   CompletableFuture<Void> result, DocumentReference adRef,
+                                   DocumentReference cardRef, StorageReference imagesRef) {
+        CompletableFuture<Boolean>[] resultsArray = new CompletableFuture[futures.size()];
+        futures.toArray(resultsArray);
+        CompletableFuture.allOf(resultsArray).thenAccept(res -> {
+            boolean successful = true;
+            List<Boolean> completedUploadResults = futures.stream()
+                    .map(CompletableFuture::join).collect(Collectors.toList());
+            for (boolean b : completedUploadResults) {
+                successful = successful && b;
+                cleanUpIfFailed(successful, result, adRef, cardRef, imagesRef);
+            }
+            result.complete(null);
+        });
+    }
+
+    private void checkAdUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
+                               DocumentReference cardRef, StorageReference imagesRef,
+                               List<String> imagesRefsList) {
+        adRef.set(adSerializer.serialize(ad)).addOnCompleteListener(
+                task -> {
+                    cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
+                    result.complete(null);
+                });
+        setPhotosReferencesForAd(imagesRefsList, adRef, cardRef, imagesRef);
+    }
+
+    private void checkCardUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
+                                 DocumentReference cardRef, StorageReference imagesRef,
+                                 String firstImageRef) {
+        Card c = new Card(cardRef.getId(), adRef.getId(), ad.getAdvertiserId(), ad.getCity(),
+                ad.getPrice(), firstImageRef, ad.hasVRTour());
+        cardRef.set(cardSerializer.serialize(c)).addOnCompleteListener(
+                task -> {
+                    cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
+                    result.complete(null);
+                });
+    }
+
+    private void finalizeAdUpload(CompletableFuture<String> result, CompletableFuture<Void> imagesResult,
+                                  CompletableFuture<Void> adResult, CompletableFuture<Void> cardResult,
+                                  DocumentReference adRef) {
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(adResult, cardResult);
+        allOf.thenAccept(res -> result.complete(adRef.getId()));
+        allOf.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+
     }
 
     @Override
@@ -329,6 +408,10 @@ public class FirestoreDatabaseService implements DatabaseService {
         visitor.visit(this);
     }
 
+    @Override
+    public void accept(GlideLoaderListenerVisitor visitor) {
+        visitor.visit(this);
+    }
     /**
      * Returns the storage reference of a stored firebase object
      *
@@ -339,6 +422,15 @@ public class FirestoreDatabaseService implements DatabaseService {
      */
     public StorageReference getStorageReference(String storageUrl) {
         return storage.getReferenceFromUrl(STORAGE_URL + storageUrl);
+    }
+
+    /**
+     * Utility function to clean up storage database
+     *
+     * @param ref reference to the folder/file to delete
+     */
+    public void removeFromStorage(StorageReference ref) {
+        ref.delete();
     }
 
     /**
@@ -361,7 +453,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         }
 
         CompletableFuture<String> result = new CompletableFuture<>();
-        db.collection(CardLayout.DIRECTORY).document(cardId).get().addOnCompleteListener(task -> {
+        db.collection(FirebaseLayout.CARDS_DIRECTORY).document(cardId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 result.complete((String) task.getResult().get(CardLayout.AD_ID));
             } else {
@@ -389,7 +481,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<DocumentReference> adReferenceFuture = new CompletableFuture<>();
         CompletableFuture<List<String>> photosReferencesListFuture = new CompletableFuture<>();
 
-        adIdFuture.thenAccept(adId -> this.db.collection(AdLayout.DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
+        adIdFuture.thenAccept(adId -> this.db.collection(FirebaseLayout.ADS_DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 adReferenceFuture.complete(task.getResult().getReference());
             } else {
@@ -409,7 +501,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                 QuerySnapshot snapshot = task.getResult();
                 List<DocumentSnapshot> documentSnapshots = snapshot.getDocuments();
                 List<String> result = documentSnapshots.stream().map(documentSnapshot ->
-                        "Ads/" + documentSnapshot.get("id")).collect(Collectors.toList());
+                        (String) documentSnapshot.get("id")).collect(Collectors.toList());
                 photosReferencesListFuture.complete(result);
             } else {
                 photosReferencesListFuture.completeExceptionally(
@@ -438,7 +530,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Ad.AdBuilder> result = new CompletableFuture<>();
 
         //once the ad id is available we query the right ad to get its detailed fields
-        adIdFuture.thenAccept(adId -> db.collection(AdLayout.DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
+        adIdFuture.thenAccept(adId -> db.collection(FirebaseLayout.ADS_DIRECTORY).document(adId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
 
@@ -490,17 +582,16 @@ public class FirestoreDatabaseService implements DatabaseService {
         if (partialAdFuture == null) {
             throw new IllegalArgumentException("partial ad future cannot be null");
         }
-
         CompletableFuture<ContactInfo> result = new CompletableFuture<>();
         //once the partial ad has be retrieve we query the user that is providing the ad
-        partialAdFuture.thenAccept(partialAd -> db.collection(UserLayout.DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
+        partialAdFuture.thenAccept(partialAd -> db.collection(FirebaseLayout.USERS_DIRECTORY).document(partialAd.getAdvertiserId()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = task.getResult();
+                /*DocumentSnapshot documentSnapshot = task.getResult();
                 String userEmail = (String) documentSnapshot.get(UserLayout.EMAIL);
                 String userPhoneNumber = (String) documentSnapshot.get(UserLayout.PHONE);
                 String name = (String) documentSnapshot.get(UserLayout.NAME);
-                ContactInfo contactInfo = new ContactInfo(userEmail, userPhoneNumber, name);
-                result.complete(contactInfo);
+                ContactInfo contactInfo = new ContactInfo(userEmail, userPhoneNumber, name);*/
+                result.complete(null);
             } else {
                 result.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
             }
@@ -526,4 +617,3 @@ public class FirestoreDatabaseService implements DatabaseService {
     }
 
 }
-
