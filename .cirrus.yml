@@ -37,7 +37,7 @@ check_android_task:
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
-  fake_location_script: adb geo fix 45.6790 4.9426
+  fake_location_script: adb emu geo fix 45.6790 4.9426
   logcat_background_script: adb -e logcat *:W
   check_script: |
     ./gradlew check connectedCheck --stacktrace
