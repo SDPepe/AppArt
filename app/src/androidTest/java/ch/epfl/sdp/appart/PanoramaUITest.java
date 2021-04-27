@@ -1,6 +1,8 @@
 package ch.epfl.sdp.appart;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,12 +19,14 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -66,6 +70,13 @@ public class PanoramaUITest {
         onView(withId(leftButtonID)).check(matches(not(isDisplayed())));
         onView(withId(rightButtonID)).check(matches(isDisplayed()));
 
+    }
+
+    @Test
+    public void backButtonTest(){
+        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        mDevice.pressBack();
+        assertEquals(panoramaActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
     }
 
 }

@@ -98,11 +98,10 @@ public class PanoramaActivity extends AppCompatActivity {
     }
 
     /**
-     * Method called when the activity is done and should be closed.
-     *
-     * @param view
+     * Method called when the device back button is tapped. It closes the activity.
      */
-    public void goBack(View view) {
+    @Override
+    public void onBackPressed() {
         finish();
     }
 

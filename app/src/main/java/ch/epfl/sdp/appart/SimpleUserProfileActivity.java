@@ -25,7 +25,6 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     UserViewModel mViewModel;
 
     /* UI components */
-    private Button backButton;
     private EditText nameText;
     private EditText ageText;
     private EditText phoneNumberText;
@@ -44,7 +43,6 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
 
 
         /* UI components initialisation */
-        this.backButton = findViewById(R.id.back_SimpleUserProfile_button);
         this.nameText = findViewById(R.id.name_SimpleUserProfile_editText);
         this.ageText = findViewById(R.id.age_SimpleUserProfile_editText);
         this.emailTextView = findViewById(R.id.emailText_SimpleUserProfile_textView);
@@ -59,12 +57,6 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         mViewModel.getUser(advertiserId);
         mViewModel.getUser().observe(this, this::setAdUserToLocal);
     }
-
-
-    /**
-     *  closes activity when back button pressed on UI
-     */
-    public void goBack(View view) { finish(); }
 
     /**
      * closes activity when back button pressed on phone
