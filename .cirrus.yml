@@ -37,7 +37,7 @@ check_android_task:
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
-  logcat_background_script: adb -d logcat epfl.sdp.appar:V *:S
+  logcat_background_script: adb -e logcat epfl.sdp.appar:V *:S
   check_script: |
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
