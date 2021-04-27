@@ -8,22 +8,6 @@
     android:onClick="goBack"
     tools:context=".UserProfileActivity">
 
-    <Button
-        android:id="@+id/back_UserProfile_button"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:contextClickable="true"
-        android:drawableStart="@drawable/back_action"
-        android:includeFontPadding="false"
-        android:onClick="goBack"
-        android:text="@string/backButtonText"
-        android:translationX="10dp"
-        android:translationY="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

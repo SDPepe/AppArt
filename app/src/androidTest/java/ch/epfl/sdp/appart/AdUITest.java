@@ -5,6 +5,8 @@ import android.content.Intent;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,6 +27,7 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -57,6 +60,8 @@ public class AdUITest {
     @Rule(order = 1)
     public ActivityScenarioRule<AdActivity> adActivityRule = new ActivityScenarioRule<>(intent);
 
+    UiDevice mDevice;
+
     @Before
     public void init() {
         Intents.init();
@@ -77,7 +82,8 @@ public class AdUITest {
 
     @Test
     public void clickOnGoBackFinishes() {
-        onView(withId(R.id.back_Ad_button)).perform(click());
+        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        mDevice.pressBack();
         assertEquals(adActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
     }
 
