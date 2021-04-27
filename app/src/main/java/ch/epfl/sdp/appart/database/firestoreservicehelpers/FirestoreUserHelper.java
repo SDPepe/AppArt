@@ -57,33 +57,19 @@ public class FirestoreUserHelper {
                         //TODO: Handle case where the string does not match a gender
                         AppUser user = new AppUser(userId, (String) data.get(UserLayout.EMAIL));
                         user.setUserEmail((String) data.get(UserLayout.EMAIL));
+
                         Object rawAge = data.get(UserLayout.AGE);
-                        if (rawAge != null) {
-                            user.setAge((long) rawAge);
-                        }
-
+                        if (rawAge != null) user.setAge((long) rawAge);
                         Object rawGender = data.get(UserLayout.GENDER);
-                        if (rawGender != null) {
-                            user.setGender((String) rawGender);
-                        }
-
+                        if (rawGender != null) user.setGender((String) rawGender);
                         Object rawName = data.get(UserLayout.NAME);
-                        if (rawName != null) {
-                            user.setName((String) rawName);
-                        }
-
+                        if (rawName != null) user.setName((String) rawName);
                         Object rawPhoneNumber = data.get(UserLayout.PHONE);
-                        if (rawPhoneNumber != null) {
-                            user.setPhoneNumber((String) rawPhoneNumber);
-                        }
-
+                        if (rawPhoneNumber != null) user.setPhoneNumber((String) rawPhoneNumber);
                         Object rawPfpRef = data.get(UserLayout.PICTURE);
-                        if (rawPfpRef != null) {
-                            user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
-                        }
+                        if (rawPfpRef != null) user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
 
                         result.complete(user);
-
                     } else {
                         result.completeExceptionally(
                                 new DatabaseServiceException(
