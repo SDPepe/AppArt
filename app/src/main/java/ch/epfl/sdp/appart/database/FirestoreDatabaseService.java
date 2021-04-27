@@ -75,55 +75,14 @@ public class FirestoreDatabaseService implements DatabaseService {
     @Override
     @NonNull
     public CompletableFuture<List<Card>> getCards() {
-
-        CompletableFuture<List<Card>> result = new CompletableFuture<>();
-
-        //ask firebase async to get the cards objects and notify the future
-        //when they have been fetched
-        db.collection(FirebaseLayout.CARDS_DIRECTORY).get().addOnCompleteListener(
-                task -> {
-
-                    List<Card> queriedCards = new ArrayList<>();
-
-                    if (task.isSuccessful()) {
-
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Map<String, Object> data = document.getData();
-                            queriedCards.add(
-                                    new Card(document.getId(), (String) data.get(CardLayout.AD_ID), (String) data.get(CardLayout.USER_ID),
-                                            (String) data.get(CardLayout.CITY),
-                                            (long) data.get(CardLayout.PRICE),
-                                            (String) data.get(CardLayout.IMAGE)));
-                        }
-                        result.complete(queriedCards);
-
-                    } else {
-                        result.completeExceptionally(
-                                new DatabaseServiceException(
-                                        "failed to fetch the cards from firebase"
-                                ));
-                    }
-                }
-        );
-
-        return result;
+        return cardHelper.getCards();
     }
 
     @NotNull
     @Override
     @NonNull
     public CompletableFuture<Boolean> updateCard(@NotNull @NonNull Card card) {
-
-        if (card == null) {
-            throw new IllegalArgumentException("card cannot bu null");
-        }
-
-        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        db.collection(FirebaseLayout.CARDS_DIRECTORY)
-                .document(card.getId())
-                .set(extractCardsInfo(card))
-                .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
-        return isFinishedFuture;
+        return cardHelper.updateCard(card);
     }
 
     @NotNull

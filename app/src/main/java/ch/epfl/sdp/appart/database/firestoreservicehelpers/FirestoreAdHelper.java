@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
@@ -35,6 +36,7 @@ public class FirestoreAdHelper {
     private final FirebaseFirestore db;
     private final FirebaseStorage storage;
     private final FirestoreImageHelper imageHelper;
+    private final FirestoreCardHelper cardHelper;
     private final String adsPath;
 
     @Inject
@@ -42,6 +44,7 @@ public class FirestoreAdHelper {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         imageHelper = new FirestoreImageHelper();
+        cardHelper = new FirestoreCardHelper();
         adsPath = FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR;
     }
 
@@ -56,7 +59,7 @@ public class FirestoreAdHelper {
 
     @NotNull
     @NonNull
-    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList){
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
         CompletableFuture<String> result = new CompletableFuture<>();
         CompletableFuture<Void> imagesResult = new CompletableFuture<>();
         CompletableFuture<Void> adResult = new CompletableFuture<>();
@@ -141,9 +144,8 @@ public class FirestoreAdHelper {
         setPhotosReferencesForAd(imagesRefsList, adRef, cardRef, imagesRef);
     }
 
-    // TODO move to CardHelper and let that class check
     /**
-     * Checks whether the upload of card information to Firestore ompleted successfully. If it
+     * Checks whether the upload of card information to Firestore completed successfully. If it
      * didn't, cleans up and completes exceptionally.
      */
     private void checkCardUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
@@ -151,11 +153,10 @@ public class FirestoreAdHelper {
                                  String firstImageRef) {
         Card c = new Card(cardRef.getId(), adRef.getId(), ad.getAdvertiserId(), ad.getCity(),
                 ad.getPrice(), firstImageRef, ad.hasVRTour());
-        cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
-                task -> {
-                    cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
-                    result.complete(null);
-                });
+        cardHelper.putCard(c, cardRef).thenAccept(successful -> {
+            cleanUpIfFailed(successful, result, adRef, cardRef, imagesRef);
+            result.complete(null);
+        });
     }
 
     /**
@@ -191,7 +192,7 @@ public class FirestoreAdHelper {
 
             // TODO create exception
             result.completeExceptionally(
-                    new UnsupportedOperationException("Ad upload failed!"));
+                    new DatabaseServiceException("Ad upload failed!"));
         }
     }
 
