@@ -62,13 +62,13 @@ public class ScrollingActivity extends ToolbarActivity {
         //search bar
         mViewModel.getCardsFilter().observe(this, this::updateList);
 
-        EditText searchText = (EditText) findViewById(R.id.search_bar_Scrolling_EditText);
+        EditText searchText = (EditText) findViewById(R.id.search_bar_Scrolling_editText);
 
         searchText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
                 mViewModel.filter(
-                    ((EditText) findViewById(R.id.search_bar_Scrolling_EditText)).getText().toString());
+                    ((EditText) findViewById(R.id.search_bar_Scrolling_editText)).getText().toString());
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
