@@ -36,22 +36,9 @@ public abstract class LocationModule {
     @Binds
     public abstract LocationService bindLocationService(AndroidLocationService locationService);
 
-    /*@Singleton
-    @Provides
-    public static FusedLocationProviderClient provideLocationProvider(@ApplicationContext Context context) {
-        return LocationServices.getFusedLocationProviderClient(context);
-    }
-
-    @Singleton
-    @Provides
-    public static Geocoder provideGeocoder(@ApplicationContext Context context) {
-        //TODO: For now, this uses the current user locale
-        return new Geocoder(context, ConfigurationCompat.getLocales(context.getResources().getConfiguration()).get(0));
-    }*/
     @Singleton
     @Provides
     public static Context provideContext(@ApplicationContext Context context) {
-        //TODO: For now, this uses the current user locale
         return context;
     }
 

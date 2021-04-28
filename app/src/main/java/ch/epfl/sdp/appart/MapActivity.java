@@ -16,7 +16,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.map.ApartmentInfoWindow;
-import ch.epfl.sdp.appart.map.GoogleMapWrapper;
+import ch.epfl.sdp.appart.map.GoogleMapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -30,6 +30,9 @@ public class MapActivity extends AppCompatActivity {
     @Inject
     LocationService locationService;
 
+    @Inject
+    GoogleMapService mapService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,6 @@ public class MapActivity extends AppCompatActivity {
                         .findFragmentById(R.id.map);
         mapFragment.getView().setContentDescription("WAITING");
 
-        GoogleMapWrapper mapWrapper;
 
         Runnable onMapReadyCallback;
 
@@ -48,16 +50,15 @@ public class MapActivity extends AppCompatActivity {
                 getIntent().getStringExtra(getString(R.string.intentLocationForMap));
 
         if (address != null) {
-            mapWrapper =
-                    new GoogleMapWrapper(null, mapFragment);
+            mapService.setMapFragment(mapFragment);
             onMapReadyCallback = () -> {
                 Location apartmentLoc =
                         locationService.getLocationFromName(address);
-                mapWrapper.addMarker(apartmentLoc, null, true, null);
+                mapService.addMarker(apartmentLoc, null, true, null);
             };
         } else {
-            mapWrapper = new GoogleMapWrapper(new ApartmentInfoWindow(this,
-                    databaseService), mapFragment);
+            mapService.setInfoWindow(new ApartmentInfoWindow(this, databaseService));
+            mapService.setMapFragment(mapFragment);
             onMapReadyCallback = () -> {
                 CompletableFuture<List<Card>> futureCards = databaseService
                         .getCards();
@@ -70,22 +71,21 @@ public class MapActivity extends AppCompatActivity {
                     for (Card card : cards) {
                         Location apartmentLoc =
                                 locationService.getLocationFromName(card.getCity());
-                        mapWrapper.addMarker(apartmentLoc, card, false, card.getCity());
+                        mapService.addMarker(apartmentLoc, card, false, card.getCity());
                     }
                 });
             };
         }
 
+        mapService.setOnReadyCallback(onMapReadyCallback);
+
         PermissionRequest.askForLocationPermission(this, () -> {
             Log.d("PERMISSION", "Location permission granted");
-            mapFragment.getMapAsync(mapWrapper);
+            mapFragment.getMapAsync(mapService);
         }, () -> {
             Log.d("PERMISSION", "Refused");
             finish();
         }, () -> Log.d("PERMISSION", "Popup"));
-
-
-        mapWrapper.setOnReadyCallback(onMapReadyCallback);
 
     }
 

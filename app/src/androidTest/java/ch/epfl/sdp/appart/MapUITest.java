@@ -1,6 +1,8 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
+import android.location.Address;
+import android.location.Geocoder;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -14,6 +16,7 @@ import androidx.test.uiautomator.Until;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +25,10 @@ import java.util.Set;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.MapModule;
+import ch.epfl.sdp.appart.location.Location;
+import ch.epfl.sdp.appart.map.GoogleMapService;
+import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -59,12 +66,25 @@ public class MapUITest {
         boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")), 10000);
         assertThat(foundMap, is(true));
 
+        Geocoder geocoder = new Geocoder(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
 
         List<Card> cards = databaseService.getCards().join();
         for (Card card : cards) {
             if (!markerDescs.contains(card.getCity())) {
+                try {
+                    List<Address> addresses = geocoder.getFromLocationName(card.getCity(), 1);
+                    Address addr = addresses.get(0);
+                    Location loc = new Location();
+                    loc.longitude = addr.getLongitude();
+                    loc.latitude = addr.getLatitude();
+                    GoogleMapService.centerOnLocation(loc, true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 List<UiObject2> lists =
                         device.findObjects(By.descContains(card.getCity()));
                 markers.addAll(lists);
