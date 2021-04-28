@@ -41,6 +41,9 @@ public class ScrollingViewModel extends ViewModel {
         if(location != null && !location.equals("")) {
             CompletableFuture<List<Card>> queriedCards = db.getCardsFilter(location);
             queriedCards.thenAccept(mCardsFilter::setValue);
+            queriedCards.exceptionally(e -> {
+                initHome();
+                return null;});
         } else {
             initHome();
         }
