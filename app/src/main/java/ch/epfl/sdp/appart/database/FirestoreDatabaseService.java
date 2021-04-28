@@ -107,7 +107,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     private void handleTask(Task task, CompletableFuture<List<Card>> result){
         List<Card> queriedCards = new ArrayList<>();
         if (task.isSuccessful()) {
-            for (QueryDocumentSnapshot document : (List<QueryDocumentSnapshot>) task.getResult()) {
+            for (QueryDocumentSnapshot document : (Iterable<? extends QueryDocumentSnapshot>) task.getResult()) {
                 Map<String, Object> data = document.getData();
                 queriedCards.add(generateCard(data, document));
             }
