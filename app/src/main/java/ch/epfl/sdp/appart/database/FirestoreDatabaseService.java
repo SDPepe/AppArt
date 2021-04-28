@@ -77,11 +77,7 @@ public class FirestoreDatabaseService implements DatabaseService {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Map<String, Object> data = document.getData();
-                            queriedCards.add(
-                                    new Card(document.getId(), (String) data.get(CardLayout.AD_ID), (String) data.get(CardLayout.USER_ID),
-                                            (String) data.get(CardLayout.CITY),
-                                            (long) data.get(CardLayout.PRICE),
-                                            (String) data.get(CardLayout.IMAGE)));
+                            queriedCards.add(generateCard(data, document));
                         }
                         result.complete(queriedCards);
 
@@ -101,9 +97,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     @Override
     @NonNull
     public CompletableFuture<List<Card>> getCardsFilter(String location) {
-
         CompletableFuture<List<Card>> result = new CompletableFuture<>();
-
         //ask firebase async to get the cards objects and notify the future
         //when they have been fetched
         db.collection(FirebaseLayout.CARDS_DIRECTORY)
@@ -116,12 +110,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
                         Map<String, Object> data = document.getData();
-                        Log.d("LOCATION", data.get(CardLayout.CITY)+ "<--- VS --->"+  location);
-                        queriedCards.add(
-                            new Card(document.getId(), (String) data.get(CardLayout.AD_ID), (String) data.get(CardLayout.USER_ID),
-                                (String) data.get(CardLayout.CITY),
-                                (long) data.get(CardLayout.PRICE),
-                                (String) data.get(CardLayout.IMAGE)));
+                        queriedCards.add(generateCard(data, document));
                     }
                     result.complete(queriedCards);
 
@@ -135,6 +124,15 @@ public class FirestoreDatabaseService implements DatabaseService {
         );
 
         return result;
+    }
+    private Card generateCard(Map<String, Object> data,QueryDocumentSnapshot document){
+        return new Card(
+            document.getId(),
+            (String) data.get(CardLayout.AD_ID),
+            (String) data.get(CardLayout.USER_ID),
+            (String) data.get(CardLayout.CITY),
+            (long) data.get(CardLayout.PRICE),
+            (String) data.get(CardLayout.IMAGE));
     }
 
     @NotNull

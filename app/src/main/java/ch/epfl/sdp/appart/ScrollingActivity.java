@@ -76,14 +76,6 @@ public class ScrollingActivity extends ToolbarActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
 
-        /*Button searchBtn = findViewById(R.id.confirm_Scrolling_Button);
-        searchBtn.setOnClickListener(w ->
-            mViewModel.filter(
-                ((EditText) findViewById(R.id.search_bar_Scrolling_EditText)).getText().toString()));
-
-         */
-
-
     }
 
     /**
