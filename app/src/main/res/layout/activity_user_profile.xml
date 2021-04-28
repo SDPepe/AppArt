@@ -70,7 +70,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.114"
-                    app:srcCompat="@drawable/user_example_no_gender"
                     tools:ignore="HardcodedText" />
 
                 <TextView
@@ -276,7 +275,7 @@
                     android:id="@+id/doneButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#8D0AE112"
+                    android:backgroundTint="#8D49BC4D"
                     android:gravity="center"
                     android:onClick="doneEditing"
                     android:text="@string/doneButtonText"

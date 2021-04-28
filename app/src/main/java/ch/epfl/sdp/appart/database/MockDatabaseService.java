@@ -119,7 +119,7 @@ public class MockDatabaseService implements DatabaseService {
 
     @NotNull
     @Override
-    public CompletableFuture<Boolean> updateUser(User user, Uri uri) {
+    public CompletableFuture<Boolean> updateUser(User user) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         if (users.containsValue(user)) {
             users.put(user.getUserId(), user);
@@ -154,6 +154,12 @@ public class MockDatabaseService implements DatabaseService {
             result.complete(true);
         }
         return result;
+    }
+
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> deleteImage(String imagePathAndName) {
+        return null;
     }
 
     @Override

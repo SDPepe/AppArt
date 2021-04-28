@@ -76,7 +76,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
      * @throws IllegalArgumentException if user is null.
      */
     @NonNull
-    CompletableFuture<Boolean> updateUser(User user, Uri uri);
+    CompletableFuture<Boolean> updateUser(User user);
 
 
     /**
@@ -111,6 +111,9 @@ public interface DatabaseService extends DatabaseHostVisitor {
      */
     @NonNull
     CompletableFuture<Boolean> putImage(Uri uri, String name, String path);
+
+    @NonNull
+    public CompletableFuture<Boolean> deleteImage(String imagePathAndName);
 
 
     CompletableFuture<Void> clearCache();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 
 /**
  * This class represents a generic user of our application - it is used to manage
@@ -21,8 +22,6 @@ public class AppUser implements User {
     private Gender gender;
     private String profileImage;
     private List<String> adsIds;
-
-    private static final String RESOURCE_PATH_USER_ICON = "android.resource://ch.epfl.sdp.appart/";
 
     /**
      * App user constructor
@@ -220,18 +219,22 @@ public class AppUser implements User {
      * @return the id of the drawable gender-icon corresponding
      * to the gender selected by the user
      */
-    private int findDrawableIdByGender() {
+    private String findDrawableIdByGender() {
         if (gender == Gender.FEMALE) {
-            return R.drawable.user_example_female;
+            return "user_example_female.png";
         } else if (gender == Gender.MALE) {
-            return R.drawable.user_example_male;
+            return "user_example_male.png";
         } else {
-            return R.drawable.user_example_no_gender;
+            return "user_example_no_gender.png";
         }
     }
 
     public void setDefaultProfileImage(){
-        this.profileImage = RESOURCE_PATH_USER_ICON + findDrawableIdByGender();
+        this.profileImage = FirebaseLayout.USERS_DIRECTORY + FirebaseLayout.SEPARATOR + "default" + FirebaseLayout.SEPARATOR +  findDrawableIdByGender();
+    }
+
+    public Boolean hasDefaultProfileImage() {
+        return !this.profileImage.contains(this.userId);
     }
 
 }

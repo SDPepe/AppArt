@@ -10,9 +10,14 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
@@ -33,6 +38,9 @@ public class UserProfileActivity extends AppCompatActivity {
     /* User ViewModel */
     UserViewModel mViewModel;
 
+    @Inject
+    DatabaseService database;
+
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
@@ -44,9 +52,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView uniAccountClaimer;
     private TextView emailTextView;
     private ImageView imageView;
-
-    /* */
-    String profileImageUriPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +95,7 @@ public class UserProfileActivity extends AppCompatActivity {
     public void editProfile(View view) {
         this.modifyButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
-        if (!this.sessionUser.getProfileImage().contains("resource")) {
+        if (!this.sessionUser.hasDefaultProfileImage()) {
             this.removeImageButton.setVisibility(View.VISIBLE);
         }
 
@@ -99,8 +104,10 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     public void removeProfileImage(View view) {
+        mViewModel.deleteImage(this.sessionUser.getProfileImage());
         this.sessionUser.setDefaultProfileImage();
-        this.profileImageUriPath = null;
+        imageView.setImageResource(android.R.color.transparent);
+        this.removeImageButton.setVisibility(View.GONE);
     }
 
     public void changeProfileImage(View view) {
@@ -114,8 +121,14 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK){
+                this.doneButton.setEnabled(false);
                 Uri profileUri = data.getParcelableExtra("profileUri");
-                this.profileImageUriPath = profileUri.getPath();
+                mViewModel.setUri(profileUri);
+                imageView.setImageURI(profileUri);
+                mViewModel.deleteImage(this.sessionUser.getProfileImage());
+                this.sessionUser.setProfileImage(FirebaseLayout.USERS_DIRECTORY + FirebaseLayout.SEPARATOR + this.sessionUser.getUserId() + FirebaseLayout.SEPARATOR +  "profileImage" + System.currentTimeMillis()+ ".jpeg");
+                mViewModel.updateImage(this.sessionUser.getUserId());
+                mViewModel.getUpdateImageConfirmed().observe(this, this::imageUpdateResult);
             }
         }
     }
@@ -154,7 +167,15 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     private void setSessionUserToDatabase(View view) {
       mViewModel.updateUser(this.sessionUser);
-      mViewModel.getUpdateCardConfirmed().observe(this, this::informationUpdateResult);
+      mViewModel.getUpdateUserConfirmed().observe(this, this::informationUpdateResult);
+    }
+
+    private void imageUpdateResult(Boolean updateResult) {
+        if (!updateResult) {
+            UIUtils.makeSnakeForUserUpdateFailed(this.doneButton, R.string.updateUserImageFailedInDB);
+        }
+        this.doneButton.setEnabled(true);
+
     }
 
     private void informationUpdateResult(Boolean updateResult) {
@@ -191,10 +212,8 @@ public class UserProfileActivity extends AppCompatActivity {
         this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
         this.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumber_UserProfile_editText)).getText().toString().trim());
 
-        if (this.profileImageUriPath == null) {
+        if (this.sessionUser.hasDefaultProfileImage()) {
             this.sessionUser.setDefaultProfileImage();
-        } else {
-            this.sessionUser.setProfileImage(this.profileImageUriPath);
         }
     }
 
@@ -221,7 +240,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        Uri profileImageUri = Uri.parse(this.sessionUser.getProfileImage());
-        this.imageView.setImageURI(profileImageUri);
+        database.accept(new GlideImageViewLoader(this, imageView,
+                this.sessionUser.getProfileImage()));
     }
 }

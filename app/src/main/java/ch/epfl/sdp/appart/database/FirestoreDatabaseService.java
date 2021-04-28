@@ -5,15 +5,12 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
@@ -187,7 +184,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<Boolean> updateUser(@NonNull User user, Uri uri) {
+    public CompletableFuture<Boolean> updateUser(@NonNull User user) {
 
         /*if (user == null) {
             throw new IllegalArgumentException("user cannot bu null");
@@ -311,6 +308,30 @@ public class FirestoreDatabaseService implements DatabaseService {
         StorageReference storeRef = storage.getReference(path);
         StorageReference fileReference = storeRef.child(name);
         fileReference.putFile(uri).addOnCompleteListener(
+                task -> isFinishedFuture.complete(task.isSuccessful()));
+        return isFinishedFuture;
+    }
+
+    @NotNull
+    @Override
+    @NonNull
+    public CompletableFuture<Boolean> deleteImage(String imagePathAndName) {
+        if (imagePathAndName == null) {
+            throw new IllegalArgumentException("deleteImage: parameters cannot be null");
+        }
+
+        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
+
+        // explain
+        if (imagePathAndName.contains("users/default/")) {
+            isFinishedFuture.complete(true);
+            return isFinishedFuture;
+        }
+
+        StorageReference storeRef = storage.getReference();
+        StorageReference desertRef = storeRef.child(imagePathAndName);
+
+        desertRef.delete().addOnCompleteListener(
                 task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
     }

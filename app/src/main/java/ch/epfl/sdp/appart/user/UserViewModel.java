@@ -4,10 +4,6 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ch.epfl.sdp.appart.ad.Ad;
-import ch.epfl.sdp.appart.ad.ContactInfo;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -20,11 +16,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class UserViewModel extends ViewModel {
 
-    private final MutableLiveData<Boolean> mPutCardConfirmed = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> mUpdateCardConfirmed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mPutUserConfirmed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mUpdateUserConfirmed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mUpdateImageConfirmed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mDeleteImageConfirmed = new MutableLiveData<>();
     private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
-    private final MutableLiveData<Uri> mUri = new MutableLiveData<>();
+    private Uri profileImageUri;
 
     final DatabaseService db;
     final LoginService ls;
@@ -44,7 +42,7 @@ public class UserViewModel extends ViewModel {
      */
     public void putUser(User user) {
         CompletableFuture<Boolean> putUser = db.putUser(user);
-        putUser.thenAccept(mPutCardConfirmed::setValue);
+        putUser.thenAccept(mPutUserConfirmed::setValue);
     }
 
     /**
@@ -53,8 +51,18 @@ public class UserViewModel extends ViewModel {
      * @param user the user to update in database
      */
     public void updateUser(User user) {
-        CompletableFuture<Boolean> updateUser = db.updateUser(user, mUri.getValue());
-        updateUser.thenAccept(mUpdateCardConfirmed::setValue);
+        CompletableFuture<Boolean> updateUser = db.updateUser(user);
+        updateUser.thenAccept(mUpdateUserConfirmed::setValue);
+    }
+
+    public void updateImage(String userId){
+        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, "profileImage" + System.currentTimeMillis() + ".jpeg", "users/"+userId);
+        updateImage.thenAccept(mUpdateImageConfirmed::setValue);
+    }
+
+    public void deleteImage(String profilePicture){
+        CompletableFuture<Boolean> deleteImage = db.deleteImage(profilePicture);
+        deleteImage.thenAccept(mDeleteImageConfirmed::setValue);
     }
 
     /**
@@ -77,27 +85,35 @@ public class UserViewModel extends ViewModel {
     /*
      * Setters
      */
-    public void setUri(Uri uri ){
-      mUri.setValue(uri);
+    public void setUri(Uri uri) {
+        profileImageUri = uri;
     }
 
     /*
      * Getters for MutableLiveData instances declared above
      */
-    public MutableLiveData<Boolean> getPutCardConfirmed() {
-        return mPutCardConfirmed;
+    public MutableLiveData<Boolean> getPutUserConfirmed() {
+        return mPutUserConfirmed;
     }
 
-    public MutableLiveData<Boolean> getUpdateCardConfirmed() {
-        return mUpdateCardConfirmed;
+    public MutableLiveData<Boolean> getUpdateUserConfirmed() {
+        return mUpdateUserConfirmed;
+    }
+
+    public MutableLiveData<Boolean> getUpdateImageConfirmed() {
+        return mUpdateImageConfirmed;
+    }
+
+    public MutableLiveData<Boolean> getDeleteImageConfirmed() {
+        return mDeleteImageConfirmed;
     }
 
     public MutableLiveData<User> getUser() {
         return mUser;
     }
 
-    public MutableLiveData<Uri> getUri() {
-        return mUri;
+    public Uri getUri() {
+        return profileImageUri;
     }
 
 }

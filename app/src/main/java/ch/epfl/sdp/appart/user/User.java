@@ -121,4 +121,6 @@ public interface User {
      */
     void setDefaultProfileImage();
 
+    Boolean hasDefaultProfileImage();
+
 }

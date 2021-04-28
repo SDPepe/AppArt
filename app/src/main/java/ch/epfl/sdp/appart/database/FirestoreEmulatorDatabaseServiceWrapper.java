@@ -64,8 +64,8 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     @NotNull
     @NonNull
     @Override
-    public CompletableFuture<Boolean> updateUser(User user, Uri uri) {
-        return db.updateUser(user, uri);
+    public CompletableFuture<Boolean> updateUser(User user) {
+        return db.updateUser(user);
     }
 
     @NotNull
@@ -86,6 +86,12 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     @Override
     public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
         return db.putImage(uri, name, path);
+    }
+
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> deleteImage(String imagePathAndName) {
+        return null;
     }
 
     @Override
