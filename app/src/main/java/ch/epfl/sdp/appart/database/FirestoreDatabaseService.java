@@ -36,7 +36,6 @@ import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
-import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
 import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
@@ -526,4 +525,3 @@ public class FirestoreDatabaseService implements DatabaseService {
     }
 
 }
-
