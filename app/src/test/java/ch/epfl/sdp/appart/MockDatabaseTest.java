@@ -68,10 +68,10 @@ public class MockDatabaseTest {
         User user = new AppUser("1234", "test.appart@epfl.ch");
         assertTrue(dataBase.putUser(user).join());
         assertEquals(user, dataBase.getUser("1234").join());
-        assertTrue(dataBase.updateUser(user, mock(Uri.class)).join());
+        assertTrue(dataBase.updateUser(user).join());
         assertEquals(user, dataBase.getUser("1234").join());
         User user3 = new AppUser("4321", "test.appart@epfl.ch");
-        assertFalse(dataBase.updateUser(user3, mock(Uri.class)).join());
+        assertFalse(dataBase.updateUser(user3).join());
     }
 
     @Test
