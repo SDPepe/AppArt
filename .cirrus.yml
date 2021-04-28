@@ -12,7 +12,9 @@ check_android_task:
     kvm: true
     cpu: 8
     memory: 10G
-  download_device_script: /bin/sh -c sdkmanager --install "system-images;android-${API_LEVEL};${TARGET};${ARCH}"     "platforms;android-${API_LEVEL}"     "emulator"
+  download_device_script: |
+    /bin/sh -c sdkmanager --install "system-images;android-${API_LEVEL};${TARGET};${ARCH}"     "platforms;android-${API_LEVEL}"     "emulator"
+    sdkmanager --list
   create_device_script:
     echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
   start_emulator_background_script:
