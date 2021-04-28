@@ -106,15 +106,17 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         //ask firebase async to get the cards objects and notify the future
         //when they have been fetched
-        db.collection(FirebaseLayout.CARDS_DIRECTORY).whereEqualTo("city", location).get().addOnCompleteListener(
+        db.collection(FirebaseLayout.CARDS_DIRECTORY)
+            .whereGreaterThanOrEqualTo("city",  location)
+            .whereLessThanOrEqualTo("city", location+"\uF7FF").get().addOnCompleteListener(
             task -> {
-
                 List<Card> queriedCards = new ArrayList<>();
-
                 if (task.isSuccessful()) {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
+
                         Map<String, Object> data = document.getData();
+                        Log.d("LOCATION", data.get(CardLayout.CITY)+ "<--- VS --->"+  location);
                         queriedCards.add(
                             new Card(document.getId(), (String) data.get(CardLayout.AD_ID), (String) data.get(CardLayout.USER_ID),
                                 (String) data.get(CardLayout.CITY),
