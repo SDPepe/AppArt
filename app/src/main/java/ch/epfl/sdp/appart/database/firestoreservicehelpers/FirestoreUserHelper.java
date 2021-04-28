@@ -31,7 +31,6 @@ public class FirestoreUserHelper {
     private final FirestoreImageHelper imageHelper;
     private final String usersPath;
 
-    @Inject
     public FirestoreUserHelper() {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -67,14 +66,13 @@ public class FirestoreUserHelper {
                         Object rawPhoneNumber = data.get(UserLayout.PHONE);
                         if (rawPhoneNumber != null) user.setPhoneNumber((String) rawPhoneNumber);
                         Object rawPfpRef = data.get(UserLayout.PICTURE);
-                        if (rawPfpRef != null) user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
+                        if (rawPfpRef != null)
+                            user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
 
                         result.complete(user);
                     } else {
                         result.completeExceptionally(
-                                new DatabaseServiceException(
-                                        "failed to request the user from firebase"
-                                )
+                                new DatabaseServiceException(task.getException().getMessage())
                         );
                     }
                 }
@@ -88,7 +86,13 @@ public class FirestoreUserHelper {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
-                .set(extractUserInfo(user)).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
+                .set(extractUserInfo(user)).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                isFinishedFuture.complete(true);
+            } else {
+                isFinishedFuture.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
+            }
+        });
         return isFinishedFuture;
     }
 
@@ -105,8 +109,13 @@ public class FirestoreUserHelper {
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
                 .set(extractUserInfo(user))
-                .addOnCompleteListener(
-                        task -> res.complete(task.isSuccessful()));
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        res.complete(task.isSuccessful());
+                    } else {
+                        res.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
+                    }
+                });
         return res;
     }
 

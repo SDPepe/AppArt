@@ -31,7 +31,6 @@ public class FirestoreCardHelper {
     private final FirebaseStorage storage;
     private final String cardssPath;
 
-    @Inject
     public FirestoreCardHelper() {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -55,7 +54,8 @@ public class FirestoreCardHelper {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Map<String, Object> data = document.getData();
                             queriedCards.add(
-                                    new Card(document.getId(), (String) data.get(CardLayout.AD_ID), (String) data.get(CardLayout.USER_ID),
+                                    new Card(document.getId(), (String) data.get(CardLayout.AD_ID),
+                                            (String) data.get(CardLayout.USER_ID),
                                             (String) data.get(CardLayout.CITY),
                                             (long) data.get(CardLayout.PRICE),
                                             (String) data.get(CardLayout.IMAGE)));
@@ -64,13 +64,10 @@ public class FirestoreCardHelper {
 
                     } else {
                         result.completeExceptionally(
-                                new DatabaseServiceException(
-                                        "failed to fetch the cards from firebase"
-                                ));
+                                new DatabaseServiceException(task.getException().getMessage()));
                     }
                 }
         );
-
         return result;
     }
 

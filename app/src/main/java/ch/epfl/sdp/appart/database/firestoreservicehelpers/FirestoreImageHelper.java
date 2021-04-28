@@ -19,7 +19,6 @@ public class FirestoreImageHelper {
 
     private final FirebaseStorage storage;
 
-    @Inject
     public FirestoreImageHelper() {
         storage = FirebaseStorage.getInstance();
     }

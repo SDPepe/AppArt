@@ -43,7 +43,6 @@ public class FirestoreAdHelper {
     private final FirestoreCardHelper cardHelper;
     private final String adsPath;
 
-    @Inject
     public FirestoreAdHelper() {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -154,21 +153,38 @@ public class FirestoreAdHelper {
         });
     }
 
-    /* <--- putAd private methods --->*/
 
     /**
      * Adds to the ad a collection with the ids of the images. Cleans up if it fails.
      */
-    private void setPhotosReferencesForAd(List<String> actualRefs, DocumentReference newAdRef,
-                                          DocumentReference cardRef, StorageReference storageRef) {
+    private void setPhotosReferencesForAd(CompletableFuture<Void> result, List<String> actualRefs,
+                                          DocumentReference newAdRef) {
+        List<CompletableFuture<Void>> photosIdResults = new ArrayList<>();
         for (int i = 0; i < actualRefs.size(); i++) {
             Map<String, Object> data = new HashMap<>();
             data.put("id", actualRefs.get(i));
             DocumentReference photoRefDocReference = newAdRef.collection(AdLayout.PICTURES_DIRECTORY)
                     .document();
-            photoRefDocReference.set(data); // TODO check all uploads
+            CompletableFuture<Void> photoIdResult = new CompletableFuture<>();
+            photosIdResults.add(photoIdResult);
+            photoRefDocReference.set(data).addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    photoIdResult.complete(null);
+                } else {
+                    photoIdResult.completeExceptionally(new DatabaseServiceException(
+                            Objects.requireNonNull(task.getException()).getMessage()));
+                }
+            });
+            CompletableFuture<Void>[] resultsArray = new CompletableFuture[photosIdResults.size()];
+            photosIdResults.toArray(resultsArray);
+            CompletableFuture.allOf(resultsArray).thenAccept(res -> result.complete(null))
+                    .exceptionally(e -> {
+                        result.completeExceptionally(e);
+                        return null;
+            });
         }
     }
+    /* <--- putAd private methods --->*/
 
     /**
      * Checks whether all image uploads completed successfully. If they didn't, cleans up and
@@ -198,13 +214,20 @@ public class FirestoreAdHelper {
     private void checkAdUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
                                DocumentReference cardRef, StorageReference imagesRef,
                                List<String> imagesRefsList) {
+        CompletableFuture<Void> infoUpload = new CompletableFuture<>();
+        CompletableFuture<Void> idsUpload = new CompletableFuture<>();
         adRef.set(extractAdInfo(ad)).addOnCompleteListener(
                 task -> {
                     cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
-                    result.complete(null);
+                    infoUpload.complete(null);
                 });
-        // TODO is this the right place to do this?
-        setPhotosReferencesForAd(imagesRefsList, adRef, cardRef, imagesRef);
+        setPhotosReferencesForAd(idsUpload, imagesRefsList, adRef);
+        CompletableFuture.allOf(infoUpload, idsUpload)
+                .thenAccept(res -> result.complete(null))
+                .exceptionally(e -> {
+                    result.completeExceptionally(e);
+                    return null;
+                });
     }
 
     /**
@@ -229,9 +252,9 @@ public class FirestoreAdHelper {
     private void finalizeAdUpload(CompletableFuture<String> result, CompletableFuture<Void> imagesResult,
                                   CompletableFuture<Void> adResult, CompletableFuture<Void> cardResult,
                                   DocumentReference adRef) {
-        CompletableFuture<Void> allOf = CompletableFuture.allOf(adResult, cardResult);
-        allOf.thenAccept(res -> result.complete(adRef.getId()));
-        allOf.exceptionally(e -> {
+        CompletableFuture.allOf(adResult, cardResult, imagesResult)
+                .thenAccept(res -> result.complete(adRef.getId()))
+                .exceptionally(e -> {
             result.completeExceptionally(e);
             return null;
         });
