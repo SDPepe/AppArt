@@ -22,6 +22,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import androidx.test.uiautomator.UiDevice;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
@@ -273,12 +274,12 @@ public class SimpleUserProfileActivityTest {
         button.check(matches(isDisplayed()));
     }
 
-   /* @Test
+    @Test
     public void backButtonPressedTest(){
         UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressBack();
         assertEquals(mActivityTestRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
-    } */
+    }
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
