@@ -115,7 +115,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         } else {
             result.completeExceptionally(
                 new DatabaseServiceException(
-                    "failed to fetch the cards from firebase"
+                    "failed to fetch the cards from firebase: " + task.getException().getMessage()
                 ));
         }
     }
