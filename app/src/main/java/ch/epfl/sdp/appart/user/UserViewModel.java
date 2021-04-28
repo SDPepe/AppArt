@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -55,11 +56,35 @@ public class UserViewModel extends ViewModel {
         updateUser.thenAccept(mUpdateUserConfirmed::setValue);
     }
 
+    /**
+     * Update the user image the database and updates the LiveData
+     * the uri for the image is stored in profileImageUri attribute above
+     *
+     * @param userId the id of the user
+     */
     public void updateImage(String userId){
-        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, "profileImage" + System.currentTimeMillis() + ".jpeg", "users/"+userId);
+        StringBuilder imageName = new StringBuilder();
+        imageName
+                .append(FirebaseLayout.PROFILE_IMAGE_NAME)
+                .append(System.currentTimeMillis())
+                .append(FirebaseLayout.JPEG);
+
+        StringBuilder imagePath = new StringBuilder();
+        imagePath
+                .append(FirebaseLayout.USERS_DIRECTORY)
+                .append(FirebaseLayout.SEPARATOR)
+                .append(userId);
+
+        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imageName.toString(), imagePath.toString());
         updateImage.thenAccept(mUpdateImageConfirmed::setValue);
     }
 
+    /**
+     * Deletes the user image the database and updates the LiveData
+     * !! USE - user.getProfileImage() when calling this method
+     *
+     * @param profilePicture this is the complete path for the user's image: user.getProfileImage()
+     */
     public void deleteImage(String profilePicture){
         CompletableFuture<Boolean> deleteImage = db.deleteImage(profilePicture);
         deleteImage.thenAccept(mDeleteImageConfirmed::setValue);
@@ -81,12 +106,6 @@ public class UserViewModel extends ViewModel {
     public void getCurrentUser() {
         CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
         getCurrentUser.thenAccept(mUser::setValue);
-    }
-    /*
-     * Setters
-     */
-    public void setUri(Uri uri) {
-        profileImageUri = uri;
     }
 
     /*
@@ -112,6 +131,16 @@ public class UserViewModel extends ViewModel {
         return mUser;
     }
 
+    /*
+     * Setters
+     */
+    public void setUri(Uri uri) {
+        profileImageUri = uri;
+    }
+
+    /*
+     * Getters
+     */
     public Uri getUri() {
         return profileImageUri;
     }

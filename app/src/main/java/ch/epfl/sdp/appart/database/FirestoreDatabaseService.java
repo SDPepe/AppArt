@@ -186,27 +186,8 @@ public class FirestoreDatabaseService implements DatabaseService {
     @Override
     @NonNull
     public CompletableFuture<Boolean> updateUser(@NonNull User user) {
-
-        /*if (user == null) {
-            throw new IllegalArgumentException("user cannot bu null");
-        }
-        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        if (uri != null) {
-            String name = "photo" + ".jpeg"; // getTypeFromUri(uri);
-            String path = "User" + "/" + user.getUserId();
-            putImage(uri, name, path).thenAccept(res -> {
-                if (!res) {
-                    isFinishedFuture.completeExceptionally(
-                        new UnsupportedOperationException("Ad upload failed!"));
-                }
-            });
-        } else {
-            return updateUserDb(isFinishedFuture, user);
-        }
-        return updateUserDb(isFinishedFuture, user);*/
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         return updateUserDb(result, user);
-
     }
 
     private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user){
@@ -311,6 +292,11 @@ public class FirestoreDatabaseService implements DatabaseService {
         return isFinishedFuture;
     }
 
+
+    /**
+     *  deletes an image from the Firebase Storage
+     * @param imagePathAndName this the complete path of the image (e.g. users/default/photo.jpeg)
+     */
     @NotNull
     @Override
     @NonNull
@@ -321,7 +307,8 @@ public class FirestoreDatabaseService implements DatabaseService {
 
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
 
-        // explain
+        /* The reason for this check is when a user has DEFAULT user icon (thus no image in storage)
+           The activity asks to delete previous profile image, which is not present, thus returns true directly */
         if (imagePathAndName.contains("users/default/")) {
             isFinishedFuture.complete(true);
             return isFinishedFuture;
@@ -347,7 +334,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         });
         return futureClear;
     }
-
 
     /**
      * If failed, deletes from firebase the given references and completes exceptionally
@@ -476,7 +462,6 @@ public class FirestoreDatabaseService implements DatabaseService {
     public void removeFromStorage(StorageReference ref) {
         ref.delete();
     }
-
 
     /**
      * Takes a cardId and fetch the adId for the corresponding card.
@@ -660,5 +645,4 @@ public class FirestoreDatabaseService implements DatabaseService {
         if (ip == null) throw new IllegalArgumentException();
         db.useEmulator(ip, port);
     }
-
 }

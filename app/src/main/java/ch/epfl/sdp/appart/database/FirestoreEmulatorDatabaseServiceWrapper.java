@@ -97,6 +97,7 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     @NonNull
     @Override
     public CompletableFuture<Boolean> deleteImage(String imagePathAndName) {
+        // TODO: implementation soon
         return null;
     }
 

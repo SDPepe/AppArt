@@ -103,6 +103,10 @@ public class UserProfileActivity extends AppCompatActivity {
         enableDisableEntries();
     }
 
+    /**
+     * removes the profile image from database and sets default user icon
+     * called by the remove button under imageView
+     */
     public void removeProfileImage(View view) {
         mViewModel.deleteImage(this.sessionUser.getProfileImage());
         this.sessionUser.setDefaultProfileImage();
@@ -110,12 +114,20 @@ public class UserProfileActivity extends AppCompatActivity {
         this.removeImageButton.setVisibility(View.GONE);
     }
 
+    /**
+     * changes the profile image of the user
+     * called by the imageView button
+     */
     public void changeProfileImage(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
         intent.putExtra("Activity", "User");
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * manages the output of camera activity and updates the profile image
+     * in firestore and firebase storage using user view-model
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -126,7 +138,18 @@ public class UserProfileActivity extends AppCompatActivity {
                 mViewModel.setUri(profileUri);
                 imageView.setImageURI(profileUri);
                 mViewModel.deleteImage(this.sessionUser.getProfileImage());
-                this.sessionUser.setProfileImage(FirebaseLayout.USERS_DIRECTORY + FirebaseLayout.SEPARATOR + this.sessionUser.getUserId() + FirebaseLayout.SEPARATOR +  "profileImage" + System.currentTimeMillis()+ ".jpeg");
+
+                StringBuilder imagePathInDb = new StringBuilder();
+                imagePathInDb
+                        .append(FirebaseLayout.USERS_DIRECTORY)
+                        .append(FirebaseLayout.SEPARATOR)
+                        .append(this.sessionUser.getUserId())
+                        .append(FirebaseLayout.SEPARATOR)
+                        .append(FirebaseLayout.PROFILE_IMAGE_NAME)
+                        .append(System.currentTimeMillis())
+                        .append(FirebaseLayout.JPEG);
+
+                this.sessionUser.setProfileImage(imagePathInDb.toString());
                 mViewModel.updateImage(this.sessionUser.getUserId());
                 mViewModel.getUpdateImageConfirmed().observe(this, this::imageUpdateResult);
             }
@@ -175,7 +198,6 @@ public class UserProfileActivity extends AppCompatActivity {
             UIUtils.makeSnakeForUserUpdateFailed(this.doneButton, R.string.updateUserImageFailedInDB);
         }
         this.doneButton.setEnabled(true);
-
     }
 
     private void informationUpdateResult(Boolean updateResult) {
@@ -209,9 +231,13 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         this.sessionUser.setName(((TextView) findViewById(R.id.name_UserProfile_editText)).getText().toString());
-        this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
         this.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumber_UserProfile_editText)).getText().toString().trim());
 
+        this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
+
+        /* LOOKS USELESS because of method naming: in case the user changed gender
+           gender the gender is locally updated above. This method then updates the correct
+           correct default user icon accordingly to the newly selected gender */
         if (this.sessionUser.hasDefaultProfileImage()) {
             this.sessionUser.setDefaultProfileImage();
         }

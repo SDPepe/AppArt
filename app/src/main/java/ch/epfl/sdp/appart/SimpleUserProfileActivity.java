@@ -5,13 +5,11 @@ import android.os.Bundle;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
-import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
 import dagger.hilt.android.AndroidEntryPoint;

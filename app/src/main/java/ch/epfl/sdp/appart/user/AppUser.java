@@ -221,16 +221,24 @@ public class AppUser implements User {
      */
     private String findDrawableIdByGender() {
         if (gender == Gender.FEMALE) {
-            return "user_example_female.png";
+            return "user_example_female" + FirebaseLayout.PNG;
         } else if (gender == Gender.MALE) {
-            return "user_example_male.png";
+            return "user_example_male" + FirebaseLayout.PNG;
         } else {
-            return "user_example_no_gender.png";
+            return "user_example_no_gender" + FirebaseLayout.PNG;
         }
     }
 
     public void setDefaultProfileImage(){
-        this.profileImage = FirebaseLayout.USERS_DIRECTORY + FirebaseLayout.SEPARATOR + "default" + FirebaseLayout.SEPARATOR +  findDrawableIdByGender();
+        StringBuilder defaultImagePathInDb = new StringBuilder();
+        defaultImagePathInDb
+                .append(FirebaseLayout.USERS_DIRECTORY)
+                .append(FirebaseLayout.SEPARATOR)
+                .append(FirebaseLayout.DEFAULT_USER_ICON_DIRECTORY)
+                .append(FirebaseLayout.SEPARATOR)
+                .append(findDrawableIdByGender());
+
+        this.profileImage = defaultImagePathInDb.toString();
     }
 
     public Boolean hasDefaultProfileImage() {
