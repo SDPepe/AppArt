@@ -42,6 +42,9 @@ import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
+import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
+import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 /**
  * Implementation of the DatabaseService with Firestore from Firebase.
@@ -52,6 +55,10 @@ public class FirestoreDatabaseService implements DatabaseService {
     private final static String STORAGE_URL = "gs://appart-ec344.appspot.com/";
     private final FirebaseFirestore db;
     private final FirebaseStorage storage;
+
+    private final UserSerializer userSerializer = new UserSerializer();
+    private final AdSerializer adSerializer = new AdSerializer();
+    private final CardSerializer cardSerializer = new CardSerializer();
 
     @Inject
     public FirestoreDatabaseService() {
@@ -70,19 +77,12 @@ public class FirestoreDatabaseService implements DatabaseService {
         //when they have been fetched
         db.collection(FirebaseLayout.CARDS_DIRECTORY).get().addOnCompleteListener(
                 task -> {
-
                     List<Card> queriedCards = new ArrayList<>();
 
                     if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult())
+                            queriedCards.add(cardSerializer.deserialize(document.getId(), document.getData()));
 
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Map<String, Object> data = document.getData();
-                            queriedCards.add(
-                                    new Card(document.getId(), (String) data.get(CardLayout.AD_ID), (String) data.get(CardLayout.USER_ID),
-                                            (String) data.get(CardLayout.CITY),
-                                            (long) data.get(CardLayout.PRICE),
-                                            (String) data.get(CardLayout.IMAGE)));
-                        }
                         result.complete(queriedCards);
 
                     } else {
@@ -109,7 +109,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(FirebaseLayout.CARDS_DIRECTORY)
                 .document(card.getId())
-                .set(extractCardsInfo(card))
+                .set(cardSerializer.serialize(card))
                 .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
     }
@@ -131,43 +131,10 @@ public class FirestoreDatabaseService implements DatabaseService {
                 task -> {
                     if (task.isSuccessful()) {
                         Map<String, Object> data = task.getResult().getData();
-                        //TODO: Handle case where the string does not match a gender
-                        AppUser user = new AppUser(userId, (String) data.get(UserLayout.EMAIL));
-                        user.setUserEmail((String) data.get(UserLayout.EMAIL));
-                        Object rawAge = data.get(UserLayout.AGE);
-                        if (rawAge != null) {
-                            user.setAge((long) rawAge);
-                        }
+                        result.complete(userSerializer.deserialize(userId, data));
+                    } else
+                        result.completeExceptionally(new DatabaseServiceException("failed to request the user from firebase"));
 
-                        Object rawGender = data.get(UserLayout.GENDER);
-                        if (rawGender != null) {
-                            user.setGender((String) rawGender);
-                        }
-
-                        Object rawName = data.get(UserLayout.NAME);
-                        if (rawName != null) {
-                            user.setName((String) rawName);
-                        }
-
-                        Object rawPhoneNumber = data.get(UserLayout.PHONE);
-                        if (rawPhoneNumber != null) {
-                            user.setPhoneNumber((String) rawPhoneNumber);
-                        }
-
-                        Object rawPfpRef = data.get(UserLayout.PICTURE);
-                        if (rawPfpRef != null) {
-                            user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
-                        }
-
-                        result.complete(user);
-
-                    } else {
-                        result.completeExceptionally(
-                                new DatabaseServiceException(
-                                        "failed to request the user from firebase"
-                                )
-                        );
-                    }
                 }
         );
         return result;
@@ -180,7 +147,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
-                .set(extractUserInfo(user)).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
+                .set(userSerializer.serialize(user)).addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
     }
 
@@ -215,12 +182,12 @@ public class FirestoreDatabaseService implements DatabaseService {
     }
 
     private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user){
-            db.collection(FirebaseLayout.USERS_DIRECTORY)
-                    .document(user.getUserId())
-                    .set(extractUserInfo(user))
-                    .addOnCompleteListener(
-                            task -> res.complete(task.isSuccessful()));
-            return res;
+        db.collection(FirebaseLayout.USERS_DIRECTORY)
+                .document(user.getUserId())
+                .set(userSerializer.serialize(user))
+                .addOnCompleteListener(
+                        task -> res.complete(task.isSuccessful()));
+        return res;
     }
 
     @NotNull
@@ -388,7 +355,7 @@ public class FirestoreDatabaseService implements DatabaseService {
     private void checkAdUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
                                DocumentReference cardRef, StorageReference imagesRef,
                                List<String> imagesRefsList) {
-        adRef.set(extractAdInfo(ad)).addOnCompleteListener(
+        adRef.set(adSerializer.serialize(ad)).addOnCompleteListener(
                 task -> {
                     cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
                     result.complete(null);
@@ -401,7 +368,7 @@ public class FirestoreDatabaseService implements DatabaseService {
                                  String firstImageRef) {
         Card c = new Card(cardRef.getId(), adRef.getId(), ad.getAdvertiserId(), ad.getCity(),
                 ad.getPrice(), firstImageRef, ad.hasVRTour());
-        cardRef.set(extractCardsInfo(c)).addOnCompleteListener(
+        cardRef.set(cardSerializer.serialize(c)).addOnCompleteListener(
                 task -> {
                     cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
                     result.complete(null);
@@ -433,16 +400,6 @@ public class FirestoreDatabaseService implements DatabaseService {
     @Override
     public void accept(GlideLoaderListenerVisitor visitor) {
         visitor.visit(this);
-    }
-
-    private Map<String, Object> extractCardsInfo(Card card) {
-        Map<String, Object> docData = new HashMap<>();
-        docData.put(CardLayout.USER_ID, card.getUserId());
-        docData.put(CardLayout.CITY, card.getCity());
-        docData.put(CardLayout.PRICE, card.getPrice());
-        docData.put(CardLayout.IMAGE, card.getImageUrl());
-        docData.put(CardLayout.AD_ID, card.getAdId());
-        return docData;
     }
 
     /**
@@ -638,29 +595,6 @@ public class FirestoreDatabaseService implements DatabaseService {
         return result;
     }
 
-    private Map<String, Object> extractAdInfo(Ad ad) {
-        Map<String, Object> adData = new HashMap<>();
-        adData.put(AdLayout.ADVERTISER_ID, ad.getAdvertiserId());
-        adData.put(AdLayout.CITY, ad.getCity());
-        adData.put(AdLayout.DESCRIPTION, ad.getDescription());
-        adData.put(AdLayout.VR_TOUR, ad.hasVRTour());
-        adData.put(AdLayout.PRICE, ad.getPrice());
-        adData.put(AdLayout.PRICE_PERIOD, ad.getPricePeriod().ordinal());
-        adData.put(AdLayout.STREET, ad.getStreet());
-        adData.put(AdLayout.TITLE, ad.getTitle());
-        return adData;
-    }
-
-    private Map<String, Object> extractUserInfo(User user) {
-        Map<String, Object> docData = new HashMap<>();
-        docData.put(UserLayout.AGE, user.getAge());
-        docData.put(UserLayout.EMAIL, user.getUserEmail());
-        docData.put(UserLayout.GENDER, user.getGender());
-        docData.put(UserLayout.NAME, user.getName());
-        docData.put(UserLayout.PHONE, user.getPhoneNumber());
-        docData.put(UserLayout.PICTURE, user.getProfileImage());
-        return docData;
-    }
 
     /**
      * Sets up the use of an emulator for the Firebase authentication service.
