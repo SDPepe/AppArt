@@ -20,6 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class ScrollingViewModel extends ViewModel {
 
     private final MutableLiveData<List<Card>> mCards = new MutableLiveData<>();
+    private final MutableLiveData<List<Card>> mCardsFilter = new MutableLiveData<>();
 
     final DatabaseService db;
 
@@ -32,9 +33,20 @@ public class ScrollingViewModel extends ViewModel {
      * Gets the cards from the database and updates the LiveData list
      */
     public void initHome() {
-
         CompletableFuture<List<Card>> queriedCards = db.getCards();
         queriedCards.thenAccept(mCards::setValue);
+    }
+
+    public void filter(String location){
+        if(location != null && !location.equals("")) {
+            CompletableFuture<List<Card>> queriedCards = db.getCardsFilter(location);
+            queriedCards.thenAccept(mCardsFilter::setValue);
+            queriedCards.exceptionally(e -> {
+                initHome();
+                return null;});
+        } else {
+            initHome();
+        }
 
     }
 
@@ -43,5 +55,9 @@ public class ScrollingViewModel extends ViewModel {
      */
     public LiveData<List<Card>> getCards() {
         return mCards;
+    }
+
+    public LiveData<List<Card>> getCardsFilter() {
+        return mCardsFilter;
     }
 }

@@ -44,6 +44,16 @@ public class MockDatabaseTest {
     }
 
     @Test
+    public void getCardsFilterNotEmpty() {
+        try {
+            List<Card> cards = dataBase.getCardsFilter("1000").get();
+            assertTrue(cards.size() > 0);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void updateCorrectCard() {
         Card test = new Card("unknown1", "adId", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg");
         try {
