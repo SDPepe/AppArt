@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,16 +9,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
-
-import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
+import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static ch.epfl.sdp.appart.utils.UIUtils.makeSnakeForUserUpdateFailed;
 
 /**
  * This class manages the UI of the user profile, the user may edit
@@ -36,7 +37,6 @@ public class UserProfileActivity extends AppCompatActivity {
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
-    private Button backButton;
     private EditText nameEditText;
     private EditText ageEditText;
     private EditText phoneNumberEditText;
@@ -51,13 +51,12 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        /* User ViewModel initialisation */
-        UserViewModel mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        /* User ViewModel initialization */
+        mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.modifyButton);
         this.doneButton = findViewById(R.id.doneButton);
-        this.backButton = findViewById(R.id.back_UserProfile_button);
         this.nameEditText = findViewById(R.id.name_UserProfile_editText);
         this.ageEditText = findViewById(R.id.age_UserProfile_editText);
         this.emailTextView = findViewById(R.id.emailText_UserProfile_textView);
@@ -67,13 +66,13 @@ public class UserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_UserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
 
-        /* retrieve session user copy for use info */
-        getSessionUserFromDatabase();
+        /* get user from database from user ID */
+        mViewModel.getCurrentUser();
+        mViewModel.getUser().observe(this, this::setSessionUserToLocal);
 
-        /* set attributes of session user to the UI components */
-        getAndSetCurrentAttributes();
-
+        mViewModel.getUri().observe(this, this::setProfileImage);
     }
+
 
     /**
      * closes activity when back button pressed on UI
@@ -102,7 +101,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * saves updated user information, called by the done button
+     * saves updated user information in firestore database, called by the done button
      */
     public void doneEditing(View view) {
 
@@ -112,43 +111,47 @@ public class UserProfileActivity extends AppCompatActivity {
         /* disable editing text in all UI components*/
         enableDisableEntries();
 
-        /* update the view with new attributes */
-        getAndSetCurrentAttributes();
-
-        /* if true the update in firestore was correctly executed */
-        boolean updateIsDone = setSessionUserToDatabase();
+        setSessionUserToDatabase(view);
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
     }
 
     /**
-     * retrieves the current user information from database
-     * and stores it in the session user instance
+     *
+     * @param user sets the value of the current user to the session user object
      */
-    private void getSessionUserFromDatabase() {
-        this.sessionUser = new AppUser("1", "carlo.musso@epfl.ch");
-        // TODO: get session user from database
+    private void setSessionUserToLocal(User user){
+        this.sessionUser = user;
+
+        /* set attributes of session user to the UI components */
+        getAndSetCurrentAttributes();
     }
 
     /**
      * sets the updated user information to the firestore database
-     *
-     * @return true if the update was correctly completed, false otherwise
      */
-    private boolean setSessionUserToDatabase() {
-        // TODO: get session user from database
-        return true;
+    private void setSessionUserToDatabase(View view) {
+      mViewModel.updateUser(this.sessionUser);
+      mViewModel.getUpdateCardConfirmed().observe(this, this::informationUpdateResult);
+    }
+
+    private void informationUpdateResult(Boolean updateResult) {
+        if (updateResult) {
+            /* update the view with new attributes */
+            getAndSetCurrentAttributes();
+        } else {
+            UIUtils.makeSnakeForUserUpdateFailed(this.doneButton, R.string.updateUserFailedInDB);
+        }
     }
 
     /**
-     * enables and disables UI components to edit
+     * enables and disables UI components when edit
      */
     private void enableDisableEntries() {
         this.nameEditText.setEnabled(!this.nameEditText.isEnabled());
         this.ageEditText.setEnabled(!this.ageEditText.isEnabled());
         this.genderSpinner.setEnabled(!this.genderSpinner.isEnabled());
-        this.backButton.setEnabled(!this.backButton.isEnabled());
         this.phoneNumberEditText.setEnabled(!this.phoneNumberEditText.isEnabled());
         /* email is never enabled since another process is required to edit it */
     }
@@ -198,6 +201,13 @@ public class UserProfileActivity extends AppCompatActivity {
         } else {
             // TODO: set actual user-specific profile picture with sessionUser.getProfileImage()
         }
+    }
+
+    /**
+     * Set user profile image
+     */
+    private void setProfileImage(Uri uri){
+        imageView.setImageURI(uri);
     }
 
 

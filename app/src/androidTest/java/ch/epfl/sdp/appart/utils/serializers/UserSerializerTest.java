@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
-import ch.epfl.sdp.appart.database.firestorelayout.UserLayout;
-import ch.epfl.sdp.appart.scrolling.card.Card;
+import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 

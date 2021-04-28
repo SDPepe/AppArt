@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 public class CardSerializerTest {

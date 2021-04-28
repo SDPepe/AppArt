@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".PanoramaActivity">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content_Panorama_relativeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -16,13 +16,32 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/back_Panorama_button"
-            android:layout_width="84dp"
-            android:layout_height="98dp"
-            android:background="#00FFFFFF"
-            android:contentDescription="@string/backbutton_desc"
-            android:onClick="goBack"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-    </RelativeLayout>
+            android:id="@+id/leftImage_Panorama_imageButton"
+            android:layout_width="48dp"
+            android:layout_height="43dp"
+            android:contentDescription="@string/leftButtonDescription_Panorama"
+            android:onClick="goLeft"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.95"
+            app:srcCompat="@drawable/left_arrow_action" />
+
+        <ImageButton
+            android:id="@+id/rightImage_Panorama_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/rightButtonDescription_Panorama"
+            android:onClick="goRight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.95"
+            app:srcCompat="@drawable/right_arrow_action" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

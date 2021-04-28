@@ -1,7 +1,5 @@
 package ch.epfl.sdp.appart;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,9 +32,6 @@ public class AdCreationVMTest {
     @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
-    @Rule(order = 1)
-    public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
-
     @BindValue
     LoginService ls = new MockLoginService();
     @BindValue
@@ -55,7 +50,6 @@ public class AdCreationVMTest {
         vm.setPrice(1000L);
         vm.setPricePeriod(PricePeriod.MONTH);
         vm.setDescription("description");
-        vm.setPhotosRefs(new ArrayList<>());
         vm.setVRTourEnable(true);
     }
 

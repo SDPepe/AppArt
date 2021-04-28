@@ -13,11 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.Locale;
 
 import ch.epfl.sdp.appart.AdActivity;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 
 /**
@@ -79,14 +80,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.cardImageView.setOnClickListener(v -> {
             Intent intent = new Intent(context, AdActivity.class);
             intent.putExtra("fromAdCreation", false);
-            intent.putExtra("adID", card.getId());
+            intent.putExtra("cardID", card.getId());
+            intent.putExtra("adID", card.getAdId());
             context.startActivity(intent);
         });
 
         // load image from database into ImageView
+        String sep = FirebaseLayout.SEPARATOR;
         database.accept(new GlideImageViewLoader(context, holder.cardImageView,
-                "Cards/" + card.getImageUrl()));
-
+                CardLayout.IMAGE_DIRECTORY + sep + card.getAdId() + sep + card.getImageUrl()));
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(String.format("%d.-/mo", card.getPrice()));
         if (!card.hasVRTour())

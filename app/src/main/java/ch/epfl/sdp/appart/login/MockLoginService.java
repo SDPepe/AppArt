@@ -35,6 +35,10 @@ public class MockLoginService implements LoginService {
         Pair<String, String> lorenzoEmailPassword = new Pair<>(lorenzo.getUserEmail(),
                 lorenzo.getUserId());
         users.put(lorenzoEmailPassword, lorenzo);
+        AppUser carlo = new AppUser("3333", "carlo@epfl.ch");
+        Pair<String, String> carloEmailPassword = new Pair<>(carlo.getUserEmail(),
+                carlo.getUserId());
+        users.put(carloEmailPassword, carlo);
         AppUser filippo = new AppUser("4444", "filippo@epfl.ch");
         Pair<String, String> filippoEmailPassword = new Pair<>(filippo.getUserEmail(),
                 filippo.getUserId());
@@ -43,16 +47,13 @@ public class MockLoginService implements LoginService {
         Pair<String, String> emilienEmailPassword = new Pair<>(emilien.getUserEmail(),
                 emilien.getUserId());
         users.put(emilienEmailPassword, emilien);
-        AppUser carlo = new AppUser("3333", "carlo@epfl.ch");
-        Pair<String, String> carloEmailPassword = new Pair<>(carlo.getUserEmail(),
-                carlo.getUserId());
-        users.put(carloEmailPassword, carlo);
         AppUser quentin = new AppUser("6666", "quentin@epfl.ch");
         Pair<String, String> quentinEmailPassword = new Pair<>(quentin.getUserEmail(),
                 quentin.getUserId());
         users.put(quentinEmailPassword, quentin);
         lorenzo.setName("Lorenzo");
         lorenzo.setPhoneNumber("000");
+        lorenzo.addAdId("id0");
     }
 
     /**

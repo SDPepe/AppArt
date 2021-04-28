@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import ch.epfl.sdp.appart.database.firestorelayout.UserLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 

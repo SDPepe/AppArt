@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.glide.visitor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,37 +27,37 @@ import ch.epfl.sdp.appart.database.MockDatabaseService;
 public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoaderVisitor {
 
     private final CompletableFuture<Bitmap> bitmapFuture;
+    private final String imagePath;
 
     public GlideBitmapLoader(Context context, CompletableFuture<Bitmap> bitmapFuture, String imagePath) {
         super(context);
         if (imagePath == null) throw new IllegalArgumentException("image path cannot be null");
         if (bitmapFuture == null) throw new IllegalArgumentException("future cannot be null");
         this.bitmapFuture = bitmapFuture;
+        this.imagePath = imagePath;
     }
 
     @Override
     public void visit(FirestoreDatabaseService database) {
         /*
-          WARNING : For simplicity we keep the loading on the drawable for now, will change
-          next week.
+          WARNING : For simplicity we keep the loading on the drawable for now, will change.
          */
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
-                .load(R.drawable.panorama_test)
+                .load(Uri.parse(imagePath))
                 .into(target);
     }
 
     @Override
     public void visit(MockDatabaseService database) {
         /*
-          WARNING : For simplicity we keep the loading on the drawable for now, will change
-          next week.
+          WARNING : For simplicity we keep the loading on the drawable for now, will change.
          */
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
-                .load(R.drawable.panorama_test)
+                .load(Uri.parse(imagePath))
                 .into(target);
 
     }
@@ -75,12 +76,11 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
 
         @Override
         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-            targetFuture.complete(resource);
+            targetFuture.complete(resource.copy(resource.getConfig(), false));
         }
 
         @Override
-        public void onLoadCleared(@Nullable Drawable placeholder) {
-        }
+        public void onLoadCleared(@Nullable Drawable placeholder) {}
 
         /**
          * Return the bitmap that was inserted in the target

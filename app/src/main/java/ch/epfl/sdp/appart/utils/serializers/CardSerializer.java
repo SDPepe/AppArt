@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import ch.epfl.sdp.appart.database.firestorelayout.CardLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 public class CardSerializer implements Serializer<Card> {

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
-import ch.epfl.sdp.appart.database.firestorelayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
 
 public class AdSerializer implements Serializer<Ad> {
     @Override

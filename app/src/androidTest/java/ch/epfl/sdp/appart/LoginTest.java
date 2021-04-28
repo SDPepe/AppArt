@@ -3,6 +3,9 @@ package ch.epfl.sdp.appart;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
 import ch.epfl.sdp.appart.login.FirebaseLoginService;
@@ -17,6 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 
 @UninstallModules(LoginModule.class)
 @HiltAndroidTest
@@ -105,6 +109,35 @@ public class LoginTest {
         assertThat(user.getUserEmail(), is(email));
     }
 
+    public void loginFailInvalidArguments() {
+
+        assertThrows(ExecutionException.class, () -> loginService.createUser("", "").get());
+        assertThrows(ExecutionException.class, () -> loginService.createUser(null, "").get());
+
+        assertThrows(ExecutionException.class, () -> loginService.createUser("invalidEmail", "password").get());
+
+        assertThrows(ExecutionException.class, () -> loginService.loginWithEmail("", "").get());
+        assertThrows(ExecutionException.class, () -> loginService.loginWithEmail(null, "").get());
+
+        assertThrows(ExecutionException.class, () -> loginService.loginWithEmail("invalidEmail", "password").get());
+        assertThrows(ExecutionException.class, () -> loginService.loginWithEmail("adg@testappart.ch", "wrongPassword").get());
+
+
+        assertThrows(ExecutionException.class, () -> loginService.resetPasswordWithEmail(null).get());
+        assertThrows(ExecutionException.class, () -> loginService.resetPasswordWithEmail("invalid").get());
+
+        assertThrows(ExecutionException.class, () -> loginService.updateEmailAddress(null).get());
+        assertThrows(ExecutionException.class, () -> loginService.updateEmailAddress("invalid").get());
+
+        assertThrows(ExecutionException.class, () -> loginService.updatePassword(null).get());
+
+        assertThrows(ExecutionException.class, () -> loginService.reAuthenticateUser("", "").get());
+        assertThrows(ExecutionException.class, () -> loginService.reAuthenticateUser(null, "").get());
+
+        assertThrows(ExecutionException.class, () -> loginService.reAuthenticateUser("invalidEmail", "password").get());
+        assertThrows(ExecutionException.class, () -> loginService.reAuthenticateUser("adg@testappart.ch", "wrongPassword").get());
+    }
+
     @Test
     public void loginTest() {
 
@@ -128,6 +161,8 @@ public class LoginTest {
         reAuthenticate(email, newPassword);
 
         deleteUser();
+
+        loginFailInvalidArguments();
 
     }
 }
