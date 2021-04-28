@@ -1,15 +1,21 @@
 package ch.epfl.sdp.appart.location;
 
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.ConfigurationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,11 +34,30 @@ public final class AndroidLocationService implements LocationService {
     private final Geocoder geocoder;
 
     @Inject
-    public AndroidLocationService(FusedLocationProviderClient locationProvider, Geocoder geocoder) {
-        if (locationProvider == null || geocoder == null)
+    public AndroidLocationService(Context context) {
+        if (context == null)
             throw new IllegalArgumentException();
-        this.locationProvider = locationProvider;
-        this.geocoder = geocoder;
+        this.locationProvider = LocationServices.getFusedLocationProviderClient(context);
+        this.geocoder = new Geocoder(context, ConfigurationCompat.getLocales(context.getResources().getConfiguration()).get(0));
+        /*try {
+            this.locationProvider.setMockMode(true).addOnCompleteListener(task -> {
+                if(task.isSuccessful()) {
+                    Log.d("MOCK LOCATION", "Successful");
+                }
+            });
+            android.location.Location fakeLoc = new android.location.Location("gps");
+            fakeLoc.setAccuracy(5.0f);
+            fakeLoc.setLongitude(5.0);
+            fakeLoc.setLatitude(5.0);
+            this.locationProvider.setMockLocation(fakeLoc).addOnCompleteListener(task -> {
+                if(task.isSuccessful()) {
+                    Log.d("MOCK LOCATION", "Successful");
+                }
+            });
+        } catch(SecurityException e) {
+            throw e;
+        }*/
+
     }
 
     @Override
