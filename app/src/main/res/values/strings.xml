@@ -107,7 +107,7 @@
 
     <!-- ScrollingActivity stuff -->
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
-    
+
 
     <!-- CameraActivity stuff -->
     <string name="confirmCameraButtonText">Confirm</string>
@@ -116,7 +116,7 @@
     <string name="leftButtonDescription_Panorama">Load previous image</string>
     <string name="rightButtonDescription_Panorama">Load next image</string>
     <string name="snackbarError_Panorama">There was an error loading the image, please try again later.</string>
-  
+
     <!-- LocationActivity stuff -->
     <string name="permissionGranted">Permission granted</string>
     <string name="permissionRefused">Permission refused</string>
