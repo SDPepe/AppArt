@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -70,26 +71,9 @@ public class FirestoreDatabaseService implements DatabaseService {
         //when they have been fetched
         db.collection(FirebaseLayout.CARDS_DIRECTORY).get().addOnCompleteListener(
                 task -> {
-
-                    List<Card> queriedCards = new ArrayList<>();
-
-                    if (task.isSuccessful()) {
-
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Map<String, Object> data = document.getData();
-                            queriedCards.add(generateCard(data, document));
-                        }
-                        result.complete(queriedCards);
-
-                    } else {
-                        result.completeExceptionally(
-                                new DatabaseServiceException(
-                                        "failed to fetch the cards from firebase"
-                                ));
-                    }
+                    handleTask(task,  result);
                 }
         );
-
         return result;
     }
 
@@ -104,22 +88,7 @@ public class FirestoreDatabaseService implements DatabaseService {
             .whereGreaterThanOrEqualTo("city",  location)
             .whereLessThanOrEqualTo("city", location+"\uF7FF").get().addOnCompleteListener(
             task -> {
-                List<Card> queriedCards = new ArrayList<>();
-                if (task.isSuccessful()) {
-
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                        Map<String, Object> data = document.getData();
-                        queriedCards.add(generateCard(data, document));
-                    }
-                    result.complete(queriedCards);
-
-                } else {
-                    result.completeExceptionally(
-                        new DatabaseServiceException(
-                            "failed to fetch the cards from firebase"
-                        ));
-                }
+                handleTask(task,  result);
             }
         );
 
@@ -133,6 +102,22 @@ public class FirestoreDatabaseService implements DatabaseService {
             (String) data.get(CardLayout.CITY),
             (long) data.get(CardLayout.PRICE),
             (String) data.get(CardLayout.IMAGE));
+    }
+
+    private void handleTask(Task task, CompletableFuture<List<Card>> result){
+        List<Card> queriedCards = new ArrayList<>();
+        if (task.isSuccessful()) {
+            for (QueryDocumentSnapshot document : (List<QueryDocumentSnapshot>) task.getResult()) {
+                Map<String, Object> data = document.getData();
+                queriedCards.add(generateCard(data, document));
+            }
+            result.complete(queriedCards);
+        } else {
+            result.completeExceptionally(
+                new DatabaseServiceException(
+                    "failed to fetch the cards from firebase"
+                ));
+        }
     }
 
     @NotNull
