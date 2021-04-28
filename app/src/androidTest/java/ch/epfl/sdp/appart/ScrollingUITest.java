@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import android.widget.FrameLayout;
 import androidx.core.widget.TextViewCompat.AutoSizeTextType;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
@@ -132,7 +133,7 @@ public class ScrollingUITest {
     @Test
     public void searchBarTest(){
         ViewInteraction appCompatEditText = onView(
-            allOf(withId(R.id.search_bar_Scrolling_EditText),
+            allOf(withId(R.id.search_bar_Scrolling_editText),
                 childAtPosition(
                     allOf(withId(R.id.columnLayout_Scrolling_LinearLayout),
                         childAtPosition(
@@ -143,16 +144,16 @@ public class ScrollingUITest {
         appCompatEditText.perform(replaceText("1000"), closeSoftKeyboard());
 
         ViewInteraction editText = onView(
-            allOf(withId(R.id.search_bar_Scrolling_EditText), withText("1000"),
+            allOf(withId(R.id.search_bar_Scrolling_editText), withText("1000"),
                 withParent(allOf(withId(R.id.columnLayout_Scrolling_LinearLayout),
-                    withParent(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class)))),
+                    withParent(IsInstanceOf.<View>instanceOf(FrameLayout.class)))),
                 isDisplayed()));
         editText.check(matches(isDisplayed()));
 
         ViewInteraction editText2 = onView(
-            allOf(withId(R.id.search_bar_Scrolling_EditText), withText("1000"),
+            allOf(withId(R.id.search_bar_Scrolling_editText), withText("1000"),
                 withParent(allOf(withId(R.id.columnLayout_Scrolling_LinearLayout),
-                    withParent(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class)))),
+                    withParent(IsInstanceOf.<View>instanceOf(FrameLayout.class)))),
                 isDisplayed()));
         editText2.check(matches(withText("1000")));
     }
