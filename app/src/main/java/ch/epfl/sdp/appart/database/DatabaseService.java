@@ -30,6 +30,9 @@ public interface DatabaseService extends DatabaseHostVisitor {
     @NonNull
     CompletableFuture<List<Card>> getCards();
 
+    @NonNull
+    CompletableFuture<List<Card>> getCardsFilter(@NonNull String location);
+
     /**
      * Update the card given as argument in the database.
      *
@@ -111,6 +114,8 @@ public interface DatabaseService extends DatabaseHostVisitor {
      */
     @NonNull
     CompletableFuture<Boolean> putImage(Uri uri, String name, String path);
+
+
 
 
     CompletableFuture<Void> clearCache();

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,24 +78,53 @@ public class FirestoreDatabaseService implements DatabaseService {
         //when they have been fetched
         db.collection(FirebaseLayout.CARDS_DIRECTORY).get().addOnCompleteListener(
                 task -> {
-                    List<Card> queriedCards = new ArrayList<>();
-
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult())
-                            queriedCards.add(cardSerializer.deserialize(document.getId(), document.getData()));
-
-                        result.complete(queriedCards);
-
-                    } else {
-                        result.completeExceptionally(
-                                new DatabaseServiceException(
-                                        "failed to fetch the cards from firebase"
-                                ));
-                    }
+                    handleTask(task,  result);
                 }
+        );
+        return result;
+    }
+
+    @NotNull
+    @Override
+    @NonNull
+    public CompletableFuture<List<Card>> getCardsFilter(String location) {
+        CompletableFuture<List<Card>> result = new CompletableFuture<>();
+        //ask firebase async to get the cards objects and notify the future
+        //when they have been fetched
+        db.collection(FirebaseLayout.CARDS_DIRECTORY)
+            .whereGreaterThanOrEqualTo("city",  location)
+            .whereLessThanOrEqualTo("city", location+"\uF7FF").get().addOnCompleteListener(
+            task -> {
+                handleTask(task,  result);
+            }
         );
 
         return result;
+    }
+    private Card generateCard(Map<String, Object> data,QueryDocumentSnapshot document){
+        return new Card(
+            document.getId(),
+            (String) data.get(CardLayout.AD_ID),
+            (String) data.get(CardLayout.USER_ID),
+            (String) data.get(CardLayout.CITY),
+            (long) data.get(CardLayout.PRICE),
+            (String) data.get(CardLayout.IMAGE));
+    }
+
+    private void handleTask(Task task, CompletableFuture<List<Card>> result){
+        List<Card> queriedCards = new ArrayList<>();
+        if (task.isSuccessful()) {
+            for (QueryDocumentSnapshot document : (Iterable<? extends QueryDocumentSnapshot>) task.getResult()) {
+                Map<String, Object> data = document.getData();
+                queriedCards.add(generateCard(data, document));
+            }
+            result.complete(queriedCards);
+        } else {
+            result.completeExceptionally(
+                new DatabaseServiceException(
+                    "failed to fetch the cards from firebase: " + task.getException().getMessage()
+                ));
+        }
     }
 
     @NotNull
