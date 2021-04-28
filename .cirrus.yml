@@ -41,8 +41,6 @@ check_android_task:
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
   setup_location_script: |
-    adb -e shell pm grant ch.epfl.sdp.appart android.permission.ACCESS_FINE_LOCATION
-    adb -e shell pm grant ch.epfl.sdp.appart android.permission.ACCESS_COARSE_LOCATION
     adb -e shell settings put secure location_providers_allowed +gps
     adb -e shell settings put secure location_providers_allowed +network
     adb -e emu geo fix 45.777439 4.848320
