@@ -155,7 +155,7 @@ public class MapUITest {
 
                 mapService.centerOnLocation(loc, true);
 
-                boolean isMarkerPresent = device.wait(Until.hasObject(By.desc(card.getCity())), 10000);
+                boolean isMarkerPresent = device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
                 assertThat(isMarkerPresent, is(true));
 
 
