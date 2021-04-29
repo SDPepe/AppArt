@@ -1,10 +1,13 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
+import android.app.Activity;
 import android.location.Address;
 import android.location.Geocoder;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
@@ -13,8 +16,11 @@ import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.Until;
 
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,9 +42,10 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-@UninstallModules(DatabaseModule.class)
+@UninstallModules({DatabaseModule.class, MapModule.class})
 @HiltAndroidTest
 public class MapUITest {
 
@@ -56,6 +63,11 @@ public class MapUITest {
     @BindValue
     final
     DatabaseService databaseService = new MockDatabaseService();
+
+    @BindValue
+    final MapService mapService = new GoogleMapService();
+
+
 
     @Test
     public void markerTest() {
@@ -76,17 +88,20 @@ public class MapUITest {
             if (!markerDescs.contains(card.getCity())) {
                 try {
                     List<Address> addresses = geocoder.getFromLocationName(card.getCity(), 1);
+                    assertThat(addresses.size(), is(1));
                     Address addr = addresses.get(0);
                     Location loc = new Location();
                     loc.longitude = addr.getLongitude();
                     loc.latitude = addr.getLatitude();
-                    GoogleMapService.centerOnLocation(loc, true);
+                    mapService.centerOnLocation(loc, true);
                 } catch (IOException e) {
+                    assert(false);
                     e.printStackTrace();
                 }
 
                 List<UiObject2> lists =
                         device.findObjects(By.descContains(card.getCity()));
+                assertThat(lists.size(), greaterThan(0));
                 markers.addAll(lists);
                 markerDescs.add(card.getCity());
             }

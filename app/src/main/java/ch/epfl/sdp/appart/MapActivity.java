@@ -17,6 +17,7 @@ import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.map.ApartmentInfoWindow;
 import ch.epfl.sdp.appart.map.GoogleMapService;
+import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -31,7 +32,7 @@ public class MapActivity extends AppCompatActivity {
     LocationService locationService;
 
     @Inject
-    GoogleMapService mapService;
+    MapService mapService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,8 @@ public class MapActivity extends AppCompatActivity {
                 (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
         mapFragment.getView().setContentDescription("WAITING");
+
+        mapService.setActivity(this);
 
 
         Runnable onMapReadyCallback;

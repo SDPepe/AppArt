@@ -1,6 +1,9 @@
 package ch.epfl.sdp.appart.map;
 
+import android.app.Activity;
+
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import ch.epfl.sdp.appart.location.Location;
@@ -8,7 +11,7 @@ import ch.epfl.sdp.appart.location.Location;
 /**
  * Service that all map services should implement
  */
-public interface MapService {
+public interface MapService extends OnMapReadyCallback {
 
     /**
      * Adds a marker at the given location on the map. The marker will carry
@@ -34,4 +37,10 @@ public interface MapService {
      * @param infoWindow
      */
     void setInfoWindow(GoogleMap.InfoWindowAdapter infoWindow);
+
+    void setOnReadyCallback(Runnable onReadyCallback);
+
+    void centerOnLocation(Location location, boolean instant);
+
+    void setActivity(Activity activity);
 }

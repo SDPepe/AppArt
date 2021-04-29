@@ -6,7 +6,6 @@ import android.content.Context;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -15,27 +14,22 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import ch.epfl.sdp.appart.hilt.MapModule;
 import ch.epfl.sdp.appart.location.Location;
 import dagger.hilt.android.qualifiers.ActivityContext;
 import dagger.hilt.android.scopes.ActivityScoped;
 
 @ActivityScoped
-public class GoogleMapService implements OnMapReadyCallback, MapService {
+public class GoogleMapService implements MapService {
 
-    private static GoogleMap map = null;
-    private static Activity myActivity;
+    private GoogleMap map = null;
+    private Activity myActivity = null;
 
     private GoogleMap.InfoWindowAdapter infoWindowAdapter = null;
     private SupportMapFragment mapFragment = null;
     private Runnable onReadyCallback = null;
 
     @Inject
-    public GoogleMapService(@ActivityContext Context activityContext) {
-        if(activityContext == null) throw new IllegalArgumentException();
-
-        myActivity = (Activity) activityContext;
-    }
+    public GoogleMapService() {}
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -67,13 +61,13 @@ public class GoogleMapService implements OnMapReadyCallback, MapService {
         Marker cardMarker = map.addMarker(new MarkerOptions()
                 .position(new LatLng(location.latitude, location
                         .longitude)));
-        if(title != null) {
+        if (title != null) {
             cardMarker.setTitle(title);
         }
         cardMarker.setTag(tag);
 
         if (centerOnMarker) {
-           this.centerOnLocation(location, false);
+            this.centerOnLocation(location, false);
         }
     }
 
@@ -87,11 +81,13 @@ public class GoogleMapService implements OnMapReadyCallback, MapService {
         this.infoWindowAdapter = infoWindow;
     }
 
-
-    public static void centerOnLocation(Location location, boolean instant) {
+    @Override
+    public /*static*/ void centerOnLocation(Location location,
+                                            boolean instant) {
         myActivity.runOnUiThread(() -> {
-            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 12.0f);
-            if(instant) {
+            CameraUpdate update =
+                    CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 2.0f);
+            if (instant) {
                 map.moveCamera(update);
             } else {
                 map.animateCamera(update);
@@ -99,6 +95,12 @@ public class GoogleMapService implements OnMapReadyCallback, MapService {
         });
     }
 
+    @Override
+    public void setActivity(Activity activity) {
+        this.myActivity = activity;
+    }
+
+    @Override
     public void setOnReadyCallback(Runnable onReadyCallback) {
         //No need to check for null here, the check line 56 makes more sense
         this.onReadyCallback = onReadyCallback;
