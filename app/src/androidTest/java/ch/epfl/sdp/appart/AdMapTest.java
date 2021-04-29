@@ -128,7 +128,7 @@ public class AdMapTest {
 
 
     @Test
-    public void markerTest() throws JSONException, UnsupportedEncodingException {
+    public void markerTest() throws JSONException, UnsupportedEncodingException, InterruptedException {
 
         UiDevice device =
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -138,10 +138,16 @@ public class AdMapTest {
         assertThat(foundMap, is(true));
 
         Location markerLocation = getLocationFromString("Lausanne");
+        assertThat(markerLocation.longitude, greaterThan(6.0));
+        assertThat(markerLocation.latitude, greaterThan(46.0));
+
+        Thread.sleep(1000);
 
         CompletableFuture<Location> futureCameraLoc = mapService.getCameraPosition();
 
         Location cameraLoc = futureCameraLoc.join();
+        assertThat(cameraLoc.longitude, greaterThan(6.0));
+        assertThat(cameraLoc.latitude, greaterThan(46.0));
 
         assertThat(Math.abs(cameraLoc.latitude - markerLocation.latitude), lessThanOrEqualTo(0.05));
         assertThat(Math.abs(cameraLoc.longitude - markerLocation.longitude), lessThanOrEqualTo(0.05));

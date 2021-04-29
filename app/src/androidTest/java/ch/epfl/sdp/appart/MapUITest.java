@@ -10,6 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
@@ -134,9 +135,10 @@ public class MapUITest {
             if (!markerDescs.contains(card.getCity())) {
                 boolean succeeded = false;
                 int tryCount = 0;
+                Location loc = null;
                 while (tryCount < 10 && !succeeded) {
                     try {
-                        Location loc = getLocationFromString("Lausanne");
+                        loc = getLocationFromString("Lausanne");
                         mapService.centerOnLocation(loc, true);
                         succeeded = true;
                     } catch (IOException e) {
@@ -151,19 +153,23 @@ public class MapUITest {
                 markers.addAll(lists);
                 markerDescs.add(card.getCity());
 
-                /*UiObject2 marker = lists.get(0);
+                mapService.centerOnLocation(loc, true);
+
+                boolean isMarkerPresent = device.wait(Until.hasObject(By.desc(card.getCity())), 10000);
+                assertThat(isMarkerPresent, is(true));
 
 
+                UiObject2 marker = device.findObject(By.descContains(card.getCity()));
                 marker.click();
 
                 boolean isMarkerClicked =
                         device.wait(Until.hasObject(By.descContains(card.getCity() + " CLICKED")), 10000);
-                assertThat(isMarkerClicked, is(true));*/
+                assertThat(isMarkerClicked, is(true));
             }
         }
 
         assertThat(markers.size(), is(cards.size()));
 
-        markers.get(0).click();
+        //markers.get(0).click();
     }
 }
