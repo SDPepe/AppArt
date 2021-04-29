@@ -3,9 +3,11 @@ package ch.epfl.sdp.appart.ad;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.ImageView;
 
 public class ResizableImageView extends androidx.appcompat.widget.AppCompatImageView implements View.OnTouchListener {
 
@@ -14,12 +16,12 @@ public class ResizableImageView extends androidx.appcompat.widget.AppCompatImage
 
     public ResizableImageView(Context context){
         super(context);
-        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener(this));
     }
 
     public ResizableImageView(Context context, AttributeSet attrs){
         super(context, attrs);
-        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener(this));
     }
 
     @Override
@@ -45,12 +47,20 @@ public class ResizableImageView extends androidx.appcompat.widget.AppCompatImage
 
     private class ScaleListener
             extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        ResizableImageView view;
+
+        ScaleListener(ResizableImageView view){
+            this.view = view;
+        }
+
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
+            Log.d("SCALE", "Scaling image");
             mScaleFactor *= detector.getScaleFactor();
-            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f));
+            mScaleFactor = Math.max(1.0f, Math.min(mScaleFactor, 5.0f));
 
-            invalidate();
+            view.setScaleX(mScaleFactor);
+            view.setScaleY(mScaleFactor);
             return true;
         }
     }
