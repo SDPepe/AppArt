@@ -1,12 +1,6 @@
 package ch.epfl.sdp.appart;
 
-import android.graphics.Canvas;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.View;
-import android.widget.ImageView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import javax.inject.Inject;
