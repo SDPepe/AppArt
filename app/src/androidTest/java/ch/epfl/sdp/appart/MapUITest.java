@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
@@ -153,6 +154,15 @@ public class MapUITest {
                 assertThat(lists.size(), greaterThan(0));
                 markers.addAll(lists);
                 markerDescs.add(card.getCity());
+
+                UiObject2 marker = lists.get(0);
+
+
+
+                marker.click();
+
+                boolean isMarkerClicked = device.wait(Until.hasObject(By.descContains(card.getCity() + " CLICKED")), 10000);
+                assertThat(isMarkerClicked, is(true));
             }
         }
 

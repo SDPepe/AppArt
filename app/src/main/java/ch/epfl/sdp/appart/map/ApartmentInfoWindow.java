@@ -84,6 +84,7 @@ public class ApartmentInfoWindow implements GoogleMap.InfoWindowAdapter {
                     }));
         }
 
+        marker.setTitle(card.getCity() + " CLICKED");
 
         return v;
     }
