@@ -26,7 +26,7 @@
 
     <!-- Mock ad stuff -->
 
-    <!-- Ad photo activity_fullscreen_image.xml -->
+    <!-- Ad photo layout -->
     <string name="photo_descprition">Photo</string>
 
     <!-- Contact info dialog stuff -->

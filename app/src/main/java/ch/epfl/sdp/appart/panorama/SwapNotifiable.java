@@ -7,14 +7,14 @@ package ch.epfl.sdp.appart.panorama;
 public interface SwapNotifiable {
     /**
      * Notify the PictureCardAdapter to swap the element at index
-     * with the element above in the activity_fullscreen_image.xml.
+     * with the element above in the layout.
      * @param index
      */
     void swapFromIndexWithAbove(int index);
 
     /**
      * Notify the PictureCardAdapter to swap the element at index
-     * with the element bellow in the activity_fullscreen_image.xml.
+     * with the element bellow in the layout.
      * @param index
      */
     void swapFromIndexWithBellow(int index);

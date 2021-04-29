@@ -1,7 +1,7 @@
 package ch.epfl.sdp.appart.database.firebaselayout;
 
 /**
- * Un-instantiable Holder for the activity_fullscreen_image.xml of the fields for a User on Firestore.
+ * Un-instantiable Holder for the layout of the fields for a User on Firestore.
  */
 public final class UserLayout {
 
