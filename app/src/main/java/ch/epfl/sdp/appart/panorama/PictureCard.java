@@ -4,7 +4,7 @@ import android.net.Uri;
 
 /**
  * Container class containing the URI of the picture in the card and
- * its index in the layout.
+ * its index in the activity_fullscreen_image.xml.
  */
 public class PictureCard {
 

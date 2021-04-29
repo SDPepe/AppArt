@@ -53,7 +53,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
     /**
-     * Create a new CardViewHolder based on the layout of a card.
+     * Create a new CardViewHolder based on the activity_fullscreen_image.xml of a card.
      *
      * @param parent   the View that will contain the ViewHolder
      * @param viewType unknown

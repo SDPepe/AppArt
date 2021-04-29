@@ -26,7 +26,7 @@
 
     <!-- Mock ad stuff -->
 
-    <!-- Ad photo layout -->
+    <!-- Ad photo activity_fullscreen_image.xml -->
     <string name="photo_descprition">Photo</string>
 
     <!-- Contact info dialog stuff -->
@@ -129,5 +129,7 @@
     <string name="getLocationButton">Get location</string>
     <string name="locationDefault">0.0</string>
 
+    <!-- FullScreenImageActivity stuff -->
+    <string name="contentDescFullScreenImage">Photo</string>
 
 </resources>
