@@ -31,6 +31,7 @@ public class AdCreationViewModel extends ViewModel {
     private String description;
     private boolean VRTourEnable;
     private List<Uri> photosUri;
+    private List<Uri> panoramaPicturesUri;
 
     final DatabaseService db;
     final LoginService ls;
@@ -40,6 +41,7 @@ public class AdCreationViewModel extends ViewModel {
         this.db = db;
         this.ls = ls;
         photosUri = new ArrayList<>();
+        panoramaPicturesUri = new ArrayList<>();
     }
 
     /**

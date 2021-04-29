@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static boolean DEMO_MODE = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,13 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("email", extras.getString("email"));
             intent.putExtra("password", extras.getString("password"));
         }
+        if (extras != null && extras.containsKey("demo_mode")) {
+            DEMO_MODE = extras.getBoolean("demo_mode");
+        }
         startActivity(intent);
+    }
+
+    public static boolean isDemoMode() {
+        return DEMO_MODE;
     }
 }
