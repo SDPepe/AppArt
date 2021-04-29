@@ -35,4 +35,32 @@ public class FirestoreImageHelper {
                 task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
     }
+
+    /**
+     *  deletes an image from the Firebase Storage
+     * @param imagePathAndName this the complete path of the image (e.g. users/default/photo.jpeg)
+     */
+    @NotNull
+    @NonNull
+    public CompletableFuture<Boolean> deleteImage(String imagePathAndName) {
+        if (imagePathAndName == null) {
+            throw new IllegalArgumentException("deleteImage: parameters cannot be null");
+        }
+
+        CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
+
+         /* The reason for this check is when a user has DEFAULT user icon (thus no image in storage)
+            The activity asks to delete previous profile image, which is not present, thus returns true directly */
+        if (imagePathAndName.contains("users/default/")) {
+            isFinishedFuture.complete(true);
+            return isFinishedFuture;
+        }
+
+        StorageReference storeRef = storage.getReference();
+        StorageReference desertRef = storeRef.child(imagePathAndName);
+
+        desertRef.delete().addOnCompleteListener(
+                task -> isFinishedFuture.complete(task.isSuccessful()));
+        return isFinishedFuture;
+    }
 }
