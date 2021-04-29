@@ -70,7 +70,7 @@ public class GoogleMapService implements MapService {
         cardMarker.setTag(tag);
 
         if (centerOnMarker) {
-            this.centerOnLocation(location, false);
+            this.centerOnLocation(location, true);
         }
     }
 

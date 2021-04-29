@@ -141,8 +141,6 @@ public class AdMapTest {
         assertThat(markerLocation.longitude, greaterThan(6.0));
         assertThat(markerLocation.latitude, greaterThan(46.0));
 
-        Thread.sleep(1000);
-
         CompletableFuture<Location> futureCameraLoc = mapService.getCameraPosition();
 
         Location cameraLoc = futureCameraLoc.join();
