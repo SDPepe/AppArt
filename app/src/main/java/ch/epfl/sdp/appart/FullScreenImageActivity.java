@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.ad.ResizableImageView;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -25,7 +26,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstances) {
         super.onCreate(savedInstances);
         setContentView(R.layout.activity_fullscreen_image);
-        ImageView photo = findViewById(R.id.image_FullScreenImage_imageView);
+        ResizableImageView photo = findViewById(R.id.image_FullScreenImage_imageView);
         String fullRef = getIntent().getStringExtra("imageId");
         db.accept(new GlideImageViewLoader(this, photo, fullRef));
     }

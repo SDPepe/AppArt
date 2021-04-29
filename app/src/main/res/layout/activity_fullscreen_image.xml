@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_centerInParent="true">
 
-    <ImageView
+    <ch.epfl.sdp.appart.ad.ResizableImageView
         android:id="@+id/image_FullScreenImage_imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
