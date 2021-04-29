@@ -31,6 +31,7 @@ import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
+import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
 
 /**
  * Helper class to add ads to and retrieve them from Firestore.
@@ -42,6 +43,7 @@ public class FirestoreAdHelper {
     private final FirestoreImageHelper imageHelper;
     private final FirestoreCardHelper cardHelper;
     private final String adsPath;
+    private final AdSerializer serializer;
 
     public FirestoreAdHelper() {
         db = FirebaseFirestore.getInstance();
@@ -49,6 +51,7 @@ public class FirestoreAdHelper {
         imageHelper = new FirestoreImageHelper();
         cardHelper = new FirestoreCardHelper();
         adsPath = FirebaseLayout.ADS_DIRECTORY;
+        serializer = new AdSerializer();
     }
 
     @NotNull
@@ -216,7 +219,7 @@ public class FirestoreAdHelper {
                                List<String> imagesRefsList) {
         CompletableFuture<Void> infoUpload = new CompletableFuture<>();
         CompletableFuture<Void> idsUpload = new CompletableFuture<>();
-        adRef.set(extractAdInfo(ad)).addOnCompleteListener(
+        adRef.set(serializer.serialize(ad)).addOnCompleteListener(
                 task -> {
                     cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
                     infoUpload.complete(null);
@@ -280,22 +283,6 @@ public class FirestoreAdHelper {
             result.completeExceptionally(
                     new DatabaseServiceException("Ad upload failed!"));
         }
-    }
-
-    /**
-     * Serializes ad information for upload on Firestore
-     */
-    private Map<String, Object> extractAdInfo(Ad ad) {
-        Map<String, Object> adData = new HashMap<>();
-        adData.put(AdLayout.ADVERTISER_ID, ad.getAdvertiserId());
-        adData.put(AdLayout.CITY, ad.getCity());
-        adData.put(AdLayout.DESCRIPTION, ad.getDescription());
-        adData.put(AdLayout.VR_TOUR, ad.hasVRTour());
-        adData.put(AdLayout.PRICE, ad.getPrice());
-        adData.put(AdLayout.PRICE_PERIOD, ad.getPricePeriod().ordinal());
-        adData.put(AdLayout.STREET, ad.getStreet());
-        adData.put(AdLayout.TITLE, ad.getTitle());
-        return adData;
     }
 
 }

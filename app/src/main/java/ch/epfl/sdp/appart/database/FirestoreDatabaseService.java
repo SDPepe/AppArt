@@ -5,20 +5,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +29,6 @@ import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
-import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.database.firestoreservicehelpers.FirestoreAdHelper;
 import ch.epfl.sdp.appart.database.firestoreservicehelpers.FirestoreCardHelper;
 import ch.epfl.sdp.appart.database.firestoreservicehelpers.FirestoreImageHelper;
@@ -44,8 +38,10 @@ import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.scrolling.card.Card;
-import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
+import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
+import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 /**
  * Implementation of the DatabaseService with Firestore from Firebase.
@@ -76,6 +72,13 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NonNull
     public CompletableFuture<List<Card>> getCards() {
         return cardHelper.getCards();
+    }
+
+    @NotNull
+    @Override
+    @NonNull
+    public CompletableFuture<List<Card>> getCardsFilter(String location) {
+        return cardHelper.getCardsFilter(location);
     }
 
     @NotNull

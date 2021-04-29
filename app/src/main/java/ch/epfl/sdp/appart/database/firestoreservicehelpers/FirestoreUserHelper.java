@@ -20,6 +20,7 @@ import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 /**
  * Helper class to add users to and retrieve them from Firestore.
@@ -30,12 +31,14 @@ public class FirestoreUserHelper {
     private final FirebaseStorage storage;
     private final FirestoreImageHelper imageHelper;
     private final String usersPath;
+    private final UserSerializer serializer;
 
     public FirestoreUserHelper() {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         imageHelper = new FirestoreImageHelper();
         usersPath = FirebaseLayout.USERS_DIRECTORY + FirebaseLayout.SEPARATOR;
+        serializer = new UserSerializer();
     }
 
     @NotNull
@@ -53,27 +56,10 @@ public class FirestoreUserHelper {
                 task -> {
                     if (task.isSuccessful()) {
                         Map<String, Object> data = task.getResult().getData();
-                        //TODO: Handle case where the string does not match a gender
-                        AppUser user = new AppUser(userId, (String) data.get(UserLayout.EMAIL));
-                        user.setUserEmail((String) data.get(UserLayout.EMAIL));
-
-                        Object rawAge = data.get(UserLayout.AGE);
-                        if (rawAge != null) user.setAge((long) rawAge);
-                        Object rawGender = data.get(UserLayout.GENDER);
-                        if (rawGender != null) user.setGender((String) rawGender);
-                        Object rawName = data.get(UserLayout.NAME);
-                        if (rawName != null) user.setName((String) rawName);
-                        Object rawPhoneNumber = data.get(UserLayout.PHONE);
-                        if (rawPhoneNumber != null) user.setPhoneNumber((String) rawPhoneNumber);
-                        Object rawPfpRef = data.get(UserLayout.PICTURE);
-                        if (rawPfpRef != null)
-                            user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
-
-                        result.complete(user);
+                        result.complete(serializer.deserialize(userId, data));
                     } else {
-                        result.completeExceptionally(
-                                new DatabaseServiceException(task.getException().getMessage())
-                        );
+                        result.completeExceptionally(new DatabaseServiceException(
+                                task.getException().getMessage()));
                     }
                 }
         );
@@ -86,7 +72,7 @@ public class FirestoreUserHelper {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
-                .set(extractUserInfo(user)).addOnCompleteListener(task -> {
+                .set(serializer.serialize(user)).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 isFinishedFuture.complete(true);
             } else {
@@ -108,7 +94,7 @@ public class FirestoreUserHelper {
     private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user) {
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
-                .set(extractUserInfo(user))
+                .set(serializer.serialize(user))
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         res.complete(task.isSuccessful());
@@ -119,16 +105,4 @@ public class FirestoreUserHelper {
         return res;
     }
 
-    /* <--- general util private methods ---> */
-
-    private Map<String, Object> extractUserInfo(User user) {
-        Map<String, Object> docData = new HashMap<>();
-        docData.put(UserLayout.AGE, user.getAge());
-        docData.put(UserLayout.EMAIL, user.getUserEmail());
-        docData.put(UserLayout.GENDER, user.getGender());
-        docData.put(UserLayout.NAME, user.getName());
-        docData.put(UserLayout.PHONE, user.getPhoneNumber());
-        docData.put(UserLayout.PICTURE, user.getProfileImage());
-        return docData;
-    }
 }

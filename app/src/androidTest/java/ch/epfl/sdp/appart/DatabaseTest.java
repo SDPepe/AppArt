@@ -209,10 +209,16 @@ public class DatabaseTest {
 
     }
 
+    public void getCardsFilterTest(){
+        List<Card> cards = db.getCardsFilter("New City").join();
+        assertThat(cards.size(), is(1));
+    }
+
     @Test
     public void databaseTest() throws IOException {
         addingUsersAndUpdateTest();
         addingAdAndGetTest();
         updateCardTest();
+        getCardsFilterTest();
     }
 }
