@@ -155,7 +155,7 @@ public class MapUITest {
 
                 mapService.centerOnLocation(loc, true);
 
-                boolean isMarkerPresent = device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
+                boolean isMarkerPresent = device.hasObject(By.descContains(card.getCity())) | device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
                 assertThat(isMarkerPresent, is(true));
 
 
@@ -163,7 +163,7 @@ public class MapUITest {
                 marker.click();
 
                 boolean isMarkerClicked =
-                        device.wait(Until.hasObject(By.descContains(card.getCity() + " CLICKED")), 10000);
+                        device.wait(Until.hasObject(By.descContains(card.getCity() + " CLICKED")), 10000) | device.hasObject(By.descContains(card.getCity() + "CLICKED"));
                 assertThat(isMarkerClicked, is(true));
             }
         }
