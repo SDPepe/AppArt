@@ -80,19 +80,26 @@ public class MapUITest {
         List<Card> cards = databaseService.getCards().join();
         for (Card card : cards) {
             if (!markerDescs.contains(card.getCity())) {
-                //try {
-                    /*List<Address> addresses =
-                            geocoder.getFromLocationName(card.getCity(), 1);
-                    assertThat(addresses.size(), is(1));
-                    Address addr = addresses.get(0);*/
-                    Location loc = new Location();
-                    loc.longitude = 6.6322734;
-                    loc.latitude = 46.5196535;
-                    mapService.centerOnLocation(loc, true);
-                /*} catch (IOException e) {
-                    assert (false);
-                    e.printStackTrace();
-                }*/
+                boolean succeeded = false;
+                int tryCount = 0;
+                while (tryCount < 10 && !succeeded) {
+                    try {
+                        List<Address> addresses =
+                                geocoder.getFromLocationName(card.getCity(), 1);
+                        assertThat(addresses.size(), is(1));
+                        Address addr = addresses.get(0);
+                        Location loc = new Location();
+                        //loc.longitude = 6.6322734;
+                        //loc.latitude = 46.5196535;
+                        loc.latitude = addr.getLatitude();
+                        loc.longitude = addr.getLongitude();
+                        mapService.centerOnLocation(loc, true);
+                        succeeded = true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        tryCount++;
+                    }
+                }
 
                 List<UiObject2> lists =
                         device.findObjects(By.descContains(card.getCity()));
