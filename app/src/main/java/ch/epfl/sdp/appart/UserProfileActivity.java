@@ -228,6 +228,8 @@ public class UserProfileActivity extends AppCompatActivity {
         String ageString = ((EditText) findViewById(R.id.age_UserProfile_editText)).getText().toString().trim();
         if (!ageString.equals("")) {
             this.sessionUser.setAge(Integer.parseInt(ageString));
+        } else {
+            this.sessionUser.setAge(0);
         }
 
         this.sessionUser.setName(((TextView) findViewById(R.id.name_UserProfile_editText)).getText().toString());

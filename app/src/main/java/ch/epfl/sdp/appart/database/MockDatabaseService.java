@@ -149,12 +149,11 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
-
     @NonNull
     @Override
-    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
+    public CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
-        if (uri == null || name == null || path == null){
+        if (uri == null || imagePathAndName == null){
             result.completeExceptionally(new IllegalArgumentException());
         } else {
             result.complete(true);

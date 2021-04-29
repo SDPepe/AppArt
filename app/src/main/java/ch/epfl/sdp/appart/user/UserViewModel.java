@@ -63,19 +63,17 @@ public class UserViewModel extends ViewModel {
      * @param userId the id of the user
      */
     public void updateImage(String userId){
-        StringBuilder imageName = new StringBuilder();
-        imageName
-                .append(FirebaseLayout.PROFILE_IMAGE_NAME)
-                .append(System.currentTimeMillis())
-                .append(FirebaseLayout.JPEG);
-
-        StringBuilder imagePath = new StringBuilder();
-        imagePath
+        StringBuilder imagePathAndName = new StringBuilder();
+        imagePathAndName
                 .append(FirebaseLayout.USERS_DIRECTORY)
                 .append(FirebaseLayout.SEPARATOR)
-                .append(userId);
+                .append(userId)
+                .append(FirebaseLayout.SEPARATOR)
+                .append(FirebaseLayout.PROFILE_IMAGE_NAME)
+                .append(System.currentTimeMillis())
+                .append(FirebaseLayout.JPEG);;
 
-        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imageName.toString(), imagePath.toString());
+        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName.toString());
         updateImage.thenAccept(mUpdateImageConfirmed::setValue);
     }
 

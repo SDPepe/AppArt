@@ -85,6 +85,7 @@ dependencies {
     implementation 'com.github.hannesa2:panoramagl:1.4'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 }
 

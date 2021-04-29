@@ -100,9 +100,14 @@ public class FirestoreAdHelper {
         List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
         Log.d("URI", "size" + uriList.size());
         for (int i = 0; i < uriList.size(); i++) {
-            String name = FirebaseLayout.PHOTO_NAME + i + ".jpeg"; // TODO modify to support other extensions
+            String name = FirebaseLayout.PHOTO_NAME + i + FirebaseLayout.JPEG; // TODO modify to support other extensions
             actualRefs.add(name);
-            imagesUploadResults.add(imageHelper.putImage(uriList.get(i), name, storagePath));
+            String imagePathAndName = storagePath.concat(FirebaseLayout.SEPARATOR.concat(name));
+            System.out.println("=======================================================");
+            System.out.println(imagePathAndName);
+            System.out.println("=======================================================");
+
+            imagesUploadResults.add(imageHelper.putImage(uriList.get(i), imagePathAndName));
         }
         // check whether any of the uploads failed
         checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storage.getReference(storagePath));

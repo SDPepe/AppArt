@@ -25,12 +25,12 @@ public class FirestoreImageHelper {
 
     @NotNull
     @NonNull
-    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
-        if (uri == null || name == null) {
+    public CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName) {
+        if (uri == null || imagePathAndName == null) {
             throw new IllegalArgumentException("parameters cannot be null");
         }
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
-        StorageReference fileReference = storage.getReference(path).child(name);
+        StorageReference fileReference = storage.getReference().child(imagePathAndName);
         fileReference.putFile(uri).addOnCompleteListener(
                 task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;

@@ -90,8 +90,8 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
 
     @NonNull
     @Override
-    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
-        return db.putImage(uri, name, path);
+    public CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName) {
+        return db.putImage(uri, imagePathAndName);
     }
 
     @NonNull
