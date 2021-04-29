@@ -13,10 +13,8 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.map.ApartmentInfoWindow;
-import ch.epfl.sdp.appart.map.GoogleMapService;
 import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
@@ -55,12 +53,16 @@ public class MapActivity extends AppCompatActivity {
         if (address != null) {
             mapService.setMapFragment(mapFragment);
             onMapReadyCallback = () -> {
-                Location apartmentLoc =
-                        locationService.getLocationFromName(address);
-                mapService.addMarker(apartmentLoc, null, true, null);
+                locationService.getLocationFromName(address).thenAccept(location -> {
+                    mapService.addMarker(location, null, true, null);
+                }).exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
             };
         } else {
-            mapService.setInfoWindow(new ApartmentInfoWindow(this, databaseService));
+            mapService.setInfoWindow(new ApartmentInfoWindow(this,
+                    databaseService));
             mapService.setMapFragment(mapFragment);
             onMapReadyCallback = () -> {
                 CompletableFuture<List<Card>> futureCards = databaseService
@@ -72,9 +74,14 @@ public class MapActivity extends AppCompatActivity {
 
                 futureCards.thenAccept(cards -> {
                     for (Card card : cards) {
-                        Location apartmentLoc =
-                                locationService.getLocationFromName(card.getCity());
-                        mapService.addMarker(apartmentLoc, card, false, card.getCity());
+                        locationService.getLocationFromName(card.getCity()).thenAccept(location -> {
+                            mapService.addMarker(location, card, false,
+                                    card.getCity());
+                        }).exceptionally(e -> {
+                            e.printStackTrace();
+                            return null;
+                        });
+
                     }
                 });
             };

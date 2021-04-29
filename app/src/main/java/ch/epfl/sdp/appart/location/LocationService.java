@@ -50,5 +50,5 @@ public interface LocationService {
      *
      * @return the location given the name if one was found, null otherwise
      */
-    Location getLocationFromName(String name);
+    CompletableFuture<Location> getLocationFromName(String name);
 }
