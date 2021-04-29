@@ -121,6 +121,11 @@ public interface User {
      */
     void setDefaultProfileImage();
 
+    /**
+     * @return true if the user is currently using the
+     * default user icon as profile image, false if the
+     * user previously uploaded a profile image
+     */
     Boolean hasDefaultProfileImage();
 
 }
