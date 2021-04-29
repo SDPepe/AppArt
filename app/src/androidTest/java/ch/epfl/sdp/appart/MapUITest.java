@@ -1,26 +1,19 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
-import android.app.Activity;
 import android.location.Address;
 import android.location.Geocoder;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
-import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.Until;
 
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,17 +61,18 @@ public class MapUITest {
     final MapService mapService = new GoogleMapService();
 
 
-
     @Test
     public void markerTest() {
 
         UiDevice device =
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-        boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")), 10000);
+        boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")),
+                10000);
         assertThat(foundMap, is(true));
 
-        Geocoder geocoder = new Geocoder(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        Geocoder geocoder =
+                new Geocoder(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
@@ -87,7 +81,8 @@ public class MapUITest {
         for (Card card : cards) {
             if (!markerDescs.contains(card.getCity())) {
                 try {
-                    List<Address> addresses = geocoder.getFromLocationName(card.getCity(), 1);
+                    List<Address> addresses =
+                            geocoder.getFromLocationName(card.getCity(), 1);
                     assertThat(addresses.size(), is(1));
                     Address addr = addresses.get(0);
                     Location loc = new Location();
@@ -95,7 +90,7 @@ public class MapUITest {
                     loc.latitude = addr.getLatitude();
                     mapService.centerOnLocation(loc, true);
                 } catch (IOException e) {
-                    assert(false);
+                    assert (false);
                     e.printStackTrace();
                 }
 
