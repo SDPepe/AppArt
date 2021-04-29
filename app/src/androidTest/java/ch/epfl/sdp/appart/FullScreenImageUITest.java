@@ -22,6 +22,7 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -49,7 +50,9 @@ public class FullScreenImageUITest {
 
     @Test
     public void imageVisibilityTest(){
-        onView(withId(R.id.image_FullScreenImage_imageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.image_FullScreenImage_imageView))
+                .perform(click())
+                .check(matches(isDisplayed()));
     }
 
     @Test

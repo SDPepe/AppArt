@@ -14,11 +14,6 @@ public class ResizableImageView extends androidx.appcompat.widget.AppCompatImage
     private ScaleGestureDetector mScaleDetector;
     private float mScaleFactor = 1.f;
 
-    public ResizableImageView(Context context){
-        super(context);
-        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener(this));
-    }
-
     public ResizableImageView(Context context, AttributeSet attrs){
         super(context, attrs);
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener(this));
@@ -35,16 +30,6 @@ public class ResizableImageView extends androidx.appcompat.widget.AppCompatImage
         return true;
     }
 
-    @Override
-    public void onDraw(Canvas canvas){
-        super.onDraw(canvas);
-
-        canvas.save();
-        canvas.scale(mScaleFactor, mScaleFactor);
-
-        canvas.restore();
-    }
-
     private class ScaleListener
             extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         ResizableImageView view;
@@ -55,7 +40,6 @@ public class ResizableImageView extends androidx.appcompat.widget.AppCompatImage
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            Log.d("SCALE", "Scaling image");
             mScaleFactor *= detector.getScaleFactor();
             mScaleFactor = Math.max(1.0f, Math.min(mScaleFactor, 5.0f));
 
