@@ -1,7 +1,6 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
-import android.location.Address;
 import android.location.Geocoder;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -12,14 +11,27 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
@@ -60,9 +72,55 @@ public class MapUITest {
     @BindValue
     final MapService mapService = new GoogleMapService();
 
+    public Location getLocationFromString(String address)
+            throws JSONException, UnsupportedEncodingException {
+        RequestQueue queue =
+                Volley.newRequestQueue(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+        String api_key =
+                InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(R.string.maps_api_key);
+
+        String url = "https://maps.googleapis" +
+                ".com/maps/api/geocode/json?address=" + URLEncoder.encode(address, "UTF-8") + "&key=" + api_key;
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonObjectRequest request = new JsonObjectRequest(url,
+                new JSONObject(), future, future);
+        queue.add(request);
+        JSONObject jsonObject;
+        try {
+            jsonObject = future.get(30, TimeUnit.SECONDS);
+
+        } catch (InterruptedException e) {
+            // exception handling
+            e.printStackTrace();
+            return null;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return null;
+            // exception handling
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            return null;
+            // exception handling
+        }
+
+        double lat = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
+                .getJSONObject("geometry").getJSONObject("location")
+                .getDouble("lat");
+
+        double lng = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
+                .getJSONObject("geometry").getJSONObject("location")
+                .getDouble("lng");
+        Location loc = new Location();
+        loc.latitude = lat;
+        loc.longitude = lng;
+        return loc;
+    }
+
 
     @Test
-    public void markerTest() {
+    public void markerTest() throws JSONException {
+
 
         UiDevice device =
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -70,9 +128,6 @@ public class MapUITest {
         boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")),
                 10000);
         assertThat(foundMap, is(true));
-
-        Geocoder geocoder =
-                new Geocoder(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
@@ -84,15 +139,7 @@ public class MapUITest {
                 int tryCount = 0;
                 while (tryCount < 10 && !succeeded) {
                     try {
-                        List<Address> addresses =
-                                geocoder.getFromLocationName(card.getCity(), 1);
-                        assertThat(addresses.size(), is(1));
-                        Address addr = addresses.get(0);
-                        Location loc = new Location();
-                        //loc.longitude = 6.6322734;
-                        //loc.latitude = 46.5196535;
-                        loc.latitude = addr.getLatitude();
-                        loc.longitude = addr.getLongitude();
+                        Location loc = getLocationFromString("Lausanne");
                         mapService.centerOnLocation(loc, true);
                         succeeded = true;
                     } catch (IOException e) {
@@ -110,5 +157,7 @@ public class MapUITest {
         }
 
         assertThat(markers.size(), is(cards.size()));
+
+        markers.get(0).click();
     }
 }
