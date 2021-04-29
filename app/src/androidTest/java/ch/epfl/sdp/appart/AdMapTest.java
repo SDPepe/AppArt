@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -51,17 +52,26 @@ import dagger.hilt.android.testing.UninstallModules;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 @UninstallModules({DatabaseModule.class, MapModule.class})
 @HiltAndroidTest
-public class MapUITest {
+public class AdMapTest {
+
+    static Intent intent;
+    static {
+        intent = new Intent(ApplicationProvider.getApplicationContext(), MapActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(ApplicationProvider.getApplicationContext().getResources().getString(R.string.intentLocationForMap), "Lausanne");
+        intent.putExtras(bundle);
+    }
 
     @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
     public ActivityScenarioRule<MapActivity> mapActivityRule =
-            new ActivityScenarioRule<>(MapActivity.class);
+            new ActivityScenarioRule<>(intent);
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
@@ -118,7 +128,8 @@ public class MapUITest {
 
 
     @Test
-    public void markerTest() throws JSONException {
+    public void markerTest() throws JSONException, UnsupportedEncodingException {
+
         UiDevice device =
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
@@ -126,44 +137,15 @@ public class MapUITest {
                 10000);
         assertThat(foundMap, is(true));
 
-        Set<String> markerDescs = new HashSet<>();
-        ArrayList<UiObject2> markers = new ArrayList<>();
+        Location markerLocation = getLocationFromString("Lausanne");
 
-        List<Card> cards = databaseService.getCards().join();
-        for (Card card : cards) {
-            if (!markerDescs.contains(card.getCity())) {
-                boolean succeeded = false;
-                int tryCount = 0;
-                while (tryCount < 10 && !succeeded) {
-                    try {
-                        Location loc = getLocationFromString("Lausanne");
-                        mapService.centerOnLocation(loc, true);
-                        succeeded = true;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        tryCount++;
-                    }
-                }
+        CompletableFuture<Location> futureCameraLoc = mapService.getCameraPosition();
 
-                List<UiObject2> lists =
-                        device.findObjects(By.descContains(card.getCity()));
-                assertThat(lists.size(), greaterThan(0));
-                markers.addAll(lists);
-                markerDescs.add(card.getCity());
+        Location cameraLoc = futureCameraLoc.join();
 
-                /*UiObject2 marker = lists.get(0);
+        assertThat(Math.abs(cameraLoc.latitude - markerLocation.latitude), lessThanOrEqualTo(0.05));
+        assertThat(Math.abs(cameraLoc.longitude - markerLocation.longitude), lessThanOrEqualTo(0.05));
 
 
-                marker.click();
-
-                boolean isMarkerClicked =
-                        device.wait(Until.hasObject(By.descContains(card.getCity() + " CLICKED")), 10000);
-                assertThat(isMarkerClicked, is(true));*/
-            }
-        }
-
-        assertThat(markers.size(), is(cards.size()));
-
-        markers.get(0).click();
     }
 }

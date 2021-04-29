@@ -7,9 +7,12 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -98,6 +101,20 @@ public class GoogleMapService implements MapService {
     @Override
     public void setActivity(Activity activity) {
         this.myActivity = activity;
+    }
+
+    @Override
+    public CompletableFuture<Location> getCameraPosition() {
+        CompletableFuture<Location> futureLocation = new CompletableFuture<>();
+        myActivity.runOnUiThread(() -> {
+            CameraPosition pos = map.getCameraPosition();
+            Location cameraLoc = new Location();
+            cameraLoc.longitude = pos.target.longitude;
+            cameraLoc.latitude = pos.target.latitude;
+            futureLocation.complete(cameraLoc);
+        });
+
+        return futureLocation;
     }
 
     @Override

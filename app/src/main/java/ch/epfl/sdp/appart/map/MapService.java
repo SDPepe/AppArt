@@ -6,6 +6,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import java.util.concurrent.CompletableFuture;
+
 import ch.epfl.sdp.appart.location.Location;
 
 /**
@@ -43,4 +45,6 @@ public interface MapService extends OnMapReadyCallback {
     void centerOnLocation(Location location, boolean instant);
 
     void setActivity(Activity activity);
+
+    CompletableFuture<Location> getCameraPosition();
 }

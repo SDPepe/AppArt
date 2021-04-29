@@ -60,7 +60,7 @@ public class ApartmentInfoWindow implements GoogleMap.InfoWindowAdapter {
         priceTextView.setText(card.getPrice() + " CHF");
         if (card.getImageUrl() != null) {
             databaseService.accept(new GlideImageViewLoaderListener(activity,
-                    photo, /*"Cards/" + */card.getImageUrl(),
+                    photo, "Cards/" + card.getImageUrl(),
                     new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e,
