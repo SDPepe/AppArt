@@ -1,16 +1,13 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
-import android.content.Intent;
-import android.os.Bundle;
+import android.location.Geocoder;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
@@ -94,14 +91,17 @@ public class MapUITest {
             jsonObject = future.get(30, TimeUnit.SECONDS);
 
         } catch (InterruptedException e) {
+            // exception handling
             e.printStackTrace();
             return null;
         } catch (ExecutionException e) {
             e.printStackTrace();
             return null;
+            // exception handling
         } catch (TimeoutException e) {
             e.printStackTrace();
             return null;
+            // exception handling
         }
 
         double lat = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
@@ -120,6 +120,8 @@ public class MapUITest {
 
     @Test
     public void markerTest() throws JSONException {
+
+
         UiDevice device =
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
@@ -135,10 +137,9 @@ public class MapUITest {
             if (!markerDescs.contains(card.getCity())) {
                 boolean succeeded = false;
                 int tryCount = 0;
-                Location loc = null;
                 while (tryCount < 10 && !succeeded) {
                     try {
-                        loc = getLocationFromString("Lausanne");
+                        Location loc = getLocationFromString("Lausanne");
                         mapService.centerOnLocation(loc, true);
                         succeeded = true;
                     } catch (IOException e) {
@@ -152,24 +153,11 @@ public class MapUITest {
                 assertThat(lists.size(), greaterThan(0));
                 markers.addAll(lists);
                 markerDescs.add(card.getCity());
-
-                /*mapService.centerOnLocation(loc, true);
-
-                boolean isMarkerPresent = device.hasObject(By.descContains(card.getCity())) | device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
-                assertThat(isMarkerPresent, is(true));
-
-
-                UiObject2 marker = device.findObject(By.descContains(card.getCity()));
-                marker.click();
-
-                boolean isMarkerClicked =
-                        device.wait(Until.hasObject(By.descContains(card.getCity() + " CLICKED")), 10000) | device.hasObject(By.descContains(card.getCity() + "CLICKED"));
-                assertThat(isMarkerClicked, is(true));*/
             }
         }
 
         assertThat(markers.size(), is(cards.size()));
 
-        //markers.get(0).click();
+        markers.get(0).click();
     }
 }
