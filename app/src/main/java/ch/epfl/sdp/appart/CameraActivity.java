@@ -79,7 +79,10 @@ public class CameraActivity extends AppCompatActivity {
 
     private void confirm(){
         if (imageUri == null) {
-            Toast.makeText(getApplicationContext(),R.string.errorNoImage ,Toast.LENGTH_SHORT).show();
+            Intent resultIntent = new Intent();
+            setResult(RESULT_CANCELED, resultIntent);
+            finish();
+            Toast.makeText(getApplicationContext(),R.string.canceledNoImage ,Toast.LENGTH_SHORT).show();
         } else {
             if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
                 Intent resultIntent = new Intent();

@@ -113,7 +113,7 @@
 
     <!-- CameraActivity stuff -->
     <string name="confirmCameraButtonText">Confirm</string>
-    <string name="errorNoImage"> "You need to upload at least one image..." </string>
+    <string name="canceledNoImage"> "Canceled: you did not upload any image " </string>
 
     <!-- PanoramaActivity stuff -->
     <string name="leftButtonDescription_Panorama">Load previous image</string>
