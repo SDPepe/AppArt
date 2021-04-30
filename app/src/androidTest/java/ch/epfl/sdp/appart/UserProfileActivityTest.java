@@ -443,15 +443,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton7.perform(click());
 
-        ViewInteraction circleImageView = onView(
-                allOf(withId(R.id.profilePicture_UserProfile_imageView), withContentDescription("profile picture"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                0),
-                        isDisplayed()));
-        circleImageView.perform(click());
+        onView(withId(R.id.profilePicture_UserProfile_imageView)).perform(click());
 
 
         ViewInteraction appCompatButton5 = onView(
