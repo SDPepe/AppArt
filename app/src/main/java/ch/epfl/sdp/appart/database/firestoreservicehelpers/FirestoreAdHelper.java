@@ -113,6 +113,7 @@ public class FirestoreAdHelper {
         checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storage.getReference(storagePath));
 
         // build and send card / ad
+
         checkCardUpload(cardResult, ad, newAdRef, cardRef, null, actualRefs.get(0));
         checkAdUpload(adResult, ad, newAdRef, cardRef, null, actualRefs);
 

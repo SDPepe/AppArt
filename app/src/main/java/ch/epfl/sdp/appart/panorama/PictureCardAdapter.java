@@ -24,7 +24,7 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
 
     List<PictureCard> cards;
     private PictureCard selectedCard;
-    private static List<CardViewHolder> viewHolders;
+    private static ArrayList<CardViewHolder> viewHolders;
     private static int selectedIndex;
 
     public PictureCardAdapter() {
@@ -78,8 +78,8 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
      * Retrieve the URI of the cards in the order they are displayed.
      * @return A List<URI> containing the ordered URI
      */
-    public List<Uri> getOrderedPicturesUris() {
-        List<Uri> result = new ArrayList<>();
+    public ArrayList<Uri> getOrderedPicturesUris() {
+        ArrayList<Uri> result = new ArrayList<>();
         for (PictureCard card : cards) {
             result.add(card.getImageUri());
         }

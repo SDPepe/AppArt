@@ -1,6 +1,10 @@
 package ch.epfl.sdp.appart;
 
 import android.content.Intent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.LinearLayout;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
@@ -8,6 +12,9 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -82,6 +89,12 @@ public class AdUITest {
     }
 
     @Test
+    public void clickOnImageOpensFullscreenPage() {
+        onView(childAtPosition(withId(R.id.horizontal_children_Ad_linearLayout), 0)).perform(scrollTo(), click());
+        intended(hasComponent(FullScreenImageActivity.class.getName()));
+    }
+
+    @Test
     public void clickOnGoBackFinishes() {
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressBack();
@@ -103,5 +116,24 @@ public class AdUITest {
     @After
     public void release() {
         Intents.release();
+    }
+
+    private static Matcher<View> childAtPosition(
+            final Matcher<View> parentMatcher, final int position) {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Child at position " + position + " in parent ");
+                parentMatcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                ViewParent parent = view.getParent();
+                return parent instanceof ViewGroup && parentMatcher.matches(parent)
+                        && view.equals(((ViewGroup) parent).getChildAt(position));
+            }
+        };
     }
 }

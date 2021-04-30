@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.appart.panorama.PictureCardAdapter;
@@ -39,19 +40,21 @@ public class PicturesImportActivity extends AppCompatActivity {
         Button importButton = findViewById(R.id.finish_PictureImport_button);
 
         addButton.setOnClickListener((View view) -> {
-            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             photoPickerIntent.setType("image/*");
             startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
         });
 
         importButton.setOnClickListener((View view) -> {
-            Intent intent = new Intent(this, AdCreationActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent();
+            intent.putParcelableArrayListExtra("uris", getOrderedPictures());
+            setResult(RESULT_OK, intent);
+            finish();
         });
 
     }
 
-    public List<Uri> getOrderedPictures() {
+    public ArrayList<Uri> getOrderedPictures() {
         return adapter.getOrderedPicturesUris();
     }
 
@@ -80,9 +83,8 @@ public class PicturesImportActivity extends AppCompatActivity {
             adapter.addPictureCard(data.getData());
             adapter.notifyDataSetChanged();
             // String picturePath contains the path of selected Image
-        } else if (resultCode != RESULT_OK || null == data) {
-            throw new IllegalStateException("failed to retrieve the picture");
         }
     }
+
 
 }

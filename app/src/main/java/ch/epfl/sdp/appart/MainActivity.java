@@ -12,6 +12,7 @@ import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static boolean DEMO_MODE = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,13 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(ActivityCommunicationLayout.PROVIDING_EMAIL, extras.getString(ActivityCommunicationLayout.PROVIDING_EMAIL));
             intent.putExtra(ActivityCommunicationLayout.PROVIDING_PASSWORD, extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
         }
+        if (extras != null && extras.containsKey("demo_mode")) {
+            DEMO_MODE = extras.getBoolean("demo_mode");
+        }
         startActivity(intent);
+    }
+
+    public static boolean isDemoMode() {
+        return DEMO_MODE;
     }
 }
