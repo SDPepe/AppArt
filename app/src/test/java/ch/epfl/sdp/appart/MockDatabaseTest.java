@@ -99,11 +99,6 @@ public class MockDatabaseTest {
     }
 
     @Test
-    public void putImageThrowsOnNullUri() throws ExecutionException, InterruptedException {
-        assertThrows(ExecutionException.class, () -> dataBase.putImage(null, "").get());
-    }
-
-    @Test
     public void putImageThrowsOnNullPathAndName() throws ExecutionException, InterruptedException {
         Uri uri = mock(Uri.class);
         assertThrows(ExecutionException.class, () -> dataBase.putImage(uri, null).get());
