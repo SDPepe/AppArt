@@ -7,7 +7,9 @@ This week I worked on the map testing. This consists in testing the MapActivity 
 The tests now works and will soon be merged.
 
 ## Carlo
-This week I worked on synching **Firebase Storage** with the **UserProfileActivity** in order to enable the user to upload, remove, update its profile picture. This needed work on the Activity, on the ViewModel and **new functions on the FirestoreDatabaseService**. These changes were introduces in ImageHelper for FirestoreDatabase. I also worked on refactoring hardcoded strings. In our codebase, activities communciate through **putExtra** and all the strings used until now were hardcoded. I wrote a ActivityCommunicationLayout file where all the communication messages are stored and used globally through the code. I then refactored all the existing putExtra calls to fit the new layout. Overall this has been a very productive week and a lot was implemented/solved.
+This week I worked on synching **Firebase Storage** with the **UserProfileActivity** in order to enable the user to upload, remove, update its profile picture. This needed work on the Activity, on the ViewModel and **new functions on the FirestoreDatabaseService**. These changes were introduces in ImageHelper for FirestoreDatabase. 
+
+I also worked on refactoring hardcoded strings. In our codebase, activities communciate through **putExtra** and all the strings used until now were hardcoded. I wrote a ActivityCommunicationLayout file where all the communication messages are stored and used globally through the code. I then refactored all the existing putExtra calls to fit the new layout. Overall this has been a very productive week and a lot was implemented/solved.
 
 ## Émilien
 
