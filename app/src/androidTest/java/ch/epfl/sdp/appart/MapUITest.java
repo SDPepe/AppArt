@@ -74,7 +74,7 @@ public class MapUITest {
 
 
     @Test
-    public void markerTest() throws InterruptedException, ExecutionException {
+    public void markerTest() throws InterruptedException {
 
 
         UiDevice device =
@@ -109,5 +109,23 @@ public class MapUITest {
         }
 
         assertThat(markers.size(), is(cards.size()));
+
+        Card card = cards.get(0);
+        Location loc =
+                locationService.getLocationFromName(card.getCity()).join();
+        mapService.centerOnLocation(loc, true);
+
+
+
+
+        boolean isMarkerPresent = device.hasObject(By.descContains(card.getCity())) | device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
+        assertThat(isMarkerPresent, is(true));
+
+
+        UiObject2 marker = device.findObject(By.descContains(card.getCity()));
+        marker.click();
+
+        boolean isMarkerClicked = device.wait(Until.hasObject(By.descContains(card.getCity() + " CLICKED")), 10000) | device.hasObject(By.descContains(card.getCity() + "CLICKED"));
+        assertThat(isMarkerClicked, is(true));
     }
 }
