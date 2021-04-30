@@ -37,6 +37,32 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        PermissionRequest.askForLocationPermission(this, () -> {
+            Log.d("PERMISSION", "Location permission granted");
+            setupMap();
+        }, () -> {
+            Log.d("PERMISSION", "Refused");
+            finish();
+        }, () -> Log.d("PERMISSION", "Popup"));
+
+    }
+
+
+    /*
+        To implement the feature :
+            - Set map center on user location
+            - Get location from all the ads (or all the ads in the country),
+            see if it is possible to get ad only
+                if they satisfy a condition.
+                It would be great if I could get all the ads (location only
+                because if we have millions of ad this is going to be huge,
+                or restrict by country for instance)
+                , then transform the address into latitude and longitude,
+                then maybe it is possible to ask the map object if a
+                   specific location is on the map. If it is display it.
+     */
+
+    private void setupMap() {
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
@@ -88,31 +114,7 @@ public class MapActivity extends AppCompatActivity {
         }
 
         mapService.setOnReadyCallback(onMapReadyCallback);
-
-        PermissionRequest.askForLocationPermission(this, () -> {
-            Log.d("PERMISSION", "Location permission granted");
-            mapFragment.getMapAsync(mapService);
-        }, () -> {
-            Log.d("PERMISSION", "Refused");
-            finish();
-        }, () -> Log.d("PERMISSION", "Popup"));
-
+        mapFragment.getMapAsync(mapService);
     }
-
-
-    /*
-        To implement the feature :
-            - Set map center on user location
-            - Get location from all the ads (or all the ads in the country),
-            see if it is possible to get ad only
-                if they satisfy a condition.
-                It would be great if I could get all the ads (location only
-                because if we have millions of ad this is going to be huge,
-                or restrict by country for instance)
-                , then transform the address into latitude and longitude,
-                then maybe it is possible to ask the map object if a
-                   specific location is on the map. If it is display it.
-     */
-
-
 }
+

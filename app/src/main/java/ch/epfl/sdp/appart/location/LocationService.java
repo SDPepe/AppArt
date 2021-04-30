@@ -47,8 +47,8 @@ public interface LocationService {
      * Gets the location from a city name.
      *
      * @param name The name of the location. This can be a city, an address, ...
-     *
-     * @return the location given the name if one was found, null otherwise
+     * @return a completable future that will contain the location if the
+     * operation succeeds, an exception otherwise.
      */
     CompletableFuture<Location> getLocationFromName(String name);
 }

@@ -43,11 +43,13 @@ public class AdMapTest {
 
     static Intent intent;
 
+    static String testCity = "Lausanne";
+
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(),
                 MapActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(ApplicationProvider.getApplicationContext().getResources().getString(R.string.intentLocationForMap), "Lausanne");
+        bundle.putString(ApplicationProvider.getApplicationContext().getResources().getString(R.string.intentLocationForMap), testCity);
         intent.putExtras(bundle);
     }
 
@@ -85,7 +87,7 @@ public class AdMapTest {
         assertThat(foundMap, is(true));
 
         Location markerLocation = locationService.getLocationFromName(
-                "Lausanne").join();
+                testCity).join();
         assertThat(markerLocation.longitude, greaterThan(6.0));
         assertThat(markerLocation.latitude, greaterThan(46.0));
 

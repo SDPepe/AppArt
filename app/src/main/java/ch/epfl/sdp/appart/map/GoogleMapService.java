@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.map;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -18,6 +19,9 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.location.Location;
 import dagger.hilt.android.scopes.ActivityScoped;
 
+/**
+ * This is the google map service.
+ */
 @ActivityScoped
 public class GoogleMapService implements MapService {
 
@@ -32,6 +36,28 @@ public class GoogleMapService implements MapService {
     public GoogleMapService() {
     }
 
+    @Override
+    public void setActivity(Activity activity) {
+        this.myActivity = activity;
+    }
+
+
+    @Override
+    public void setMapFragment(SupportMapFragment fragment) {
+        this.mapFragment = fragment;
+    }
+
+    @Override
+    public void setInfoWindow(GoogleMap.InfoWindowAdapter infoWindow) {
+        this.infoWindowAdapter = infoWindow;
+    }
+
+    @Override
+    public void setOnReadyCallback(Runnable onReadyCallback) {
+        this.onReadyCallback = onReadyCallback;
+    }
+
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -54,6 +80,7 @@ public class GoogleMapService implements MapService {
         this.mapFragment.getView().setContentDescription("MAP READY");
     }
 
+    @Override
     public void addMarker(Location location, Object tag,
                           boolean centerOnMarker, String title) {
         if (location == null) {
@@ -72,19 +99,10 @@ public class GoogleMapService implements MapService {
         }
     }
 
-    @Override
-    public void setMapFragment(SupportMapFragment fragment) {
-        this.mapFragment = fragment;
-    }
 
     @Override
-    public void setInfoWindow(GoogleMap.InfoWindowAdapter infoWindow) {
-        this.infoWindowAdapter = infoWindow;
-    }
-
-    @Override
-    public /*static*/ void centerOnLocation(Location location,
-                                            boolean instant) {
+    public void centerOnLocation(Location location,
+                                 boolean instant) {
         myActivity.runOnUiThread(() -> {
             CameraUpdate update =
                     CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 2.0f);
@@ -94,11 +112,6 @@ public class GoogleMapService implements MapService {
                 map.animateCamera(update);
             }
         });
-    }
-
-    @Override
-    public void setActivity(Activity activity) {
-        this.myActivity = activity;
     }
 
     @Override
@@ -115,9 +128,5 @@ public class GoogleMapService implements MapService {
         return futureLocation;
     }
 
-    @Override
-    public void setOnReadyCallback(Runnable onReadyCallback) {
-        //No need to check for null here, the check line 56 makes more sense
-        this.onReadyCallback = onReadyCallback;
-    }
+
 }

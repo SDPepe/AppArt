@@ -3,11 +3,9 @@ package ch.epfl.sdp.appart;
 import android.Manifest;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.test.annotation.UiThreadTest;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.rule.UiThreadTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
@@ -20,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
@@ -93,11 +90,12 @@ public class MapUITest {
         for (Card card : cards) {
             if (!markerDescs.contains(card.getCity())) {
                 Location loc =
-                        locationService.getLocationFromName("Lausanne").join();
-                assertThat(Math.abs(loc.latitude - 46.5196535), lessThanOrEqualTo(0.05));
-                assertThat(Math.abs(loc.longitude - 6.6322734), lessThanOrEqualTo(0.05));
+                        locationService.getLocationFromName(card.getCity()).join();
+                assertThat(Math.abs(loc.latitude - 46.5196535),
+                        lessThanOrEqualTo(0.05));
+                assertThat(Math.abs(loc.longitude - 6.6322734),
+                        lessThanOrEqualTo(0.05));
                 mapService.centerOnLocation(loc, true);
-
 
 
                 List<UiObject2> lists =
@@ -116,16 +114,17 @@ public class MapUITest {
         mapService.centerOnLocation(loc, true);
 
 
-
-
-        boolean isMarkerPresent = device.hasObject(By.descContains(card.getCity())) | device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
+        boolean isMarkerPresent =
+                device.hasObject(By.descContains(card.getCity())) | device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
         assertThat(isMarkerPresent, is(true));
 
 
         UiObject2 marker = device.findObject(By.descContains(card.getCity()));
         marker.click();
 
-        boolean isMarkerClicked = device.wait(Until.hasObject(By.descContains(card.getCity() + " CLICKED")), 10000) | device.hasObject(By.descContains(card.getCity() + "CLICKED"));
+        boolean isMarkerClicked =
+                device.wait(Until.hasObject(By.descContains(card.getCity() +
+                        " CLICKED")), 10000) | device.hasObject(By.descContains(card.getCity() + "CLICKED"));
         assertThat(isMarkerClicked, is(true));
     }
 }

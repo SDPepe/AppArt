@@ -1,17 +1,13 @@
 package ch.epfl.sdp.appart.location;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -27,9 +23,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -38,6 +31,14 @@ import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.R;
 
+
+/**
+ * This class represents the android location service. It uses a
+ * FusedLocationProviderClient to get location information.
+ * <p>
+ * To get a location from name we bypass the Geocoder because it fails in
+ * cirrus and sometimes on the local emulator. It seems very unstable.
+ */
 @Singleton
 public final class AndroidLocationService implements LocationService {
     private final FusedLocationProviderClient locationProvider;
@@ -58,6 +59,7 @@ public final class AndroidLocationService implements LocationService {
 
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public CompletableFuture<Location> getCurrentLocation() {
         CompletableFuture<Location> futureLocation = new CompletableFuture<>();
@@ -80,6 +82,7 @@ public final class AndroidLocationService implements LocationService {
         return futureLocation;
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public CompletableFuture<Void> setupLocationUpdate(Consumer<List<Location>> callback) {
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
@@ -154,13 +157,11 @@ public final class AndroidLocationService implements LocationService {
                 loc.latitude = lat;
                 loc.longitude = lng;
                 futureLocation.complete(loc);
-            }, error -> {
-                futureLocation.completeExceptionally(error.getCause());
-            });
+            }, error -> futureLocation.completeExceptionally(error.getCause()));
             queue.add(request);
 
 
-        } catch(UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             futureLocation.completeExceptionally(e);
         }
 
