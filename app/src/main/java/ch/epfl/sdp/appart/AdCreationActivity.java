@@ -2,9 +2,10 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +13,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,7 +47,9 @@ public class AdCreationActivity extends AppCompatActivity {
     @Inject
     DatabaseService database;
     AdCreationViewModel mViewModel;
-
+    private final static int PICTURES_IMPORT_ACTIVITY_RESULT = 2;
+    private List<Uri> picturesUris;
+    private List<Uri> panoramaUris;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,12 +66,35 @@ public class AdCreationActivity extends AppCompatActivity {
         Button createPanoramaTourButton = findViewById(R.id.createVirtualTour_AdCreation_button);
         createPanoramaTourButton.setOnClickListener((View view) -> {
             Intent intent = new Intent(this, PicturesImportActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, PICTURES_IMPORT_ACTIVITY_RESULT);
         });
 
+        if (MainActivity.isDemoMode()) {
 
+            ((TextView)findViewById(R.id.title_AdCreation_editText)).setText("Cool Ad");
+            ((TextView)findViewById(R.id.street_AdCreation_editText)).setText("Funny Street");
+            ((TextView)findViewById(R.id.number_AdCreation_ediText)).setText("1A");
+            ((TextView)findViewById(R.id.npa_AdCreation_editText)).setText("1000");
+            ((TextView)findViewById(R.id.city_AdCreation_editText)).setText("Lausanne");
+            ((TextView)findViewById(R.id.price_AdCreation_editText)).setText("1234");
+            ((TextView)findViewById(R.id.description_AdCreation_editText)).setText("Welcome to Appart !");
+            //"android.resource://ch.epfl.sdp.appart/"
+            Uri simplePictureUri = Uri.parse("file:///android_asset/Ads/fake_ad_1.jpg");
+            Uri panoramaUri = Uri.parse("file:///android_asset/panorama_test.jpg");
+            List<Uri> picturesUris = Arrays.asList(simplePictureUri, simplePictureUri, simplePictureUri);
+            List<Uri> panoramasUris = Arrays.asList(panoramaUri, panoramaUri, panoramaUri);
+            this.picturesUris = picturesUris;
+            this.panoramaUris = panoramasUris;
+
+            fillHorizontalViewWithPictures(findViewById(R.id.pictures_AdCreation_linearLayout), picturesUris);
+            fillHorizontalViewWithPictures(findViewById(R.id.panorama_AdCreation_linearLayout), panoramasUris);
+
+        }
     }
 
+    private void setTextView(TextView textView, String content) {
+        textView.setText(content);
+    }
     /**
      * Sets values to viewmodel and confirm creation. If some fields are not filled, it shows a
      * snackbar message.
@@ -124,6 +154,7 @@ public class AdCreationActivity extends AppCompatActivity {
         mViewModel.setDescription(getContentOfEditText(R.id.description_AdCreation_editText));
         // TODO modify when logic for adding vrtour is added
         mViewModel.setVRTourEnable(false);
+        mViewModel.setUri(picturesUris);
     }
 
     private String joinStrings(int id1, int id2) {
@@ -180,27 +211,49 @@ public class AdCreationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
-            if (resultCode == RESULT_OK){
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
                 int size = data.getIntExtra("size", 0);
                 List<Uri> listUri = new ArrayList<>();
-                for(int i = 0; i< size; i++){
+                for(int i = 0; i< size; i++) {
                  listUri.add(data.getParcelableExtra("imageUri"+i));
                 }
-                mViewModel.setUri(listUri);
-
-                LinearLayout horizontalLayout = findViewById(R.id.photos_AdCreation_linearLayout);
-                horizontalLayout.removeAllViews();
-
-                for (Uri i: mViewModel.getUri()) {
-                    LayoutInflater inflater =
-                        (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
-                    ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
-                    photo.setImageURI(i);
-                    photo.setPadding(16,0,16,0);
-                    horizontalLayout.addView(myView);
+                picturesUris = listUri;
+                fillHorizontalViewWithPictures(findViewById(R.id.pictures_AdCreation_linearLayout), listUri);
+            }
+        } else if (requestCode == PICTURES_IMPORT_ACTIVITY_RESULT) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<Uri> uris = data.getParcelableArrayListExtra("uris");
+                if (uris == null) {
+                    throw new IllegalStateException("uris cannot be null");
                 }
+                fillHorizontalViewWithPictures(findViewById(R.id.panorama_AdCreation_linearLayout), uris);
+            }
+        }
+    }
+
+    private void fillHorizontalViewWithPictures(LinearLayout horizontalLayout, List<Uri> uris) {
+
+        if (uris == null || uris.isEmpty()) {
+            return;
+        }
+
+        horizontalLayout.removeAllViews();
+
+        for (int i = 0; i < uris.size(); i++) {
+            LayoutInflater inflater =
+                    (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
+            ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
+            Glide.with(this).load(uris.get(i)).into(photo);
+            horizontalLayout.addView(myView);
+            if (i != 4) {
+                Space hspacer = new Space(this);
+                hspacer.setLayoutParams(new ViewGroup.LayoutParams(
+                        8,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                ));
+                horizontalLayout.addView(hspacer);
             }
         }
     }
