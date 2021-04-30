@@ -10,6 +10,12 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import dagger.hilt.android.AndroidEntryPoint;
 
+/**
+ * Activity that shows an image fullscreen.
+ * <p>
+ * The image is loaded from the path passed through the intent extras. The image can be zoomed in
+ * and out with pinch gestures.
+ */
 @AndroidEntryPoint
 public class FullScreenImageActivity extends AppCompatActivity {
 
@@ -25,6 +31,9 @@ public class FullScreenImageActivity extends AppCompatActivity {
         db.accept(new GlideImageViewLoader(this, photo, fullRef));
     }
 
+    /**
+     * Closes the activity.
+     */
     @Override
     public void onBackPressed() {
         finish();
