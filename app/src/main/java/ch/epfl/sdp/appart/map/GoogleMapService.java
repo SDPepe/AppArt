@@ -1,7 +1,6 @@
 package ch.epfl.sdp.appart.map;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,10 +14,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.location.Location;
-import dagger.hilt.android.qualifiers.ActivityContext;
 import dagger.hilt.android.scopes.ActivityScoped;
 
 @ActivityScoped
@@ -32,7 +29,8 @@ public class GoogleMapService implements MapService {
     private Runnable onReadyCallback = null;
 
     @Inject
-    public GoogleMapService() {}
+    public GoogleMapService() {
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
