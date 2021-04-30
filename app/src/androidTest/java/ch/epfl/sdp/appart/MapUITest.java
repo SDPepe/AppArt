@@ -2,9 +2,11 @@ package ch.epfl.sdp.appart;
 
 import android.Manifest;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.rule.UiThreadTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
@@ -50,10 +52,15 @@ public class MapUITest {
     public ActivityScenarioRule<MapActivity> mapActivityRule =
             new ActivityScenarioRule<>(MapActivity.class);
 
-    @Rule
+    @Rule(order = 2)
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET);
 
+    @Rule
+    public UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
+
+    @Rule
+    public InstantTaskExecutorRule executorRule = new InstantTaskExecutorRule();
     @BindValue
     final
     DatabaseService databaseService = new MockDatabaseService();
@@ -66,8 +73,8 @@ public class MapUITest {
             new AndroidLocationService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
 
-    /*@Test
-    public void markerTest() {
+    @Test
+    public void markerTest() throws InterruptedException {
 
 
         UiDevice device =
@@ -76,6 +83,7 @@ public class MapUITest {
         boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")),
                 10000);
         assertThat(foundMap, is(true));
+        Thread.sleep(5000);
 
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
@@ -88,6 +96,9 @@ public class MapUITest {
                 assertThat(Math.abs(loc.latitude - 46.5196535), lessThanOrEqualTo(0.05));
                 assertThat(Math.abs(loc.longitude - 6.6322734), lessThanOrEqualTo(0.05));
                 mapService.centerOnLocation(loc, true);
+
+
+
                 List<UiObject2> lists =
                         device.findObjects(By.descContains(card.getCity()));
                 assertThat(lists.size(), greaterThan(0));
@@ -97,5 +108,5 @@ public class MapUITest {
         }
 
         assertThat(markers.size(), is(cards.size()));
-    }*/
+    }
 }
