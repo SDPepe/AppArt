@@ -64,7 +64,7 @@ public class CameraActivity extends AppCompatActivity {
         listImageUri = new ArrayList<>();
         Intent intent = getIntent();
         activity = intent.getStringExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
-        
+
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
         Button confirmBtn = findViewById(R.id.confirm_Camera_button);
@@ -78,7 +78,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void confirm(){
-        if (imageUri != null) {
+        if (imageUri == null) {
             Toast.makeText(getApplicationContext(),R.string.errorNoImage ,Toast.LENGTH_SHORT).show();
         } else {
             if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
