@@ -57,7 +57,7 @@
                 android:paddingStart="30dp"
                 tools:ignore="RtlSymmetry,UseCompoundDrawables">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/profilePicture_UserProfile_imageView"
                     android:layout_width="150dp"
                     android:layout_height="150dp"

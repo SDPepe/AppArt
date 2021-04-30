@@ -103,10 +103,6 @@ public class FirestoreAdHelper {
             String name = FirebaseLayout.PHOTO_NAME + i + FirebaseLayout.JPEG; // TODO modify to support other extensions
             actualRefs.add(name);
             String imagePathAndName = storagePath.concat(FirebaseLayout.SEPARATOR.concat(name));
-            System.out.println("=======================================================");
-            System.out.println(imagePathAndName);
-            System.out.println("=======================================================");
-
             imagesUploadResults.add(imageHelper.putImage(uriList.get(i), imagePathAndName));
         }
         // check whether any of the uploads failed
