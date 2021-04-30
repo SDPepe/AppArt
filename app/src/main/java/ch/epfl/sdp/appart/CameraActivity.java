@@ -64,7 +64,7 @@ public class CameraActivity extends AppCompatActivity {
         listImageUri = new ArrayList<>();
         Intent intent = getIntent();
         activity = intent.getStringExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
-
+        
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
         Button confirmBtn = findViewById(R.id.confirm_Camera_button);
@@ -93,8 +93,7 @@ public class CameraActivity extends AppCompatActivity {
                 finish();
             } else if (activity.equals(ActivityCommunicationLayout.USER_PROFILE_ACTIVITY)) {
                 Intent resultIntent = new Intent();
-                Uri uri = null;
-                resultIntent.putExtra("profileUri", uri);
+                resultIntent.putExtra("profileUri", imageUri);
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
