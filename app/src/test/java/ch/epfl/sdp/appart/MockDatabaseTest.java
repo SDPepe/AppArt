@@ -105,6 +105,19 @@ public class MockDatabaseTest {
     }
 
     @Test
+    public void putImageIsSuccessful(){
+        Uri uri = mock(Uri.class);
+        String imagePathAndName = "users/test/path/photo.jpeg";
+        assertTrue(dataBase.putImage(uri, imagePathAndName).getNow(null));
+    }
+
+    @Test
+    public void deleteImageIsSuccessful(){
+        String imagePathAndName = "users/test/path/photo.jpeg";
+        assertTrue(dataBase.deleteImage(imagePathAndName).getNow(null));
+    }
+
+    @Test
     public void deleteImageThrowsOnNullPathAndName() throws ExecutionException, InterruptedException {
         Uri uri = mock(Uri.class);
         assertThrows(ExecutionException.class, () -> dataBase.deleteImage(null).get());
