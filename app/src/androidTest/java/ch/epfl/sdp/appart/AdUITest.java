@@ -20,6 +20,7 @@ import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -46,7 +47,7 @@ public class AdUITest {
 
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(), AdActivity.class);
-        intent.putExtra("cardID", testId);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID, testId);
     }
 
     @BindValue

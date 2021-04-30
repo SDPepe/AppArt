@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 
 /**
  * The main UI class.
@@ -19,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
         Bundle extras = this.getIntent().getExtras();
         Intent intent = new Intent(this, LoginActivity.class);
         if(extras != null && extras.containsKey("email")  && extras.containsKey("password")){
-            intent.putExtra("email", extras.getString("email"));
-            intent.putExtra("password", extras.getString("password"));
+            intent.putExtra(ActivityCommunicationLayout.PROVIDING_EMAIL, extras.getString("email"));
+            intent.putExtra(ActivityCommunicationLayout.PROVIDING_PASSWORD, extras.getString("password"));
         }
         startActivity(intent);
     }

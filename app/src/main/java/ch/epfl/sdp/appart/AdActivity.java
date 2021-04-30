@@ -23,6 +23,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -64,10 +65,10 @@ public class AdActivity extends ToolbarActivity {
             List<String> adIds = login.getCurrentUser().getAdsIds();
             mViewModel.initAd(adIds.get(adIds.size() - 1));
         } else {
-            mViewModel.initAd(getIntent().getStringExtra("adID"));
+            mViewModel.initAd(getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID));
         }
         */
-        adId = getIntent().getStringExtra("adID");
+        adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
         mViewModel.initAd(adId);
     }
 
@@ -149,7 +150,7 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openContactInfo(View view) {
         Intent intent = new Intent(this, SimpleUserProfileActivity.class);
-        intent.putExtra("advertiserId", this.advertiserId);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_USER_ID, this.advertiserId);
         startActivity(intent);
     }
 

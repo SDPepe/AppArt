@@ -12,6 +12,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -50,7 +51,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_SimpleUserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_SimpleUserProfile_imageView);
 
-        String advertiserId = getIntent().getStringExtra("advertiserId");
+        String advertiserId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_USER_ID);
 
         /* get user from database from user ID */
         mViewModel.getUser(advertiserId);

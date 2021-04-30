@@ -11,9 +11,20 @@ public final class ActivityCommunicationLayout {
 
     private ActivityCommunicationLayout(){}
 
+
     /*  IDs for put requests */
 
     public static final String PROVIDING_ACTIVITY_NAME = "activity";
+
+    public static final String PROVIDING_USER_ID = "userID";
+
+    public static final String PROVIDING_CARD_ID = "cardID";
+
+    public static final String PROVIDING_AD_ID = "adID";
+
+    public static final String PROVIDING_EMAIL = "email";
+
+    public static final String PROVIDING_PASSWORD = "password";
 
 
     /*  IDs for provided information */
