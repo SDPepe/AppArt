@@ -214,7 +214,10 @@ public class DatabaseTest {
         assertThat(cards.size(), is(1));
     }
 
-    @Test
+    public void putImageThrowsOnNullParameters() {
+        assertThrows(IllegalArgumentException.class, () -> db.putImage(null, null).get());
+    }
+
     public void deleteImageThrowsOnNullPathAndName() {
         assertThrows(IllegalArgumentException.class, () -> db.deleteImage(null).get());
     }
@@ -225,5 +228,7 @@ public class DatabaseTest {
         addingAdAndGetTest();
         updateCardTest();
         getCardsFilterTest();
+        putImageThrowsOnNullParameters();
+        deleteImageThrowsOnNullPathAndName();
     }
 }
