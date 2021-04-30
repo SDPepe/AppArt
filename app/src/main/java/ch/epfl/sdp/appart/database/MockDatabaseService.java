@@ -29,6 +29,7 @@ public class MockDatabaseService implements DatabaseService {
     private final List<Card> cards = new ArrayList<>();
     private final Ad ad;
     private final Map<String, User> users = new HashMap<>();
+    private final List<String> images = new ArrayList<>();
 
     public MockDatabaseService() {
 
@@ -37,6 +38,10 @@ public class MockDatabaseService implements DatabaseService {
         cards.add(new Card("unknown3", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown4", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown5", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+
+        images.add("users/default/user_example_female.png");
+        images.add("users/default/user_example_male.png");
+        images.add("users/default/user_example_no_gender.png");
 
         List<String> picturesReferences = Arrays.asList(
                 "file:///android_asset/fake_ad_1.jpg",
@@ -156,6 +161,14 @@ public class MockDatabaseService implements DatabaseService {
         if (uri == null || imagePathAndName == null){
             result.completeExceptionally(new IllegalArgumentException());
         } else {
+            System.out.println("=============================================================");
+            System.out.println("=============================================================");
+            System.out.println("=============================================================");
+            System.out.println(uri.toString() + " | " +  imagePathAndName);
+            System.out.println("=============================================================");
+            System.out.println("=============================================================");
+            System.out.println("=============================================================");
+            images.add(imagePathAndName);
             result.complete(true);
         }
         return result;
@@ -164,8 +177,14 @@ public class MockDatabaseService implements DatabaseService {
     @NonNull
     @Override
     public CompletableFuture<Boolean> deleteImage(String imagePathAndName) {
-        // TODO: implementation soon
-        return null;
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        if (imagePathAndName == null){
+            result.completeExceptionally(new IllegalArgumentException());
+        } else {
+            images.remove(imagePathAndName);
+            result.complete(true);
+        }
+        return result;
     }
 
     @Override

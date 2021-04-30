@@ -17,10 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,15 +27,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import androidx.lifecycle.ViewModelProvider;
-import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
-import ch.epfl.sdp.appart.user.UserViewModel;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+
 import javax.inject.Inject;
 
 import static android.widget.Toast.makeText;
@@ -68,7 +63,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         listImageUri = new ArrayList<>();
         Intent intent = getIntent();
-        activity = intent.getStringExtra("Activity");
+        activity = intent.getStringExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
 
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
@@ -83,8 +78,10 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void confirm(){
-        if (activity.equals("Ads")) {
-            if(listImageUri.size() >= 1)  {
+        if (imageUri != null) {
+            Toast.makeText(getApplicationContext(),R.string.errorNoImage ,Toast.LENGTH_SHORT).show();
+        } else {
+            if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("size", listImageUri.size());
                 int count = 0;
@@ -94,14 +91,13 @@ public class CameraActivity extends AppCompatActivity {
                 }
                 setResult(RESULT_OK, resultIntent);
                 finish();
-            } else {
-                Toast.makeText(getApplicationContext(),"You need to upload some image...",Toast.LENGTH_SHORT).show();
+            } else if (activity.equals(ActivityCommunicationLayout.USER_PROFILE_ACTIVITY)) {
+                Intent resultIntent = new Intent();
+                Uri uri = null;
+                resultIntent.putExtra("profileUri", uri);
+                setResult(RESULT_OK, resultIntent);
+                finish();
             }
-        } else if (activity.equals("User")) {
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("profileUri", imageUri);
-            setResult(RESULT_OK, resultIntent);
-            finish();
         }
     }
 
@@ -120,7 +116,7 @@ public class CameraActivity extends AppCompatActivity {
     private void startCamera() {
         ContentValues val = new ContentValues();
         val.put(MediaStore.Images.Media.TITLE, "new picture");
-        val.put(Media.DESCRIPTION, "form the phone");
+        val.put(Media.DESCRIPTION, "from the phone");
         imageUri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, val);
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);

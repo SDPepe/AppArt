@@ -1,6 +1,10 @@
 package ch.epfl.sdp.appart;
 
 
+import android.content.Intent;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -15,12 +19,22 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+import java.io.IOException;
+
 import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
@@ -66,13 +80,17 @@ public class UserProfileActivityTest {
     @BindValue
     DatabaseService database = new MockDatabaseService();
 
+    UiDevice mDevice;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
     @Before
     public void init() {
         Intents.init();
         hiltRule.inject();
     }
     @Test
-    public void userProfileActivityTest() {
+    public void userProfileActivityTest() throws {
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
                         childAtPosition(
@@ -414,6 +432,55 @@ public class UserProfileActivityTest {
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
+
+        ViewInteraction appCompatButton7 = onView(
+                allOf(withId(R.id.modifyButton), withText("EDIT PROFILE"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                1),
+                        isDisplayed()));
+        appCompatButton7.perform(click());
+
+        ViewInteraction circleImageView = onView(
+                allOf(withId(R.id.profilePicture_UserProfile_imageView), withContentDescription("profile picture"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                0),
+                        isDisplayed()));
+        circleImageView.perform(click());
+
+
+        ViewInteraction appCompatButton5 = onView(
+                allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
+                        childAtPosition(
+                                allOf(withId(R.id.camera_layout),
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0)),
+                                4),
+                        isDisplayed()));
+        appCompatButton5.perform(click());
+
+        ViewInteraction appCompatButton6 = onView(
+                allOf(withId(R.id.doneButton), withText("DONE"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                0),
+                        isDisplayed()));
+        appCompatButton6.perform(click());
+
+        ViewInteraction imageView2 = onView(
+                allOf(withId(R.id.profilePicture_UserProfile_imageView), withContentDescription("profile picture"),
+                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                        isDisplayed()));
+        imageView2.check(matches(isDisplayed()));
+
     }
 
     private static Matcher<View> childAtPosition(

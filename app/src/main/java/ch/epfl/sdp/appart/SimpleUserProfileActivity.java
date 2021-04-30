@@ -104,7 +104,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        String[] verifier = this.advertiserUser.getProfileImage().split(":");
+        String[] verifier = this.advertiserUser.getProfileImagePathAndName().split(":");
         if (verifier[0].equals("userIcon")){
             int id = Integer.parseInt(verifier[1]);
             Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);

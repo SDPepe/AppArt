@@ -100,17 +100,19 @@ public class MockDatabaseTest {
 
     @Test
     public void putImageThrowsOnNullUri() throws ExecutionException, InterruptedException {
-        assertThrows(ExecutionException.class, () -> dataBase.putImage(null, "", "").get());
+        assertThrows(ExecutionException.class, () -> dataBase.putImage(null, "").get());
     }
+
     @Test
-    public void putImageThrowsOnNullName() throws ExecutionException, InterruptedException {
+    public void putImageThrowsOnNullPathAndName() throws ExecutionException, InterruptedException {
         Uri uri = mock(Uri.class);
-        assertThrows(ExecutionException.class, () -> dataBase.putImage(uri, null, "").get());
+        assertThrows(ExecutionException.class, () -> dataBase.putImage(uri, null).get());
     }
+
     @Test
-    public void putImageThrowsOnNullUser() throws ExecutionException, InterruptedException {
+    public void deleteImageThrowsOnNullPathAndName() throws ExecutionException, InterruptedException {
         Uri uri = mock(Uri.class);
-        assertThrows(ExecutionException.class, () -> dataBase.putImage(uri, "", null).get());
+        assertThrows(ExecutionException.class, () -> dataBase.deleteImage(null).get());
     }
 
 }

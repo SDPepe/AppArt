@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.ad.PricePeriod;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -173,7 +173,7 @@ public class AdCreationActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     private void takePhoto() {
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra("Activity","Ads");
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.AD_CREATION_ACTIVITY);
         startActivityForResult(intent, 1);
     }
 

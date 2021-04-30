@@ -21,6 +21,7 @@ import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -108,7 +109,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * called by the remove button under imageView
      */
     public void removeProfileImage(View view) {
-        mViewModel.deleteImage(this.sessionUser.getProfileImage());
+        mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
         this.sessionUser.setDefaultProfileImage();
         imageView.setImageResource(android.R.color.transparent);
         this.removeImageButton.setVisibility(View.GONE);
@@ -120,7 +121,7 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     public void changeProfileImage(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra("Activity", "User");
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
         startActivityForResult(intent, 1);
     }
 
@@ -137,7 +138,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 Uri profileUri = data.getParcelableExtra("profileUri");
                 mViewModel.setUri(profileUri);
                 imageView.setImageURI(profileUri);
-                mViewModel.deleteImage(this.sessionUser.getProfileImage());
+                mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
 
                 StringBuilder imagePathInDb = new StringBuilder();
                 imagePathInDb
@@ -149,7 +150,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .append(System.currentTimeMillis())
                         .append(FirebaseLayout.JPEG);
 
-                this.sessionUser.setProfileImage(imagePathInDb.toString());
+                this.sessionUser.setProfileImagePathAndName(imagePathInDb.toString());
                 mViewModel.updateImage(this.sessionUser.getUserId());
                 mViewModel.getUpdateImageConfirmed().observe(this, this::imageUpdateResult);
             }
@@ -269,6 +270,6 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     private void setPictureToImageComponent() {
         database.accept(new GlideImageViewLoader(this, imageView,
-                this.sessionUser.getProfileImage()));
+                this.sessionUser.getProfileImagePathAndName()));
     }
 }

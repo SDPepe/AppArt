@@ -49,16 +49,17 @@ public interface User {
     /**
      * getter for user profile picture
      *
-     * @return the profile picture as a path String
+     * @return the profile picture as a path (e.g. users/default/photo.jpeg)
      */
-    String getProfileImage();
+    String getProfileImagePathAndName();
 
     /**
      * setter for user profile picture
      *
-     * @param img the image path for the users new profile picture
+     * @param img the image complete path (e.g. users/default/photo.jpeg)
+     * of the users new profile picture
      */
-    void setProfileImage(String img);
+    void setProfileImagePathAndName(String img);
 
     /**
      * getter for users age
