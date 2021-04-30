@@ -2,6 +2,10 @@
 
 ## Antoine
 
+This week I worked on the map testing. This consists in testing the MapActivity when used to display all available apartments and in testing the MapaActivity when it is used to display the location of a specific apartment. I started by trying to test the location service with no success. Everything worked on my local machine but it didn't work on cirrus. I then moved to map testing. I had to change the emulator used in cirrus because it is necessary to have the google_apis for the map to work. I had lots of issues while trying to test this feature and it wasn't merged for this week.
+
+The tests now works and will soon be merged.
+
 ## Carlo
 
 ## Émilien
