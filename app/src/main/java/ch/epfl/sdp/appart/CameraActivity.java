@@ -156,9 +156,9 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void setDisplayAction(){
-        if(activity.equals("Ads")) {
+        if(activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
             displayListImage();
-        } else if (activity.equals("User")) {
+        } else if (activity.equals(ActivityCommunicationLayout.USER_PROFILE_ACTIVITY)) {
             displayImage();
         }
     }
