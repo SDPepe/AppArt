@@ -114,6 +114,4 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         database.accept(new GlideImageViewLoader(this, imageView,
                 this.advertiserUser.getProfileImagePathAndName()));
     }
-
-
 }
