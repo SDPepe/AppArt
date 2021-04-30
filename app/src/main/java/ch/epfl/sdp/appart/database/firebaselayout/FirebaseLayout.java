@@ -1,7 +1,7 @@
 package ch.epfl.sdp.appart.database.firebaselayout;
 
 /**
- * Un-instantiable Holder for the layout of FIrebase Storage and Firestore.
+ * Un-instantiable Holder for the layout of Firebase Storage and Firestore.
  */
 public final class FirebaseLayout {
 
