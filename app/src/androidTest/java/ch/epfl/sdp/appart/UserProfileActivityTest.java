@@ -90,7 +90,7 @@ public class UserProfileActivityTest {
         hiltRule.inject();
     }
     @Test
-    public void userProfileActivityTest() throws {
+    public void userProfileActivityTest() {
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
                         childAtPosition(
