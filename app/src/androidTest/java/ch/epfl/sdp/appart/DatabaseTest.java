@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
@@ -37,6 +38,9 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest
@@ -208,6 +212,11 @@ public class DatabaseTest {
     public void getCardsFilterTest(){
         List<Card> cards = db.getCardsFilter("New City").join();
         assertThat(cards.size(), is(1));
+    }
+
+    @Test
+    public void deleteImageThrowsOnNullPathAndName() {
+        assertThrows(IllegalArgumentException.class, () -> db.deleteImage(null).get());
     }
 
     @Test
