@@ -35,7 +35,6 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;

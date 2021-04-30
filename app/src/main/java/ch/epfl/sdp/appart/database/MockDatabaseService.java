@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.ad.Ad;
-import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
@@ -42,6 +41,7 @@ public class MockDatabaseService implements DatabaseService {
         images.add("users/default/user_example_female.png");
         images.add("users/default/user_example_male.png");
         images.add("users/default/user_example_no_gender.png");
+        images.add("users/test/path/photo.jpeg");
 
         List<String> picturesReferences = Arrays.asList(
                 "file:///android_asset/fake_ad_1.jpg",
@@ -158,16 +158,9 @@ public class MockDatabaseService implements DatabaseService {
     @Override
     public CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
-        if (uri == null || imagePathAndName == null){
+        if (imagePathAndName == null){
             result.completeExceptionally(new IllegalArgumentException());
         } else {
-            System.out.println("=============================================================");
-            System.out.println("=============================================================");
-            System.out.println("=============================================================");
-            System.out.println(uri.toString() + " | " +  imagePathAndName);
-            System.out.println("=============================================================");
-            System.out.println("=============================================================");
-            System.out.println("=============================================================");
             images.add(imagePathAndName);
             result.complete(true);
         }
@@ -192,6 +185,10 @@ public class MockDatabaseService implements DatabaseService {
         CompletableFuture<Void> futureClear = new CompletableFuture<>();
         futureClear.complete(null);
         return futureClear;
+    }
+
+    public List<String> getImages() {
+        return this.images;
     }
 
     public void accept(GlideLoaderVisitor visitor) {

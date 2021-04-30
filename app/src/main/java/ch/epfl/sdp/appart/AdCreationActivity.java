@@ -34,7 +34,6 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.ad.PricePeriod;
-import ch.epfl.sdp.appart.hilt.HiltApplication_HiltComponents;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
