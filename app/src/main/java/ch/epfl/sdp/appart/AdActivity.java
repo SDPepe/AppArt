@@ -57,16 +57,6 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
         mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
 
-        // if activity opened by adcreation, load the last ad created by the user,
-        // otherwise load the id passed by scrollingactivity
-        /*
-        if (getIntent().getBooleanExtra("fromAdCreation", false)) {
-            List<String> adIds = login.getCurrentUser().getAdsIds();
-            mViewModel.initAd(adIds.get(adIds.size() - 1));
-        } else {
-            mViewModel.initAd(getIntent().getStringExtra("adID"));
-        }
-        */
         adId = getIntent().getStringExtra("adID");
         mViewModel.initAd(adId);
     }
@@ -81,13 +71,13 @@ public class AdActivity extends ToolbarActivity {
         horizontalLayout.removeAllViews();
 
         for (int i = 0; i < references.size(); i++) {
+            String sep = FirebaseLayout.SEPARATOR;
+            String fullRef = FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
-            String sep = FirebaseLayout.SEPARATOR;
-            database.accept(new GlideImageViewLoader(this, photo,
-                    FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i)));
+            database.accept(new GlideImageViewLoader(this, photo, fullRef));
             horizontalLayout.addView(myView);
             if (i != 4) {
                 Space hspacer = new Space(this);
@@ -97,6 +87,8 @@ public class AdActivity extends ToolbarActivity {
                 ));
                 horizontalLayout.addView(hspacer);
             }
+            // open image fullscreen on tap
+            myView.setOnClickListener(e -> openImageFullscreen(fullRef));
         }
     }
 
@@ -167,6 +159,12 @@ public class AdActivity extends ToolbarActivity {
         Intent intent = new Intent(this, MapActivity.class);
         TextView addressView = findViewById(R.id.address_field_Ad_textView);
         intent.putExtra(getString(R.string.intentLocationForMap), addressView.getText().toString());
+        startActivity(intent);
+    }
+
+    private void openImageFullscreen(String imageId){
+        Intent intent = new Intent(this, FullScreenImageActivity.class);
+        intent.putExtra("imageId", imageId);
         startActivity(intent);
     }
 

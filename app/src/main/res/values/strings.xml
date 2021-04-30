@@ -129,5 +129,7 @@
     <string name="getLocationButton">Get location</string>
     <string name="locationDefault">0.0</string>
 
+    <!-- FullScreenImageActivity stuff -->
+    <string name="contentDescFullScreenImage">Photo</string>
 
 </resources>
