@@ -37,6 +37,7 @@ import dagger.hilt.android.testing.UninstallModules;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 @UninstallModules({DatabaseModule.class, MapModule.class, LocationModule.class})
 @HiltAndroidTest
@@ -84,6 +85,8 @@ public class MapUITest {
             if (!markerDescs.contains(card.getCity())) {
                 Location loc =
                         locationService.getLocationFromName("Lausanne").join();
+                assertThat(Math.abs(loc.latitude - 46.5196535), lessThanOrEqualTo(0.05));
+                assertThat(Math.abs(loc.longitude - 6.6322734), lessThanOrEqualTo(0.05));
                 mapService.centerOnLocation(loc, true);
                 List<UiObject2> lists =
                         device.findObjects(By.descContains(card.getCity()));
