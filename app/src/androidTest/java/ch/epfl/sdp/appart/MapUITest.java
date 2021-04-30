@@ -66,7 +66,7 @@ public class MapUITest {
             new AndroidLocationService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
 
-    @Test
+    /*@Test
     public void markerTest() {
 
 
@@ -97,5 +97,5 @@ public class MapUITest {
         }
 
         assertThat(markers.size(), is(cards.size()));
-    }
+    }*/
 }
