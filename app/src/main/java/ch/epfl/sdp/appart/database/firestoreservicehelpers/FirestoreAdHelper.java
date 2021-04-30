@@ -213,7 +213,7 @@ public class FirestoreAdHelper {
     }
 
     /**
-     * Checks whether the upload of ad information to FIrestore completed successfully. If it didn't,
+     * Checks whether the upload of ad information to Firestore completed successfully. If it didn't,
      * cleans up and completes exceptionally.
      */
     private void checkAdUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,

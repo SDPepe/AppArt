@@ -414,6 +414,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 
+        /*
         ViewInteraction appCompatButton7 = onView(
                 allOf(withId(R.id.modifyButton), withText("EDIT PROFILE"),
                         childAtPosition(
@@ -447,6 +448,7 @@ public class UserProfileActivityTest {
                                 0),
                         isDisplayed()));
         appCompatButton6.perform(click());
+        */
 
         ViewInteraction imageView2 = onView(
                 allOf(withId(R.id.profilePicture_UserProfile_imageView), withContentDescription("profile picture"),
