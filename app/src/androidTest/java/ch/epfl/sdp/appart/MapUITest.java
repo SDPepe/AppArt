@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart;
 import android.Manifest;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.test.annotation.UiThreadTest;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
@@ -57,10 +59,8 @@ public class MapUITest {
             GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET);
 
     @Rule
-    public UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
-
-    @Rule
     public InstantTaskExecutorRule executorRule = new InstantTaskExecutorRule();
+
     @BindValue
     final
     DatabaseService databaseService = new MockDatabaseService();
@@ -74,7 +74,7 @@ public class MapUITest {
 
 
     @Test
-    public void markerTest() throws InterruptedException {
+    public void markerTest() throws InterruptedException, ExecutionException {
 
 
         UiDevice device =
@@ -83,7 +83,8 @@ public class MapUITest {
         boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")),
                 10000);
         assertThat(foundMap, is(true));
-        Thread.sleep(5000);
+
+        Thread.sleep(2000);
 
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
