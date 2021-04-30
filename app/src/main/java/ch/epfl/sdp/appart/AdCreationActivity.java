@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.ad.PricePeriod;
+import ch.epfl.sdp.appart.hilt.HiltApplication_HiltComponents;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -182,10 +183,10 @@ public class AdCreationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1){
             if (resultCode == RESULT_OK){
-                int size = data.getIntExtra("size", 0);
+                int size = data.getIntExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
                 List<Uri> listUri = new ArrayList<>();
                 for(int i = 0; i< size; i++){
-                 listUri.add(data.getParcelableExtra("imageUri"+i));
+                 listUri.add(data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI + i));
                 }
                 mViewModel.setUri(listUri);
 

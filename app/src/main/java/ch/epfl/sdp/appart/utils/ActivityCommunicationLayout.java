@@ -26,6 +26,10 @@ public final class ActivityCommunicationLayout {
 
     public static final String PROVIDING_PASSWORD = "password";
 
+    public static final String PROVIDING_IMAGE_URI = "uri";
+
+    public static final String PROVIDING_SIZE = "size";
+
 
     /*  IDs for provided information */
 

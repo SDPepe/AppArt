@@ -83,17 +83,17 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("size", listImageUri.size());
+                resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_SIZE, listImageUri.size());
                 int count = 0;
                 for (Uri i : listImageUri) {
-                    resultIntent.putExtra("imageUri" + count, i);
+                    resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI + count, i);
                     count++;
                 }
                 setResult(RESULT_OK, resultIntent);
                 finish();
             } else if (activity.equals(ActivityCommunicationLayout.USER_PROFILE_ACTIVITY)) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("profileUri", imageUri);
+                resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI, imageUri);
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }

@@ -135,7 +135,7 @@ public class UserProfileActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK){
                 this.doneButton.setEnabled(false);
-                Uri profileUri = data.getParcelableExtra("profileUri");
+                Uri profileUri = data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI);
                 mViewModel.setUri(profileUri);
                 imageView.setImageURI(profileUri);
                 mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
