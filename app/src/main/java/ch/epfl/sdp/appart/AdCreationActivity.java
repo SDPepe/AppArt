@@ -48,6 +48,8 @@ public class AdCreationActivity extends AppCompatActivity {
     DatabaseService database;
     AdCreationViewModel mViewModel;
     private final static int PICTURES_IMPORT_ACTIVITY_RESULT = 2;
+    private List<Uri> picturesUris;
+    private List<Uri> panoramaUris;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,11 +78,13 @@ public class AdCreationActivity extends AppCompatActivity {
             ((TextView)findViewById(R.id.city_AdCreation_editText)).setText("Lausanne");
             ((TextView)findViewById(R.id.price_AdCreation_editText)).setText("1234");
             ((TextView)findViewById(R.id.description_AdCreation_editText)).setText("Welcome to Appart !");
-
-            Uri simplePictureUri = Uri.parse("android.resource://ch.epfl.sdp.appart/" + R.drawable.apart_fake_image_1);
-            Uri panoramaUri = Uri.parse("android.resource://ch.epfl.sdp.appart/" + R.drawable.panorama_test);
+            //"android.resource://ch.epfl.sdp.appart/"
+            Uri simplePictureUri = Uri.parse("file:///android_asset/Ads/fake_ad_1.jpg");
+            Uri panoramaUri = Uri.parse("file:///android_asset/panorama_test.jpg");
             List<Uri> picturesUris = Arrays.asList(simplePictureUri, simplePictureUri, simplePictureUri);
             List<Uri> panoramasUris = Arrays.asList(panoramaUri, panoramaUri, panoramaUri);
+            this.picturesUris = picturesUris;
+            this.panoramaUris = panoramasUris;
 
             fillHorizontalViewWithPictures(findViewById(R.id.pictures_AdCreation_linearLayout), picturesUris);
             fillHorizontalViewWithPictures(findViewById(R.id.panorama_AdCreation_linearLayout), panoramasUris);
@@ -150,6 +154,7 @@ public class AdCreationActivity extends AppCompatActivity {
         mViewModel.setDescription(getContentOfEditText(R.id.description_AdCreation_editText));
         // TODO modify when logic for adding vrtour is added
         mViewModel.setVRTourEnable(false);
+        mViewModel.setUri(picturesUris);
     }
 
     private String joinStrings(int id1, int id2) {
@@ -213,8 +218,7 @@ public class AdCreationActivity extends AppCompatActivity {
                 for(int i = 0; i< size; i++) {
                  listUri.add(data.getParcelableExtra("imageUri"+i));
                 }
-                mViewModel.setUri(listUri);
-
+                picturesUris = listUri;
                 fillHorizontalViewWithPictures(findViewById(R.id.pictures_AdCreation_linearLayout), listUri);
             }
         } else if (requestCode == PICTURES_IMPORT_ACTIVITY_RESULT) {
