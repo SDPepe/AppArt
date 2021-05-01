@@ -115,7 +115,7 @@ public class AdCreationUITest {
     }
 
     @Test
-    public void cameraActivityWorksAndRespondsCorrectly() throws InterruptedException{
+    public void cameraActivityWorksAndRespondsCorrectly() {
         onView(withId(R.id.addPhoto_AdCreation_button)).perform(scrollTo(), click());
         /* =================================================================================================== */
         /*                         HOW TO CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                        */
@@ -143,8 +143,6 @@ public class AdCreationUITest {
         intended(toPackage("com.android.camera2"));
 
         onView(withId(R.id.confirm_Camera_button)).perform(click());
-
-        Thread.sleep(1000);
 
         ViewInteraction horizontalScrollView = onView(
                 allOf(withId(R.id.picturesScroll_AdCreation_ScrollView),
