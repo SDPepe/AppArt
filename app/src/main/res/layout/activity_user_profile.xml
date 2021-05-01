@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="fill"
     android:focusable="auto"
+    android:paddingBottom="5dp"
     tools:context=".UserProfileActivity">
 
     <LinearLayout
@@ -14,6 +15,7 @@
         android:layout_height="match_parent"
         android:gravity="fill"
         android:orientation="vertical"
+        android:paddingBottom="10dp"
         android:paddingTop="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -120,7 +122,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="329dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:foregroundGravity="bottom"
             android:gravity="bottom"
@@ -297,8 +299,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:paddingBottom="30dp"
-                android:paddingTop="30dp">
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
 
                 <Button
                     android:id="@+id/doneButton"

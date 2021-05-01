@@ -99,7 +99,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="329dp"
+            android:layout_height="wrap_content"
             android:gravity="bottom|center"
             android:orientation="vertical">
 
@@ -286,8 +286,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:paddingBottom="30dp"
-                android:paddingTop="60dp">
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
 
                 <Button
                     android:id="@+id/contact_SimpleUserProfile_button"
