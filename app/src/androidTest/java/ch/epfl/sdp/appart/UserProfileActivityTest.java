@@ -16,6 +16,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,6 +88,7 @@ public class UserProfileActivityTest {
         hiltRule.inject();
     }
     @Test
+    @Ignore
     public void userProfileActivityTest() {
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
