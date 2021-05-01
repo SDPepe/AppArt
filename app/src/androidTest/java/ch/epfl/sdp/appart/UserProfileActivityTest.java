@@ -511,11 +511,6 @@ public class UserProfileActivityTest {
 
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                2),
                         isDisplayed()));
         appCompatButton3.perform(click());
 
