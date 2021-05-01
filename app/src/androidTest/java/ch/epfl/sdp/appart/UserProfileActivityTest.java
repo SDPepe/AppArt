@@ -439,7 +439,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton7.perform(click());
 
-        onView(withId(R.id.profilePicture_UserProfile_imageView)).perform(click());
+        onView(withId(R.id.editImage_UserProfile_button)).perform(click());
 
 
 

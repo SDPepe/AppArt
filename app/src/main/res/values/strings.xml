@@ -53,6 +53,7 @@
     <string name="genderText"> Gender </string>
     <string name="nonUniAccountClaimer">  Regular account </string>
     <string name="removeProfilePicture"> REMOVE </string>
+    <string name="changeProfilePicture"> CHANGE </string>
     <string name="updateUserFailedInDB">  Information update failed, try again </string>
     <string name="updateUserImageFailedInDB">  Image update failed, try again </string>
     <string-array name="genderList">

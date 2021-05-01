@@ -45,6 +45,7 @@ public class UserProfileActivity extends AppCompatActivity {
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
+    private Button changeImageButton;
     private Button removeImageButton;
     private EditText nameEditText;
     private EditText ageEditText;
@@ -66,6 +67,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.modifyButton = findViewById(R.id.editProfile_UserProfile_button);
         this.doneButton = findViewById(R.id.doneButton);
         this.removeImageButton = findViewById(R.id.removeImage_UserProfile_button);
+        this.changeImageButton = findViewById(R.id.editImage_UserProfile_button);
         this.nameEditText = findViewById(R.id.name_UserProfile_editText);
         this.ageEditText = findViewById(R.id.age_UserProfile_editText);
         this.emailTextView = findViewById(R.id.emailText_UserProfile_textView);
@@ -74,8 +76,10 @@ public class UserProfileActivity extends AppCompatActivity {
         this.genderSpinner.setEnabled(ageEditText.isEnabled());
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_UserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
+
         this.imageView.setEnabled(false);
         this.removeImageButton.setVisibility(View.GONE);
+        this.changeImageButton.setVisibility(View.GONE);
 
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
@@ -96,6 +100,7 @@ public class UserProfileActivity extends AppCompatActivity {
     public void editProfile(View view) {
         this.modifyButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
+        this.changeImageButton.setVisibility(View.VISIBLE);
         if (!this.sessionUser.hasDefaultProfileImage()) {
             this.removeImageButton.setVisibility(View.VISIBLE);
         }
@@ -173,6 +178,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
         this.removeImageButton.setVisibility(View.GONE);
+        this.changeImageButton.setVisibility(View.GONE);
     }
 
     /**
@@ -218,7 +224,6 @@ public class UserProfileActivity extends AppCompatActivity {
         this.ageEditText.setEnabled(!this.ageEditText.isEnabled());
         this.genderSpinner.setEnabled(!this.genderSpinner.isEnabled());
         this.phoneNumberEditText.setEnabled(!this.phoneNumberEditText.isEnabled());
-        this.imageView.setEnabled(!this.imageView.isEnabled());
         /* email is never enabled since another process is required to edit it */
     }
 
