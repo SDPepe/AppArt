@@ -291,6 +291,8 @@ public class UserProfileActivityTest {
         /* =================================================================================================== */
 
         // Create a bitmap we can use for our simulated camera image
+
+        /*
         Bitmap icon = BitmapFactory.decodeResource(
                 ApplicationProvider.getApplicationContext().getResources(),
                 R.mipmap.ic_launcher);
@@ -311,6 +313,8 @@ public class UserProfileActivityTest {
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         intended(toPackage("com.android.camera2"));
 
+
+*/
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
@@ -343,6 +347,8 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton6.perform(click());
 
+        /*
+
         ViewInteraction appCompatButton7 = onView(
                 allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
                         childAtPosition(
@@ -352,6 +358,8 @@ public class UserProfileActivityTest {
                                 2),
                         isDisplayed()));
         appCompatButton7.perform(click());
+
+*/
 
         ViewInteraction appCompatButton8 = onView(
                 allOf(withId(R.id.doneButton), withText("DONE"),
