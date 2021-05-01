@@ -63,7 +63,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         /* UI components initialisation */
-        this.modifyButton = findViewById(R.id.modifyButton);
+        this.modifyButton = findViewById(R.id.editProfile_UserProfile_button);
         this.doneButton = findViewById(R.id.doneButton);
         this.removeImageButton = findViewById(R.id.removeImage_UserProfile_button);
         this.nameEditText = findViewById(R.id.name_UserProfile_editText);

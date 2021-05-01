@@ -16,12 +16,10 @@ import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.InstrumentationRegistry;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
@@ -132,7 +130,7 @@ public class UserProfileActivityTest {
         appCompatTextView.perform(click());
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.modifyButton), withText("EDIT PROFILE"),
+                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
@@ -426,13 +424,13 @@ public class UserProfileActivityTest {
         textView13.check(matches(withText("Gender")));
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.modifyButton), withText("EDIT PROFILE"),
+                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 
         ViewInteraction appCompatButton7 = onView(
-                allOf(withId(R.id.modifyButton), withText("EDIT PROFILE"),
+                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
@@ -500,7 +498,7 @@ public class UserProfileActivityTest {
         imageView2.check(matches(isDisplayed()));
 
         ViewInteraction appCompatButton2_ = onView(
-                allOf(withId(R.id.modifyButton), withText("EDIT PROFILE"),
+                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
