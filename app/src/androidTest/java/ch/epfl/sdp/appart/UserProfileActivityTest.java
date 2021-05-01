@@ -245,6 +245,53 @@ public class UserProfileActivityTest {
                 .atPosition(0);
         appCompatTextView2.perform(click());
 
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.editImage_UserProfile_button), withText("CHANGE"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        2),
+                                1),
+                        isDisplayed()));
+        appCompatButton3.perform(click());
+
+
+        /* =================================================================================================== */
+        /*                         HOW TO CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                        */
+        /* =================================================================================================== */
+
+        // Create a bitmap we can use for our simulated camera image
+        Bitmap icon = BitmapFactory.decodeResource(
+                ApplicationProvider.getApplicationContext().getResources(),
+                R.mipmap.ic_launcher);
+
+
+        // Build a result to return from the Camera app
+        Intent resultData = new Intent();
+        resultData.putExtra("data", icon);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+
+        // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
+        // with the ActivityResult we just created
+        intending(toPackage("com.android.camera2")).respondWith(result);
+
+        // Now that we have the stub in place, click on the button in our app that launches into the Camera
+        onView(withId(R.id.camera_Camera_button)).perform(click());
+
+        // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
+        intended(toPackage("com.android.camera2"));
+
+        ViewInteraction appCompatButton5 = onView(
+                allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
+                        childAtPosition(
+                                allOf(withId(R.id.camera_layout),
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0)),
+                                4),
+                        isDisplayed()));
+        appCompatButton5.perform(click());
+
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.doneButton), withText("DONE"),
                         childAtPosition(
@@ -254,6 +301,33 @@ public class UserProfileActivityTest {
                                 0),
                         isDisplayed()));
         appCompatButton2.perform(click());
+
+        ViewInteraction appCompatButton12 = onView(
+                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                1),
+                        isDisplayed()));
+        appCompatButton12.perform(click());
+
+        ViewInteraction appCompatButton9 = onView(
+                allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
+                        isDisplayed()));
+        appCompatButton9.perform(click());
+
+        ViewInteraction appCompatButton4 = onView(
+                allOf(withId(R.id.doneButton), withText("DONE"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                0),
+                        isDisplayed()));
+        appCompatButton4.perform(click());
+
+        //====================================================================================================
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.email_UserProfile_textView), withText("Email"),
@@ -422,110 +496,6 @@ public class UserProfileActivityTest {
                                 withParent(withId(R.id.attributes_UserProfile_layout)))),
                         isDisplayed()));
         textView13.check(matches(withText("Gender")));
-
-        ViewInteraction button = onView(
-                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-                        isDisplayed()));
-        button.check(matches(isDisplayed()));
-
-        ViewInteraction appCompatButton7 = onView(
-                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                1),
-                        isDisplayed()));
-        appCompatButton7.perform(click());
-
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.editImage_UserProfile_button), withText("CHANGE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                1),
-                        isDisplayed()));
-        appCompatButton3.perform(click());
-
-
-        /* =================================================================================================== */
-        /*                         HOW TO CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                        */
-        /* =================================================================================================== */
-
-        // Create a bitmap we can use for our simulated camera image
-        Bitmap icon = BitmapFactory.decodeResource(
-                ApplicationProvider.getApplicationContext().getResources(),
-                R.mipmap.ic_launcher);
-
-
-        // Build a result to return from the Camera app
-        Intent resultData = new Intent();
-        resultData.putExtra("data", icon);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
-
-        // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
-        // with the ActivityResult we just created
-        intending(toPackage("com.android.camera2")).respondWith(result);
-
-        // Now that we have the stub in place, click on the button in our app that launches into the Camera
-        onView(withId(R.id.camera_Camera_button)).perform(click());
-
-        // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
-        intended(toPackage("com.android.camera2"));
-
-        ViewInteraction appCompatButton5 = onView(
-                allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
-                        childAtPosition(
-                                allOf(withId(R.id.camera_layout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                4),
-                        isDisplayed()));
-        appCompatButton5.perform(click());
-
-        ViewInteraction appCompatButton6 = onView(
-                allOf(withId(R.id.doneButton), withText("DONE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                0),
-                        isDisplayed()));
-        appCompatButton6.perform(click());
-
-        ViewInteraction imageView2 = onView(
-                allOf(withId(R.id.profilePicture_UserProfile_imageView), withContentDescription("profile picture"),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-                        isDisplayed()));
-        imageView2.check(matches(isDisplayed()));
-
-        ViewInteraction appCompatButton2_ = onView(
-                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                1),
-                        isDisplayed()));
-        appCompatButton2_.perform(click());
-
-        ViewInteraction appCompatButton9 = onView(
-                allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
-                        isDisplayed()));
-        appCompatButton9.perform(click());
-
-        ViewInteraction appCompatButton4 = onView(
-                allOf(withId(R.id.doneButton), withText("DONE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                0),
-                        isDisplayed()));
-        appCompatButton4.perform(click());
 
         ViewInteraction imageView_ = onView(
                 allOf(withId(R.id.profilePicture_UserProfile_imageView), withContentDescription("profile picture"),
