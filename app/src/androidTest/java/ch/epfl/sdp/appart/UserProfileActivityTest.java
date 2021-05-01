@@ -439,10 +439,15 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton7.perform(click());
 
-        onView(withId(R.id.editImage_UserProfile_button)).perform(click());
-
-
-
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.editImage_UserProfile_button), withText("CHANGE"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        2),
+                                1),
+                        isDisplayed()));
+        appCompatButton3.perform(click());
 
 
         /* =================================================================================================== */
@@ -507,10 +512,10 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton2_.perform(click());
 
-        ViewInteraction appCompatButton3 = onView(
+        ViewInteraction appCompatButton9 = onView(
                 allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
                         isDisplayed()));
-        appCompatButton3.perform(click());
+        appCompatButton9.perform(click());
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.doneButton), withText("DONE"),
