@@ -158,11 +158,6 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         if (resultCode == ActivityCommunicationLayout.RESULT_IS_FOR_TEST) {
-            System.out.println("================================================");
-            System.out.println("================================================");
-            System.out.println(data.getStringExtra("data"));
-            System.out.println("================================================");
-            System.out.println("================================================");
             imageUri = Uri.EMPTY;
             setDisplayAction();
         }

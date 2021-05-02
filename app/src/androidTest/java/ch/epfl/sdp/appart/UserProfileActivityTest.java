@@ -294,7 +294,7 @@ public class UserProfileActivityTest {
                                         2),
                                 1),
                         isDisplayed()));
-        appCompatButton3.perform(scrollTo(), click());
+        appCompatButton3.perform(click());
 
 
 
@@ -327,10 +327,18 @@ public class UserProfileActivityTest {
         UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
         // Search for correct button in the dialog.
-        UiObject buttonAllow = uiDevice.findObject(new UiSelector().text("Allow all the time"));
+        UiObject buttonAllow = uiDevice.findObject(new UiSelector().text("ALLOW"));
 
         if (buttonAllow.exists() && buttonAllow.isEnabled()) {
             buttonAllow.click();
+            uiDevice.pressBack();
+        }
+
+        // Search for correct button in the dialog.
+        UiObject buttonAllow2 = uiDevice.findObject(new UiSelector().text("Allow all the time"));
+
+        if (buttonAllow2.exists() && buttonAllow2.isEnabled()) {
+            buttonAllow2.click();
             uiDevice.pressBack();
         }
 
