@@ -46,7 +46,6 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -287,12 +286,12 @@ public class UserProfileActivityTest {
         appCompatButton3.perform(click());
 
         /* =================================================================================================== */
-        /*                         HOW TO CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                        */
+        /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
         /* =================================================================================================== */
 
         // Create a bitmap we can use for our simulated camera image
 
-        /*
+
         Bitmap icon = BitmapFactory.decodeResource(
                 ApplicationProvider.getApplicationContext().getResources(),
                 R.mipmap.ic_launcher);
@@ -309,12 +308,6 @@ public class UserProfileActivityTest {
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
-
-        // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
-        intended(toPackage("com.android.camera2"));
-
-
-*/
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
@@ -347,7 +340,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton6.perform(click());
 
-        /*
+
 
         ViewInteraction appCompatButton7 = onView(
                 allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
@@ -359,7 +352,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton7.perform(click());
 
-*/
+
 
         ViewInteraction appCompatButton8 = onView(
                 allOf(withId(R.id.doneButton), withText("DONE"),
