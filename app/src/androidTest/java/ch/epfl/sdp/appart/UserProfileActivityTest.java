@@ -297,6 +297,10 @@ public class UserProfileActivityTest {
         appCompatButton3.perform(click());*/
         onView(withId(R.id.editImage_UserProfile_button)).perform(click());
 
+        onView(withId(R.id.confirm_Camera_button)).perform(click());
+
+        onView(withId(R.id.editImage_UserProfile_button)).perform(click());
+
 
 
         /* =================================================================================================== */
