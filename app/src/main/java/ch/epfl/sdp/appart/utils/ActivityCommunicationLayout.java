@@ -37,4 +37,6 @@ public final class ActivityCommunicationLayout {
 
     public static final String AD_CREATION_ACTIVITY = "AdCreationActivity";
 
+    public static final int RESULT_IS_FOR_TEST = 111;
+
 }

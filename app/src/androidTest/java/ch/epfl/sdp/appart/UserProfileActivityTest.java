@@ -1,7 +1,6 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,6 +33,7 @@ import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -73,6 +73,7 @@ public class UserProfileActivityTest {
     @Rule(order = 2)
     public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 */
+    /* Used to grant camera permission always */
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -302,9 +303,10 @@ public class UserProfileActivityTest {
 
 
         // Build a result to return from the Camera app
-        Intent resultData = new Intent();
-        resultData.putExtra("data", icon);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("data", icon);
+        resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI, "");
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
 
         // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
         // with the ActivityResult we just created

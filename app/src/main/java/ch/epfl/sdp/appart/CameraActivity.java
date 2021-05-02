@@ -147,14 +147,20 @@ public class CameraActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK)
+        if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
             setDisplayAction();
-
+        }
 
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
-
             imageUri = data.getData();
             setDisplayAction();
+        }
+
+        if (resultCode == ActivityCommunicationLayout.RESULT_IS_FOR_TEST) {
+            imageUri = Uri.parse("test");
+            LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
+            horizontalLayout.removeAllViews();
+            horizontalLayout.addView(uploadImage(imageUri));
         }
     }
 
