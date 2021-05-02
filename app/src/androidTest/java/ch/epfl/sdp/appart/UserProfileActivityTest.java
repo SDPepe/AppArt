@@ -295,7 +295,7 @@ public class UserProfileActivityTest {
                                 1),
                         isDisplayed()));
         appCompatButton3.perform(click());*/
-        onView(withId(R.id.editImage_UserProfile_button)).perform(scrollTo(), click());
+        onView(withId(R.id.editImage_UserProfile_button)).perform(click());
 
 
 
