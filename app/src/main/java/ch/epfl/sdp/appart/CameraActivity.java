@@ -157,10 +157,8 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         if (resultCode == ActivityCommunicationLayout.RESULT_IS_FOR_TEST) {
-            imageUri = Uri.parse("test");
-            LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
-            horizontalLayout.removeAllViews();
-            horizontalLayout.addView(uploadImage(imageUri));
+            imageUri = Uri.EMPTY;
+            setDisplayAction();
         }
     }
 

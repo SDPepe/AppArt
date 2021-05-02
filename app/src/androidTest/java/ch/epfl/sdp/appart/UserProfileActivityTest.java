@@ -90,7 +90,7 @@ public class UserProfileActivityTest {
         hiltRule.inject();
     }
     @Test
-    public void userProfileActivityTest() throws InterruptedException {
+    public void userProfileActivityTest() {
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
@@ -280,7 +280,7 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
-        Thread.sleep(5000);
+
 
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.editImage_UserProfile_button), withText("CHANGE"),
@@ -292,7 +292,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton3.perform(click());
 
-        Thread.sleep(5000);
+
 
         /* =================================================================================================== */
         /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
@@ -315,12 +315,12 @@ public class UserProfileActivityTest {
         // with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);
 
-        Thread.sleep(5000);
+
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
 
-        Thread.sleep(5000);
+
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
@@ -333,7 +333,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton4.perform(click());
 
-        Thread.sleep(5000);
+
 
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.doneButton), withText("DONE"),
@@ -345,7 +345,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton5.perform(click());
 
-        Thread.sleep(5000);
+
 
         ViewInteraction appCompatButton6 = onView(
                 allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
@@ -357,7 +357,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton6.perform(click());
 
-        Thread.sleep(5000);
+
 
 
 
@@ -371,7 +371,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton7.perform(click());
 
-        Thread.sleep(5000);
+
 
         ViewInteraction appCompatButton8 = onView(
                 allOf(withId(R.id.doneButton), withText("DONE"),
