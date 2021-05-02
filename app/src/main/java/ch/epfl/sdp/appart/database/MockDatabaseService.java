@@ -53,7 +53,8 @@ public class MockDatabaseService implements DatabaseService {
                 .withStreet("Station 18").withCity("1015 Lausanne")
                 .withAdvertiserId("vetterli-id")
                 .withDescription("Ever wanted the EPFL campus all for yourself?")
-                .withPhotosIds(picturesReferences)
+                .withPicturesReferences(picturesReferences)
+                .withPanoramaReferences(picturesReferences) //put the pictures since its mocked
                 .hasVRTour(false)
                 .build();
 

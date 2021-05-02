@@ -101,13 +101,16 @@ public class FirestoreAdHelper {
     @NonNull
     public CompletableFuture<String> putAd(Ad ad, List<Uri> picturesUris, List<Uri> panoramaUris) {
 
+        //we create a new entry reference for an ad and for the related card
         DocumentReference newAdRef = db.collection(FirebaseLayout.ADS_DIRECTORY).document();
         DocumentReference cardRef = db.collection(FirebaseLayout.CARDS_DIRECTORY).document();
+
+        //storage path is the the path pointing to the ads directory in a folder named with the ad id
         String storagePath = adsPath + FirebaseLayout.SEPARATOR + newAdRef.getId();
 
+        //first we upload the pictures and check that the upload was successful
         Pair<List<String>, List<CompletableFuture<Boolean>>> uploadPicturesResultPair =
                 uploadIndexedImages(picturesUris, FirebaseLayout.PHOTO_NAME, storagePath);
-
         List<String> picturesReferences = uploadPicturesResultPair.first;
         List<CompletableFuture<Boolean>> uploadImagesFutures = uploadPicturesResultPair.second;
 
@@ -115,24 +118,26 @@ public class FirestoreAdHelper {
         CompletableFuture<Void> picturesCheckFuture =
                 checkPhotosUpload(uploadImagesFutures, newAdRef, cardRef, storage.getReference(storagePath));
 
-        //upload the panoramas
+        //We then upload the panoramas images in the ad folder with ad id name
         Pair<List<String>, List<CompletableFuture<Boolean>>> uploadPanoramasResultPair =
                 uploadIndexedImages(picturesUris, FirebaseLayout.PANORAMA_NAME, storagePath);
         List<String> panoramasReferences = uploadPanoramasResultPair.first;
         List<CompletableFuture<Boolean>> uploadPanoramasFutures = uploadPanoramasResultPair.second;
 
-        // check whether any of the uploads failed
+        // check whether any of the panoramas uploads failed. The check will squash everything if there was a problem.
         CompletableFuture<Void> panoramasCheckFuture =
                 checkPhotosUpload(uploadPanoramasFutures, newAdRef, cardRef, storage.getReference(storagePath));
 
-        // build and send card / ad
-        CompletableFuture<Void> cardCheckFuture =
-                checkCardUpload(ad, newAdRef, cardRef, null, picturesReferences.get(0));
-        CompletableFuture<Void> adCheckFuture =
-                checkAdUpload(ad, newAdRef, cardRef, null, picturesReferences);
+        //We upload the card with the first image as miniature
+        CompletableFuture<Void> cardUploadFuture =
+                uploadCardFromReferences(ad, newAdRef, cardRef, null, picturesReferences.get(0));
 
-        // check if everything succeeded
-        return finalizeAdUpload(newAdRef, picturesCheckFuture, panoramasCheckFuture, cardCheckFuture, adCheckFuture);
+        //we upload the ad with the pictures and panoramas images. If a failure occurs we squash everything
+        CompletableFuture<Void> adCheckFuture =
+                uploadAdFromReferences(ad, newAdRef, cardRef, null, picturesReferences, panoramasReferences);
+
+        //check if everything succeeded
+        return finalizeAdUpload(newAdRef, picturesCheckFuture, panoramasCheckFuture, cardUploadFuture, adCheckFuture);
     }
 
     /* <--- getAd private methods --->*/
@@ -179,18 +184,18 @@ public class FirestoreAdHelper {
     /**
      * Adds to the ad a collection with the ids of the images. Cleans up if it fails.
      */
-    private void setPhotosReferencesForAd(CompletableFuture<Void> result, List<String> actualRefs,
-                                          DocumentReference newAdRef) {
+    private CompletableFuture<Void> setPhotosReferencesForAd(List<String> actualRefs, DocumentReference collectionReference) {
+
+        CompletableFuture<Void> result = new CompletableFuture<>();
         List<CompletableFuture<Void>> photosIdResults = new ArrayList<>();
         for (int i = 0; i < actualRefs.size(); i++) {
             Map<String, Object> data = new HashMap<>();
-            data.put("id", actualRefs.get(i));
-            DocumentReference photoRefDocReference = newAdRef.collection(AdLayout.PICTURES_DIRECTORY)
-                    .document();
+            data.put(AdLayout.PICTURE_ELEMENT_ID_FIELD, actualRefs.get(i));
+
             CompletableFuture<Void> photoIdResult = new CompletableFuture<>();
             photosIdResults.add(photoIdResult);
-            photoRefDocReference.set(data).addOnCompleteListener(task -> {
-                if (task.isSuccessful()){
+            collectionReference.set(data).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
                     photoIdResult.complete(null);
                 } else {
                     photoIdResult.completeExceptionally(new DatabaseServiceException(
@@ -205,6 +210,7 @@ public class FirestoreAdHelper {
                         return null;
             });
         }
+        return result;
     }
     /* <--- putAd private methods --->*/
 
@@ -235,19 +241,27 @@ public class FirestoreAdHelper {
      * Checks whether the upload of ad information to FIrestore completed successfully. If it didn't,
      * cleans up and completes exceptionally.
      */
-    private CompletableFuture<Void> checkAdUpload(Ad ad, DocumentReference adRef,
+    private CompletableFuture<Void> uploadAdFromReferences(Ad ad, DocumentReference adRef,
                                DocumentReference cardRef, StorageReference imagesRef,
-                               List<String> imagesRefsList) {
+                               List<String> picturesReferences, List<String> panoramasReferences) {
         CompletableFuture<Void> result = new CompletableFuture<>();
         CompletableFuture<Void> infoUpload = new CompletableFuture<>();
-        CompletableFuture<Void> idsUpload = new CompletableFuture<>();
+
+        //we first set the ad in the database by serializing it and if it fail we squash everything
         adRef.set(serializer.serialize(ad)).addOnCompleteListener(
                 task -> {
                     cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
                     infoUpload.complete(null);
                 });
-        setPhotosReferencesForAd(idsUpload, imagesRefsList, adRef);
-        CompletableFuture.allOf(infoUpload, idsUpload)
+
+        //we then set the ids collection for the ad in firebase.
+        CompletableFuture<Void> picturesIdsUploadFuture =
+                setPhotosReferencesForAd(picturesReferences, adRef.collection(AdLayout.PICTURES_DIRECTORY).document());
+        CompletableFuture<Void> panoramasIdsUploadFuture =
+                setPhotosReferencesForAd(panoramasReferences, adRef.collection(AdLayout.PANORAMA_DIRECTORY).document());
+
+        //we check how everything completed
+        CompletableFuture.allOf(infoUpload, picturesIdsUploadFuture, panoramasIdsUploadFuture)
                 .thenAccept(res -> result.complete(null))
                 .exceptionally(e -> {
                     result.completeExceptionally(e);
@@ -260,7 +274,7 @@ public class FirestoreAdHelper {
      * Checks whether the upload of card information to Firestore completed successfully. If it
      * didn't, cleans up and completes exceptionally.
      */
-    private CompletableFuture<Void> checkCardUpload(Ad ad, DocumentReference adRef,
+    private CompletableFuture<Void> uploadCardFromReferences(Ad ad, DocumentReference adRef,
                                  DocumentReference cardRef, StorageReference imagesRef,
                                  String firstImageRef) {
         CompletableFuture<Void> result = new CompletableFuture<>();
