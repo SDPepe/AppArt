@@ -80,10 +80,10 @@ public class UserProfileActivityTest {
             GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
  */
     @BindValue
-    LoginService login = new MockLoginService();
+    DatabaseService database = new MockDatabaseService();
 
     @BindValue
-    DatabaseService database = new MockDatabaseService();
+    LoginService login = new MockLoginService();
 
     @Before
     public void init() {
@@ -281,6 +281,8 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
+
+
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.editImage_UserProfile_button), withText("CHANGE"),
                         childAtPosition(
@@ -290,6 +292,8 @@ public class UserProfileActivityTest {
                                 1),
                         isDisplayed()));
         appCompatButton3.perform(scrollTo(), click());
+
+
 
         /* =================================================================================================== */
         /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
@@ -312,8 +316,12 @@ public class UserProfileActivityTest {
         // with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);
 
+
+
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
+
+
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
@@ -326,6 +334,8 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton4.perform(click());
 
+
+
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.doneButton), withText("DONE"),
                         childAtPosition(
@@ -336,6 +346,8 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton5.perform(click());
 
+
+
         ViewInteraction appCompatButton6 = onView(
                 allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
                         childAtPosition(
@@ -345,6 +357,8 @@ public class UserProfileActivityTest {
                                 1),
                         isDisplayed()));
         appCompatButton6.perform(click());
+
+
 
 
 
