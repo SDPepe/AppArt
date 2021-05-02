@@ -163,6 +163,7 @@ public class DatabaseTest {
 
         builder.withTitle(title);
         builder.withStreet(street);
+        builder.withAdvertiserName(globalUser.getName());
         builder.withAdvertiserId(globalUser.getUserId());
         builder.withCity(city);
         builder.withDescription(desc);

@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.UserProfileActivity;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
@@ -32,6 +33,7 @@ import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
+import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 /**
  * Helper class to add ads to and retrieve them from Firestore.
@@ -44,6 +46,7 @@ public class FirestoreAdHelper {
     private final FirestoreCardHelper cardHelper;
     private final String adsPath;
     private final AdSerializer serializer;
+    private final UserSerializer userSerializer;
 
     public FirestoreAdHelper() {
         db = FirebaseFirestore.getInstance();
@@ -52,6 +55,7 @@ public class FirestoreAdHelper {
         cardHelper = new FirestoreCardHelper();
         adsPath = FirebaseLayout.ADS_DIRECTORY;
         serializer = new AdSerializer();
+        userSerializer = new UserSerializer();
     }
 
     @NotNull
@@ -135,6 +139,7 @@ public class FirestoreAdHelper {
 
     private void getAndCheckPartialAd(CompletableFuture<Ad.AdBuilder> result,
                                       String adId) {
+
         db.collection(adsPath).document(adId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
@@ -150,7 +155,19 @@ public class FirestoreAdHelper {
                         .withDescription((String) documentSnapshot.get(AdLayout.DESCRIPTION))
                         .hasVRTour((boolean) documentSnapshot.get(AdLayout.VR_TOUR));
 
-                result.complete(builder);
+                db.collection(FirebaseLayout.USERS_DIRECTORY).document((String) documentSnapshot.get(AdLayout.ADVERTISER_ID)).get().addOnCompleteListener(
+                        userTask -> {
+                            if (userTask.isSuccessful()) {
+                                Map<String, Object> data = userTask.getResult().getData();
+                                String advertiserName = userSerializer.deserialize((String) documentSnapshot.get(AdLayout.ADVERTISER_ID), data).getName();
+                                builder.withAdvertiserName(advertiserName);
+                                result.complete(builder);
+                            } else {
+                                result.completeExceptionally(new DatabaseServiceException(
+                                        userTask.getException().getMessage()));
+                            }
+                        }
+                );
             } else {
                 result.completeExceptionally(new DatabaseServiceException(Objects.requireNonNull(
                         task.getException()).getMessage()));

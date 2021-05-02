@@ -56,6 +56,7 @@ public class MockDatabaseService implements DatabaseService {
                 .withPrice(100000)
                 .withPricePeriod(PricePeriod.MONTH)
                 .withStreet("Station 18").withCity("1015 Lausanne")
+                .withAdvertiserName("Martin Vetterli")
                 .withAdvertiserId("vetterli-id")
                 .withDescription("Ever wanted the EPFL campus all for yourself?")
                 .withPhotosIds(picturesReferences)
