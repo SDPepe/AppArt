@@ -286,7 +286,7 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
-        ViewInteraction appCompatButton3 = onView(
+        /*ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.editImage_UserProfile_button), withText("CHANGE"),
                         childAtPosition(
                                 childAtPosition(
@@ -294,7 +294,8 @@ public class UserProfileActivityTest {
                                         2),
                                 1),
                         isDisplayed()));
-        appCompatButton3.perform(click());
+        appCompatButton3.perform(click());*/
+        onView(withId(R.id.editImage_UserProfile_button)).perform(scrollTo(), click());
 
 
 
