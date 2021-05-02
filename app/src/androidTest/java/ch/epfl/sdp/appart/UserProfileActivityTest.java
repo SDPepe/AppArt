@@ -305,7 +305,6 @@ public class UserProfileActivityTest {
         // Build a result to return from the Camera app
         Intent resultIntent = new Intent();
         resultIntent.putExtra("data", icon);
-        resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI, "");
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
 
         // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
