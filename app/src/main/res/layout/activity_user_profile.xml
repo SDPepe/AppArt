@@ -98,8 +98,11 @@
                     android:layout_width="150dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center_horizontal"
+                    android:clickable="true"
+                    android:contextClickable="true"
                     android:onClick="changeProfileImage"
-                    android:text="@string/changeProfilePicture" />
+                    android:text="@string/changeProfilePicture"
+                    android:focusable="true" />
 
                 <Button
                     android:id="@+id/removeImage_UserProfile_button"
