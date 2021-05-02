@@ -354,7 +354,6 @@ public class UserProfileActivityTest {
         appCompatButton4.perform(click());
 
 
-
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.doneButton), withText("DONE"),
                         childAtPosition(
