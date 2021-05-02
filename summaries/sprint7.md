@@ -14,7 +14,7 @@ I also worked on refactoring hardcoded strings. In our codebase, activities comm
 ## Émilien
 
 ## Filippo
-This week I worked on the search bar on the top of the home page. So, I made minor change to the **ScrollingActivity** for display the search bar and I added a new function to the **FirestoreDatabaseService** for retrive only the card form a specific location. These feature with even the associated tests took me the estimated time. Secondly, I helped Carlo a little in managing the profile image and the comuncation with the **Firebase Storage**. 
+This week I worked on the search bar on the top of the home page. So, I made minor change to the **ScrollingActivity** for display the search bar and I added a new function to the **FirestoreDatabaseService** for retrive only the card form a specific location. These feature with even the associated tests took me the estimated time to implement. Secondly, I helped Carlo a little in managing the profile image and the comuncation with the **Firebase Storage**. 
 
 ## Lorenzo
 This week I worked on refactoring the database, creating helper classes to down/up-load documents and adding constants to easily create paths for objects in the database. The work has been smooth, the only issues have been about merging other PRs and adapting the code a lot because there have been multiple PRs opened in parallel and that worked on the same files.
