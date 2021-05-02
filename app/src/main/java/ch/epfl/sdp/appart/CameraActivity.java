@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -157,6 +158,11 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         if (resultCode == ActivityCommunicationLayout.RESULT_IS_FOR_TEST) {
+            System.out.println("================================================");
+            System.out.println("================================================");
+            System.out.println(data.getStringExtra("data"));
+            System.out.println("================================================");
+            System.out.println("================================================");
             imageUri = Uri.EMPTY;
             setDisplayAction();
         }

@@ -26,7 +26,12 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
@@ -70,14 +75,14 @@ public class UserProfileActivityTest {
     public ActivityScenarioRule<MainActivity> mActivityTestRule = new ActivityScenarioRule<>(MainActivity.class);
 
     /* Used to grant camera permission always */
-    @Rule
-    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+    //@Rule
+    //public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
-    /* Used to grant camera permission always
+    /* Used to grant camera permission always */
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
- */
+
     @BindValue
     DatabaseService database = new MockDatabaseService();
 
@@ -90,7 +95,7 @@ public class UserProfileActivityTest {
         hiltRule.inject();
     }
     @Test
-    public void userProfileActivityTest() {
+    public void userProfileActivityTest() throws UiObjectNotFoundException {
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
@@ -280,8 +285,6 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
-
-
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.editImage_UserProfile_button), withText("CHANGE"),
                         childAtPosition(
@@ -316,11 +319,19 @@ public class UserProfileActivityTest {
         intending(toPackage("com.android.camera2")).respondWith(result);
 
 
-
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
 
+        // Initialize UiDevice instance
+        UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
+        // Search for correct button in the dialog.
+        UiObject buttonAllow = uiDevice.findObject(new UiSelector().text("Allow all the time"));
+
+        if (buttonAllow.exists() && buttonAllow.isEnabled()) {
+            buttonAllow.click();
+            uiDevice.pressBack();
+        }
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
