@@ -50,6 +50,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
@@ -293,7 +294,7 @@ public class UserProfileActivityTest {
                                         2),
                                 1),
                         isDisplayed()));
-        appCompatButton3.perform(click());
+        appCompatButton3.perform(scrollTo(), click());
 
 
 
