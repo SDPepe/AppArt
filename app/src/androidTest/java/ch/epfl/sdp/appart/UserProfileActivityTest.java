@@ -294,7 +294,7 @@ public class UserProfileActivityTest {
                                         2),
                                 1),
                         isDisplayed()));
-        appCompatButton3.perform(scrollTo(), click());
+        appCompatButton3.perform(click());
 
 
 
