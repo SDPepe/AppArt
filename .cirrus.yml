@@ -2,16 +2,19 @@ check_android_task:
   name: Run Android tests
   env:
     API_LEVEL: 29
-    TARGET: default
+    TARGET: google_apis
     ARCH: x86
     CC_TEST_REPORTER_ID: ENCRYPTED[6770a26c58a75c6cd70782dcb463e28fca45e9c25eb04028e3bb17ba2740442e2b5d3c50602172f9f39a2456c4b8af3a]
     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-    MAPS_API_KEY: ${{secrets.MAPS_API_KEY}}
+    MAPS_API_KEY: ENCRYPTED[df7ed70a48a8d0c79c72494f7b16709f3948ae29f07ed6a2776b0f6dcce50a46abb0b640fa39586859c10ccd1c5449b9]
   container:
     image: reactivecircus/android-emulator-$API_LEVEL:latest
     kvm: true
     cpu: 8
     memory: 10G
+  download_device_script: |
+    sdkmanager "system-images;android-$API_LEVEL;$TARGET;$ARCH"
+    sdkmanager --list
   create_device_script:
     echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
   start_emulator_background_script:
@@ -37,7 +40,8 @@ check_android_task:
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
-  check_script:
+  logcat_background_script: adb -e logcat *:E
+  check_script: |
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/

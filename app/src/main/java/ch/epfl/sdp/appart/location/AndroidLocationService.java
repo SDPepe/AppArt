@@ -1,17 +1,26 @@
 package ch.epfl.sdp.appart.location;
 
-import android.location.Address;
-import android.location.Geocoder;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 
-import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -20,26 +29,42 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import ch.epfl.sdp.appart.R;
+
+
+/**
+ * This class represents the android location service. It uses a
+ * FusedLocationProviderClient to get location information.
+ * <p>
+ * To get a location from name we bypass the Geocoder because it fails in
+ * cirrus and sometimes on the local emulator. It seems very unstable.
+ */
 @Singleton
 public final class AndroidLocationService implements LocationService {
     private final FusedLocationProviderClient locationProvider;
 
     private LocationCallback locationCallback;
-    private final Geocoder geocoder;
+    private final RequestQueue queue;
+    private final String api_key;
 
     @Inject
-    public AndroidLocationService(FusedLocationProviderClient locationProvider, Geocoder geocoder) {
-        if (locationProvider == null || geocoder == null)
+    public AndroidLocationService(Context context) {
+        if (context == null)
             throw new IllegalArgumentException();
-        this.locationProvider = locationProvider;
-        this.geocoder = geocoder;
+        this.locationProvider =
+                LocationServices.getFusedLocationProviderClient(context);
+
+        this.queue = Volley.newRequestQueue(context);
+        this.api_key = context.getResources().getString(R.string.maps_api_key);
+
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public CompletableFuture<Location> getCurrentLocation() {
         CompletableFuture<Location> futureLocation = new CompletableFuture<>();
         try {
-            locationProvider.getLastLocation().addOnCompleteListener(task -> {
+            locationProvider.getCurrentLocation(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY, null).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     android.location.Location androidLoc = task.getResult();
                     Location myLocation = new Location();
@@ -57,6 +82,7 @@ public final class AndroidLocationService implements LocationService {
         return futureLocation;
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public CompletableFuture<Void> setupLocationUpdate(Consumer<List<Location>> callback) {
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
@@ -106,22 +132,39 @@ public final class AndroidLocationService implements LocationService {
     }
 
     @Override
-    public Location getLocationFromName(String name) {
-        if (name == null) return null;
-
-        final List<Address> addresses;
+    public CompletableFuture<Location> getLocationFromName(String address) {
+        CompletableFuture<Location> futureLocation = new CompletableFuture<>();
         try {
-            addresses = this.geocoder.getFromLocationName(name, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            String url = "https://maps.googleapis" +
+                    ".com/maps/api/geocode/json?address=" + URLEncoder.encode(address, "UTF-8") + "&key=" + api_key;
+            JsonObjectRequest request = new JsonObjectRequest(url,
+                    new JSONObject(), jsonObject -> {
+                double lat = 0;
+                double lng = 0;
+                try {
+                    lat = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
+                            .getJSONObject("geometry").getJSONObject("location")
+                            .getDouble("lat");
+                    lng = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
+                            .getJSONObject("geometry").getJSONObject("location")
+                            .getDouble("lng");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    futureLocation.completeExceptionally(e);
+                }
+
+                Location loc = new Location();
+                loc.latitude = lat;
+                loc.longitude = lng;
+                futureLocation.complete(loc);
+            }, error -> futureLocation.completeExceptionally(error.getCause()));
+            queue.add(request);
+
+
+        } catch (UnsupportedEncodingException e) {
+            futureLocation.completeExceptionally(e);
         }
-        if (addresses.isEmpty()) return null;
 
-        Location cityLoc = new Location();
-        cityLoc.latitude = addresses.get(0).getLatitude();
-        cityLoc.longitude = addresses.get(0).getLongitude();
-
-        return cityLoc;
+        return futureLocation;
     }
 }

@@ -13,10 +13,9 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.map.ApartmentInfoWindow;
-import ch.epfl.sdp.appart.map.GoogleMapWrapper;
+import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -30,61 +29,21 @@ public class MapActivity extends AppCompatActivity {
     @Inject
     LocationService locationService;
 
+    @Inject
+    MapService mapService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.map);
-
-        GoogleMapWrapper mapWrapper;
-
-        Runnable onMapReadyCallback;
-
-        String address =
-                getIntent().getStringExtra(getString(R.string.intentLocationForMap));
-
-        if (address != null) {
-            mapWrapper =
-                    new GoogleMapWrapper(null);
-            onMapReadyCallback = () -> {
-                Location apartmentLoc =
-                        locationService.getLocationFromName(address);
-                mapWrapper.addMarker(apartmentLoc, null, true);
-            };
-        } else {
-            mapWrapper = new GoogleMapWrapper(new ApartmentInfoWindow(this,
-                    databaseService));
-            onMapReadyCallback = () -> {
-                CompletableFuture<List<Card>> futureCards = databaseService
-                        .getCards();
-                futureCards.exceptionally(e -> {
-                    Log.d("EXCEPTION_DB", e.getMessage());
-                    return null;
-                });
-
-                futureCards.thenAccept(cards -> {
-                    for (Card card : cards) {
-                        Location apartmentLoc =
-                                locationService.getLocationFromName(card.getCity());
-                        mapWrapper.addMarker(apartmentLoc, card, false);
-                    }
-                });
-            };
-        }
-
         PermissionRequest.askForLocationPermission(this, () -> {
             Log.d("PERMISSION", "Location permission granted");
-            mapFragment.getMapAsync(mapWrapper);
+            setupMap();
         }, () -> {
             Log.d("PERMISSION", "Refused");
             finish();
         }, () -> Log.d("PERMISSION", "Popup"));
-
-
-        mapWrapper.setOnReadyCallback(onMapReadyCallback);
 
     }
 
@@ -103,5 +62,59 @@ public class MapActivity extends AppCompatActivity {
                    specific location is on the map. If it is display it.
      */
 
+    private void setupMap() {
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+        mapFragment.getView().setContentDescription("WAITING");
 
+        mapService.setActivity(this);
+
+
+        Runnable onMapReadyCallback;
+
+        String address =
+                getIntent().getStringExtra(getString(R.string.intentLocationForMap));
+
+        if (address != null) {
+            mapService.setMapFragment(mapFragment);
+            onMapReadyCallback = () -> {
+                locationService.getLocationFromName(address).thenAccept(location -> {
+                    mapService.addMarker(location, null, true, null);
+                }).exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
+            };
+        } else {
+            mapService.setInfoWindow(new ApartmentInfoWindow(this,
+                    databaseService));
+            mapService.setMapFragment(mapFragment);
+            onMapReadyCallback = () -> {
+                CompletableFuture<List<Card>> futureCards = databaseService
+                        .getCards();
+                futureCards.exceptionally(e -> {
+                    Log.d("EXCEPTION_DB", e.getMessage());
+                    return null;
+                });
+
+                futureCards.thenAccept(cards -> {
+                    for (Card card : cards) {
+                        locationService.getLocationFromName(card.getCity()).thenAccept(location -> {
+                            mapService.addMarker(location, card, false,
+                                    card.getCity());
+                        }).exceptionally(e -> {
+                            e.printStackTrace();
+                            return null;
+                        });
+
+                    }
+                });
+            };
+        }
+
+        mapService.setOnReadyCallback(onMapReadyCallback);
+        mapFragment.getMapAsync(mapService);
+    }
 }
+
