@@ -69,15 +69,15 @@ public class UserProfileActivityTest {
     @Rule(order = 1)
     public ActivityScenarioRule<MainActivity> mActivityTestRule = new ActivityScenarioRule<>(MainActivity.class);
 
-    /* Used to grant camera permission always
-    @Rule(order = 2)
-    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
-*/
     /* Used to grant camera permission always */
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+
+    /* Used to grant camera permission always
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
-
+ */
     @BindValue
     LoginService login = new MockLoginService();
 
