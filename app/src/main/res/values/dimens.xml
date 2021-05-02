@@ -5,6 +5,8 @@
     to square screens.
     -->
 
+    <!-- Login activity !-->
+    <dimen name="marginLogin">2dp</dimen>
     <!--
     This padding applies to both square and round screens. The total padding between the buttons
     and the window insets is box_inset_layout_padding (above variable) on square screens and

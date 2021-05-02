@@ -6,71 +6,90 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
-    <Button
-        android:id="@+id/login_Login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="logIn"
-        android:text="@string/loginButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_Login_editText"
-        app:layout_constraintVertical_bias="0.211" />
 
-    <Button
-        android:id="@+id/reset_password_Login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:onClick="resetPassword"
-        android:text="@string/resetPasswordButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_Login_button"
-        app:layout_constraintVertical_bias="0.048" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline_vertical1_login"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline_vertical2_login"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline_horizontal_login"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="0.5" />
+
 
     <EditText
-        android:id="@+id/email_Login_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/prompt_email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.44"
-        android:autofillHints="" />
-
+      android:id="@+id/email_Login_editText"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/marginLogin"
+      android:autofillHints=""
+      android:ems="10"
+      android:hint="@string/prompt_email"
+      android:inputType="textEmailAddress"
+      app:layout_constraintBottom_toTopOf="@+id/password_Login_editText"
+      app:layout_constraintEnd_toStartOf="@+id/guideline_vertical2_login"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/guideline_vertical1_login" />
     <EditText
-        android:id="@+id/password_Login_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/prompt_password"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_Login_editText"
-        app:layout_constraintVertical_bias="0.064"
-        android:autofillHints="" />
-
+      android:id="@+id/password_Login_editText"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/marginLogin"
+      android:autofillHints=""
+      android:ems="10"
+      android:hint="@string/prompt_password"
+      android:inputType="textPassword"
+      app:layout_constraintBottom_toTopOf="@+id/login_Login_button"
+      app:layout_constraintEnd_toStartOf="@+id/guideline_vertical2_login"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/guideline_vertical1_login" />
     <Button
-        android:id="@+id/create_account_Login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="createAccount"
-        android:text="@string/createAccountFromLoginButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.226" />
+      android:id="@+id/login_Login_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@drawable/button_default"
+      android:layout_marginBottom="@dimen/marginLogin"
+      android:onClick="logIn"
+      android:text="@string/loginButtonText"
+      app:layout_constraintBottom_toTopOf="@+id/reset_password_Login_button"
+      app:layout_constraintEnd_toStartOf="@+id/guideline_vertical2_login"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/guideline_vertical1_login" />
+    <Button
+      android:id="@+id/reset_password_Login_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/marginLogin"
+      android:background="@drawable/button_default"
+      android:onClick="resetPassword"
+      android:text="@string/resetPasswordButtonText"
+      app:layout_constraintBottom_toTopOf="@+id/create_account_Login_button"
+      app:layout_constraintEnd_toStartOf="@+id/guideline_vertical2_login"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/guideline_vertical1_login" />
+    <Button
+      android:id="@+id/create_account_Login_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/marginLogin"
+      android:background="@drawable/button_default"
+      android:onClick="createAccount"
+      android:text="@string/createAccountFromLoginButtonText"
+      app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_login"
+      app:layout_constraintEnd_toStartOf="@+id/guideline_vertical2_login"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/guideline_vertical1_login" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
