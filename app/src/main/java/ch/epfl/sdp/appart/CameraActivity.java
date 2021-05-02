@@ -144,13 +144,13 @@ public class CameraActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK)
+        if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
             setDisplayAction();
-
+        }
 
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
-
             imageUri = data.getData();
+            this.getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             setDisplayAction();
         }
     }

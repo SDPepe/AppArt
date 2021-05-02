@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.database.firestoreservicehelpers;
 
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
@@ -75,7 +76,7 @@ public class FirestoreAdHelper {
                 return null;
             });
             partialAdResult.thenAccept(adBuilder -> {
-                adBuilder.withPhotosIds(imagesIds);
+                adBuilder.withPicturesReferences(imagesIds);
                 result.complete(adBuilder.build());
             });
 
@@ -84,37 +85,54 @@ public class FirestoreAdHelper {
         return result;
     }
 
+    private Pair<List<String>, List<CompletableFuture<Boolean>>> uploadIndexedImages(List<Uri> uris, String prefix, String path) {
+        List<String> references = new ArrayList<>();
+        List<CompletableFuture<Boolean>> imagesUploadFutures = new ArrayList<>();
+
+        for (int i = 0; i < uris.size(); i++) {
+            String name = FirebaseLayout.PHOTO_NAME + i + ".jpeg"; // TODO modify to support other extensions
+            references.add(name);
+            imagesUploadFutures.add(imageHelper.putImage(uris.get(i), name, path));
+        }
+        return new Pair<>(references, imagesUploadFutures);
+    }
+
     @NotNull
     @NonNull
-    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
-        CompletableFuture<String> result = new CompletableFuture<>();
-        CompletableFuture<Void> imagesResult = new CompletableFuture<>();
-        CompletableFuture<Void> adResult = new CompletableFuture<>();
-        CompletableFuture<Void> cardResult = new CompletableFuture<>();
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> picturesUris, List<Uri> panoramaUris) {
+
         DocumentReference newAdRef = db.collection(FirebaseLayout.ADS_DIRECTORY).document();
         DocumentReference cardRef = db.collection(FirebaseLayout.CARDS_DIRECTORY).document();
         String storagePath = adsPath + FirebaseLayout.SEPARATOR + newAdRef.getId();
 
-        // upload photos
-        List<String> actualRefs = new ArrayList<>();
-        List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
-        Log.d("URI", "size" + uriList.size());
-        for (int i = 0; i < uriList.size(); i++) {
-            String name = FirebaseLayout.PHOTO_NAME + i + ".jpeg"; // TODO modify to support other extensions
-            actualRefs.add(name);
-            imagesUploadResults.add(imageHelper.putImage(uriList.get(i), name, storagePath));
-        }
+        Pair<List<String>, List<CompletableFuture<Boolean>>> uploadPicturesResultPair =
+                uploadIndexedImages(picturesUris, FirebaseLayout.PHOTO_NAME, storagePath);
+
+        List<String> picturesReferences = uploadPicturesResultPair.first;
+        List<CompletableFuture<Boolean>> uploadImagesFutures = uploadPicturesResultPair.second;
+
         // check whether any of the uploads failed
-        checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storage.getReference(storagePath));
+        CompletableFuture<Void> picturesCheckFuture =
+                checkPhotosUpload(uploadImagesFutures, newAdRef, cardRef, storage.getReference(storagePath));
+
+        //upload the panoramas
+        Pair<List<String>, List<CompletableFuture<Boolean>>> uploadPanoramasResultPair =
+                uploadIndexedImages(picturesUris, FirebaseLayout.PANORAMA_NAME, storagePath);
+        List<String> panoramasReferences = uploadPanoramasResultPair.first;
+        List<CompletableFuture<Boolean>> uploadPanoramasFutures = uploadPanoramasResultPair.second;
+
+        // check whether any of the uploads failed
+        CompletableFuture<Void> panoramasCheckFuture =
+                checkPhotosUpload(uploadPanoramasFutures, newAdRef, cardRef, storage.getReference(storagePath));
 
         // build and send card / ad
-
-        checkCardUpload(cardResult, ad, newAdRef, cardRef, null, actualRefs.get(0));
-        checkAdUpload(adResult, ad, newAdRef, cardRef, null, actualRefs);
+        CompletableFuture<Void> cardCheckFuture =
+                checkCardUpload(ad, newAdRef, cardRef, null, picturesReferences.get(0));
+        CompletableFuture<Void> adCheckFuture =
+                checkAdUpload(ad, newAdRef, cardRef, null, picturesReferences);
 
         // check if everything succeeded
-        finalizeAdUpload(result, imagesResult, adResult, cardResult, newAdRef);
-        return result;
+        return finalizeAdUpload(newAdRef, picturesCheckFuture, panoramasCheckFuture, cardCheckFuture, adCheckFuture);
     }
 
     /* <--- getAd private methods --->*/
@@ -194,9 +212,10 @@ public class FirestoreAdHelper {
      * Checks whether all image uploads completed successfully. If they didn't, cleans up and
      * completes exceptionally
      */
-    private void checkPhotosUpload(List<CompletableFuture<Boolean>> futures,
-                                   CompletableFuture<Void> result, DocumentReference adRef,
+    private CompletableFuture<Void> checkPhotosUpload(List<CompletableFuture<Boolean>> futures, DocumentReference adRef,
                                    DocumentReference cardRef, StorageReference imagesRef) {
+
+        CompletableFuture<Void> result = new CompletableFuture<>();
         CompletableFuture<Boolean>[] resultsArray = new CompletableFuture[futures.size()];
         futures.toArray(resultsArray);
         CompletableFuture.allOf(resultsArray).thenAccept(res -> {
@@ -209,15 +228,17 @@ public class FirestoreAdHelper {
             }
             result.complete(null);
         });
+        return result;
     }
 
     /**
      * Checks whether the upload of ad information to FIrestore completed successfully. If it didn't,
      * cleans up and completes exceptionally.
      */
-    private void checkAdUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
+    private CompletableFuture<Void> checkAdUpload(Ad ad, DocumentReference adRef,
                                DocumentReference cardRef, StorageReference imagesRef,
                                List<String> imagesRefsList) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
         CompletableFuture<Void> infoUpload = new CompletableFuture<>();
         CompletableFuture<Void> idsUpload = new CompletableFuture<>();
         adRef.set(serializer.serialize(ad)).addOnCompleteListener(
@@ -232,36 +253,39 @@ public class FirestoreAdHelper {
                     result.completeExceptionally(e);
                     return null;
                 });
+        return result;
     }
 
     /**
      * Checks whether the upload of card information to Firestore completed successfully. If it
      * didn't, cleans up and completes exceptionally.
      */
-    private void checkCardUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,
+    private CompletableFuture<Void> checkCardUpload(Ad ad, DocumentReference adRef,
                                  DocumentReference cardRef, StorageReference imagesRef,
                                  String firstImageRef) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
         Card c = new Card(cardRef.getId(), adRef.getId(), ad.getAdvertiserId(), ad.getCity(),
                 ad.getPrice(), firstImageRef, ad.hasVRTour());
         cardHelper.putCard(c, cardRef).thenAccept(successful -> {
             cleanUpIfFailed(successful, result, adRef, cardRef, imagesRef);
             result.complete(null);
         });
+        return result;
     }
 
     /**
      * Checks that every part of the ad upload completed successfully, completes exceptionally if at
      * least one Future completed exceptionally.
      */
-    private void finalizeAdUpload(CompletableFuture<String> result, CompletableFuture<Void> imagesResult,
-                                  CompletableFuture<Void> adResult, CompletableFuture<Void> cardResult,
-                                  DocumentReference adRef) {
-        CompletableFuture.allOf(adResult, cardResult, imagesResult)
+    private CompletableFuture<String> finalizeAdUpload(DocumentReference adRef, CompletableFuture<Void>... futures) {
+        CompletableFuture<String> result = new CompletableFuture<>();
+        CompletableFuture.allOf(futures)
                 .thenAccept(res -> result.complete(adRef.getId()))
                 .exceptionally(e -> {
             result.completeExceptionally(e);
             return null;
         });
+        return result;
     }
 
     /**

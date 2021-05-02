@@ -227,6 +227,7 @@ public class AdCreationActivity extends AppCompatActivity {
                 if (uris == null) {
                     throw new IllegalStateException("uris cannot be null");
                 }
+                mViewModel.setPanoramaUri(uris);
                 fillHorizontalViewWithPictures(findViewById(R.id.panorama_AdCreation_linearLayout), uris);
             }
         }
