@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ public class AdActivity extends ToolbarActivity {
     String adId;
 
     private String advertiserId;
-    private List<String> panoramasReferences;
+    private ArrayList<String> panoramasReferences = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
         mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
+        mViewModel.observePanoramasReferences(this, this::updatePanoramasReferences);
 
         adId = getIntent().getStringExtra("adID");
         mViewModel.initAd(adId);
@@ -91,6 +93,11 @@ public class AdActivity extends ToolbarActivity {
             // open image fullscreen on tap
             myView.setOnClickListener(e -> openImageFullscreen(fullRef));
         }
+    }
+
+    private void updatePanoramasReferences(List<String> references) {
+        panoramasReferences.clear();
+        panoramasReferences.addAll(references);
     }
 
     private void updateAddress(String address) {
@@ -153,6 +160,7 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
+        intent.putStringArrayListExtra("panoramas_pictures_references", panoramasReferences);
         startActivity(intent);
     }
 

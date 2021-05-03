@@ -86,6 +86,8 @@ public class Ad {
         return photosReferences;
     }
 
+    public List<String> getPanoramaReferences() { return  panoramaReferences; }
+
     public boolean hasVRTour() {
         return hasVRTour;
     }

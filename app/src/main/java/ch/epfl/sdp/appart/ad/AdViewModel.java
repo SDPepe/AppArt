@@ -2,8 +2,11 @@ package ch.epfl.sdp.appart.ad;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -31,6 +34,7 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adAdvertiser = new MutableLiveData<>(); // name of user
     private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>(); // id of announcer
     private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
 
     @Inject
     public AdViewModel(DatabaseService db) {
@@ -59,9 +63,13 @@ public class AdViewModel extends ViewModel {
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
 
             this.adPhotosRefs.setValue(ad.getPhotosRefs());
+            this.panoramasReferences.setValue(ad.getPanoramaReferences());
         });
     }
 
+    public <T> void observePanoramasReferences(LifecycleOwner owner, @NonNull Observer<? super List<String>> observer) {
+        panoramasReferences.observe(owner, observer);
+    }
     // Getters
     public LiveData<String> getTitle() { return adTitle; }
 

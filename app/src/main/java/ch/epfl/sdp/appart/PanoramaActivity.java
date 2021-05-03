@@ -51,6 +51,12 @@ public class PanoramaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panoramagl);
+
+        Bundle extras = this.getIntent().getExtras();
+        if (extras != null && extras.containsKey("panoramas_pictures_references"))  {
+            images = extras.getStringArrayList("panoramas_pictures_references");
+        }
+
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
         rightButton = (ImageButton) findViewById(R.id.rightImage_Panorama_imageButton);
 
@@ -70,6 +76,7 @@ public class PanoramaActivity extends AppCompatActivity {
         disableLeftButton();
         if (images.size() < 2)
             disableRightButton();
+
     }
 
 
@@ -137,10 +144,14 @@ public class PanoramaActivity extends AppCompatActivity {
      * Init the list of panorama images, set the current image index to 0, load image.
      */
     private void getImages() {
+
+        /*
         images = new ArrayList<>();
         // TODO change with database call to get image references
         images.add("file:///android_asset/panorama_test.jpg");
         images.add("file:///android_asset/panorama_test_2.jpg");
+         */
+
         //images.add("file:///android_asset/panorama_test_3.jpg");
         //images.add("file:///android_asset/panorama_test_4.jpg");
     }
