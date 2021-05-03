@@ -12,6 +12,7 @@ This week I worked on synching **Firebase Storage** with the **UserProfileActivi
 I also worked on refactoring hardcoded strings. In our codebase, activities communciate through **putExtra** and all the strings used until now were hardcoded. I wrote a ActivityCommunicationLayout file where all the communication messages are stored and used globally through the code. I then refactored all the existing putExtra calls to fit the new layout. Overall this has been a very productive week and a lot was implemented/solved.
 
 ## Émilien
+This worked I finalized my work on the serializers. I had a few issues with the merging, which took me a bit more time than I had anticipated. I also worked on finishing the implementation of the favorites. It is now fully done, but I still need to test the feature and it will be good to go. It has been more productive than last week, as I managed to resolve a lot of issues I had, especially with the favorites.
 
 ## Filippo
 This week I worked on the search bar on the top of the home page. So, I made minor change to the **ScrollingActivity** for display the search bar and I added a new function to the **FirestoreDatabaseService** for retrive only the card form a specific location. These feature with even the associated tests took me the estimated time to implement. Secondly, I helped Carlo a little in managing the profile image and the comuncation with the **Firebase Storage**. 
