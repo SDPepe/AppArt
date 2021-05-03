@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -90,7 +91,7 @@ public class FirestoreAdHelper {
         List<CompletableFuture<Boolean>> imagesUploadFutures = new ArrayList<>();
 
         for (int i = 0; i < uris.size(); i++) {
-            String name = FirebaseLayout.PHOTO_NAME + i + ".jpeg"; // TODO modify to support other extensions
+            String name = prefix + i + ".jpeg"; // TODO modify to support other extensions
             references.add(name);
             imagesUploadFutures.add(imageHelper.putImage(uris.get(i), name, path));
         }
@@ -120,7 +121,7 @@ public class FirestoreAdHelper {
 
         //We then upload the panoramas images in the ad folder with ad id name
         Pair<List<String>, List<CompletableFuture<Boolean>>> uploadPanoramasResultPair =
-                uploadIndexedImages(picturesUris, FirebaseLayout.PANORAMA_NAME, storagePath);
+                uploadIndexedImages(panoramaUris, FirebaseLayout.PANORAMA_NAME, storagePath);
         List<String> panoramasReferences = uploadPanoramasResultPair.first;
         List<CompletableFuture<Boolean>> uploadPanoramasFutures = uploadPanoramasResultPair.second;
 
@@ -184,17 +185,25 @@ public class FirestoreAdHelper {
     /**
      * Adds to the ad a collection with the ids of the images. Cleans up if it fails.
      */
-    private CompletableFuture<Void> setPhotosReferencesForAd(List<String> actualRefs, DocumentReference collectionReference) {
+    private CompletableFuture<Void> setPhotosReferencesForAd(List<String> actualRefs, CollectionReference collectionReference) {
 
         CompletableFuture<Void> result = new CompletableFuture<>();
-        List<CompletableFuture<Void>> photosIdResults = new ArrayList<>();
+        //List<CompletableFuture<Void>> photosIdResults = new ArrayList<>();
+        CompletableFuture<Void>[] photosIdResults = new CompletableFuture[actualRefs.size()];
+
+        //iterate over all images references to set their reference in the firebase ad
         for (int i = 0; i < actualRefs.size(); i++) {
+
+            //set the id of the current image reference
             Map<String, Object> data = new HashMap<>();
             data.put(AdLayout.PICTURE_ELEMENT_ID_FIELD, actualRefs.get(i));
 
             CompletableFuture<Void> photoIdResult = new CompletableFuture<>();
-            photosIdResults.add(photoIdResult);
-            collectionReference.set(data).addOnCompleteListener(task -> {
+            //photosIdResults.add(photoIdResult);
+            photosIdResults[i] = photoIdResult;
+
+            //set the data in firestore in the given collection (warning the same collection reference !)
+            collectionReference.document().set(data).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     photoIdResult.complete(null);
                 } else {
@@ -202,14 +211,18 @@ public class FirestoreAdHelper {
                             Objects.requireNonNull(task.getException()).getMessage()));
                 }
             });
-            CompletableFuture<Void>[] resultsArray = new CompletableFuture[photosIdResults.size()];
-            photosIdResults.toArray(resultsArray);
-            CompletableFuture.allOf(resultsArray).thenAccept(res -> result.complete(null))
-                    .exceptionally(e -> {
-                        result.completeExceptionally(e);
-                        return null;
-            });
+
+            //CompletableFuture<Void>[] resultsArray = new CompletableFuture[photosIdResults.size()];
+            //photosIdResults.toArray(resultsArray);
+
         }
+
+        CompletableFuture.allOf(photosIdResults).thenAccept(res -> result.complete(null))
+                .exceptionally(e -> {
+                    result.completeExceptionally(e);
+                    return null;
+                });
+
         return result;
     }
     /* <--- putAd private methods --->*/
@@ -256,9 +269,9 @@ public class FirestoreAdHelper {
 
         //we then set the ids collection for the ad in firebase.
         CompletableFuture<Void> picturesIdsUploadFuture =
-                setPhotosReferencesForAd(picturesReferences, adRef.collection(AdLayout.PICTURES_DIRECTORY).document());
+                setPhotosReferencesForAd(picturesReferences, adRef.collection(AdLayout.PICTURES_DIRECTORY));
         CompletableFuture<Void> panoramasIdsUploadFuture =
-                setPhotosReferencesForAd(panoramasReferences, adRef.collection(AdLayout.PANORAMA_DIRECTORY).document());
+                setPhotosReferencesForAd(panoramasReferences, adRef.collection(AdLayout.PANORAMA_DIRECTORY));
 
         //we check how everything completed
         CompletableFuture.allOf(infoUpload, picturesIdsUploadFuture, panoramasIdsUploadFuture)
