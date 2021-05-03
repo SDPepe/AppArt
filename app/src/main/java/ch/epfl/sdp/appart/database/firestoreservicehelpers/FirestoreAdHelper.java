@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -60,24 +61,42 @@ public class FirestoreAdHelper {
     @NonNull
     public CompletableFuture<Ad> getAd(String adId) {
         CompletableFuture<Ad> result = new CompletableFuture<>();
-        CompletableFuture<Ad.AdBuilder> partialAdResult = new CompletableFuture<>();
-        CompletableFuture<List<String>> imagesIdsResult = new CompletableFuture<>();
+        //CompletableFuture<Ad.AdBuilder> partialAdResult = new CompletableFuture<>();
+        //CompletableFuture<List<String>> imagesIdsResult = new CompletableFuture<>();
 
         // get images, if successful try to retrieve the other ad fields
-        getAndCheckImagesIds(imagesIdsResult, adId);
-        imagesIdsResult.exceptionally(e -> {
+        CompletableFuture<List<String>> picturesReferencesFutures =
+                getAndCheckImagesIds(adId, AdLayout.PICTURES_DIRECTORY);
+        picturesReferencesFutures.exceptionally(e -> {
             result.completeExceptionally(e);
             return null;
         });
-        imagesIdsResult.thenAccept(imagesIds -> {
+
+        // get panoramas, if successful try to retrieve the other ad fields
+        CompletableFuture<List<String>> panoramasReferencesFutures =
+                getAndCheckImagesIds(adId, AdLayout.PANORAMA_DIRECTORY);
+        picturesReferencesFutures.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+
+        //combine both pictures and panoramas ids futures
+        CompletionStage<Pair<List<String>, List<String>>> combined =
+                CompletableFuture.allOf(picturesReferencesFutures, panoramasReferencesFutures)
+                        .thenApply(ignoredVoid ->
+                                new Pair<>(picturesReferencesFutures.join(), panoramasReferencesFutures.join())
+                        );
+
+        combined.thenAccept(imagesAndPanoramasIds -> {
             // get remaining ad fields, if successful add images ids to the ad and build it
-            getAndCheckPartialAd(partialAdResult, adId);
+            CompletableFuture<Ad.AdBuilder> partialAdResult = getAndCheckPartialAd(adId);
             partialAdResult.exceptionally(e -> {
                 result.completeExceptionally(e);
                 return null;
             });
             partialAdResult.thenAccept(adBuilder -> {
-                adBuilder.withPicturesReferences(imagesIds);
+                adBuilder.withPicturesReferences(imagesAndPanoramasIds.first);
+                adBuilder.withPanoramaReferences(imagesAndPanoramasIds.second);
                 result.complete(adBuilder.build());
             });
 
@@ -143,21 +162,23 @@ public class FirestoreAdHelper {
 
     /* <--- getAd private methods --->*/
 
-    private void getAndCheckImagesIds(CompletableFuture<List<String>> result,
-                                      String adId) {
-        db.collection(adsPath).document(adId).collection(AdLayout.PICTURES_DIRECTORY)
+    private CompletableFuture<List<String>> getAndCheckImagesIds(String adId, String directory) {
+        CompletableFuture<List<String>> result = new CompletableFuture<List<String>>();
+        db.collection(adsPath).document(adId).collection(directory/*AdLayout.PICTURES_DIRECTORY*/)
                 .get().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 result.completeExceptionally(new DatabaseServiceException("Failed to get pictures ids."));
             } else {
                 result.complete(task.getResult().getDocuments().stream().map(documentSnapshot ->
-                        (String) documentSnapshot.get("id")).collect(Collectors.toList()));
+                        (String) documentSnapshot.get(AdLayout.PICTURE_ELEMENT_ID_FIELD)).collect(Collectors.toList()));
             }
         });
+        return result;
     }
 
-    private void getAndCheckPartialAd(CompletableFuture<Ad.AdBuilder> result,
-                                      String adId) {
+    private CompletableFuture<Ad.AdBuilder> getAndCheckPartialAd(String adId) {
+
+        CompletableFuture<Ad.AdBuilder> result = new CompletableFuture<>();
         db.collection(adsPath).document(adId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
@@ -179,6 +200,7 @@ public class FirestoreAdHelper {
                         task.getException()).getMessage()));
             }
         });
+        return result;
     }
 
 
@@ -202,7 +224,7 @@ public class FirestoreAdHelper {
             //photosIdResults.add(photoIdResult);
             photosIdResults[i] = photoIdResult;
 
-            //set the data in firestore in the given collection (warning the same collection reference !)
+            //set the data in firestore in the given collection by creating a new document in it
             collectionReference.document().set(data).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     photoIdResult.complete(null);

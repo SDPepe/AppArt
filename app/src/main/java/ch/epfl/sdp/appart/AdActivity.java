@@ -38,6 +38,7 @@ public class AdActivity extends ToolbarActivity {
     String adId;
 
     private String advertiserId;
+    private List<String> panoramasReferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
