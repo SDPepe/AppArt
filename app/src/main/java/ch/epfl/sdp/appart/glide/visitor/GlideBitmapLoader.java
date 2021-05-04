@@ -45,7 +45,7 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
-                .load(Uri.parse(imagePath))
+                .load(database.getStorageReference(imagePath))
                 .into(target);
     }
 
@@ -76,12 +76,18 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
 
         @Override
         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-            targetFuture.complete(resource.copy(resource.getConfig(), false));
+            //PanoramaGl wants a bitmap with a max size, for now we scale it to 2048*2048
+            Bitmap result = Bitmap.createScaledBitmap(resource, 2048, 2048, false);
+            targetFuture.complete(result.copy(result.getConfig(), false));
         }
 
         @Override
-        public void onLoadCleared(@Nullable Drawable placeholder) {}
+        public void onLoadCleared(@Nullable Drawable placeholder) { }
 
+        @Override
+        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+            targetFuture.completeExceptionally(new IllegalStateException("panorama bitmap loading failed"));
+        }
         /**
          * Return the bitmap that was inserted in the target
          *

@@ -161,6 +161,7 @@ public class AdActivity extends ToolbarActivity {
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
         intent.putStringArrayListExtra("panoramas_pictures_references", panoramasReferences);
+        intent.putExtra("adId", adId);
         startActivity(intent);
     }
 

@@ -14,13 +14,19 @@ import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
+import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
+import ch.epfl.sdp.appart.utils.FirebaseIndexedImagesComparator;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -46,6 +52,7 @@ public class PanoramaActivity extends AppCompatActivity {
     ImageButton leftButton;
     ImageButton rightButton;
     private Bitmap bitmap;
+    private String currentAdId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +60,11 @@ public class PanoramaActivity extends AppCompatActivity {
         setContentView(R.layout.panoramagl);
 
         Bundle extras = this.getIntent().getExtras();
-        if (extras != null && extras.containsKey("panoramas_pictures_references"))  {
+        if (extras != null && extras.containsKey("panoramas_pictures_references")
+                && extras.containsKey("adId"))  {
             images = extras.getStringArrayList("panoramas_pictures_references");
+            Collections.sort(images, new FirebaseIndexedImagesComparator());
+            currentAdId = extras.getString("adId");
         }
 
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
@@ -78,7 +88,6 @@ public class PanoramaActivity extends AppCompatActivity {
             disableRightButton();
 
     }
-
 
     @Override
     protected void onResume() {
@@ -163,7 +172,13 @@ public class PanoramaActivity extends AppCompatActivity {
         PLSphericalPanorama panorama = new PLSphericalPanorama();
 
         CompletableFuture<Bitmap> bitmapFuture = new CompletableFuture<>();
-        database.accept(new GlideBitmapLoader(this, bitmapFuture, images.get(currImage)));
+        String imagePath = AdLayout.IMAGES_DIRECTORY +
+                FirebaseLayout.SEPARATOR +
+                currentAdId +
+                FirebaseLayout.SEPARATOR +
+                images.get(currImage);
+
+        database.accept(new GlideBitmapLoader(this, bitmapFuture, imagePath));
 
         bitmapFuture.thenApply(bitmap -> {
             panorama.setImage(new PLImage(bitmap, true));
@@ -172,6 +187,7 @@ public class PanoramaActivity extends AppCompatActivity {
             this.bitmap = bitmap;
             return bitmap;
         });
+
         bitmapFuture.exceptionally(e -> {
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarError_Panorama),
