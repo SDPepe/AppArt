@@ -78,7 +78,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
 
         this.imageView.setEnabled(false);
-       // this.removeImageButton.setVisibility(View.GONE);
+        // this.removeImageButton.setVisibility(View.GONE);
         this.changeImageButton.setVisibility(View.GONE);
 
         /* get user from database from user ID */
@@ -115,9 +115,9 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     public void removeProfileImage(View view) {
         //mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
-       // this.sessionUser.setDefaultProfileImage();
-       // imageView.setImageResource(android.R.color.transparent);
-       // this.removeImageButton.setVisibility(View.GONE);
+        // this.sessionUser.setDefaultProfileImage();
+        // imageView.setImageResource(android.R.color.transparent);
+        // this.removeImageButton.setVisibility(View.GONE);
     }
 
     /**
@@ -125,9 +125,9 @@ public class UserProfileActivity extends AppCompatActivity {
      * called by the imageView button
      */
     public void changeProfileImage(View view) {
-      //  Intent intent = new Intent(this, CameraActivity.class);
-      //  intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
-      //  startActivityForResult(intent, 1);
+        //  Intent intent = new Intent(this, CameraActivity.class);
+        //  intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
+        //  startActivityForResult(intent, 1);
     }
 
     /**
@@ -196,8 +196,8 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the updated user information to the firestore database
      */
     private void setSessionUserToDatabase(View view) {
-      mViewModel.updateUser(this.sessionUser);
-      mViewModel.getUpdateUserConfirmed().observe(this, this::informationUpdateResult);
+        mViewModel.updateUser(this.sessionUser);
+        mViewModel.getUpdateUserConfirmed().observe(this, this::informationUpdateResult);
     }
 
     private void imageUpdateResult(Boolean updateResult) {
