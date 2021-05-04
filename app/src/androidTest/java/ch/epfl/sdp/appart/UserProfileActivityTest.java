@@ -74,13 +74,13 @@ public class UserProfileActivityTest {
     @Test
     public void userProfileActivityTest() {
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.email_Login_editText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
+            allOf(withId(R.id.email_Login_editText),
+                childAtPosition(
+                    childAtPosition(
+                        withId(android.R.id.content),
+                        0),
+                    0),
+                isDisplayed()));
         appCompatEditText.perform(replaceText("carlo@epfl.ch"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText2 = onView(
@@ -89,7 +89,7 @@ public class UserProfileActivityTest {
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                3),
+                                1),
                         isDisplayed()));
         appCompatEditText2.perform(replaceText("3333"), closeSoftKeyboard());
 

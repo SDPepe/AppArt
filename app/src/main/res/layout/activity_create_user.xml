@@ -1,62 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CreateUserActivity">
-
-    <EditText
-        android:id="@+id/create_account_password_CreateUser_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/createAccountPasswordFieldHint"
-        android:inputType="textPassword"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".CreateUserActivity">
 
     <Button
-        android:id="@+id/create_account_CreateUser_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="createAccount"
-        android:text="@string/createAccountButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_account_password_CreateUser_editText"
-        app:layout_constraintVertical_bias="0.257" />
+      android:id="@+id/create_account_CreateUser_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:onClick="createAccount"
+      android:text="@string/createAccountButtonText"
+      app:layout_constraintBottom_toTopOf="@+id/guideline6"
+      app:layout_constraintEnd_toStartOf="@+id/guideline3"
+      app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
     <Button
-        android:id="@+id/create_account_login_CreateUser_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:onClick="backToLogin"
-        android:text="@string/backToLoginFromCreateButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+      android:id="@+id/create_account_login_CreateUser_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:onClick="backToLogin"
+      android:text="@string/backToLoginFromCreateButtonText"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
-        android:id="@+id/create_account_email_CreateUser_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/createAccountEmailFieldHint"
-        android:inputType="textEmailAddress"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/create_account_password_CreateUser_editText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.865"
-        android:autofillHints="" />
+      android:id="@+id/create_account_password_CreateUser_editText"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:autofillHints=""
+      android:ems="10"
+      android:hint="@string/createAccountPasswordFieldHint"
+      android:inputType="textPassword"
+      android:textAlignment="center"
+      app:layout_constraintBottom_toTopOf="@+id/guideline4"
+      app:layout_constraintEnd_toStartOf="@+id/guideline3"
+      app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+    <EditText
+      android:id="@+id/create_account_email_CreateUser_editText"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:autofillHints=""
+      android:ems="10"
+      android:hint="@string/createAccountEmailFieldHint"
+      android:inputType="textEmailAddress"
+      android:textAlignment="center"
+      app:layout_constraintBottom_toTopOf="@+id/guideline5"
+      app:layout_constraintEnd_toStartOf="@+id/guideline3"
+      app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_2" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="@dimen/horizontal_2" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline5"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="@dimen/horizontal_1" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline6"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="@dimen/horizontal_3" />
 </androidx.constraintlayout.widget.ConstraintLayout>
