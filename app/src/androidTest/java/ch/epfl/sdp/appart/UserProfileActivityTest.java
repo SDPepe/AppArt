@@ -367,10 +367,11 @@ public class UserProfileActivityTest {
                                 1),
                         isDisplayed()));
         appCompatButton6.perform(click());
-
+        
 
         onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
-        
+
+
 
         ViewInteraction appCompatButton8 = onView(
                 allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
