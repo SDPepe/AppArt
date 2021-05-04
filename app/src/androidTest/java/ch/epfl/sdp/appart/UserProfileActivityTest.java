@@ -158,6 +158,10 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton2.perform(click());
 
+        onView(withId(R.id.editImage_UserProfile_button)).perform(click());
+
+        onView(withId(R.id.confirm_Camera_button)).perform(click());
+
         ViewInteraction textInputEditText = onView(
                 allOf(withId(R.id.name_UserProfile_editText), withText("carlo"),
                         childAtPosition(
@@ -291,8 +295,6 @@ public class UserProfileActivityTest {
         onView(withId(R.id.confirm_Camera_button)).perform(click());
 
         onView(withId(R.id.editImage_UserProfile_button)).perform(click());
-
-
 
         /* =================================================================================================== */
         /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
