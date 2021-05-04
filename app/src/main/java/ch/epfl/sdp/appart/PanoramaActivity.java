@@ -51,11 +51,11 @@ public class PanoramaActivity extends AppCompatActivity {
         setContentView(R.layout.panoramagl);
 
         Bundle extras = this.getIntent().getExtras();
-        if (extras != null && extras.containsKey("panoramas_pictures_references")
-                && extras.containsKey("adId"))  {
-            images = extras.getStringArrayList("panoramas_pictures_references");
+        if (extras != null && extras.containsKey(AdActivity.Intents.INTENT_PANORAMA_PICTURES)
+                && extras.containsKey(AdActivity.Intents.INTENT_AD_ID))  {
+            images = extras.getStringArrayList(AdActivity.Intents.INTENT_PANORAMA_PICTURES);
             Collections.sort(images, new FirebaseIndexedImagesComparator());
-            currentAdId = extras.getString("adId");
+            currentAdId = extras.getString(AdActivity.Intents.INTENT_AD_ID);
         }
 
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);

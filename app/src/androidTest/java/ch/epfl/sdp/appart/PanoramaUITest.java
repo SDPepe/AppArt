@@ -1,7 +1,11 @@
 package ch.epfl.sdp.appart;
 
+import android.content.Intent;
+
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
@@ -9,6 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
@@ -39,17 +46,30 @@ import static org.mockito.Mockito.when;
 @HiltAndroidTest
 public class PanoramaUITest {
 
+    static final String testId = "1PoUWbeNHvMNotxwAui5";
+    static final Intent intent;
+
+    static {
+        intent = new Intent(ApplicationProvider.getApplicationContext(), PanoramaActivity.class);
+        ArrayList<String> images = new ArrayList<>();
+        images.add("fake_ad_1.jpg");
+        images.add("fake_ad_2.jpg");
+        intent.putStringArrayListExtra(AdActivity.Intents.INTENT_PANORAMA_PICTURES, images);
+        intent.putExtra(AdActivity.Intents.INTENT_AD_ID, "dummy");
+    }
+
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityScenarioRule<PanoramaActivity> panoramaActivityRule = new ActivityScenarioRule<>(PanoramaActivity.class);
+    public ActivityScenarioRule<PanoramaActivity> panoramaActivityRule = new ActivityScenarioRule<>(intent);
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
 
     int leftButtonID;
     int rightButtonID;
+
 
     @Before
     public void init() {

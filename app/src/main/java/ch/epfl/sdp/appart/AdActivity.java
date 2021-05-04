@@ -38,6 +38,11 @@ public class AdActivity extends ToolbarActivity {
     LoginService login;
     String adId;
 
+    public static class Intents {
+        public static final String INTENT_PANORAMA_PICTURES = "panoramas_pictures_references";
+        public static final String INTENT_AD_ID = "adId";
+    }
+
     private String advertiserId;
     private ArrayList<String> panoramasReferences = new ArrayList<>();
 
@@ -160,8 +165,8 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
-        intent.putStringArrayListExtra("panoramas_pictures_references", panoramasReferences);
-        intent.putExtra("adId", adId);
+        intent.putStringArrayListExtra(Intents.INTENT_PANORAMA_PICTURES, panoramasReferences);
+        intent.putExtra(Intents.INTENT_AD_ID, adId);
         startActivity(intent);
     }
 
