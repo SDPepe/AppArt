@@ -344,7 +344,7 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton4.perform(click());
 */
-        
+
 
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
