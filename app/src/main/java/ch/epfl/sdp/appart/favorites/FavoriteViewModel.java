@@ -2,7 +2,9 @@ package ch.epfl.sdp.appart.favorites;
 
 import android.util.Log;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -35,13 +37,14 @@ public class FavoriteViewModel extends ViewModel {
 
     public void initHome() {
             database.getUser(loginService.getCurrentUser().getUserId()).thenAccept(u -> {
-                Log.d("favorites", "number of favorites : " + u.getFavoritesIds().size());
                 CompletableFuture<List<Card>> cards = database.getCards();
                 cards.thenAccept(cs -> {
-                    List<Card> filteredCards = cs.stream().filter(c -> u.getFavoritesIds().contains(c.getAdId())).collect(Collectors.toList());
-                    for (Card c: filteredCards)
-                        Log.d("favorites", c.getAdId() + " passed the filter");
-                    Log.d("favorites", "" + filteredCards.size());
+                    Set<String> favoritesIds = u.getFavoritesIds();
+                    List<Card> filteredCards = new LinkedList<>();
+                    for (Card c : cs) {
+                        if (favoritesIds.contains(c.getId()))
+                            filteredCards.add(c);
+                    }
                     lFavorites.setValue(filteredCards);
                 });
             });
@@ -51,7 +54,7 @@ public class FavoriteViewModel extends ViewModel {
     /**
      * Getter for the LiveData of the list of favorite cards
      */
-    public LiveData<List<Card>> getFavorites() {
+    public MutableLiveData<List<Card>> getFavorites() {
         return lFavorites;
     }
 }

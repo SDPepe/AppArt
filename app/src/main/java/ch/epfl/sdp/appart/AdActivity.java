@@ -184,9 +184,7 @@ public class AdActivity extends ToolbarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO check the user is logged in
         if (item.getItemId() == R.id.action_add_favorite) {
-            // TODO handle the exceptions for realsies
             database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
-                Log.d("favorites", u.getUserId() + " " + u.getFavoritesIds().size());
                 u.addFavorite(adId);
                 database.updateUser(u);
             });

@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.user;
 
 import java.util.List;
+import java.util.Set;
 
 public interface User {
 
@@ -125,7 +126,7 @@ public interface User {
      * getter method for the list of the favorite ads of the user
      * @return a list of the ids of the ads the user has marked as favorites
      */
-    List<String> getFavoritesIds();
+    Set<String> getFavoritesIds();
 
     /**
      * adds the ad id to the list of the favorite ads of this user

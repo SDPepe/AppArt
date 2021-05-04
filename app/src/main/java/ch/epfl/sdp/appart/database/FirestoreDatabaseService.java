@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.database;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -187,8 +189,9 @@ public class FirestoreDatabaseService implements DatabaseService {
 
                         Object rawFavoriteIds = data.get(UserLayout.FAVORITE_IDS);
                         if (rawFavoriteIds !=  null) {
-                            for (String id : (List<String>) rawFavoriteIds)
-                                user.addFavorite(id);
+                            List<String> favoriteIds = (List<String>) rawFavoriteIds;
+                            for (int i = 0; i < favoriteIds.size(); ++i)
+                                user.addFavorite(favoriteIds.get(i));
                         }
 
                         result.complete(user);
@@ -578,7 +581,7 @@ public class FirestoreDatabaseService implements DatabaseService {
         docData.put(UserLayout.PHONE, user.getPhoneNumber());
         docData.put(UserLayout.PICTURE, user.getProfileImage());
         docData.put(UserLayout.AD_IDS, user.getAdsIds());
-        docData.put(UserLayout.FAVORITE_IDS, user.getFavoritesIds());
+        docData.put(UserLayout.FAVORITE_IDS, new ArrayList<>(user.getFavoritesIds()));
         return docData;
     }
 

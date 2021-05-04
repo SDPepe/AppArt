@@ -3,7 +3,9 @@ package ch.epfl.sdp.appart.user;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -24,7 +26,7 @@ public class AppUser implements User {
     private Gender gender;
     private String profilePicture;
     private List<String> adsIds;
-    private List<String> favoritesIds;
+    private Set<String> favoritesIds;
 
     private static final String PREFIX_FOR_ICON_IMAGE = "userIcon";
 
@@ -42,7 +44,7 @@ public class AppUser implements User {
         this.email = email;
         this.gender = Gender.NOT_SELECTED;
         this.adsIds = new ArrayList<>();
-        favoritesIds = new ArrayList<>();
+        favoritesIds = new HashSet<>();
 
         /* As default, everything before '@' in email is selected as name,
         this is overwritten by the name setter once the user specifies it */
@@ -233,18 +235,18 @@ public class AppUser implements User {
     }
 
     @Override
-    public List<String> getFavoritesIds() {
-        return adsIds;
+    public Set<String> getFavoritesIds() {
+        return favoritesIds;
     }
 
     @Override
     public void addFavorite(String id) {
         if (id == null)
             throw new IllegalArgumentException("id can't be null");
-        favoritesIds.add(id);
-        for (String fid: favoritesIds) {
-            Log.d("favorites id", fid + " ");
-        }
+        if (!favoritesIds.contains(id))
+            favoritesIds.add(id);
+        else
+            favoritesIds.remove(id);
     }
 
     /**

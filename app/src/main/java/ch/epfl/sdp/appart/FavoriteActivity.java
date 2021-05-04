@@ -10,14 +10,17 @@ import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
 import ch.epfl.sdp.appart.scrolling.ScrollingViewModel;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
+import dagger.hilt.android.AndroidEntryPoint;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+@AndroidEntryPoint
 public class FavoriteActivity extends ToolbarActivity {
 
     @Inject
@@ -37,7 +40,8 @@ public class FavoriteActivity extends ToolbarActivity {
         //TODO handle database exception
         mViewModel.initHome();
 
-        recyclerView = findViewById(R.id.recycler_Scrolling_recyclerView);
+        Log.d("favorites", "database -> " + database);
+        recyclerView = findViewById(R.id.recycler_favorites);
         recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
         recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
         mViewModel.getFavorites().observe(this, this::updateList);
