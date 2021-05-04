@@ -367,7 +367,9 @@ public class UserProfileActivityTest {
                                 1),
                         isDisplayed()));
         appCompatButton6.perform(click());
-        
+
+
+
 
         onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
 
