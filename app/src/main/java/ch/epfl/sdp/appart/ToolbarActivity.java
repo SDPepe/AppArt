@@ -51,15 +51,15 @@ public abstract class ToolbarActivity extends AppCompatActivity {
             startActivity(intentLogout);
             return true;
         }
-        if (item.getItemId() == R.id.action_account) {
+        else if (item.getItemId() == R.id.action_account) {
             Intent intentAccount = new Intent(this, UserProfileActivity.class);
             startActivity(intentAccount);
             return true;
         }
-        if (item.getItemId() == R.id.action_settings) {
+        else if (item.getItemId() == R.id.action_settings) {
             return true;
         }
-        if (item.getItemId() == R.id.action_favorite) {
+        else if (item.getItemId() == R.id.action_favorite) {
             Intent intentFavorite = new Intent(this, FavoriteActivity.class);
             startActivity(intentFavorite);
             return true;
