@@ -95,7 +95,7 @@ public class UserProfileActivityTest {
         hiltRule.inject();
     }
     @Test
-    public void userProfileActivityTest() throws UiObjectNotFoundException, InterruptedException {
+    public void userProfileActivityTest() throws UiObjectNotFoundException {
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
@@ -287,6 +287,9 @@ public class UserProfileActivityTest {
 
         onView(withId(R.id.editImage_UserProfile_button)).perform(click());
 
+        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
+       // onView(withId(R.id.doneEditing_UserProfile_button)).perform(click());
+
         /* =================================================================================================== */
         /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
         /* =================================================================================================== */
@@ -331,8 +334,6 @@ public class UserProfileActivityTest {
             uiDevice.pressBack();
         }
 
-
-
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
                         childAtPosition(
@@ -343,9 +344,9 @@ public class UserProfileActivityTest {
                                 4),
                         isDisplayed()));
         appCompatButton4.perform(click());
+
 */
-
-
+        /*
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
                         childAtPosition(
@@ -369,9 +370,21 @@ public class UserProfileActivityTest {
         appCompatButton6.perform(click());
 
 
-        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
-        
 
+
+
+        ViewInteraction appCompatButton7 = onView(
+                allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        2),
+                                2),
+                        isDisplayed()));
+        appCompatButton7.perform(click());
+
+
+*/
         ViewInteraction appCompatButton8 = onView(
                 allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
                         childAtPosition(
@@ -381,6 +394,7 @@ public class UserProfileActivityTest {
                                 0),
                         isDisplayed()));
         appCompatButton8.perform(click());
+        
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.email_UserProfile_textView), withText("Email"),
