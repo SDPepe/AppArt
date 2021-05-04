@@ -16,7 +16,10 @@
       android:inputType="textEmailAddress"
       app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_1"
       app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_2"
-      app:layout_constraintStart_toStartOf="@+id/guideline_vertical_1" />
+      app:layout_constraintStart_toStartOf="@+id/guideline_vertical_1"
+      android:drawableStart="@drawable/ic_person"
+      android:drawablePadding="@dimen/ic_padding"
+      android:background="@drawable/edit_text_default"/>
 
     <EditText
       android:id="@+id/password_Login_editText"
@@ -26,9 +29,12 @@
       android:ems="10"
       android:hint="@string/prompt_password"
       android:inputType="textPassword"
+      android:background="@drawable/edit_text_default"
       app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_2"
       app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_2"
-      app:layout_constraintStart_toStartOf="@+id/guideline_vertical_1" />
+      app:layout_constraintStart_toStartOf="@+id/guideline_vertical_1"
+      android:drawableStart="@drawable/ic_lock"
+      android:drawablePadding="@dimen/ic_padding"/>
 
 
     <Button
@@ -41,6 +47,7 @@
       app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_3"
       app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_2"
       app:layout_constraintStart_toStartOf="@+id/guideline_vertical_1" />
+
     <Button
       android:id="@+id/reset_password_Login_button"
       android:layout_width="0dp"
@@ -51,6 +58,7 @@
       app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_4"
       app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_2"
       app:layout_constraintStart_toStartOf="@+id/guideline_vertical_1" />
+
     <Button
       android:id="@+id/create_account_Login_button"
       android:layout_width="0dp"

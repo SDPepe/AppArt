@@ -10,6 +10,7 @@
       android:id="@+id/create_account_CreateUser_button"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:background="@drawable/button_default"
       android:onClick="createAccount"
       android:text="@string/createAccountButtonText"
       app:layout_constraintBottom_toTopOf="@+id/guideline6"
@@ -33,10 +34,13 @@
       android:ems="10"
       android:hint="@string/createAccountPasswordFieldHint"
       android:inputType="textPassword"
-      android:textAlignment="center"
+
       app:layout_constraintBottom_toTopOf="@+id/guideline4"
       app:layout_constraintEnd_toStartOf="@+id/guideline3"
-      app:layout_constraintStart_toStartOf="@+id/guideline2" />
+      app:layout_constraintStart_toStartOf="@+id/guideline2"
+      android:background="@drawable/edit_text_default"
+      android:drawableStart="@drawable/ic_lock"
+      android:drawablePadding="@dimen/ic_padding"/>
 
     <EditText
       android:id="@+id/create_account_email_CreateUser_editText"
@@ -46,10 +50,13 @@
       android:ems="10"
       android:hint="@string/createAccountEmailFieldHint"
       android:inputType="textEmailAddress"
-      android:textAlignment="center"
       app:layout_constraintBottom_toTopOf="@+id/guideline5"
       app:layout_constraintEnd_toStartOf="@+id/guideline3"
-      app:layout_constraintStart_toStartOf="@+id/guideline2" />
+      app:layout_constraintStart_toStartOf="@+id/guideline2"
+      android:background="@drawable/edit_text_default"
+      android:drawableStart="@drawable/ic_person"
+      android:drawablePadding="@dimen/ic_padding"
+      />
 
     <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline2"

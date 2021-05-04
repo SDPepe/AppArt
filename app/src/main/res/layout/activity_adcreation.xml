@@ -6,15 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".AdActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline14"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline15"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_2" />
+
 
     <ScrollView
-        android:id="@+id/horizontal_AdCreation_scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+      android:id="@+id/horizontal_AdCreation_scrollView"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/guideline15"
+      app:layout_constraintStart_toStartOf="@+id/guideline14"
+      app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/vertical_AdCreation_linearLayout"
@@ -26,9 +39,9 @@
                 android:id="@+id/title_AdCreation_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:ems="10"
                 android:hint="@string/editTitleAdCreation"
                 android:inputType="textPersonName"
@@ -281,10 +294,15 @@
                 android:id="@+id/addPhoto_AdCreation_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:background="@drawable/button_default"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="024dp"
-                android:text="@string/cameraButtonAdCreation" />
+                android:gravity="center"
+                android:text="@string/cameraButtonAdCreation"
+                android:drawableEnd="@drawable/ic_photo"
+                android:paddingEnd="16dp"
+                android:paddingStart="40dp"
+
+              />
 
             <HorizontalScrollView
                 android:id="@+id/panoramaScroll_AdCreation_ScrollView"
@@ -305,20 +323,23 @@
                 android:id="@+id/createVirtualTour_AdCreation_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:background="@drawable/button_default"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="024dp"
-                android:text="@string/createPanoramaTourButton" />
+                android:drawableEnd="@drawable/ic_vrpano"
+                android:paddingEnd="16dp"
+                android:paddingStart="40dp"
+                android:text="@string/createPanoramaTourButton"/>
 
             <Button
-                android:id="@+id/confirm_AdCreation_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/confirmButtonAdCreation" />
+              android:id="@+id/confirm_AdCreation_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp"
+              android:background="@drawable/button_default"
+              android:drawableEnd="@drawable/post_add"
+              android:paddingEnd="16dp"
+              android:paddingStart="40dp"
+              android:text="@string/confirmButtonAdCreation" />
 
         </LinearLayout>
     </ScrollView>

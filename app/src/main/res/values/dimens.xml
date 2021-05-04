@@ -17,6 +17,9 @@
     <dimen name="horizontal_4">0.55</dimen>
     <dimen name="horizontal_5">0.65</dimen>
 
+    <!-- TextField !-->
+    <dimen name="ic_padding">8dp</dimen>
+
     <!--
     This padding applies to both square and round screens. The total padding between the buttons
     and the window insets is box_inset_layout_padding (above variable) on square screens and

@@ -24,15 +24,14 @@
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:fillViewport="false"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_add2"
+        app:layout_constraintStart_toStartOf="@+id/guideline_add1"
         app:layout_constraintTop_toBottomOf="@+id/title_Ad_textView">
 
         <LinearLayout
@@ -62,7 +61,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="openVirtualTour"
-                android:text="@string/vtourbutton_text" />
+                android:text="@string/vtourbutton_text"
+                android:background="@drawable/button_default"
+                android:drawableEnd="@drawable/ic_vrpano"
+                android:paddingEnd="16dp"
+                android:paddingStart="40dp"
+              />
 
             <Space
                 android:layout_width="match_parent"
@@ -148,15 +152,24 @@
                 android:id="@+id/contact_info_Ad_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:onClick="openContactInfo"
-                android:text="@string/contactbutton_text" />
+                android:text="@string/contactbutton_text"
+                android:background="@drawable/button_default"
+                android:drawableEnd="@drawable/ic_contact"
+                android:paddingEnd="16dp"
+                android:paddingStart="40dp"/>
 
             <Button
                 android:id="@+id/seeLocation_Ad_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onSeeLocationClick"
-                android:text="@string/seeLocationText" />
+                android:text="@string/seeLocationText"
+                android:background="@drawable/button_default"
+                android:drawableEnd="@drawable/ic_location"
+                android:paddingEnd="16dp"
+                android:paddingStart="40dp"/>
 
         </LinearLayout>
     </ScrollView>
@@ -172,5 +185,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline_add1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline_add2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
