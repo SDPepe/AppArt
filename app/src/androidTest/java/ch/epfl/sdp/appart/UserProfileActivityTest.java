@@ -50,7 +50,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
@@ -157,10 +156,6 @@ public class UserProfileActivityTest {
                                 1),
                         isDisplayed()));
         appCompatButton2.perform(click());
-
-        onView(withId(R.id.editImage_UserProfile_button)).perform(click());
-
-        onView(withId(R.id.confirm_Camera_button)).perform(click());
 
         ViewInteraction textInputEditText = onView(
                 allOf(withId(R.id.name_UserProfile_editText), withText("carlo"),
@@ -290,10 +285,9 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
-        onView(withId(R.id.editImage_UserProfile_button)).perform(click());
-
-        onView(withId(R.id.confirm_Camera_button)).perform(click());
-
+        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
+        onView(withId(R.id.doneEditing_UserProfile_button)).perform(click());
+        onView(withId(R.id.editProfile_UserProfile_button)).perform(click());
         onView(withId(R.id.editImage_UserProfile_button)).perform(click());
 
         /* =================================================================================================== */
@@ -353,7 +347,7 @@ public class UserProfileActivityTest {
 
 
         ViewInteraction appCompatButton5 = onView(
-                allOf(withId(R.id.doneButton), withText("DONE"),
+                allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
@@ -391,7 +385,7 @@ public class UserProfileActivityTest {
 
 
         ViewInteraction appCompatButton8 = onView(
-                allOf(withId(R.id.doneButton), withText("DONE"),
+                allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),

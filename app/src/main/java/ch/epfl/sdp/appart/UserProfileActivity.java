@@ -65,7 +65,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.editProfile_UserProfile_button);
-        this.doneButton = findViewById(R.id.doneButton);
+        this.doneButton = findViewById(R.id.doneEditing_UserProfile_button);
         this.removeImageButton = findViewById(R.id.removeImage_UserProfile_button);
         this.changeImageButton = findViewById(R.id.editImage_UserProfile_button);
         this.nameEditText = findViewById(R.id.name_UserProfile_editText);
@@ -78,7 +78,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
 
         this.imageView.setEnabled(false);
-        this.removeImageButton.setVisibility(View.GONE);
+       // this.removeImageButton.setVisibility(View.GONE);
         this.changeImageButton.setVisibility(View.GONE);
 
         /* get user from database from user ID */
@@ -114,10 +114,10 @@ public class UserProfileActivity extends AppCompatActivity {
      * called by the remove button under imageView
      */
     public void removeProfileImage(View view) {
-        mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
-        this.sessionUser.setDefaultProfileImage();
-        imageView.setImageResource(android.R.color.transparent);
-        this.removeImageButton.setVisibility(View.GONE);
+        //mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
+       // this.sessionUser.setDefaultProfileImage();
+       // imageView.setImageResource(android.R.color.transparent);
+       // this.removeImageButton.setVisibility(View.GONE);
     }
 
     /**

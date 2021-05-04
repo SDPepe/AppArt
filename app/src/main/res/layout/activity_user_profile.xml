@@ -96,18 +96,18 @@
                 <Button
                     android:id="@+id/editImage_UserProfile_button"
                     android:layout_width="150dp"
-                    android:layout_height="38dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:clickable="true"
                     android:contextClickable="true"
+                    android:focusable="true"
                     android:onClick="changeProfileImage"
-                    android:text="@string/changeProfilePicture"
-                    android:focusable="true" />
+                    android:text="@string/changeProfilePicture" />
 
                 <Button
                     android:id="@+id/removeImage_UserProfile_button"
                     android:layout_width="150dp"
-                    android:layout_height="38dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:onClick="removeProfileImage"
                     android:text="@string/removeProfilePicture" />
@@ -314,7 +314,7 @@
                 android:paddingTop="20dp">
 
                 <Button
-                    android:id="@+id/doneButton"
+                    android:id="@+id/doneEditing_UserProfile_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#8D49BC4D"
