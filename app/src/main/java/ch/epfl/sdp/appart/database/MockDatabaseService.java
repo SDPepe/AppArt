@@ -29,6 +29,7 @@ public class MockDatabaseService implements DatabaseService {
     private final List<Card> cards = new ArrayList<>();
     private final Ad ad;
     private final Map<String, User> users = new HashMap<>();
+    private static final String ANDROID_FILE_PATH = "file:///android_asset/";
 
     public MockDatabaseService() {
 
@@ -39,11 +40,11 @@ public class MockDatabaseService implements DatabaseService {
         cards.add(new Card("unknown5", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
 
         List<String> picturesReferences = Arrays.asList(
-                "file:///android_asset/fake_ad_1.jpg",
-                "file:///android_asset/fake_ad_2.jpg",
-                "file:///android_asset/fake_ad_3.jpg",
-                "file:///android_asset/fake_ad_4.jpg",
-                "file:///android_asset/fake_ad_5.jpg"
+                "fake_ad_1.jpg",
+                "fake_ad_2.jpg",
+                "fake_ad_3.jpg",
+                "fake_ad_4.jpg",
+                "fake_ad_5.jpg"
         );
 
         ad = new Ad.AdBuilder()
@@ -181,5 +182,14 @@ public class MockDatabaseService implements DatabaseService {
     @Override
     public void accept(GlideLoaderListenerVisitor visitor) {
         visitor.visit(this);
+    }
+
+    /**
+     * Returns ANDROID_FILE_PATH + fileName
+     * @param fileName the filename
+     * @return the complete path String
+     */
+    public String prependAndroidFilePath(String fileName) {
+        return ANDROID_FILE_PATH + fileName;
     }
 }

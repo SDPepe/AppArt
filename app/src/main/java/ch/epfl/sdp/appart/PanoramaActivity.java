@@ -35,15 +35,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class PanoramaActivity extends AppCompatActivity {
 
-    /**
-     * WARNING : For people using bitmaps loaded with Glide:
-     * DON'T STORE THE BITMAP ANYWHERE IT WOULD GET RECYCLED BY SOMEONE ELSE
-     * Glide has a Cache and take care of its own recycling. as the commented
-     * line above would be uncommented and would contain a Glide's loaded Bitmap
-     * The activity would have called recycled() on this bitmap when closing.
-     * This would have caused an IllegalState and its hard to debug.
-     */
-
     @Inject
     DatabaseService database;
     private PLManager plManager;

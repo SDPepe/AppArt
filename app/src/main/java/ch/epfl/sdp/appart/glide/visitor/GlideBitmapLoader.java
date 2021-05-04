@@ -57,7 +57,7 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
-                .load(Uri.parse(imagePath))
+                .load(Uri.parse(database.prependAndroidFilePath(imagePath)))
                 .into(target);
 
     }

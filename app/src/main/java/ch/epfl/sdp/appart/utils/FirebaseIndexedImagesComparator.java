@@ -14,7 +14,7 @@ public class FirebaseIndexedImagesComparator implements Comparator<String> {
 
     //this pattern will match a conventional name of images with its index followed by
     //a dot and its file extension
-    private final Pattern pattern = Pattern.compile("^[a-zA-Z]+\\d+\\.[a-zA-Z]+$");
+    private final Pattern pattern = Pattern.compile("^[a-zA-Z_]+\\d+\\.[a-zA-Z]+$");
     //this pattern aims to extract the index inside the string
     private final Pattern numberPattern = Pattern.compile("\\d+");
 

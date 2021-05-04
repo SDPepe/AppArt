@@ -24,7 +24,7 @@ public class AdUnitTest {
         List<String> refs = new ArrayList<>();
         refs.add("ref");
         ad = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
-                "1015 Lausanne", "unknown", "Cool place", refs,
+                "1015 Lausanne", "unknown", "Cool place", refs, refs,
                 false);
     }
 
@@ -34,7 +34,7 @@ public class AdUnitTest {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad(null, 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
-                    new ArrayList<>(), false);
+                    new ArrayList<>(), new ArrayList<>(),false);
         });
     }
 
@@ -43,7 +43,7 @@ public class AdUnitTest {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, null, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
-                    new ArrayList<>(), false);
+                    new ArrayList<>(), new ArrayList<>(), false);
         });
     }
 
@@ -52,7 +52,7 @@ public class AdUnitTest {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, null,
                     "1015 Lausanne", "unknown", "Cool place",
-                    new ArrayList<>(), false);
+                    new ArrayList<>(), new ArrayList<>(), false);
         });
     }
 
@@ -61,7 +61,7 @@ public class AdUnitTest {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     null, "unknown", "Cool place",
-                    new ArrayList<>(), false);
+                    new ArrayList<>(), new ArrayList<>(),false);
         });
     }
 
@@ -70,7 +70,7 @@ public class AdUnitTest {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", null, "Cool place",
-                    new ArrayList<>(), false);
+                    new ArrayList<>(), new ArrayList<>(),false);
         });
     }
 
@@ -79,7 +79,7 @@ public class AdUnitTest {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", null,
-                    new ArrayList<>(), false);
+                    new ArrayList<>(), new ArrayList<>(),false);
         });
     }
 
@@ -88,7 +88,7 @@ public class AdUnitTest {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
                     "1015 Lausanne", "unknown", "Cool place",
-                    null, false);
+                    null, null, false);
         });
     }
 
