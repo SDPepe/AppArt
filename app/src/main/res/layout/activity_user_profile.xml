@@ -60,6 +60,17 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <Button
+                android:id="@+id/editImage_UserProfile_button"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:contextClickable="true"
+                android:focusable="true"
+                android:onClick="changeProfileImage"
+                android:text="@string/changeProfilePicture" />
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -92,17 +103,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.114"
                     tools:ignore="HardcodedText" />
-
-                <Button
-                    android:id="@+id/editImage_UserProfile_button"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:clickable="true"
-                    android:contextClickable="true"
-                    android:focusable="true"
-                    android:onClick="changeProfileImage"
-                    android:text="@string/changeProfilePicture" />
 
                 <Button
                     android:id="@+id/removeImage_UserProfile_button"

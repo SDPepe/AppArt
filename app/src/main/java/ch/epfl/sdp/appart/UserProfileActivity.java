@@ -125,9 +125,9 @@ public class UserProfileActivity extends AppCompatActivity {
      * called by the imageView button
      */
     public void changeProfileImage(View view) {
-        Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
-        startActivityForResult(intent, 1);
+      //  Intent intent = new Intent(this, CameraActivity.class);
+      //  intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
+      //  startActivityForResult(intent, 1);
     }
 
     /**
@@ -177,7 +177,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
-        this.removeImageButton.setVisibility(View.GONE);
+        //this.removeImageButton.setVisibility(View.GONE);
         this.changeImageButton.setVisibility(View.GONE);
     }
 

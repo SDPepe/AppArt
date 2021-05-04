@@ -95,7 +95,7 @@ public class UserProfileActivityTest {
         hiltRule.inject();
     }
     @Test
-    public void userProfileActivityTest() throws UiObjectNotFoundException {
+    public void userProfileActivityTest() throws UiObjectNotFoundException, InterruptedException {
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
@@ -285,9 +285,6 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
-        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
-        onView(withId(R.id.doneEditing_UserProfile_button)).perform(click());
-        onView(withId(R.id.editProfile_UserProfile_button)).perform(click());
         onView(withId(R.id.editImage_UserProfile_button)).perform(click());
 
         /* =================================================================================================== */
@@ -296,7 +293,7 @@ public class UserProfileActivityTest {
 
         // Create a bitmap we can use for our simulated camera image
 
-
+/*
         Bitmap icon = BitmapFactory.decodeResource(
                 ApplicationProvider.getApplicationContext().getResources(),
                 R.mipmap.ic_launcher);
@@ -334,6 +331,8 @@ public class UserProfileActivityTest {
             uiDevice.pressBack();
         }
 
+
+
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
                         childAtPosition(
@@ -344,7 +343,7 @@ public class UserProfileActivityTest {
                                 4),
                         isDisplayed()));
         appCompatButton4.perform(click());
-
+*/
 
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
@@ -371,16 +370,7 @@ public class UserProfileActivityTest {
 
 
 
-
-        ViewInteraction appCompatButton7 = onView(
-                allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                2),
-                        isDisplayed()));
-        appCompatButton7.perform(click());
+        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
 
 
 
