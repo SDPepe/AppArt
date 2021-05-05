@@ -27,6 +27,7 @@ import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.utils.FirebaseIndexedImagesComparator;
+import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -163,11 +164,11 @@ public class PanoramaActivity extends AppCompatActivity {
         PLSphericalPanorama panorama = new PLSphericalPanorama();
 
         CompletableFuture<Bitmap> bitmapFuture = new CompletableFuture<>();
-        String imagePath = AdLayout.IMAGES_DIRECTORY +
-                FirebaseLayout.SEPARATOR +
-                currentAdId +
-                FirebaseLayout.SEPARATOR +
-                images.get(currImage);
+
+        String imagePath = new StoragePathBuilder()
+                .toAdsStorageDirectory()
+                .toDirectory(currentAdId)
+                .withFile(images.get(currImage));
 
         database.accept(new GlideBitmapLoader(this, bitmapFuture, imagePath));
 
