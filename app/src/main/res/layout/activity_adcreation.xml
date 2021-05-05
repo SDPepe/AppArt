@@ -263,7 +263,7 @@
                 android:scrollbars="vertical" />
 
             <HorizontalScrollView
-                android:id="@+id/photosScroll_AdCreation_ScrollView"
+                android:id="@+id/picturesScroll_AdCreation_ScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
@@ -271,10 +271,10 @@
                 android:layout_marginEnd="16dp">
 
                 <LinearLayout
-                    android:id="@+id/photos_AdCreation_linearLayout"
+                    android:id="@+id/pictures_AdCreation_linearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical" />
+                    android:orientation="horizontal" />
             </HorizontalScrollView>
 
             <Button
@@ -285,6 +285,30 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="024dp"
                 android:text="@string/cameraButtonAdCreation" />
+
+            <HorizontalScrollView
+                android:id="@+id/panoramaScroll_AdCreation_ScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp">
+
+                <LinearLayout
+                    android:id="@+id/panorama_AdCreation_linearLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <Button
+                android:id="@+id/createVirtualTour_AdCreation_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="024dp"
+                android:text="@string/createPanoramaTourButton" />
 
             <Button
                 android:id="@+id/confirm_AdCreation_button"

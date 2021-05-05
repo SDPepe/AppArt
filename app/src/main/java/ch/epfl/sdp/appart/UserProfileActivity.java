@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
+import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static ch.epfl.sdp.appart.utils.UIUtils.makeSnakeForUserUpdateFailed;
 
 /**
  * This class manages the UI of the user profile, the user may edit
@@ -33,7 +37,6 @@ public class UserProfileActivity extends AppCompatActivity {
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
-    private Button backButton;
     private EditText nameEditText;
     private EditText ageEditText;
     private EditText phoneNumberEditText;
@@ -54,7 +57,6 @@ public class UserProfileActivity extends AppCompatActivity {
         /* UI components initialisation */
         this.modifyButton = findViewById(R.id.modifyButton);
         this.doneButton = findViewById(R.id.doneButton);
-        this.backButton = findViewById(R.id.back_UserProfile_button);
         this.nameEditText = findViewById(R.id.name_UserProfile_editText);
         this.ageEditText = findViewById(R.id.age_UserProfile_editText);
         this.emailTextView = findViewById(R.id.emailText_UserProfile_textView);
@@ -67,7 +69,10 @@ public class UserProfileActivity extends AppCompatActivity {
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
         mViewModel.getUser().observe(this, this::setSessionUserToLocal);
+
+        mViewModel.getUri().observe(this, this::setProfileImage);
     }
+
 
     /**
      * closes activity when back button pressed on UI
@@ -106,7 +111,7 @@ public class UserProfileActivity extends AppCompatActivity {
         /* disable editing text in all UI components*/
         enableDisableEntries();
 
-        setSessionUserToDatabase();
+        setSessionUserToDatabase(view);
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
@@ -126,16 +131,18 @@ public class UserProfileActivity extends AppCompatActivity {
     /**
      * sets the updated user information to the firestore database
      */
-    private void setSessionUserToDatabase() {
+    private void setSessionUserToDatabase(View view) {
       mViewModel.updateUser(this.sessionUser);
       mViewModel.getUpdateCardConfirmed().observe(this, this::informationUpdateResult);
-        /* update the view with new attributes */
-        getAndSetCurrentAttributes();
     }
 
-    private void informationUpdateResult(Boolean b) {
-        //System.out.println(b);
-        // TODO: do something if needed
+    private void informationUpdateResult(Boolean updateResult) {
+        if (updateResult) {
+            /* update the view with new attributes */
+            getAndSetCurrentAttributes();
+        } else {
+            UIUtils.makeSnakeForUserUpdateFailed(this.doneButton, R.string.updateUserFailedInDB);
+        }
     }
 
     /**
@@ -145,7 +152,6 @@ public class UserProfileActivity extends AppCompatActivity {
         this.nameEditText.setEnabled(!this.nameEditText.isEnabled());
         this.ageEditText.setEnabled(!this.ageEditText.isEnabled());
         this.genderSpinner.setEnabled(!this.genderSpinner.isEnabled());
-        this.backButton.setEnabled(!this.backButton.isEnabled());
         this.phoneNumberEditText.setEnabled(!this.phoneNumberEditText.isEnabled());
         /* email is never enabled since another process is required to edit it */
     }
@@ -195,6 +201,13 @@ public class UserProfileActivity extends AppCompatActivity {
         } else {
             // TODO: set actual user-specific profile picture with sessionUser.getProfileImage()
         }
+    }
+
+    /**
+     * Set user profile image
+     */
+    private void setProfileImage(Uri uri){
+        imageView.setImageURI(uri);
     }
 
 

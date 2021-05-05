@@ -6,25 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".AdActivity">
 
-    <ImageButton
-        android:id="@+id/back_UserProfile_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="56dp"
-        android:background="#00FFFFFF"
-        android:contentDescription="@string/backbutton_desc"
-        android:onClick="goBack"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-
     <TextView
         android:id="@+id/title_Ad_textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/default_loading"
         android:textAlignment="center"
@@ -32,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_UserProfile_button" />
+        app:layout_constraintTop_toBottomOf="@+id/account_Ad_toolbar" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -76,12 +63,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="openVirtualTour"
                 android:text="@string/vtourbutton_text" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="openCamera"
-                android:text="@string/cameraAdButtonDesc" />
 
             <Space
                 android:layout_width="match_parent"
@@ -169,6 +150,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="openContactInfo"
                 android:text="@string/contactbutton_text" />
+
+            <Button
+                android:id="@+id/seeLocation_Ad_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onSeeLocationClick"
+                android:text="@string/seeLocationText" />
 
         </LinearLayout>
     </ScrollView>

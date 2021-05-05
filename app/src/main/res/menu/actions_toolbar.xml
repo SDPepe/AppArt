@@ -22,4 +22,7 @@
         android:id="@+id/action_logout"
         android:title="@string/action_logout"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/map_Toolbar_item"
+        android:title="@string/action_map" />
 </menu>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_InfoWindow_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="Info window layout"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/city_InfoWindow_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="City"
+        android:text="City" />
+
+    <TextView
+        android:id="@+id/price_InfoWindow_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Price" />
+
+    <ImageView
+        android:id="@+id/photo_InfoWindow_imageView"
+        android:layout_width="222dp"
+        android:layout_height="210dp"
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
+        android:visibility="visible"
+        tools:visibility="visible" />
+
+</LinearLayout>

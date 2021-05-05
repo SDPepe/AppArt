@@ -42,7 +42,7 @@ public class FavoriteViewModel extends ViewModel {
                     Set<String> favoritesIds = u.getFavoritesIds();
                     List<Card> filteredCards = new LinkedList<>();
                     for (Card c : cs) {
-                        if (favoritesIds.contains(c.getId()))
+                        if (favoritesIds.contains(c.getAdId()))
                             filteredCards.add(c);
                     }
                     lFavorites.setValue(filteredCards);

@@ -40,7 +40,6 @@ public class FavoriteActivity extends ToolbarActivity {
         //TODO handle database exception
         mViewModel.initHome();
 
-        Log.d("favorites", "database -> " + database);
         recyclerView = findViewById(R.id.recycler_favorites);
         recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
         recyclerView.setHasFixedSize(true); //use for performance if card dims does not change

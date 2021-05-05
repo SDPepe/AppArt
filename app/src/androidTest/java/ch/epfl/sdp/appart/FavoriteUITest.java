@@ -168,21 +168,6 @@ public class FavoriteUITest {
                         isDisplayed()));
         actionMenuItemView.perform(click());
 
-        pressBack();
-
-        ViewInteraction appCompatImageView2 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 1));
-        appCompatImageView2.perform(click());
-
-        ViewInteraction actionMenuItemView2 = onView(
-                allOf(withId(R.id.action_add_favorite), withContentDescription("Add to Favorites"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.account_Ad_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        actionMenuItemView2.perform(click());
-
         ViewInteraction overflowMenuButton3 = onView(
                 allOf(withContentDescription("More options"),
                         childAtPosition(
@@ -226,15 +211,7 @@ public class FavoriteUITest {
                         isDisplayed()));
         actionMenuItemView3.perform(click());
 
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withId(R.id.back_UserProfile_button), withContentDescription("Close ad"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatImageButton.perform(click());
+        pressBack();
 
         ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 1));
         appCompatImageView4.perform(click());

@@ -45,31 +45,31 @@ public abstract class ToolbarActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean choiceFound = false;
-        if (item.getItemId() == R.id.action_logout) {
-            loginService.signOut();
-            Intent intentLogout = new Intent(this, LoginActivity.class);
-            startActivity(intentLogout);
-            choiceFound = true;
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                loginService.signOut();
+                Intent intentLogout = new Intent(this, LoginActivity.class);
+                startActivity(intentLogout);
+                return true;
+
+            case R.id.action_account:
+                Intent intentAccount = new Intent(this, UserProfileActivity.class);
+                startActivity(intentAccount);
+                return true;
+
+            case R.id.action_settings:
+                return true;
+
+            case R.id.action_favorite:
+                Intent intentFavorite = new Intent(this, FavoriteActivity.class);
+                startActivity(intentFavorite);
+                return true;
+
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        else if (item.getItemId() == R.id.action_account) {
-            Intent intentAccount = new Intent(this, UserProfileActivity.class);
-            startActivity(intentAccount);
-            choiceFound = true;
-        }
-        else if (item.getItemId() == R.id.action_settings) {
-            choiceFound = true;
-        }
-        else if (item.getItemId() == R.id.action_favorite) {
-            Intent intentFavorite = new Intent(this, FavoriteActivity.class);
-            startActivity(intentFavorite);
-            choiceFound = true;
-        }
-        // If we got here, the user's action was not recognized.
-        // Invoke the superclass to handle it.
-        if (!choiceFound)
-            return super.onOptionsItemSelected(item);
-        else return true;
     }
 
 }

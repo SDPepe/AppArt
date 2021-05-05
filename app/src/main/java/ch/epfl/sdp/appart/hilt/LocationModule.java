@@ -1,16 +1,20 @@
 package ch.epfl.sdp.appart.hilt;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.LocationManager;
 
 import androidx.annotation.Nullable;
+import androidx.core.os.ConfigurationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Locale;
 
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
@@ -34,7 +38,8 @@ public abstract class LocationModule {
 
     @Singleton
     @Provides
-    public static FusedLocationProviderClient provideLocationProvider(@ApplicationContext Context context) {
-        return LocationServices.getFusedLocationProviderClient(context);
+    public static Context provideContext(@ApplicationContext Context context) {
+        return context;
     }
+
 }

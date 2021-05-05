@@ -24,6 +24,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+
+        <EditText
+            android:id="@+id/search_bar_Scrolling_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/searchDescription_Scrolling"
+            android:inputType="text"
+            android:importantForAutofill="no"
+            android:gravity="center"
+            android:drawableStart="@android:drawable/ic_menu_search"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_Scrolling_recyclerView"
             android:layout_width="match_parent"

@@ -1,8 +1,13 @@
 package ch.epfl.sdp.appart.user;
 
+import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.ContactInfo;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -19,6 +24,8 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Boolean> mUpdateCardConfirmed = new MutableLiveData<>();
     private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
+    private final MutableLiveData<Uri> mUri = new MutableLiveData<>();
+
     final DatabaseService db;
     final LoginService ls;
 
@@ -28,6 +35,7 @@ public class UserViewModel extends ViewModel {
         this.db = database;
         this.ls = loginService;
     }
+
 
     /**
      * Puts the user in the database and updates the LiveData
@@ -45,7 +53,7 @@ public class UserViewModel extends ViewModel {
      * @param user the user to update in database
      */
     public void updateUser(User user) {
-        CompletableFuture<Boolean> updateUser = db.updateUser(user);
+        CompletableFuture<Boolean> updateUser = db.updateUser(user, mUri.getValue());
         updateUser.thenAccept(mUpdateCardConfirmed::setValue);
     }
 
@@ -60,11 +68,17 @@ public class UserViewModel extends ViewModel {
     }
 
     /**
-     * Get the current user from the database and updates the LiveDatae
+     * Get the current user from the database and updates the LiveData
      */
     public void getCurrentUser() {
         CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
         getCurrentUser.thenAccept(mUser::setValue);
+    }
+    /*
+     * Setters
+     */
+    public void setUri(Uri uri ){
+      mUri.setValue(uri);
     }
 
     /*
@@ -80,6 +94,10 @@ public class UserViewModel extends ViewModel {
 
     public MutableLiveData<User> getUser() {
         return mUser;
+    }
+
+    public MutableLiveData<Uri> getUri() {
+        return mUri;
     }
 
 }

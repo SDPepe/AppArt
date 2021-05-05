@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import android.net.Uri;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Before;
@@ -18,6 +20,8 @@ import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreEmulatorDatabaseServiceWrapper;
+import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
@@ -36,6 +40,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.mock;
 
 @UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest
@@ -53,20 +58,19 @@ public class DatabaseTest {
     LoginService loginService = new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
 
     User globalUser = null;
+    FirestoreEmulatorDatabaseServiceWrapper database;
 
     @Before
     public void setup() {
+        database = (FirestoreEmulatorDatabaseServiceWrapper) db;
         db.clearCache().join();
+        System.out.println("Cache cleared");
     }
 
     public void verifyCard(Card retrievedCard, String city, long price, String ownerID) {
         assertThat(retrievedCard.getCity(), is(city));
         assertThat(retrievedCard.getPrice(), is(price));
         assertThat(retrievedCard.getUserId(), is(ownerID));
-    }
-
-    public void putCardThrowsOnNull() {
-        assertThrows(IllegalArgumentException.class, () -> db.putCard(null));
     }
 
     public void verifyUser(User retrievedUser, long age, String name, String id, String email, String phoneNB) {
@@ -96,7 +100,7 @@ public class DatabaseTest {
 
         verifyUser(retrievedUser, age, name, userId, email, phoneNb);
 
-
+/*
         email = "newFakeEmail@testappart.ch";
         name = "TestName2";
         age = 30;
@@ -105,11 +109,12 @@ public class DatabaseTest {
         user.setName(name);
         user.setUserEmail(email);
 
-        db.updateUser(user).join();
+        db.updateUser(user, Uri.parse("/")).join();
 
         retrievedUser = db.getUser(user.getUserId()).join();
 
         verifyUser(retrievedUser, age, name, userId, email, phoneNb);
+        */
         globalUser = retrievedUser;
     }
 
@@ -120,9 +125,6 @@ public class DatabaseTest {
         assertThat(retrievedAd.getCity(), is(city));
         assertThat(retrievedAd.getDescription(), is(desc));
         assertThat(retrievedAd.getPrice(), is(price));
-        assertThat(retrievedAd.getContactInfo().name, is(contactInfo.name));
-        assertThat(retrievedAd.getContactInfo().userEmail, is(contactInfo.userEmail));
-        assertThat(retrievedAd.getContactInfo().userPhoneNumber, is(contactInfo.userPhoneNumber));
         assertThat(retrievedAd.getPricePeriod(), is(pricePeriod));
         assertThat(retrievedAd.hasVRTour(), is(hasVRTour));
     }
@@ -151,6 +153,8 @@ public class DatabaseTest {
         InputStream input = InstrumentationRegistry.getInstrumentation().getContext().getResources().getAssets().open("panorama_test.jpg");
         File copy = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getCacheDir() + "/panorama_test.jpg");
         writeCopy(input, copy);
+        List<Uri> uriList = new ArrayList<>();
+        uriList.add(Uri.fromFile(copy));
 
         loginService.signInAnonymously().join();
 
@@ -163,13 +167,12 @@ public class DatabaseTest {
         builder.withCity(city);
         builder.withDescription(desc);
         builder.withPrice(price);
-        builder.withContactInfo(contactInfo);
         builder.withPhotosIds(photoIds);
         builder.withPricePeriod(pricePeriod);
         builder.hasVRTour(hasVRTour);
 
         Ad ad = builder.build();
-        db.putAd(ad).join();
+        String adId = db.putAd(ad, uriList).join();
 
         List<Card> retrievedCards = this.db.getCards().join();
         assertThat(retrievedCards.size(), is(1));
@@ -177,10 +180,11 @@ public class DatabaseTest {
 
         verifyCard(card, city, price, globalUser.getUserId());
 
-        Ad retrievedAd = db.getAd(card.getId()).join();
+        Ad retrievedAd = db.getAd(card.getAdId()).join();
         verifyAd(retrievedAd, title, street, city, desc, price, globalUser.getUserId(), contactInfo, pricePeriod, hasVRTour);
 
-
+        database.removeFromStorage(database.getStorageReference(
+                FirebaseLayout.ADS_DIRECTORY + FirebaseLayout.SEPARATOR + adId + "photo0.jpeg"));
     }
 
     public void updateCardTest() {
@@ -205,45 +209,16 @@ public class DatabaseTest {
 
     }
 
-    public void putCardTest() {
-        String id = "fakeId";
-        String adId = "fakeAdId";
-        String ownerId = "fakeOwnerID";
-        String city = "fakeCity";
-        long price = 1000;
-        boolean hasVRTour = false;
-
-        Card card = new Card(id, adId, ownerId, city, price, "", hasVRTour);
-
-        List<Card> cards = db.getCards().join();
+    public void getCardsFilterTest(){
+        List<Card> cards = db.getCardsFilter("New City").join();
         assertThat(cards.size(), is(1));
-
-        String otherCardId = cards.get(0).getId();
-
-        String cardId = db.putCard(card).join();
-
-        cards = db.getCards().join();
-
-        Card wantedCard = null;
-        for (Card retrievedCard : cards) {
-            if (retrievedCard.getId().equals(id) || !retrievedCard.getId().equals(otherCardId) || retrievedCard.getId().equals(cardId)) {
-                wantedCard = retrievedCard;
-                break;
-            }
-        }
-
-        assertNotNull(wantedCard);
-
-        verifyCard(wantedCard, city, price, ownerId);
-
     }
 
     @Test
     public void databaseTest() throws IOException {
         addingUsersAndUpdateTest();
         addingAdAndGetTest();
-        putCardThrowsOnNull();
         updateCardTest();
-        putCardTest();
+        getCardsFilterTest();
     }
 }

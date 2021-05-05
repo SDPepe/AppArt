@@ -24,6 +24,7 @@ public class FirebaseLoginService implements LoginService {
     public FirebaseLoginService() {
         this.mAuth = FirebaseAuth.getInstance();
         this.mAuth.signOut(); //to unsure that no invalid user is cached
+        System.out.println("User signed out");
     }
 
     /**
@@ -175,6 +176,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public void signOut() {
         mAuth.signOut();
+        System.out.println("User signed out");
     }
 
     @Override

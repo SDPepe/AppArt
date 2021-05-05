@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
@@ -40,6 +41,8 @@ public class AdActivity extends ToolbarActivity {
     DatabaseService database;
     @Inject
     LoginService login;
+
+    private String advertiserId;
 
     private String adId;
 
@@ -59,15 +62,9 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getPrice().observe(this, this::updatePrice);
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
+        mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
 
-        // if activity open by adcreation, load the last ad created by the user,
-        // otherwise load the id passed by scrollingactivity
-        if (getIntent().getBooleanExtra("fromAdCreation", false)) {
-            List<String> adIds = login.getCurrentUser().getAdsIds();
-            adId = adIds.get(adIds.size() - 1);
-        } else
-            adId = getIntent().getStringExtra("adID");
-
+        adId = getIntent().getStringExtra("adID");
         mViewModel.initAd(adId);
     }
 
@@ -81,12 +78,13 @@ public class AdActivity extends ToolbarActivity {
         horizontalLayout.removeAllViews();
 
         for (int i = 0; i < references.size(); i++) {
+            String sep = FirebaseLayout.SEPARATOR;
+            String fullRef = FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
-            database.accept(new GlideImageViewLoader(this, photo,
-                    references.get(i)));
+            database.accept(new GlideImageViewLoader(this, photo, fullRef));
             horizontalLayout.addView(myView);
             if (i != 4) {
                 Space hspacer = new Space(this);
@@ -96,6 +94,8 @@ public class AdActivity extends ToolbarActivity {
                 ));
                 horizontalLayout.addView(hspacer);
             }
+            // open image fullscreen on tap
+            myView.setOnClickListener(e -> openImageFullscreen(fullRef));
         }
     }
 
@@ -119,6 +119,10 @@ public class AdActivity extends ToolbarActivity {
         setIfNotNull(usernameView, username);
     }
 
+    private void updateAdvertiserId(String advertiserId) {
+        this.advertiserId = advertiserId;
+    }
+
     private void setIfNotNull(TextView view, String content) {
         if (content == null) {
             view.setText(R.string.loadingTextAdActivity);
@@ -128,19 +132,13 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Method called when the activity is done and should be closed.
+     * Method called when the device back button is pressed.
      * <p>
-     * If the activity has been opened by AdCreationActivity, then it opens a new ScrollingActivity,
-     * otherwise it returns to the ScrollingActivity that opened this activity.
-     *
-     * @param view
+     * It goes back to the scrolling activity.
      */
-    public void goBack(View view) {
-        if (getIntent().getBooleanExtra("fromAdCreation", false)) {
-            startActivity(new Intent(this, ScrollingActivity.class));
-        } else {
-            finish();
-        }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     /**
@@ -150,6 +148,7 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openContactInfo(View view) {
         Intent intent = new Intent(this, SimpleUserProfileActivity.class);
+        intent.putExtra("advertiserId", this.advertiserId);
         startActivity(intent);
     }
 
@@ -163,13 +162,16 @@ public class AdActivity extends ToolbarActivity {
         startActivity(intent);
     }
 
-    /**
-     * Method called when you want open the camera.
-     *
-     * @param view
-     */
-    public void openCamera(View view) {
-        Intent intent = new Intent(this, CameraActivity.class);
+    public void onSeeLocationClick(View view) {
+        Intent intent = new Intent(this, MapActivity.class);
+        TextView addressView = findViewById(R.id.address_field_Ad_textView);
+        intent.putExtra(getString(R.string.intentLocationForMap), addressView.getText().toString());
+        startActivity(intent);
+    }
+
+    private void openImageFullscreen(String imageId){
+        Intent intent = new Intent(this, FullScreenImageActivity.class);
+        intent.putExtra("imageId", imageId);
         startActivity(intent);
     }
 
@@ -186,7 +188,7 @@ public class AdActivity extends ToolbarActivity {
         if (item.getItemId() == R.id.action_add_favorite) {
             database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
                 u.addFavorite(adId);
-                database.updateUser(u);
+                database.updateUser(u, null);
             });
             return true;
         }
