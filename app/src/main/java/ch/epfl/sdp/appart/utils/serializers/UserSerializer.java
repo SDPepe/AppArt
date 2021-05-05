@@ -1,16 +1,11 @@
 package ch.epfl.sdp.appart.utils.serializers;
 
-import android.util.Log;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.user.AppUser;
@@ -36,41 +31,33 @@ public class UserSerializer implements Serializer<User> {
     public User deserialize(String id, Map<String, Object> data) {
         AppUser user = new AppUser(id, (String) data.get(UserLayout.EMAIL));
 
-        Object rawAge = data.get(UserLayout.AGE);
-        if (rawAge != null) {
-            user.setAge((long) rawAge);
+        if (data.get(UserLayout.AGE) != null) {
+            user.setAge((long) data.get(UserLayout.AGE));
         }
 
-        Object rawGender = data.get(UserLayout.GENDER);
-        if (rawGender != null) {
-            user.setGender((String) rawGender);
+        if (data.get(UserLayout.GENDER) != null) {
+            user.setGender((String) data.get(UserLayout.GENDER));
         }
 
-        Object rawName = data.get(UserLayout.NAME);
-        if (rawName != null) {
-            user.setName((String) rawName);
+        if (data.get(UserLayout.NAME) != null) {
+            user.setName((String) data.get(UserLayout.NAME));
         }
 
-        Object rawPhoneNumber = data.get(UserLayout.PHONE);
-        if (rawPhoneNumber != null) {
-            user.setPhoneNumber((String) rawPhoneNumber);
+        if (data.get(UserLayout.PHONE) != null) {
+            user.setPhoneNumber((String) data.get(UserLayout.PHONE));
         }
 
-        Object rawPfpRef = data.get(UserLayout.PICTURE);
-        if (rawPfpRef != null) {
-            user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
+        if (data.get(UserLayout.PICTURE) != null) {
+            user.setProfileImage((String) data.get(UserLayout.PICTURE)); //WARNING WAS "profilePicture" before not matching our actual
         }
 
-        Object rawAdsIds = data.get(UserLayout.AD_IDS);
-        if (rawAdsIds !=  null) {
-            for (String adId : (List<String>) rawAdsIds)
+        if (data.get(UserLayout.AD_IDS) !=  null) {
+            for (String adId : (List<String>) data.get(UserLayout.AD_IDS))
                 user.addAdId(adId);
         }
 
-        Object rawFavoriteIds = data.get(UserLayout.FAVORITE_IDS);
-        if (rawFavoriteIds !=  null) {
-            List<String> favoriteIds = (List<String>) rawFavoriteIds;
-            Log.d("favorites", "User has " + favoriteIds.size() + " favorites");
+        if (data.get(UserLayout.FAVORITE_IDS) !=  null) {
+            List<String> favoriteIds = (List<String>) data.get(UserLayout.FAVORITE_IDS);
             for (int i = 0; i < favoriteIds.size(); ++i)
                 user.addFavorite(favoriteIds.get(i));
         }
