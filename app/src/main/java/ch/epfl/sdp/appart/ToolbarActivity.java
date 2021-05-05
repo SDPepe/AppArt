@@ -45,28 +45,31 @@ public abstract class ToolbarActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        boolean choiceFound = false;
         if (item.getItemId() == R.id.action_logout) {
             loginService.signOut();
             Intent intentLogout = new Intent(this, LoginActivity.class);
             startActivity(intentLogout);
-            return true;
+            choiceFound = true;
         }
         else if (item.getItemId() == R.id.action_account) {
             Intent intentAccount = new Intent(this, UserProfileActivity.class);
             startActivity(intentAccount);
-            return true;
+            choiceFound = true;
         }
         else if (item.getItemId() == R.id.action_settings) {
-            return true;
+            choiceFound = true;
         }
         else if (item.getItemId() == R.id.action_favorite) {
             Intent intentFavorite = new Intent(this, FavoriteActivity.class);
             startActivity(intentFavorite);
-            return true;
+            choiceFound = true;
         }
         // If we got here, the user's action was not recognized.
         // Invoke the superclass to handle it.
-        return super.onOptionsItemSelected(item);
+        if (!choiceFound)
+            return super.onOptionsItemSelected(item);
+        else return true;
     }
 
 }
