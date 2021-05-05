@@ -99,7 +99,7 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     public void editProfile(View view) {
         this.modifyButton.setVisibility(View.GONE);
-        //this.doneButton.setVisibility(View.VISIBLE);
+        this.doneButton.setVisibility(View.VISIBLE);
         //this.changeImageButton.setVisibility(View.VISIBLE);
         if (!this.sessionUser.hasDefaultProfileImage()) {
             this.removeImageButton.setVisibility(View.VISIBLE);
