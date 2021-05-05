@@ -285,10 +285,8 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
-        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
         onView(withId(R.id.editImage_UserProfile_button)).perform(click());
 
-        // onView(withId(R.id.doneEditing_UserProfile_button)).perform(click());
 
         /* =================================================================================================== */
         /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
@@ -296,7 +294,7 @@ public class UserProfileActivityTest {
 
         // Create a bitmap we can use for our simulated camera image
 
-/*
+
         Bitmap icon = BitmapFactory.decodeResource(
                 ApplicationProvider.getApplicationContext().getResources(),
                 R.mipmap.ic_launcher);
@@ -345,8 +343,8 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton4.perform(click());
 
-*/
-        /*
+
+
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
                         childAtPosition(
@@ -370,21 +368,8 @@ public class UserProfileActivityTest {
         appCompatButton6.perform(click());
 
 
+        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
 
-
-
-        ViewInteraction appCompatButton7 = onView(
-                allOf(withId(R.id.removeImage_UserProfile_button), withText("REMOVE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                2),
-                        isDisplayed()));
-        appCompatButton7.perform(click());
-
-
-*/
         ViewInteraction appCompatButton8 = onView(
                 allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
                         childAtPosition(

@@ -78,8 +78,8 @@ public class UserProfileActivity extends AppCompatActivity {
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
 
         this.imageView.setEnabled(false);
-        // this.removeImageButton.setVisibility(View.GONE);
-        //this.changeImageButton.setVisibility(View.GONE);
+        this.removeImageButton.setVisibility(View.GONE);
+        this.changeImageButton.setVisibility(View.GONE);
 
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
@@ -100,7 +100,7 @@ public class UserProfileActivity extends AppCompatActivity {
     public void editProfile(View view) {
         this.modifyButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
-        //this.changeImageButton.setVisibility(View.VISIBLE);
+        this.changeImageButton.setVisibility(View.VISIBLE);
         if (!this.sessionUser.hasDefaultProfileImage()) {
             this.removeImageButton.setVisibility(View.VISIBLE);
         }
@@ -114,10 +114,10 @@ public class UserProfileActivity extends AppCompatActivity {
      * called by the remove button under imageView
      */
     public void removeProfileImage(View view) {
-        //mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
-        // this.sessionUser.setDefaultProfileImage();
-        // imageView.setImageResource(android.R.color.transparent);
-        // this.removeImageButton.setVisibility(View.GONE);
+        mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
+        this.sessionUser.setDefaultProfileImage();
+        imageView.setImageResource(android.R.color.transparent);
+        this.removeImageButton.setVisibility(View.GONE);
     }
 
     /**
@@ -125,9 +125,9 @@ public class UserProfileActivity extends AppCompatActivity {
      * called by the imageView button
      */
     public void changeProfileImage(View view) {
-        //  Intent intent = new Intent(this, CameraActivity.class);
-        //  intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
-        //  startActivityForResult(intent, 1);
+        Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
+        startActivityForResult(intent, 1);
     }
 
 
@@ -135,8 +135,6 @@ public class UserProfileActivity extends AppCompatActivity {
      * manages the output of camera activity and updates the profile image
      * in firestore and firebase storage using user view-model
      */
-
-    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -164,7 +162,6 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         }
     }
-    */
 
     /**
      * saves updated user information in firestore database, called by the done button
@@ -181,8 +178,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
-        //this.removeImageButton.setVisibility(View.GONE);
-        //this.changeImageButton.setVisibility(View.GONE);
+        this.removeImageButton.setVisibility(View.GONE);
+        this.changeImageButton.setVisibility(View.GONE);
     }
 
     /**
@@ -271,7 +268,7 @@ public class UserProfileActivity extends AppCompatActivity {
         if (this.sessionUser.getGender() != null) {
             this.genderSpinner.setSelection(Gender.valueOf(this.sessionUser.getGender()).ordinal());
         }
-        //setPictureToImageComponent();
+        setPictureToImageComponent();
     }
 
     /**
