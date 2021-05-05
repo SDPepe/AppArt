@@ -41,15 +41,15 @@ public class ApartmentInfoWindow implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoContents(Marker marker) {
-        View v = activity.getLayoutInflater().inflate(R.layout.infowindow,
+        View v = activity.getLayoutInflater().inflate(R.layout.map_info_layout,
                 null);
 
         TextView cityTextView =
-                v.findViewById(R.id.city_InfoWindow_textView);
+                v.findViewById(R.id.city_CardLayout_textView);
         TextView priceTextView =
-                v.findViewById(R.id.price_InfoWindow_textView);
+                v.findViewById(R.id.price_CardLayout_textView);
 
-        ImageView photo = v.findViewById(R.id.photo_InfoWindow_imageView);
+        ImageView photo = v.findViewById(R.id.image_CardLayout_imageView);
 
         Card card = (Card) marker.getTag();
 
@@ -60,7 +60,7 @@ public class ApartmentInfoWindow implements GoogleMap.InfoWindowAdapter {
         priceTextView.setText(card.getPrice() + " CHF");
         if (card.getImageUrl() != null) {
             databaseService.accept(new GlideImageViewLoaderListener(activity,
-                    photo, "Cards/" + card.getImageUrl(),
+                    photo, "ads/" + card.getAdId() + "/" + card.getImageUrl(),
                     new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e,
