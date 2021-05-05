@@ -75,13 +75,9 @@
 
             <Button
                 android:id="@+id/editImage_UserProfile_button"
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:clickable="true"
-                android:contextClickable="true"
-                android:focusable="true"
-                android:onClick="changeProfileImage"
+                android:layout_weight="1"
                 android:text="@string/changeProfilePicture" />
 
             <TextView
