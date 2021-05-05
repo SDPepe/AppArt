@@ -271,7 +271,7 @@ public class UserProfileActivity extends AppCompatActivity {
         if (this.sessionUser.getGender() != null) {
             this.genderSpinner.setSelection(Gender.valueOf(this.sessionUser.getGender()).ordinal());
         }
-        setPictureToImageComponent();
+        //setPictureToImageComponent();
     }
 
     /**
