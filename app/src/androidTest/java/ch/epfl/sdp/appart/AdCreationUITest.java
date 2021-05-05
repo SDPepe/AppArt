@@ -24,13 +24,19 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -114,35 +120,62 @@ public class AdCreationUITest {
     }
 
     @Test
-    @Ignore
-    public void cameraActivityWorksAndRespondsCorrectly() {
+    public void cameraActivityWorksAndRespondsCorrectly() throws UiObjectNotFoundException {
         onView(withId(R.id.addPhoto_AdCreation_button)).perform(scrollTo(), click());
         /* =================================================================================================== */
-        /*                         HOW TO CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                        */
+        /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
         /* =================================================================================================== */
 
         // Create a bitmap we can use for our simulated camera image
+
+
         Bitmap icon = BitmapFactory.decodeResource(
                 ApplicationProvider.getApplicationContext().getResources(),
                 R.mipmap.ic_launcher);
 
 
         // Build a result to return from the Camera app
-        Intent resultData = new Intent();
-        resultData.putExtra("data", icon);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("data", icon);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
 
         // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
         // with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);
 
+
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
 
-        // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
-        intended(toPackage("com.android.camera2"));
+        // Initialize UiDevice instance
+        UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-        onView(withId(R.id.confirm_Camera_button)).perform(click());
+        // Search for correct button in the dialog.
+        UiObject buttonAllow = uiDevice.findObject(new UiSelector().text("ALLOW"));
+
+        if (buttonAllow.exists() && buttonAllow.isEnabled()) {
+            buttonAllow.click();
+            uiDevice.pressBack();
+        }
+
+        // Search for correct button in the dialog.
+        UiObject buttonAllow2 = uiDevice.findObject(new UiSelector().text("Allow all the time"));
+
+        if (buttonAllow2.exists() && buttonAllow2.isEnabled()) {
+            buttonAllow2.click();
+            uiDevice.pressBack();
+        }
+
+        ViewInteraction appCompatButton4 = onView(
+                allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
+                        childAtPosition(
+                                allOf(withId(R.id.camera_layout),
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0)),
+                                4),
+                        isDisplayed()));
+        appCompatButton4.perform(click());
 
         ViewInteraction horizontalScrollView = onView(
                 allOf(withId(R.id.picturesScroll_AdCreation_ScrollView),
