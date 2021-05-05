@@ -94,7 +94,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/profilePicture_UserProfile_imageView"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
