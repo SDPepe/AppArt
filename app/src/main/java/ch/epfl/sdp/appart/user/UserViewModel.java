@@ -1,6 +1,8 @@
 package ch.epfl.sdp.appart.user;
 
 import android.net.Uri;
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -43,6 +45,10 @@ public class UserViewModel extends ViewModel {
      */
     public void putUser(User user) {
         CompletableFuture<Boolean> putUser = db.putUser(user);
+        putUser.exceptionally(e -> {
+            Log.d("PUT USER", "DATABASE FAIL");
+            return null;
+        });
         putUser.thenAccept(mPutUserConfirmed::setValue);
     }
 
@@ -53,6 +59,10 @@ public class UserViewModel extends ViewModel {
      */
     public void updateUser(User user) {
         CompletableFuture<Boolean> updateUser = db.updateUser(user);
+        updateUser.exceptionally(e -> {
+            Log.d("UPDATE USER", "DATABASE FAIL");
+            return null;
+        });
         updateUser.thenAccept(mUpdateUserConfirmed::setValue);
     }
 
@@ -74,6 +84,10 @@ public class UserViewModel extends ViewModel {
                 .append(FirebaseLayout.JPEG);;
 
         CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName.toString());
+        updateImage.exceptionally(e -> {
+            Log.d("UPDATE IMAGE", "DATABASE FAIL");
+            return null;
+        });
         updateImage.thenAccept(mUpdateImageConfirmed::setValue);
     }
 
@@ -85,6 +99,10 @@ public class UserViewModel extends ViewModel {
      */
     public void deleteImage(String profilePicture){
         CompletableFuture<Boolean> deleteImage = db.deleteImage(profilePicture);
+        deleteImage.exceptionally(e -> {
+            Log.d("DELETE IMAGE", "DATABASE FAIL");
+            return null;
+        });
         deleteImage.thenAccept(mDeleteImageConfirmed::setValue);
     }
 
@@ -95,6 +113,10 @@ public class UserViewModel extends ViewModel {
      */
     public void getUser(String userId) {
         CompletableFuture<User> getUser = db.getUser(userId);
+        getUser.exceptionally(e -> {
+            Log.d("GET USER", "DATABASE FAIL");
+            return null;
+        });
         getUser.thenAccept(mUser::setValue);
     }
 
@@ -103,6 +125,10 @@ public class UserViewModel extends ViewModel {
      */
     public void getCurrentUser() {
         CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
+        getCurrentUser.exceptionally(e -> {
+            Log.d("GET USER", "DATABASE FAIL");
+            return null;
+        });
         getCurrentUser.thenAccept(mUser::setValue);
     }
 

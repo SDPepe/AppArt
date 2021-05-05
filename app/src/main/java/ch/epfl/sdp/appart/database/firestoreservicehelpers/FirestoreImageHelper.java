@@ -4,15 +4,18 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 
 public class FirestoreImageHelper {
@@ -59,8 +62,17 @@ public class FirestoreImageHelper {
         StorageReference storeRef = storage.getReference();
         StorageReference desertRef = storeRef.child(imagePathAndName);
 
-        desertRef.delete().addOnCompleteListener(
-                task -> isFinishedFuture.complete(task.isSuccessful()));
+        desertRef.delete().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+
+                isFinishedFuture.complete(true);
+            } else {
+                isFinishedFuture.completeExceptionally(
+                        new DatabaseServiceException(task.getException().getMessage()));
+            }
+        }
+        );
+
         return isFinishedFuture;
     }
 }
