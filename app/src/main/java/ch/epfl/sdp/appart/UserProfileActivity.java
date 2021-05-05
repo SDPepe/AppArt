@@ -130,10 +130,13 @@ public class UserProfileActivity extends AppCompatActivity {
         //  startActivityForResult(intent, 1);
     }
 
+
     /**
      * manages the output of camera activity and updates the profile image
      * in firestore and firebase storage using user view-model
      */
+
+    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -161,6 +164,7 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         }
     }
+    */
 
     /**
      * saves updated user information in firestore database, called by the done button
