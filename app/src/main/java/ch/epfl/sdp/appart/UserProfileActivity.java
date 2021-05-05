@@ -79,7 +79,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         this.imageView.setEnabled(false);
         // this.removeImageButton.setVisibility(View.GONE);
-        this.changeImageButton.setVisibility(View.GONE);
+        //this.changeImageButton.setVisibility(View.GONE);
 
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
@@ -99,8 +99,8 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     public void editProfile(View view) {
         this.modifyButton.setVisibility(View.GONE);
-        this.doneButton.setVisibility(View.VISIBLE);
-        this.changeImageButton.setVisibility(View.VISIBLE);
+        //this.doneButton.setVisibility(View.VISIBLE);
+        //this.changeImageButton.setVisibility(View.VISIBLE);
         if (!this.sessionUser.hasDefaultProfileImage()) {
             this.removeImageButton.setVisibility(View.VISIBLE);
         }
@@ -182,7 +182,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
         //this.removeImageButton.setVisibility(View.GONE);
-        this.changeImageButton.setVisibility(View.GONE);
+        //this.changeImageButton.setVisibility(View.GONE);
     }
 
     /**
