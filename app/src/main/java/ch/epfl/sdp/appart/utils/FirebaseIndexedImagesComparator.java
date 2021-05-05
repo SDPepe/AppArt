@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.utils;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,11 +22,6 @@ public class FirebaseIndexedImagesComparator implements Comparator<String> {
     @Override
     public int compare(String o1, String o2) {
         return Integer.compare(getIndex(o1), getIndex(o2));
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return false;
     }
 
     /**
