@@ -16,7 +16,7 @@
         android:gravity="fill"
         android:orientation="vertical"
         android:paddingBottom="10dp"
-        android:paddingTop="50dp"
+        android:paddingTop="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -91,20 +91,40 @@
                     app:layout_constraintVertical_bias="0.114"
                     tools:ignore="HardcodedText" />
 
-                <Button
-                    android:id="@+id/editImage_UserProfile_button"
+                <LinearLayout
+                    android:id="@+id/editImage_UserProfile_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="changeProfileImage"
-                    android:text="@string/changeProfilePicture" />
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp">
 
-                <Button
-                    android:id="@+id/removeImage_UserProfile_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:onClick="removeProfileImage"
-                    android:text="@string/removeProfilePicture" />
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/editImage_UserProfile_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="changeProfileImage"
+                        app:srcCompat="@android:drawable/ic_menu_edit" />
+
+                    <Space
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/removeImage_UserProfile_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="removeProfileImage"
+                        app:srcCompat="@android:drawable/ic_menu_delete" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/uniAccountClaimer_UserProfile_textView"

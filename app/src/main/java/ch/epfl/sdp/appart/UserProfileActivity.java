@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import javax.inject.Inject;
 
 import androidx.annotation.Nullable;
@@ -45,8 +47,8 @@ public class UserProfileActivity extends AppCompatActivity {
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
-    private Button changeImageButton;
-    private Button removeImageButton;
+    private FloatingActionButton changeImageButton;
+    private FloatingActionButton removeImageButton;
     private EditText nameEditText;
     private EditText ageEditText;
     private EditText phoneNumberEditText;
