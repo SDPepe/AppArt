@@ -285,9 +285,9 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
+        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
         onView(withId(R.id.editImage_UserProfile_button)).perform(click());
 
-        onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
         // onView(withId(R.id.doneEditing_UserProfile_button)).perform(click());
 
         /* =================================================================================================== */
