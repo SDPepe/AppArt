@@ -76,8 +76,8 @@ public class AdCreationUITest {
         onView(withId(R.id.city_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
         onView(withId(R.id.npa_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
         onView(withId(R.id.price_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.description_AdCreation_textView)).check(matches(isDisplayed()));
-        onView(withId(R.id.francs_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.description_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.francs_AdCreation_textView)).check(matches(isDisplayed()));
 
 
         //buttons
