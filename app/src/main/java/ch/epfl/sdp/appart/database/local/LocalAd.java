@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.database.local;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.function.Function;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.scrolling.card.Card;
+import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
 import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
@@ -30,12 +32,13 @@ public class LocalAd {
      * names. Since we do not want the LocalAd file to not deal with anything
      * related to Firebase, we take as parameter a function that takes in a
      * String and return a Void completable future. This function will
-     * perform the getFile from StorageReference, and download the images to
-     * the specified folder (the string arg). It will return a completable
-     * future of void to indicate if the task succeeded or not and to allow
-     * the writeCompleteAd function to perform the actions when the operation
-     * is finished. This function will modify the path to the images so that
-     * on load, the images from local storage will be displayed.
+     * perform the getFile from StorageReference, and download the images
+     * (card + ad + user) to the specified folder (the string arg). It will
+     * return a completable future of void to indicate if the task succeeded
+     * or not and to allow the writeCompleteAd function to perform the
+     * actions when the operation is finished. This function will modify the
+     * path to the images so that on load, the images from local storage will
+     * be displayed.
      *
      * @param card       the card that will written on disk
      * @param ad         the ad that will be written on disk
@@ -48,28 +51,66 @@ public class LocalAd {
      *                   want to store the images. It will return a Void
      *                   completable future to indicate when it has finished,
      *                   and whether it has succeeded or not.
-     * @return
+     * @return a Void completable future to indicate whether the task has
+     * succeeded or not.
      */
     public static CompletableFuture<Void> writeCompleteAd(Card card, Ad ad,
                                                           User user,
                                                           String appPath,
                                                           Function<String,
                                                                   CompletableFuture<Void>> loadImages) {
-        Map<String, Object> cardMap = CardSerializer.serialize(card);
-        cardMap.put(ID, card.getId());
 
-        Map<String, Object> adMap = AdSerializer.serialize(ad);
+        CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
+
+        //Creating local folder for the complete ad
+        String adFolderPath = appPath + "/" + card.getId();
+
+        File adFolder = new File(adFolderPath);
+        if (!adFolder.exists()) {
+            boolean createdDir = adFolder.mkdir();
+            if (!createdDir) {
+                futureSuccess.completeExceptionally(new IOException("Could " +
+                        "not create dir :" + adFolderPath));
+            }
+        }
+
+        //Changing the photoRefs to local paths
+        List<String> localPhotoRefs = new ArrayList<>();
+        for (int i = 0; i < ad.getPhotosRefs().size(); ++i) {
+            localPhotoRefs.add(appPath + "/" + "Photo" + i + ".jpg");
+        }
+
+        //Building local versions of the ad and card
+        Card localCard = new Card(card.getId(), card.getAdId(),
+                card.getUserId(), card.getCity(), card.getPrice(),
+                card.getImageUrl(), card.hasVRTour());
+        Ad localAd = new Ad(ad.getTitle(), ad.getPrice(), ad.getPricePeriod()
+                , ad.getStreet(), ad.getCity(), ad.getAdvertiserId(),
+                ad.getDescription(), localPhotoRefs, ad.hasVRTour());
+
+        User localUser = new AppUser(user.getUserId(), user.getUserEmail());
+        localUser.setPhoneNumber(user.getPhoneNumber());
+        localUser.setName(user.getName());
+        localUser.setAge(user.getAge());
+        localUser.setGender(user.getGender());
+        localUser.setProfileImage(appPath + "/user_profile_pic.jpg");
 
 
-        Map<String, Object> userMap = UserSerializer.serialize(user);
-        userMap.put(ID, user.getUserId());
+
+        //Serializing
+        Map<String, Object> cardMap = CardSerializer.serialize(localCard);
+        cardMap.put(ID, localCard.getId());
+
+        Map<String, Object> adMap = AdSerializer.serialize(localAd);
+
+
+        Map<String, Object> userMap = UserSerializer.serialize(localUser);
+        userMap.put(ID, localUser.getUserId());
 
         List<Map<String, Object>> mapList = new ArrayList<>();
         mapList.add(cardMap);
         mapList.add(adMap);
         mapList.add(userMap);
-
-        CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
 
 
         FileOutputStream fos;
@@ -78,12 +119,18 @@ public class LocalAd {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mapList);
             oos.close();
-
-            futureSuccess.complete(null);
         } catch (IOException e) {
             e.printStackTrace();
             futureSuccess.completeExceptionally(e);
         }
+
+        CompletableFuture<Void> futureImageLoad =
+                loadImages.apply(adFolderPath);
+        futureImageLoad.thenAccept(arg -> futureSuccess.complete(null));
+        futureImageLoad.exceptionally(e -> {
+            futureSuccess.completeExceptionally(e);
+            return null;
+        });
 
         return futureSuccess;
     }
