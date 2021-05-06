@@ -3,6 +3,8 @@ package ch.epfl.sdp.appart;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
@@ -24,7 +26,7 @@ public class LocalAdTest {
                 "adID", "description", photoRefs, false);
         User user = new AppUser("ID", "mail");
 
-        LocalAd.writeCompleteAd(card, ad, user, "test.list");
+        LocalAd.writeCompleteAd(card, ad, user, "test.list", s -> null);
         LocalAd.LocalCompleteAd completeAd = LocalAd.loadCompleteAd("test" +
                 ".list").join();
 
