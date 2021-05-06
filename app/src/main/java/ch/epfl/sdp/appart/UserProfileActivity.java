@@ -157,6 +157,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .append(FirebaseLayout.PROFILE_IMAGE_NAME)
                         .append(System.currentTimeMillis())
                         .append(FirebaseLayout.JPEG);
+                        // TODO: support more image formats
 
                 this.sessionUser.setProfileImagePathAndName(imagePathInDb.toString());
                 mViewModel.updateImage(this.sessionUser.getUserId());

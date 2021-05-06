@@ -69,8 +69,10 @@ public class AdCreationUITest {
     public ActivityScenarioRule<AdCreationActivity> adCreationActivityRule = new ActivityScenarioRule<>(AdCreationActivity.class);
 
     /* Used to grant camera permission always */
-    @Rule(order = 2)
-    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule =
+            GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
+
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
@@ -139,13 +141,15 @@ public class AdCreationUITest {
         resultIntent.putExtra("data", icon);
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
 
-        // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
-        // with the ActivityResult we just created
+        // When an intent is sent to the Camera, this tells Espresso to respond with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);
 
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
+
+        // validate that an intent resolving to the "camera" activity has been sent out by app
+        intended(toPackage("com.android.camera2"));
 
         // Initialize UiDevice instance
         UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());

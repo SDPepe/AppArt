@@ -104,7 +104,8 @@ public class FirestoreAdHelper {
         List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
         Log.d("URI", "size" + uriList.size());
         for (int i = 0; i < uriList.size(); i++) {
-            String name = FirebaseLayout.PHOTO_NAME + i + FirebaseLayout.JPEG; // TODO modify to support other extensions
+            // TODO: support more image formats
+            String name = FirebaseLayout.PHOTO_NAME + i + FirebaseLayout.JPEG;
             actualRefs.add(name);
             String imagePathAndName = storagePath.concat(FirebaseLayout.SEPARATOR.concat(name));
             imagesUploadResults.add(imageHelper.putImage(uriList.get(i), imagePathAndName));
@@ -156,18 +157,17 @@ public class FirestoreAdHelper {
                         .hasVRTour((boolean) documentSnapshot.get(AdLayout.VR_TOUR));
 
                 db.collection(FirebaseLayout.USERS_DIRECTORY).document((String) documentSnapshot.get(AdLayout.ADVERTISER_ID)).get().addOnCompleteListener(
-                        userTask -> {
-                            if (userTask.isSuccessful()) {
-                                Map<String, Object> data = userTask.getResult().getData();
-                                String advertiserName = userSerializer.deserialize((String) documentSnapshot.get(AdLayout.ADVERTISER_ID), data).getName();
-                                builder.withAdvertiserName(advertiserName);
-                                result.complete(builder);
-                            } else {
-                                result.completeExceptionally(new DatabaseServiceException(
-                                        userTask.getException().getMessage()));
-                            }
-                        }
-                );
+                        taskUser -> {
+                    if (taskUser.isSuccessful()) {
+                        String advertiserName = (String) taskUser.getResult().get("name");
+                        builder.withAdvertiserName(advertiserName);
+                        result.complete(builder);
+                    } else {
+                        result.completeExceptionally(new DatabaseServiceException(
+                                taskUser.getException().getMessage()));
+                    }
+                });
+
             } else {
                 result.completeExceptionally(new DatabaseServiceException(Objects.requireNonNull(
                         task.getException()).getMessage()));

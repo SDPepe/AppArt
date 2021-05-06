@@ -22,6 +22,11 @@ public class AppUser implements User {
     private String profileImagePathAndName;
     private List<String> adsIds;
 
+/* default values */
+    private static final String DEFAULT_IMAGE_NAME_NO_GENDER = "user_example_no_gender";
+    private static final String DEFAULT_IMAGE_NAME_FEMALE = "user_example_female";
+    private static final String DEFAULT_IMAGE_NAME_MALE = "user_example_male";
+
     /**
      * App user constructor
      *
@@ -219,11 +224,11 @@ public class AppUser implements User {
      */
     private String findDrawableIdByGender() {
         if (gender == Gender.FEMALE) {
-            return "user_example_female" + FirebaseLayout.PNG;
+            return DEFAULT_IMAGE_NAME_FEMALE + FirebaseLayout.PNG;
         } else if (gender == Gender.MALE) {
-            return "user_example_male" + FirebaseLayout.PNG;
+            return DEFAULT_IMAGE_NAME_MALE + FirebaseLayout.PNG;
         } else {
-            return "user_example_no_gender" + FirebaseLayout.PNG;
+            return DEFAULT_IMAGE_NAME_NO_GENDER + FirebaseLayout.PNG;
         }
     }
 

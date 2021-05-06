@@ -81,7 +81,8 @@ public class UserViewModel extends ViewModel {
                 .append(FirebaseLayout.SEPARATOR)
                 .append(FirebaseLayout.PROFILE_IMAGE_NAME)
                 .append(System.currentTimeMillis())
-                .append(FirebaseLayout.JPEG);;
+                .append(FirebaseLayout.JPEG);
+                // TODO: support more image formats
 
         CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName.toString());
         updateImage.exceptionally(e -> {
@@ -168,5 +169,6 @@ public class UserViewModel extends ViewModel {
     public Uri getUri() {
         return profileImageUri;
     }
+    
 
 }

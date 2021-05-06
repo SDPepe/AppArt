@@ -19,6 +19,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
@@ -51,6 +53,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -59,9 +62,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
@@ -73,10 +79,6 @@ public class UserProfileActivityTest {
 
     @Rule(order = 1)
     public ActivityScenarioRule<MainActivity> mActivityTestRule = new ActivityScenarioRule<>(MainActivity.class);
-
-    /* Used to grant camera permission always */
-    //@Rule
-    //public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
     /* Used to grant camera permission always */
     @Rule
@@ -96,7 +98,6 @@ public class UserProfileActivityTest {
     }
     @Test
     public void userProfileActivityTest() throws UiObjectNotFoundException {
-
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
                         childAtPosition(
@@ -292,9 +293,10 @@ public class UserProfileActivityTest {
         /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
         /* =================================================================================================== */
 
+        int initialDatabaseImageSize = ((MockDatabaseService) database).getImages().size();
+
+
         // Create a bitmap we can use for our simulated camera image
-
-
         Bitmap icon = BitmapFactory.decodeResource(
                 ApplicationProvider.getApplicationContext().getResources(),
                 R.mipmap.ic_launcher);
@@ -305,13 +307,15 @@ public class UserProfileActivityTest {
         resultIntent.putExtra("data", icon);
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
 
-        // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
-        // with the ActivityResult we just created
+        // When an intent is sent to the Camera, this tells Espresso to respond with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);
 
 
-        // Now that we have the stub in place, click on the button in our app that launches into the Camera
+        // click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
+
+        // validate that an intent resolving to the "camera" activity has been sent out by app
+        intended(toPackage("com.android.camera2"));
 
         // Initialize UiDevice instance
         UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -343,8 +347,6 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton4.perform(click());
 
-
-
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
                         childAtPosition(
@@ -355,6 +357,13 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton5.perform(click());
 
+        /* after the done button the previous image should have been removed and the new one updated */
+        List<String> mockImages =  ((MockDatabaseService) database).getImages();
+
+        assertThat(mockImages.size(), is(initialDatabaseImageSize ));
+        assertFalse(mockImages.contains("users/default/user_example_no_gender.png"));
+        /* contains has to be used since the exact name of the image depends on System.currentTimeMillis() */
+        assertTrue(mockImages.get(mockImages.size() - 1).contains("users/3333/profileImage"));
 
 
         ViewInteraction appCompatButton6 = onView(
@@ -380,6 +389,12 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton8.perform(click());
 
+        /* the image is removed */
+        assertThat(((MockDatabaseService) database).getImages().size(), is(initialDatabaseImageSize - 1));
+
+        mockImages = ((MockDatabaseService) database).getImages();
+        /* contains has to be used since the exact name of the image depends on System.currentTimeMillis() */
+        assertFalse(mockImages.get(mockImages.size() - 1).contains("users/3333/profileImage"));
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.email_UserProfile_textView), withText("Email"),
