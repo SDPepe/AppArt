@@ -65,6 +65,11 @@ public abstract class ToolbarActivity extends AppCompatActivity {
                 startActivity(intentFavorite);
                 return true;
 
+            case R.id.map_Toolbar_item:
+                Intent intentMap = new Intent(this, MapActivity.class);
+                startActivity(intentMap);
+                return true;
+
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
             default:
