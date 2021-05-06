@@ -6,6 +6,39 @@
   android:layout_height="match_parent"
   tools:context=".ScrollingActivity">
 
+    <LinearLayout
+      android:id="@+id/columnLayout_Scrolling_LinearLayout"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/guideline8"
+      app:layout_constraintStart_toStartOf="@+id/guideline7"
+      app:layout_constraintTop_toBottomOf="@+id/login_Scrolling_toolbar">
+
+
+        <EditText
+          android:id="@+id/search_bar_Scrolling_editText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="15dp"
+          android:layout_marginBottom="15dp"
+          android:background="@drawable/edit_text_default"
+          android:drawablePadding="@dimen/ic_padding"
+          android:drawableStart="@drawable/ic_search"
+          android:hint="@string/searchDescription_Scrolling"
+          android:importantForAutofill="no"
+          android:inputType="text" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/recycler_Scrolling_recyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:scrollbars="vertical"
+          app:layoutManager="LinearLayoutManager" />
+    </LinearLayout>
+
     <androidx.appcompat.widget.Toolbar
       android:id="@+id/login_Scrolling_toolbar"
       android:layout_width="match_parent"
@@ -19,38 +52,6 @@
       app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
       app:subtitleTextColor="#FFFFFF "
       app:titleTextColor="#FFFFFF " />
-
-    <LinearLayout
-      android:id="@+id/columnLayout_Scrolling_LinearLayout"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      app:layout_constraintEnd_toStartOf="@+id/guideline8"
-      app:layout_constraintStart_toStartOf="@+id/guideline7"
-      app:layout_constraintTop_toBottomOf="@+id/login_Scrolling_toolbar">
-
-
-        <EditText
-          android:id="@+id/search_bar_Scrolling_editText"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="15dp"
-          android:layout_marginTop="15dp"
-          android:drawablePadding="@dimen/ic_padding"
-          android:drawableStart="@drawable/ic_search"
-          android:hint="@string/searchDescription_Scrolling"
-          android:importantForAutofill="no"
-          android:inputType="text"
-          android:background="@drawable/edit_text_default"/>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/recycler_Scrolling_recyclerView"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:scrollbars="vertical"
-          app:layoutManager="LinearLayoutManager" />
-    </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline7"
