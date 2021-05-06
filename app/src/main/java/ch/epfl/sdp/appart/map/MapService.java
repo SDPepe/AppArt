@@ -5,8 +5,10 @@ import android.app.Activity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import ch.epfl.sdp.appart.location.Location;
 
@@ -55,19 +57,29 @@ public interface MapService extends OnMapReadyCallback {
      * go directly on the location depending on the instant boolean parameter.
      *
      * @param location the location we want the map's camera to be centered at
-     * @param instant indicates if we want an animated movement or not
+     * @param instant  indicates if we want an animated movement or not
      */
     void centerOnLocation(Location location, boolean instant);
 
     /**
      * Sets the activity for the whole service.
+     *
      * @param activity the activity we want to give to the map service
      */
     void setActivity(Activity activity);
 
     /**
      * Get the current map's camera's position.
-     * @return a future that will contain the location when the operation completes.
+     *
+     * @return a future that will contain the location when the operation
+     * completes.
      */
     CompletableFuture<Location> getCameraPosition();
+
+    /**
+     * Sets the listener for info windows clicks.
+     *
+     * @param infoWindowClickListener the listener
+     */
+    void setOnInfoWindowClickListener(Consumer<Marker> infoWindowClickListener);
 }
