@@ -36,8 +36,17 @@ public class FavoriteViewModel extends ViewModel {
     }
 
     public void initHome() {
-            database.getUser(loginService.getCurrentUser().getUserId()).thenAccept(u -> {
+            CompletableFuture<User> user = database.getUser(loginService.getCurrentUser().getUserId());
+            user.exceptionally(e -> {
+                Log.d("EXCEPTION_DB", e.getMessage());
+                return null;
+            });
+            user.thenAccept(u -> {
                 CompletableFuture<List<Card>> cards = database.getCards();
+                cards.exceptionally(e -> {
+                    Log.d("EXCEPTION_DB", e.getMessage());
+                    return null;
+                });
                 cards.thenAccept(cs -> {
                     Set<String> favoritesIds = u.getFavoritesIds();
                     List<Card> filteredCards = new LinkedList<>();
