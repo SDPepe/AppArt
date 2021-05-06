@@ -34,7 +34,8 @@ public class LocalAd {
      * the specified folder (the string arg). It will return a completable
      * future of void to indicate if the task succeeded or not and to allow
      * the writeCompleteAd function to perform the actions when the operation
-     * is finished.
+     * is finished. This function will modify the path to the images so that
+     * on load, the images from local storage will be displayed.
      *
      * @param card       the card that will written on disk
      * @param ad         the ad that will be written on disk
