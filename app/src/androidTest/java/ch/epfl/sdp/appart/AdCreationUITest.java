@@ -81,7 +81,7 @@ public class AdCreationUITest {
 
         //buttons
         onView(withId(R.id.addPhoto_AdCreation_button)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.confirm_AdCreation_button)).check(matches(isDisplayed()));
 
         //sbinner
         onView(withId(R.id.period_AdCreation_spinner)).perform(scrollTo()).check(matches(isDisplayed()));

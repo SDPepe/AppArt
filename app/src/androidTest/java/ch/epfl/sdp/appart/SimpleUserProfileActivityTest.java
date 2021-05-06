@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -36,6 +38,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -65,13 +68,33 @@ public class SimpleUserProfileActivityTest {
         Intents.init();
         hiltRule.inject();
     }
+
+    public static ViewAction forceClick() {
+        return new ViewAction() {
+            @Override public Matcher<View> getConstraints() {
+                return isClickable();
+            }
+
+            @Override public String getDescription() {
+                return "force click";
+            }
+
+            @Override public void perform(UiController uiController, View view) {
+                view.performClick(); // perform click without checking view coordinates.
+                uiController.loopMainThreadUntilIdle();
+            }
+        };
+    }
+
     @Test
     public void simpleUserProfileActivityTest() {
-        ViewInteraction card = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
-        card.perform(click());
+        ViewInteraction appCompatImageView = onView(
+            ViewUtils.withIndex(withId(R.id.image_CardLayout_imageView),
+                0));
+        appCompatImageView.perform(forceClick());
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.contact_info_Ad_button), withText("show contact info"),
+                allOf(withId(R.id.contact_info_Ad_button), withText("Contact"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),

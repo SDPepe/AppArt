@@ -20,7 +20,7 @@
     <string name="price">Price:</string>
     <string name="description">Description:</string>
     <string name="user">Advertiser:</string>
-    <string name="contactbutton_text">Contact Info</string>
+    <string name="contactbutton_text">Contact</string>
     <string name="seeLocationText">Location</string>
     <string name="intentLocationForMap">LOCATION</string>
 
