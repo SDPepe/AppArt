@@ -18,7 +18,7 @@ This worked I finalized my work on the serializers. I had a few issues with the 
 This week I worked on the search bar on the top of the home page. So, I made minor change to the **ScrollingActivity** for display the search bar and I added a new function to the **FirestoreDatabaseService** for retrive only the card form a specific location. These feature with even the associated tests took me the estimated time to implement. Secondly, I helped Carlo a little in managing the profile image and the comuncation with the **Firebase Storage**. 
 
 ## Lorenzo
-This week I worked on refactoring the database, creating helper classes to down/up-load documents and adding constants to easily create paths for objects in the database. The work has been smooth, the only issues have been about merging other PRs and adapting the code a lot because there have been multiple PRs opened in parallel and that worked on the same files.
+This week I worked on refactoring the database, creating helper classes to up/down-load documents and adding constants to easily create paths for objects in the database. The work has been smooth, the only issues have been about merging other PRs and adapting the code a lot because there have been multiple PRs opened in parallel and that worked on the same files.
 Other than that I made minor UI changes and added a functionality to open ad image fullscreen, so that we can see the whole photo instead of only the square-cropped version. These features weren't hard to implement, they just required a bit of doc reading to learn about gesture detectors and such.
 Overall it's been a good week and I feel like there's not much to improve about it, only the communication with other members to better organize the flow between different PRs.
 
