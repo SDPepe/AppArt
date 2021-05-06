@@ -28,17 +28,9 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 public class FirestoreUserHelper {
 
     private final FirebaseFirestore db;
-    private final FirebaseStorage storage;
-    private final FirestoreImageHelper imageHelper;
-    private final String usersPath;
-    private final UserSerializer serializer;
 
     public FirestoreUserHelper() {
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
-        imageHelper = new FirestoreImageHelper();
-        usersPath = FirebaseLayout.USERS_DIRECTORY + FirebaseLayout.SEPARATOR;
-        serializer = new UserSerializer();
     }
 
     @NotNull
@@ -56,7 +48,7 @@ public class FirestoreUserHelper {
                 task -> {
                     if (task.isSuccessful()) {
                         Map<String, Object> data = task.getResult().getData();
-                        result.complete(serializer.deserialize(userId, data));
+                        result.complete(UserSerializer.deserialize(userId, data));
                     } else {
                         result.completeExceptionally(new DatabaseServiceException(
                                 task.getException().getMessage()));
@@ -72,7 +64,7 @@ public class FirestoreUserHelper {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
-                .set(serializer.serialize(user)).addOnCompleteListener(task -> {
+                .set(UserSerializer.serialize(user)).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 isFinishedFuture.complete(true);
             } else {
@@ -94,7 +86,7 @@ public class FirestoreUserHelper {
     private CompletableFuture<Boolean> updateUserDb(CompletableFuture<Boolean> res, User user) {
         db.collection(FirebaseLayout.USERS_DIRECTORY)
                 .document(user.getUserId())
-                .set(serializer.serialize(user))
+                .set(UserSerializer.serialize(user))
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         res.complete(task.isSuccessful());

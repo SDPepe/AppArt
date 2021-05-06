@@ -1,21 +1,19 @@
 package ch.epfl.sdp.appart.utils.serializers;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
-public class UserSerializer implements Serializer<User> {
+public class UserSerializer {
 
-    @Override
-    public Map<String, Object> serialize(User data) {
+    //To prevent construction
+    private UserSerializer() {
+    }
+
+    public static Map<String, Object> serialize(User data) {
         Map<String, Object> docData = new HashMap<>();
         docData.put(UserLayout.AGE, data.getAge());
         docData.put(UserLayout.EMAIL, data.getUserEmail());
@@ -26,8 +24,7 @@ public class UserSerializer implements Serializer<User> {
         return docData;
     }
 
-    @Override
-    public User deserialize(String id, Map<String, Object> data) {
+    public static User deserialize(String id, Map<String, Object> data) {
         AppUser user = new AppUser(id, (String) data.get(UserLayout.EMAIL));
 
         Object rawAge = data.get(UserLayout.AGE);
@@ -52,7 +49,8 @@ public class UserSerializer implements Serializer<User> {
 
         Object rawPfpRef = data.get(UserLayout.PICTURE);
         if (rawPfpRef != null) {
-            user.setProfileImage((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
+            user.setProfileImage((String) rawPfpRef); //WARNING WAS
+            // "profilePicture" before not matching our actual
         }
 
         return user;

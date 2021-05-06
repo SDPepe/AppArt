@@ -43,7 +43,6 @@ public class FirestoreAdHelper {
     private final FirestoreImageHelper imageHelper;
     private final FirestoreCardHelper cardHelper;
     private final String adsPath;
-    private final AdSerializer serializer;
 
     public FirestoreAdHelper() {
         db = FirebaseFirestore.getInstance();
@@ -51,7 +50,6 @@ public class FirestoreAdHelper {
         imageHelper = new FirestoreImageHelper();
         cardHelper = new FirestoreCardHelper();
         adsPath = FirebaseLayout.ADS_DIRECTORY;
-        serializer = new AdSerializer();
     }
 
     @NotNull
@@ -220,7 +218,7 @@ public class FirestoreAdHelper {
                                List<String> imagesRefsList) {
         CompletableFuture<Void> infoUpload = new CompletableFuture<>();
         CompletableFuture<Void> idsUpload = new CompletableFuture<>();
-        adRef.set(serializer.serialize(ad)).addOnCompleteListener(
+        adRef.set(AdSerializer.serialize(ad)).addOnCompleteListener(
                 task -> {
                     cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
                     infoUpload.complete(null);

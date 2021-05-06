@@ -15,7 +15,6 @@ import ch.epfl.sdp.appart.user.User;
 import static org.junit.Assert.*;
 
 public class UserSerializerTest {
-    public UserSerializer serializer = new UserSerializer();
 
     @Test
     public void serializeTest() {
@@ -29,7 +28,7 @@ public class UserSerializerTest {
             user.setProfileImage(generateRandomString(10, random));
 
 
-            Map<String, Object> serializedUser = serializer.serialize(user);
+            Map<String, Object> serializedUser = UserSerializer.serialize(user);
             Assert.assertEquals(serializedUser.get(UserLayout.AGE), user.getAge());
             Assert.assertEquals(serializedUser.get(UserLayout.EMAIL), user.getUserEmail());
             Assert.assertEquals(serializedUser.get(UserLayout.GENDER), user.getGender());
@@ -51,7 +50,7 @@ public class UserSerializerTest {
             serializedUser.put(UserLayout.PHONE, generateRandomString(10, random));
             serializedUser.put(UserLayout.PICTURE, generateRandomString(10, random));
 
-            User user = serializer.deserialize("", serializedUser);
+            User user = UserSerializer.deserialize("", serializedUser);
             Assert.assertEquals(serializedUser.get(UserLayout.AGE), user.getAge());
             Assert.assertEquals(serializedUser.get(UserLayout.EMAIL), user.getUserEmail());
             Assert.assertEquals(serializedUser.get(UserLayout.GENDER), user.getGender());
@@ -71,8 +70,8 @@ public class UserSerializerTest {
             user.setName(generateRandomString(10, random));
             user.setPhoneNumber(generateRandomString(10, random));
             user.setProfileImage(generateRandomString(10, random));
-            Map<String, Object> serializedUser = serializer.serialize(user);
-            User deserializedUser = serializer.deserialize("", serializedUser);
+            Map<String, Object> serializedUser = UserSerializer.serialize(user);
+            User deserializedUser = UserSerializer.deserialize("", serializedUser);
             Assert.assertEquals(deserializedUser.getAge(), user.getAge());
             Assert.assertEquals(deserializedUser.getUserEmail(), user.getUserEmail());
             Assert.assertEquals(deserializedUser.getGender(), user.getGender());
