@@ -57,9 +57,8 @@ public class UserSerializer implements Serializer<User> {
         }
 
         if (data.get(UserLayout.FAVORITE_IDS) !=  null) {
-            List<String> favoriteIds = (List<String>) data.get(UserLayout.FAVORITE_IDS);
-            for (int i = 0; i < favoriteIds.size(); ++i)
-                user.addFavorite(favoriteIds.get(i));
+            for (String favId: (List<String>) data.get(UserLayout.FAVORITE_IDS))
+                user.addFavorite(favId);
         }
 
         return user;
