@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoaderListener;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
@@ -60,7 +61,7 @@ public class ApartmentInfoWindow implements GoogleMap.InfoWindowAdapter {
         priceTextView.setText(card.getPrice() + " CHF");
         if (card.getImageUrl() != null) {
             databaseService.accept(new GlideImageViewLoaderListener(activity,
-                    photo, "ads/" + card.getAdId() + "/" + card.getImageUrl(),
+                    photo, FirebaseLayout.ADS_DIRECTORY + card.getAdId() + FirebaseLayout.SEPARATOR + card.getImageUrl(),
                     new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e,
