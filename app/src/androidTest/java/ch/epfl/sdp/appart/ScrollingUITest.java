@@ -137,7 +137,7 @@ public class ScrollingUITest {
         appCompatTextView3.perform(click());
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.login_Login_button), withText("LOGIN"),
+                allOf(withId(R.id.login_Login_button), withText("Log In!"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
