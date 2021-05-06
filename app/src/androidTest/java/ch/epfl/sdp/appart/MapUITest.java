@@ -1,8 +1,11 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
+import android.graphics.Point;
+import android.view.Display;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -11,6 +14,8 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -35,10 +40,13 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 @UninstallModules({DatabaseModule.class, MapModule.class, LocationModule.class})
 @HiltAndroidTest
@@ -70,6 +78,8 @@ public class MapUITest {
             new AndroidLocationService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
 
+    private static final double SCREEN_HEIGHT_INFO_WINDOW_FACTOR = 0.35;
+
     @Test
     public void markerTest() throws InterruptedException {
 
@@ -91,10 +101,6 @@ public class MapUITest {
             if (!markerDescs.contains(card.getCity())) {
                 Location loc =
                         locationService.getLocationFromName(card.getCity()).join();
-                assertThat(Math.abs(loc.latitude - 46.5196535),
-                        lessThanOrEqualTo(0.05));
-                assertThat(Math.abs(loc.longitude - 6.6322734),
-                        lessThanOrEqualTo(0.05));
                 mapService.centerOnLocation(loc, true);
 
 
@@ -127,4 +133,68 @@ public class MapUITest {
                         " CLICKED")), 10000) | device.hasObject(By.descContains(card.getCity() + "CLICKED"));
         assertThat(isMarkerClicked, is(true));
     }
+
+    @Before
+    public void init() {
+        Intents.init();
+    }
+
+    @Test
+    public void markerClickTest() throws InterruptedException {
+
+
+        UiDevice device =
+                UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+        boolean foundMap = device.wait(Until.hasObject(By.desc("MAP READY")),
+                10000);
+        assertThat(foundMap, is(true));
+
+        Thread.sleep(2000);
+
+        List<Card> cards = databaseService.getCards().join();
+
+        Card card = cards.get(0);
+
+        Location loc =
+                locationService.getLocationFromName(card.getCity()).join();
+        mapService.centerOnLocation(loc, true);
+
+
+        boolean isMarkerPresent =
+                device.hasObject(By.descContains(card.getCity())) | device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
+        assertThat(isMarkerPresent, is(true));
+
+
+        UiObject2 marker = device.findObject(By.descContains(card.getCity()));
+        marker.click();
+
+        Thread.sleep(2000);
+
+        //https://stackoverflow.com/questions/42505274/android-testing-google
+        // -map-info-window-click
+        Display display =
+                InstrumentationRegistry.getInstrumentation().getTargetContext().getDisplay();
+        Point size = new Point();
+        display.getRealSize(size);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        int x = screenWidth / 2;
+        int y = (int) (screenHeight * SCREEN_HEIGHT_INFO_WINDOW_FACTOR);
+
+        device.click(x, y);
+
+        Thread.sleep(1000);
+
+        intended(allOf(hasComponent(AdActivity.class.getName()), hasExtra(
+                "adID", card.getAdId())));
+
+
+    }
+
+    @After
+    public void release() {
+        Intents.release();
+    }
+
 }
