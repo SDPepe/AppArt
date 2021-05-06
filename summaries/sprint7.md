@@ -27,4 +27,4 @@ Overall it's been a good week and I feel like there's not much to improve about 
 This week I worked on finding a way to exchange data between activities. I explored 3 ways with some kind of interface to try to counter the drawbacks of the current system of android. Unfortunatly, it did not went good and I could not find a solution. We will stick to the android fashion. Otherwise I worked on uploading the images of panorama to firebase and retrieve them from the ad but this is not finished.
 
 ## Overall team
-
+This week we worked on several components including the map and the panorama activity. We also worked on enhancing the current functionalities of the app as well as doing meetings to accordate ourselves.
