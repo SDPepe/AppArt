@@ -15,6 +15,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -42,6 +44,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -157,7 +160,7 @@ public class FavoriteUITest {
         pressBack();
 
         ViewInteraction appCompatImageView = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
-        appCompatImageView.perform(click());
+        appCompatImageView.perform(forceClick());
 
         ViewInteraction actionMenuItemView = onView(
                 allOf(withId(R.id.action_add_favorite), withContentDescription("Add to Favorites"),
@@ -200,7 +203,7 @@ public class FavoriteUITest {
         pressBack();
 
         ViewInteraction appCompatImageView3 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
-        appCompatImageView3.perform(click());
+        appCompatImageView3.perform(forceClick());
 
         ViewInteraction actionMenuItemView3 = onView(
                 allOf(withId(R.id.action_add_favorite), withContentDescription("Add to Favorites"),
@@ -215,7 +218,7 @@ public class FavoriteUITest {
         pressBack();
 
         ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 1));
-        appCompatImageView4.perform(click());
+        appCompatImageView4.perform(forceClick());
 
         ViewInteraction actionMenuItemView4 = onView(
                 allOf(withId(R.id.action_add_favorite), withContentDescription("Add to Favorites"),
@@ -253,6 +256,26 @@ public class FavoriteUITest {
                                 withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
                         isDisplayed()));
         recyclerView3.check(matches(isDisplayed()));
+    }
+
+    private static ViewAction forceClick() {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isClickable();
+            }
+
+            @Override
+            public String getDescription() {
+                return "force click";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                view.performClick();
+                uiController.loopMainThreadUntilIdle();
+            }
+        };
     }
 
     private static Matcher<View> childAtPosition(
