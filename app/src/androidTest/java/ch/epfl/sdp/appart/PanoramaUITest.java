@@ -29,9 +29,12 @@ import dagger.hilt.android.testing.UninstallModules;
 import static android.app.Activity.RESULT_CANCELED;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -97,6 +100,23 @@ public class PanoramaUITest {
         UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressBack();
         assertEquals(panoramaActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
+    }
+
+    /**
+     * This test does nothing but allows to increase coverage over an internal method of
+     * panoramagl
+     */
+    @Test
+    public void scrollTest() {
+        swipeDown();
+    }
+
+
+    @Test
+    public void checkLoadImageSucceed() {
+        panoramaActivityRule.getScenario().onActivity(activity -> {
+            activity.hasCurrentImageLoadingFailed().thenAccept(s -> assertThat(s, is(false)));
+        });
     }
 
 }

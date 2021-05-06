@@ -46,6 +46,10 @@ public class PanoramaActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private String currentAdId;
 
+
+    //only meant for testing and should be used a single time !
+    private CompletableFuture<Boolean> hasCurrentImageLoadingFailed = new CompletableFuture<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +104,7 @@ public class PanoramaActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return plManager.onTouchEvent(event);
@@ -144,18 +149,7 @@ public class PanoramaActivity extends AppCompatActivity {
     /**
      * Init the list of panorama images, set the current image index to 0, load image.
      */
-    private void getImages() {
-
-        /*
-        images = new ArrayList<>();
-        // TODO change with database call to get image references
-        images.add("file:///android_asset/panorama_test.jpg");
-        images.add("file:///android_asset/panorama_test_2.jpg");
-         */
-
-        //images.add("file:///android_asset/panorama_test_3.jpg");
-        //images.add("file:///android_asset/panorama_test_4.jpg");
-    }
+    private void getImages() {}
 
     /**
      * Load image at current index into panorama
@@ -173,6 +167,7 @@ public class PanoramaActivity extends AppCompatActivity {
         database.accept(new GlideBitmapLoader(this, bitmapFuture, imagePath));
 
         bitmapFuture.thenApply(bitmap -> {
+            hasCurrentImageLoadingFailed.complete(true);
             panorama.setImage(new PLImage(bitmap, true));
             panorama.getCamera().lookAtAndZoomFactor(30.0f, 90.0f, 0.5f, false);
             plManager.setPanorama(panorama);
@@ -181,6 +176,7 @@ public class PanoramaActivity extends AppCompatActivity {
         });
 
         bitmapFuture.exceptionally(e -> {
+            hasCurrentImageLoadingFailed.complete(false);
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarError_Panorama),
                     Snackbar.LENGTH_SHORT).show();
@@ -218,6 +214,10 @@ public class PanoramaActivity extends AppCompatActivity {
     private void enableRightButton() {
         rightButton.setEnabled(true);
         rightButton.setVisibility(View.VISIBLE);
+    }
+
+    public CompletableFuture<Boolean> hasCurrentImageLoadingFailed() {
+        return this.hasCurrentImageLoadingFailed;
     }
 
 }
