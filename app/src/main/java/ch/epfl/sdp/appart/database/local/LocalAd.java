@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -21,9 +22,38 @@ public class LocalAd {
 
     private static final String ID = "ID";
 
+    /**
+     * This function handles the writing of a complete ad to the local
+     * storage. It will create a folder with all the ad images and a "binary"
+     * file. The name of the folder will be the card ID. The name of the
+     * binary file will be also be the card ID. The images will keep their
+     * names. Since we do not want the LocalAd file to not deal with anything
+     * related to Firebase, we take as parameter a function that takes in a
+     * String and return a Void completable future. This function will
+     * perform the getFile from StorageReference, and download the images to
+     * the specified folder (the string arg). It will return a completable
+     * future of void to indicate if the task succeeded or not and to allow
+     * the writeCompleteAd function to perform the actions when the operation
+     * is finished.
+     *
+     * @param card       the card that will written on disk
+     * @param ad         the ad that will be written on disk
+     * @param user       the user that will be written on disk
+     * @param appPath    the path of the app folder. It is given to the
+     *                   function because we don't want to deal with anything
+     *                   related to android, such as the Context.
+     * @param loadImages the function that will load the images. The String
+     *                   argument will take the name of the folder where we
+     *                   want to store the images. It will return a Void
+     *                   completable future to indicate when it has finished,
+     *                   and whether it has succeeded or not.
+     * @return
+     */
     public static CompletableFuture<Void> writeCompleteAd(Card card, Ad ad,
                                                           User user,
-                                                          String fullPath) {
+                                                          String appPath,
+                                                          Function<String,
+                                                                  CompletableFuture<Void>> loadImages) {
         Map<String, Object> cardMap = CardSerializer.serialize(card);
         cardMap.put(ID, card.getId());
 
@@ -43,7 +73,7 @@ public class LocalAd {
 
         FileOutputStream fos;
         try {
-            fos = new FileOutputStream(fullPath);
+            fos = new FileOutputStream(appPath);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mapList);
             oos.close();
