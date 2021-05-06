@@ -391,10 +391,11 @@ public class UserProfileActivityTest {
                         isDisplayed()));
         appCompatButton8.perform(click());
 
-        /* the image is removed */
-        assertThat(((MockDatabaseService) database).getImages().size(), is(initialDatabaseImageSize - 1));
-
         mockImages = ((MockDatabaseService) database).getImages();
+
+        /* the image is removed */
+        assertThat(mockImages.size(), is(initialDatabaseImageSize - 1));
+
         /* contains has to be used since the exact name of the image depends on System.currentTimeMillis() */
         assertFalse(mockImages.get(mockImages.size() - 1).contains("users/3333/profileImage"));
 
