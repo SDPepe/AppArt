@@ -78,6 +78,8 @@ public class MapUITest {
             new AndroidLocationService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
 
+    private static final double SCREEN_HEIGHT_INFO_WINDOW_FACTOR = 0.35;
+
     @Test
     public void markerTest() throws InterruptedException {
 
@@ -178,7 +180,7 @@ public class MapUITest {
         int screenWidth = size.x;
         int screenHeight = size.y;
         int x = screenWidth / 2;
-        int y = (int) (screenHeight * 0.35);
+        int y = (int) (screenHeight * SCREEN_HEIGHT_INFO_WINDOW_FACTOR);
 
         device.click(x, y);
 
