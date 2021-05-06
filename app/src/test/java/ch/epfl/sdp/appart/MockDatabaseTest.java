@@ -55,7 +55,7 @@ public class MockDatabaseTest {
 
     @Test
     public void updateCorrectCard() {
-        Card test = new Card("unknown1", "adId", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg");
+        Card test = new Card("1111", "adId", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg");
         try {
             assertTrue(dataBase.updateCard(test).get());
         } catch (ExecutionException | InterruptedException e) {
