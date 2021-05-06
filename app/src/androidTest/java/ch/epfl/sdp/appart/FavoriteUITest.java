@@ -9,6 +9,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -271,5 +272,11 @@ public class FavoriteUITest {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+
+    @After
+    public void release() {
+        Intents.release();
     }
 }

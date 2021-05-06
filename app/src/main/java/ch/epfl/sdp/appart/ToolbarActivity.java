@@ -57,9 +57,6 @@ public abstract class ToolbarActivity extends AppCompatActivity {
                 startActivity(intentAccount);
                 return true;
 
-            case R.id.action_settings:
-                return true;
-
             case R.id.action_favorite:
                 Intent intentFavorite = new Intent(this, FavoriteActivity.class);
                 startActivity(intentFavorite);

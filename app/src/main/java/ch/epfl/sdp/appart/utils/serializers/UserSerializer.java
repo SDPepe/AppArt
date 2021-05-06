@@ -52,13 +52,11 @@ public class UserSerializer implements Serializer<User> {
         }
 
         if (data.get(UserLayout.AD_IDS) !=  null) {
-            for (String adId : (List<String>) data.get(UserLayout.AD_IDS))
-                user.addAdId(adId);
+            ((List<String>) data.get(UserLayout.AD_IDS)).forEach(user::addAdId);
         }
 
         if (data.get(UserLayout.FAVORITE_IDS) !=  null) {
-            for (String favId: (List<String>) data.get(UserLayout.FAVORITE_IDS))
-                user.addFavorite(favId);
+            ((List<String>) data.get(UserLayout.FAVORITE_IDS)).forEach(user::addFavorite);
         }
 
         return user;
