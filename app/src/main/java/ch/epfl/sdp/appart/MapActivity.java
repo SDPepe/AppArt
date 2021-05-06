@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -78,17 +79,25 @@ public class MapActivity extends AppCompatActivity {
 
         if (address != null) {
             mapService.setMapFragment(mapFragment);
-            onMapReadyCallback = () -> {
-                locationService.getLocationFromName(address).thenAccept(location -> {
-                    mapService.addMarker(location, null, true, null);
-                }).exceptionally(e -> {
-                    e.printStackTrace();
-                    return null;
-                });
-            };
+            onMapReadyCallback = () -> locationService.getLocationFromName(address).thenAccept(location -> {
+                mapService.addMarker(location, null, true, null);
+            }).exceptionally(e -> {
+                e.printStackTrace();
+                return null;
+            });
         } else {
+
             mapService.setInfoWindow(new ApartmentInfoWindow(this,
                     databaseService));
+            mapService.setOnInfoWindowClickListener(marker -> {
+                Card card = (Card) marker.getTag();
+                String adId = card.getAdId();
+                Intent intent = new Intent(this, AdActivity.class);
+                intent.putExtra("adID", adId);
+                startActivity(intent);
+
+            });
+
             mapService.setMapFragment(mapFragment);
             onMapReadyCallback = () -> {
                 CompletableFuture<List<Card>> futureCards = databaseService
@@ -100,10 +109,8 @@ public class MapActivity extends AppCompatActivity {
 
                 futureCards.thenAccept(cards -> {
                     for (Card card : cards) {
-                        locationService.getLocationFromName(card.getCity()).thenAccept(location -> {
-                            mapService.addMarker(location, card, false,
-                                    card.getCity());
-                        }).exceptionally(e -> {
+                        locationService.getLocationFromName(card.getCity()).thenAccept(location -> mapService.addMarker(location, card, false,
+                                card.getCity())).exceptionally(e -> {
                             e.printStackTrace();
                             return null;
                         });
