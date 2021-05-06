@@ -57,16 +57,20 @@
                 android:layout_height="8dp" />
 
             <Button
-                android:id="@+id/vtour_Ad_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="openVirtualTour"
-                android:text="@string/vtourbutton_text"
-                android:background="@drawable/button_default"
-                android:drawableEnd="@drawable/ic_vrpano"
-                android:paddingEnd="16dp"
-                android:paddingStart="40dp"
-              />
+              android:id="@+id/vtour_Ad_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingStart="40dp"
+              android:paddingEnd="16dp"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:background="@drawable/style_secondary"
+              android:drawableEnd="@drawable/ic_vrpano"
+              android:onClick="openVirtualTour"
+              android:text="@string/vtourbutton_text"
+              android:textAllCaps="false"
+              android:textColor="@color/primaryStart"
+              android:textSize="16sp" />
 
             <Space
                 android:layout_width="match_parent"
@@ -149,27 +153,38 @@
                 android:layout_height="8dp" />
 
             <Button
-                android:id="@+id/contact_info_Ad_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:onClick="openContactInfo"
-                android:text="@string/contactbutton_text"
-                android:background="@drawable/button_default"
-                android:drawableEnd="@drawable/ic_contact"
-                android:paddingEnd="16dp"
-                android:paddingStart="40dp"/>
+              android:id="@+id/contact_info_Ad_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="16dp"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:paddingStart="40dp"
+              android:paddingEnd="16dp"
+              android:background="@drawable/style_secondary"
+              android:drawableEnd="@drawable/ic_contact"
+              android:onClick="openContactInfo"
+              android:text="@string/contactbutton_text"
+              android:textAllCaps="false"
+              android:textColor="@color/primaryStart"
+              android:textSize="16sp" />
 
             <Button
-                android:id="@+id/seeLocation_Ad_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onSeeLocationClick"
-                android:text="@string/seeLocationText"
-                android:background="@drawable/button_default"
-                android:drawableEnd="@drawable/ic_location"
-                android:paddingEnd="16dp"
-                android:paddingStart="40dp"/>
+              android:id="@+id/seeLocation_Ad_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="16dp"
+              android:paddingStart="40dp"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:paddingEnd="16dp"
+              android:background="@drawable/style_secondary"
+              android:drawableEnd="@drawable/ic_location"
+              android:onClick="onSeeLocationClick"
+              android:text="@string/seeLocationText"
+              android:textAllCaps="false"
+              android:textColor="@color/primaryStart"
+              android:textSize="16sp" />
 
         </LinearLayout>
     </ScrollView>
@@ -180,11 +195,13 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:theme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:subtitleTextColor="#FFFFFF "
+        app:titleTextColor="#FFFFFF "/>
 
     <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline_add1"

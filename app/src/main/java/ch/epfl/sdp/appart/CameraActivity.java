@@ -34,6 +34,7 @@ import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.UserViewModel;
+import com.bumptech.glide.Glide;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
@@ -174,6 +175,15 @@ public class CameraActivity extends AppCompatActivity {
         horizontalLayout.removeAllViews();
         for (Uri i: listImageUri) {
             horizontalLayout.addView(uploadImage(i));
+
+            if (listImageUri.size() > 1) {
+                Space hspacer = new Space(this);
+                hspacer.setLayoutParams(new ViewGroup.LayoutParams(
+                    8,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                ));
+                horizontalLayout.addView(hspacer);
+            }
         }
     }
     private View uploadImage(Uri uri){
@@ -181,13 +191,8 @@ public class CameraActivity extends AppCompatActivity {
             (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
         ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
-        photo.setImageURI(uri);
-        photo.setPadding(16,0,16,0);
+        Glide.with(this).load(uri).into(photo);
         return myView;
-    }
-    
-    public void goBack(View view) {
-        finish();
     }
 
     private String getFileExtension(Uri uri) {

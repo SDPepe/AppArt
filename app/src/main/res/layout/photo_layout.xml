@@ -19,7 +19,8 @@
         <ImageView
             android:id="@+id/photo_Photo_imageView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:adjustViewBounds="true"
             android:contentDescription="@string/photo_descprition"
             android:scaleType="centerCrop"

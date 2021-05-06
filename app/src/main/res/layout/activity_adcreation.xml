@@ -241,13 +241,13 @@
                     android:textSize="18sp" />
 
                 <Spinner
-                    android:id="@+id/period_AdCreation_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_weight="0"
-                    android:entries="@array/periodList" />
+                  android:id="@+id/period_AdCreation_spinner"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:layout_weight="0"
+                  android:layout_marginTop="0dp"
+                  android:layout_marginEnd="0dp"
+                  android:entries="@array/periodList" />
             </LinearLayout>
 
             <TextView
@@ -278,39 +278,38 @@
             <HorizontalScrollView
                 android:id="@+id/picturesScroll_AdCreation_ScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
 
                 <LinearLayout
                     android:id="@+id/pictures_AdCreation_linearLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
             <Button
-                android:id="@+id/addPhoto_AdCreation_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_default"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="@string/cameraButtonAdCreation"
-                android:drawableEnd="@drawable/ic_photo"
-                android:paddingEnd="16dp"
-                android:paddingStart="40dp"
-
-              />
+              android:id="@+id/addPhoto_AdCreation_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp"
+              android:paddingStart="40dp"
+              android:paddingEnd="16dp"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:background="@drawable/style_secondary"
+              android:drawableEnd="@drawable/ic_add_photo"
+              android:gravity="center"
+              android:text="@string/cameraButtonAdCreation"
+              android:textAllCaps="false"
+              android:textColor="@color/primaryStart"
+              android:textSize="16sp" />
 
             <HorizontalScrollView
                 android:id="@+id/panoramaScroll_AdCreation_ScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp">
+                android:layout_marginTop="16dp">
 
                 <LinearLayout
                     android:id="@+id/panorama_AdCreation_linearLayout"
@@ -320,26 +319,33 @@
             </HorizontalScrollView>
 
             <Button
-                android:id="@+id/createVirtualTour_AdCreation_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_default"
-                android:layout_marginTop="16dp"
-                android:drawableEnd="@drawable/ic_vrpano"
-                android:paddingEnd="16dp"
-                android:paddingStart="40dp"
-                android:text="@string/createPanoramaTourButton"/>
-
+              android:id="@+id/createVirtualTour_AdCreation_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="0dp"
+              android:paddingStart="40dp"
+              android:paddingEnd="16dp"
+              android:background="@drawable/style_secondary"
+              android:drawableEnd="@drawable/ic_vrpano"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:text="@string/createPanoramaTourButton"
+              android:textAllCaps="false"
+              android:textColor="@color/primaryStart"
+              android:textSize="16sp" />
             <Button
               android:id="@+id/confirm_AdCreation_button"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="16dp"
-              android:background="@drawable/button_default"
-              android:drawableEnd="@drawable/post_add"
-              android:paddingEnd="16dp"
-              android:paddingStart="40dp"
-              android:text="@string/confirmButtonAdCreation" />
+              android:layout_marginBottom="16dp"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:background="@drawable/style_primary"
+              android:text="@string/confirmButtonAdCreation"
+              android:textAllCaps="false"
+              android:textColor=" #FFFFFF "
+              android:textSize="16sp" />
 
         </LinearLayout>
     </ScrollView>
