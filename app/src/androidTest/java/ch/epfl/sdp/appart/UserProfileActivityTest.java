@@ -286,7 +286,10 @@ public class UserProfileActivityTest {
                 .atPosition(3);
         appCompatTextView2.perform(click());
 
+
+
         onView(withId(R.id.editImage_UserProfile_button)).perform(click());
+
 
 
         /* =================================================================================================== */
@@ -300,7 +303,6 @@ public class UserProfileActivityTest {
         Bitmap icon = BitmapFactory.decodeResource(
                 ApplicationProvider.getApplicationContext().getResources(),
                 R.mipmap.ic_launcher);
-
 
         // Build a result to return from the Camera app
         Intent resultIntent = new Intent();
