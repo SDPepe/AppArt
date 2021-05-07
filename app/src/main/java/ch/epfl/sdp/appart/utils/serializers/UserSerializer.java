@@ -58,8 +58,9 @@ public class UserSerializer implements Serializer<User> {
 
         if (data.get(UserLayout.FAVORITE_IDS) !=  null) {
             ((List<String>) data.get(UserLayout.FAVORITE_IDS)).forEach(user::addFavorite);
+        }
 
-          Object rawPfpRef = data.get(UserLayout.PICTURE);
+        Object rawPfpRef = data.get(UserLayout.PICTURE);
         if (rawPfpRef != null) {
             user.setProfileImagePathAndName((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
         }
