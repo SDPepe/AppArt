@@ -189,7 +189,7 @@ public class AdActivity extends ToolbarActivity {
         if (item.getItemId() == R.id.action_add_favorite) {
             database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
                 u.addFavorite(adId);
-                database.updateUser(u, null);
+                database.updateUser(u);
             });
             return true;
         }
