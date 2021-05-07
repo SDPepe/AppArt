@@ -119,12 +119,7 @@ public class UserProfileActivityTest {
         appCompatEditText2.perform(replaceText("3333"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.login_Login_button), withText("Login"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
+                allOf(withId(R.id.login_Login_button), withText("Log In!"),
                         isDisplayed()));
         appCompatButton.perform(click());
 
@@ -340,12 +335,6 @@ public class UserProfileActivityTest {
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
-                        childAtPosition(
-                                allOf(withId(R.id.camera_layout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                4),
                         isDisplayed()));
         appCompatButton4.perform(click());
 

@@ -176,12 +176,6 @@ public class AdCreationUITest {
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
-                        childAtPosition(
-                                allOf(withId(R.id.camera_layout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                4),
                         isDisplayed()));
         appCompatButton4.perform(click());
 
