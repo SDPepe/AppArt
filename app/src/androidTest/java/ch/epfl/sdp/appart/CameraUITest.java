@@ -29,7 +29,6 @@ import static org.hamcrest.Matchers.allOf;
 @HiltAndroidTest
 public class CameraUITest {
 
-
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 

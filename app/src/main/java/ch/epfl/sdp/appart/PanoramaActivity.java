@@ -216,6 +216,12 @@ public class PanoramaActivity extends AppCompatActivity {
         rightButton.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * WARNING should be used only for testing
+     * @return a future that complete once the image has loaded and will be true if success,
+     * false otherwise.
+     */
+    @Deprecated
     public CompletableFuture<Boolean> hasCurrentImageLoadingFailed() {
         return this.hasCurrentImageLoadingFailed;
     }
