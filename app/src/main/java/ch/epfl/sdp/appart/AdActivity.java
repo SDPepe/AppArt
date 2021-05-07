@@ -40,6 +40,7 @@ public class AdActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
+    
     @Inject
     LoginService login;
 
