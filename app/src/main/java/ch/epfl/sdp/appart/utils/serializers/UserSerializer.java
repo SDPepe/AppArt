@@ -21,7 +21,6 @@ public class UserSerializer implements Serializer<User> {
         docData.put(UserLayout.GENDER, data.getGender());
         docData.put(UserLayout.NAME, data.getName());
         docData.put(UserLayout.PHONE, data.getPhoneNumber());
-        docData.put(UserLayout.PICTURE, data.getProfileImage());
         docData.put(UserLayout.AD_IDS, data.getAdsIds());
         docData.put(UserLayout.FAVORITE_IDS, new ArrayList<>(data.getFavoritesIds()));
         docData.put(UserLayout.PICTURE, data.getProfileImagePathAndName());
@@ -46,10 +45,6 @@ public class UserSerializer implements Serializer<User> {
 
         if (data.get(UserLayout.PHONE) != null) {
             user.setPhoneNumber((String) data.get(UserLayout.PHONE));
-        }
-
-        if (data.get(UserLayout.PICTURE) != null) {
-            user.setProfileImage((String) data.get(UserLayout.PICTURE)); //WARNING WAS "profilePicture" before not matching our actual
         }
 
         if (data.get(UserLayout.AD_IDS) !=  null) {
