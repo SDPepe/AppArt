@@ -7,6 +7,13 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
+ * To run tests :
+ * ./gradlew check connectedCheck --stacktrace
+ * To insert in configuration :
+ *  -e "email" "youremail" -e "password" "yourpsw" --ez "demo_mode" true
+ */
+
+/**
  * The main UI class.
  */
 public class MainActivity extends AppCompatActivity {
