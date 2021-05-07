@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -30,9 +31,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Bundle extras = this.getIntent().getExtras();
-        if(extras != null && extras.containsKey("email")  && extras.containsKey("password")){
-            ((EditText)findViewById(R.id.email_Login_editText)).setText(extras.getString("email"));
-            ((EditText)findViewById(R.id.password_Login_editText)).setText(extras.getString("password"));
+        if(extras != null && extras.containsKey(ActivityCommunicationLayout.PROVIDING_EMAIL)  && extras.containsKey(ActivityCommunicationLayout.PROVIDING_PASSWORD)){
+            ((EditText)findViewById(R.id.email_Login_editText)).setText(extras.getString(ActivityCommunicationLayout.PROVIDING_EMAIL));
+            ((EditText)findViewById(R.id.password_Login_editText)).setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
         }
     }
 

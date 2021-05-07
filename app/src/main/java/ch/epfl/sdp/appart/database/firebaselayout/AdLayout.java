@@ -38,7 +38,7 @@ public final class AdLayout {
     /**
      * @apiNote : String on Firestore
      */
-    public final static String ADVERTISER_ID = "advertiser_id"; //advertiserId
+    public final static String ADVERTISER_ID = "advertiser_id";
 
     /**
      * @apiNote : String on Firestore

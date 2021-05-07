@@ -50,21 +50,17 @@ public interface User {
     /**
      * getter for user profile picture
      *
-     * @return the profile picture as a path String
+     * @return the profile picture as a path (e.g. users/default/photo.jpeg)
      */
-    String getProfileImage();
+    String getProfileImagePathAndName();
 
     /**
      * setter for user profile picture
      *
-     * @param img the image path for the users new profile picture
+     * @param img the image complete path (e.g. users/default/photo.jpeg)
+     * of the users new profile picture
      */
-    void setProfileImage(String img);
-
-    /**
-     * removes the profile picture, thus sets the default user gender icon
-     */
-    void removeProfileImage();
+    void setProfileImagePathAndName(String img);
 
     /**
      * getter for users age
@@ -133,5 +129,17 @@ public interface User {
      * @param id, the id of the ad
      */
     void addFavorite(String id);
+
+    /**
+     * sets default user-icon uri
+     */
+    void setDefaultProfileImage();
+
+    /**
+     * @return true if the user is currently using the
+     * default user icon as profile image, false if the
+     * user previously uploaded a profile image
+     */
+    Boolean hasDefaultProfileImage();
 
 }

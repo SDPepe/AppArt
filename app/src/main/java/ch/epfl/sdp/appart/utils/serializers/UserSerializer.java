@@ -24,6 +24,7 @@ public class UserSerializer implements Serializer<User> {
         docData.put(UserLayout.PICTURE, data.getProfileImage());
         docData.put(UserLayout.AD_IDS, data.getAdsIds());
         docData.put(UserLayout.FAVORITE_IDS, new ArrayList<>(data.getFavoritesIds()));
+        docData.put(UserLayout.PICTURE, data.getProfileImagePathAndName());
         return docData;
     }
 
@@ -57,6 +58,10 @@ public class UserSerializer implements Serializer<User> {
 
         if (data.get(UserLayout.FAVORITE_IDS) !=  null) {
             ((List<String>) data.get(UserLayout.FAVORITE_IDS)).forEach(user::addFavorite);
+
+          Object rawPfpRef = data.get(UserLayout.PICTURE);
+        if (rawPfpRef != null) {
+            user.setProfileImagePathAndName((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
         }
 
         return user;

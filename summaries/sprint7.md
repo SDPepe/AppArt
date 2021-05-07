@@ -1,31 +1,30 @@
-# Summary of week 6
+# Summary of week 7
 
 ## Antoine
-This week I worked on the map features of the app. It actually consists in two separate features. First, we want the user to be able to see all ads on a map, and click on the markers to get the relevant informations. Secondly, we want the user to be able to see the location of an ad on the ad page. For now, this is done through a see location button that launches an entirely different activity but the end goal is to have it directly on the ad page. 
 
-I didn't realize implementing this would take me so long. I had to create a location service, which I didn't plan to add at first, and get familiar with the Google maps APIs.
+This week I worked on the map testing. This consists in testing the MapActivity when used to display all available apartments and in testing the MapaActivity when it is used to display the location of a specific apartment. I started by trying to test the location service with no success. Everything worked on my local machine but it didn't work on cirrus. I then moved to map testing. I had to change the emulator used in cirrus because it is necessary to have the google_apis for the map to work. I had lots of issues while trying to test this feature and it wasn't merged for this week.
 
-Right now, the UI is not nice looking and not particularly user friendly but I think this can be improved quite easily.
+The tests now works and will soon be merged.
 
 ## Carlo
-This week I mainly worked on synching the contact info on ad with the actual firestore user which posted the ad. This is now done and **tested**. Now, once a user taps the **contact info** button on ad the announcer's information gets fetched from firestore and displayed on the SimpleUserProfileActivity. 
-I also worked with Filippo on the storing and retrieving of images in database for the user profile: this task was longer and more cumbersome than expected initially because of code adaptations, thus will be continued through next week. 
+This week I worked on synching **Firebase Storage** with the **UserProfileActivity** in order to enable the user to upload, remove, update its profile picture. This needed work on the Activity, on the ViewModel and **new functions on the FirestoreDatabaseService**. These changes were introduces in ImageHelper for FirestoreDatabase. 
 
-In the upcoming week I will merge the PR introducing sync between contact info and firestore (which is already done) and I will keep working on the per-user storage of images in firestore.
+I also worked on refactoring hardcoded strings. In our codebase, activities communciate through **putExtra** and all the strings used until now were hardcoded. I wrote a ActivityCommunicationLayout file where all the communication messages are stored and used globally through the code. I then refactored all the existing putExtra calls to fit the new layout. Overall this has been a very productive week and a lot was implemented/solved.
 
 ## Émilien
-This week I've been working on a new favorite feature. The goal is to allow the user to save its favorites announces and check them when they want. For now, there is multiple issues with firestore, especially because for now the users in the database seem to not be updated when a new favorite is given, even though they should be. Aside from that, I've been working on doing the serializers, as suggested in the coding review. There are still a few issues with those, but it shouldn't take too much time to fix it. 
+This worked I finalized my work on the serializers. I had a few issues with the merging, which took me a bit more time than I had anticipated. I also worked on finishing the implementation of the favorites. It is now fully done, but I still need to test the feature and it will be good to go. It has been more productive than last week, as I managed to resolve a lot of issues I had, especially with the favorites.
 
-## Filippo (scrum master)
-This week I worked on several parts. First of all, I added the possibility to use the application with Launch Options that allow you to automate the login on the emulator. Secondly I finished the CameraActivity which can be used in different situations. Finally I worked with Lorenzo, Carlo to allow you to add photos to your Ad or your Profile. For the moment we have found a solution to manage the database when we store an Ad but in the coming weeks we will have to do a refactor.
+## Filippo
+This week I worked on the search bar on the top of the home page. So, I made minor change to the **ScrollingActivity** for display the search bar and I added a new function to the **FirestoreDatabaseService** for retrive only the card form a specific location. These feature with even the associated tests took me the estimated time to implement. Secondly, I helped Carlo a little in managing the profile image and the comuncation with the **Firebase Storage**. 
 
-## Lorenzo 
-This sprint has been the worst one by far. It's been full of unexpected issues that we had a hard time fixing. On both my tasks I had to spend a lot of extra time to make things work. 
-My first task was about expanding the panorama activity to support navigation through multiple panorama images. The task looks simple but I got stuck on an error coming from an external library we use. The strange thing is that the activity was still working fine, and many hours later I got told that error was already present before I started working on the activity. The second task was about modifying the adcreation activity and the firestoredatabaseservice so that the images chosen from the camera activity are uploaded to firebase storage. Also here we got stuck on several issues due to lack of knowledge on several technical aspects of dealing with files and we also had to modify the ad class structure. Overall due to time constraints we had to settle on fairly poorly written code and low testing coverage, and it's quite demotivating to know during the next sprint we will have to work again on these things to clean up everything and finalize features that were put on halt.
+## Lorenzo
+This week I worked on refactoring the database, creating helper classes to up/down-load documents and adding constants to easily create paths for objects in the database. The work has been smooth, the only issues have been about merging other PRs and adapting the code a lot because there have been multiple PRs opened in parallel and that worked on the same files.
+Other than that I made minor UI changes and added a functionality to open ad image fullscreen, so that we can see the whole photo instead of only the square-cropped version. These features weren't hard to implement, they just required a bit of doc reading to learn about gesture detectors and such.
+Overall it's been a good week and I feel like there's not much to improve about it, only the communication with other members to better organize the flow between different PRs.
 
-## Quentin
-This week i worked on experimenting panoramagl library but it seems time consuming. Some parts of the library appeared buggy. I could mamanged to fork the repo and to modify it but it seems that I will need to dive deep into the code to debug it. Otherwise I worked on an activity that was meant to allows pictures importation. It consists in a simple UI where the user that will be creating an ad can import pictures and order them by indices.
+## Quentin (scrum master)
+
+This week I worked on finding a way to exchange data between activities. I explored 3 ways with some kind of interface to try to counter the drawbacks of the current system of android. Unfortunately, it did not went good and I could not find a solution. We will stick to the android fashion. Otherwise I worked on uploading the images of panorama to firebase and retrieve them from the ad but this is not finished.
 
 ## Overall team
-This week we worked on several components of the application. In general we continued the work with the tour overview by offering the possibility to create a parkour, synchronized the creation of the announcements with the database and offered the possibility to see a map.
-
+This week we worked on several components including the map and the panorama activity. We also worked on enhancing the current functionalities of the app as well as doing meetings to accordate ourselves.

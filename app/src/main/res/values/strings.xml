@@ -52,7 +52,10 @@
     <string name="emailText"> Email </string>
     <string name="genderText"> Gender </string>
     <string name="nonUniAccountClaimer">  Regular account </string>
+    <string name="removeProfilePicture"> REMOVE </string>
+    <string name="changeProfilePicture"> CHANGE </string>
     <string name="updateUserFailedInDB">  Information update failed, try again </string>
+    <string name="updateUserImageFailedInDB">  Image update failed, try again </string>
     <string-array name="genderList">
         <item> </item>
         <item>Female</item>
@@ -106,6 +109,7 @@
 
     <!-- CameraActivity stuff -->
     <string name="confirmCameraButtonText">Confirm</string>
+    <string name="canceledNoImage"> "Canceled: you did not upload any image " </string>
 
     <!-- PanoramaActivity stuff -->
     <string name="leftButtonDescription_Panorama">Load previous image</string>

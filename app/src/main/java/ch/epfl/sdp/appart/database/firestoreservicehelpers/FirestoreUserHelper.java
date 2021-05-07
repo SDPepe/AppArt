@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -86,7 +87,7 @@ public class FirestoreUserHelper {
 
     @NotNull
     @NonNull
-    public CompletableFuture<Boolean> updateUser(User user, Uri uri) {
+    public CompletableFuture<Boolean> updateUser(User user) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         return updateUserDb(result, user);
     }
