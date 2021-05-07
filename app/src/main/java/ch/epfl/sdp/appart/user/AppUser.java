@@ -3,7 +3,7 @@ package ch.epfl.sdp.appart.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 
 /**
  * This class represents a generic user of our application - it is used to manage
@@ -19,10 +19,13 @@ public class AppUser implements User {
     private String phoneNumber;
     private long age;
     private Gender gender;
-    private String profilePicture;
+    private String profileImagePathAndName;
     private List<String> adsIds;
 
-    private static final String PREFIX_FOR_ICON_IMAGE = "userIcon";
+/* default values */
+    private static final String DEFAULT_IMAGE_NAME_NO_GENDER = "user_example_no_gender";
+    private static final String DEFAULT_IMAGE_NAME_FEMALE = "user_example_female";
+    private static final String DEFAULT_IMAGE_NAME_MALE = "user_example_male";
 
     /**
      * App user constructor
@@ -38,6 +41,7 @@ public class AppUser implements User {
         this.email = email;
         this.gender = Gender.NOT_SELECTED;
         this.adsIds = new ArrayList<>();
+        setDefaultProfileImage();
 
         /* As default, everything before '@' in email is selected as name,
         this is overwritten by the name setter once the user specifies it */
@@ -118,39 +122,26 @@ public class AppUser implements User {
 
     /**
      * getter for user profile picture
-     * @return a string with the profilePicture id if the user provided one,
-     * or else a concatenation of the string 'userIcon' and the id of the drawable
-     * of the gender user icon (e.g. "userIcon:R.drawable.user_example_female")
+     *
+     * @return the profile picture as a path (e.g. users/default/photo.jpeg)
      */
     @Override
-    public String getProfileImage() {
-        if (profilePicture == null || profilePicture.split(":")[0].equals(PREFIX_FOR_ICON_IMAGE)) {
-            int id = findDrawableIdByGender();
-            String userIcon = PREFIX_FOR_ICON_IMAGE+":";
-            return userIcon.concat(String.valueOf(id));
-        }
-        return profilePicture;
+    public String getProfileImagePathAndName() {
+        return profileImagePathAndName;
     }
 
     /**
      * setter for user profile picture
      *
-     * @param img the image path for the users new profile picture
+     * @param img the image complete path (e.g. users/default/photo.jpeg)
+     * of the users new profile picture
      */
     @Override
-    public void setProfileImage(String img) {
+    public void setProfileImagePathAndName(String img) {
         if (img == null) {
             throw new IllegalArgumentException("ERROR - image parameter was null");
         }
-        this.profilePicture = img;
-    }
-
-    /**
-     * removes the profile picture, thus sets the default user gender icon
-     */
-    @Override
-    public void removeProfileImage() {
-        this.profilePicture = null;
+        this.profileImagePathAndName = img;
     }
 
     /**
@@ -229,17 +220,40 @@ public class AppUser implements User {
 
     /**
      *
-     * @return the id of the drawable gender-icon corresponding
-     * to the gender selected by the user
+     * @return the name of the user gender-icon image
      */
-    private int findDrawableIdByGender() {
+    private String findDrawableIdByGender() {
         if (gender == Gender.FEMALE) {
-            return R.drawable.user_example_female;
+            return DEFAULT_IMAGE_NAME_FEMALE + FirebaseLayout.PNG;
         } else if (gender == Gender.MALE) {
-            return R.drawable.user_example_male;
+            return DEFAULT_IMAGE_NAME_MALE + FirebaseLayout.PNG;
         } else {
-            return R.drawable.user_example_no_gender;
+            return DEFAULT_IMAGE_NAME_NO_GENDER + FirebaseLayout.PNG;
         }
+    }
+
+    /**
+     * sets the default user icon
+     */
+    public void setDefaultProfileImage(){
+        StringBuilder defaultImagePathInDb = new StringBuilder();
+        defaultImagePathInDb
+                .append(FirebaseLayout.USERS_DIRECTORY)
+                .append(FirebaseLayout.SEPARATOR)
+                .append(FirebaseLayout.DEFAULT_USER_ICON_DIRECTORY)
+                .append(FirebaseLayout.SEPARATOR)
+                .append(findDrawableIdByGender());
+
+        this.profileImagePathAndName = defaultImagePathInDb.toString();
+    }
+
+    /**
+     * @return true if the user is currently using the
+     * default user icon as profile image, false if the
+     * user previously uploaded a profile image
+     */
+    public Boolean hasDefaultProfileImage() {
+        return !this.profileImagePathAndName.contains(this.userId);
     }
 
 }

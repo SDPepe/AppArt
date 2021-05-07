@@ -1,18 +1,17 @@
 package ch.epfl.sdp.appart.user;
 
 import android.net.Uri;
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ch.epfl.sdp.appart.ad.Ad;
-import ch.epfl.sdp.appart.ad.ContactInfo;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -20,11 +19,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class UserViewModel extends ViewModel {
 
-    private final MutableLiveData<Boolean> mPutCardConfirmed = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> mUpdateCardConfirmed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mPutUserConfirmed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mUpdateUserConfirmed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mUpdateImageConfirmed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mDeleteImageConfirmed = new MutableLiveData<>();
     private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
-    private final MutableLiveData<Uri> mUri = new MutableLiveData<>();
+    private Uri profileImageUri;
 
     final DatabaseService db;
     final LoginService ls;
@@ -44,7 +45,11 @@ public class UserViewModel extends ViewModel {
      */
     public void putUser(User user) {
         CompletableFuture<Boolean> putUser = db.putUser(user);
-        putUser.thenAccept(mPutCardConfirmed::setValue);
+        putUser.exceptionally(e -> {
+            Log.d("PUT USER", "DATABASE FAIL");
+            return null;
+        });
+        putUser.thenAccept(mPutUserConfirmed::setValue);
     }
 
     /**
@@ -53,8 +58,53 @@ public class UserViewModel extends ViewModel {
      * @param user the user to update in database
      */
     public void updateUser(User user) {
-        CompletableFuture<Boolean> updateUser = db.updateUser(user, mUri.getValue());
-        updateUser.thenAccept(mUpdateCardConfirmed::setValue);
+        CompletableFuture<Boolean> updateUser = db.updateUser(user);
+        updateUser.exceptionally(e -> {
+            Log.d("UPDATE USER", "DATABASE FAIL");
+            return null;
+        });
+        updateUser.thenAccept(mUpdateUserConfirmed::setValue);
+    }
+
+    /**
+     * Update the user image the database and updates the LiveData
+     * the uri for the image is stored in profileImageUri attribute above
+     *
+     * @param userId the id of the user
+     */
+    public void updateImage(String userId){
+        StringBuilder imagePathAndName = new StringBuilder();
+        imagePathAndName
+                .append(FirebaseLayout.USERS_DIRECTORY)
+                .append(FirebaseLayout.SEPARATOR)
+                .append(userId)
+                .append(FirebaseLayout.SEPARATOR)
+                .append(FirebaseLayout.PROFILE_IMAGE_NAME)
+                .append(System.currentTimeMillis())
+                .append(FirebaseLayout.JPEG);
+                // TODO: support more image formats
+
+        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName.toString());
+        updateImage.exceptionally(e -> {
+            Log.d("UPDATE IMAGE", "DATABASE FAIL");
+            return null;
+        });
+        updateImage.thenAccept(mUpdateImageConfirmed::setValue);
+    }
+
+    /**
+     * Deletes the user image the database and updates the LiveData
+     * !! USE - user.getProfileImage() when calling this method
+     *
+     * @param profilePicture this is the complete path for the user's image: user.getProfileImage()
+     */
+    public void deleteImage(String profilePicture){
+        CompletableFuture<Boolean> deleteImage = db.deleteImage(profilePicture);
+        deleteImage.exceptionally(e -> {
+            Log.d("DELETE IMAGE", "DATABASE FAIL");
+            return null;
+        });
+        deleteImage.thenAccept(mDeleteImageConfirmed::setValue);
     }
 
     /**
@@ -64,6 +114,10 @@ public class UserViewModel extends ViewModel {
      */
     public void getUser(String userId) {
         CompletableFuture<User> getUser = db.getUser(userId);
+        getUser.exceptionally(e -> {
+            Log.d("GET USER", "DATABASE FAIL");
+            return null;
+        });
         getUser.thenAccept(mUser::setValue);
     }
 
@@ -72,32 +126,49 @@ public class UserViewModel extends ViewModel {
      */
     public void getCurrentUser() {
         CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
+        getCurrentUser.exceptionally(e -> {
+            Log.d("GET USER", "DATABASE FAIL");
+            return null;
+        });
         getCurrentUser.thenAccept(mUser::setValue);
-    }
-    /*
-     * Setters
-     */
-    public void setUri(Uri uri ){
-      mUri.setValue(uri);
     }
 
     /*
      * Getters for MutableLiveData instances declared above
      */
-    public MutableLiveData<Boolean> getPutCardConfirmed() {
-        return mPutCardConfirmed;
+    public MutableLiveData<Boolean> getPutUserConfirmed() {
+        return mPutUserConfirmed;
     }
 
-    public MutableLiveData<Boolean> getUpdateCardConfirmed() {
-        return mUpdateCardConfirmed;
+    public MutableLiveData<Boolean> getUpdateUserConfirmed() {
+        return mUpdateUserConfirmed;
+    }
+
+    public MutableLiveData<Boolean> getUpdateImageConfirmed() {
+        return mUpdateImageConfirmed;
+    }
+
+    public MutableLiveData<Boolean> getDeleteImageConfirmed() {
+        return mDeleteImageConfirmed;
     }
 
     public MutableLiveData<User> getUser() {
         return mUser;
     }
 
-    public MutableLiveData<Uri> getUri() {
-        return mUri;
+    /*
+     * Setters
+     */
+    public void setUri(Uri uri) {
+        profileImageUri = uri;
     }
+
+    /*
+     * Getters
+     */
+    public Uri getUri() {
+        return profileImageUri;
+    }
+    
 
 }

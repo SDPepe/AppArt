@@ -12,8 +12,6 @@ import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 
-import static org.junit.Assert.*;
-
 public class UserSerializerTest {
     public UserSerializer serializer = new UserSerializer();
 
@@ -26,7 +24,7 @@ public class UserSerializerTest {
             user.setGender(random.nextBoolean() ? "MALE" : "FEMALE");
             user.setName(generateRandomString(10, random));
             user.setPhoneNumber(generateRandomString(10, random));
-            user.setProfileImage(generateRandomString(10, random));
+            user.setProfileImagePathAndName(generateRandomString(10, random));
 
 
             Map<String, Object> serializedUser = serializer.serialize(user);
@@ -35,7 +33,7 @@ public class UserSerializerTest {
             Assert.assertEquals(serializedUser.get(UserLayout.GENDER), user.getGender());
             Assert.assertEquals(serializedUser.get(UserLayout.NAME), user.getName());
             Assert.assertEquals(serializedUser.get(UserLayout.PHONE), user.getPhoneNumber());
-            Assert.assertEquals(serializedUser.get(UserLayout.PICTURE), user.getProfileImage());
+            Assert.assertEquals(serializedUser.get(UserLayout.PICTURE), user.getProfileImagePathAndName());
         }
     }
 
@@ -57,7 +55,7 @@ public class UserSerializerTest {
             Assert.assertEquals(serializedUser.get(UserLayout.GENDER), user.getGender());
             Assert.assertEquals(serializedUser.get(UserLayout.NAME), user.getName());
             Assert.assertEquals(serializedUser.get(UserLayout.PHONE), user.getPhoneNumber());
-            Assert.assertEquals(serializedUser.get(UserLayout.PICTURE), user.getProfileImage());
+            Assert.assertEquals(serializedUser.get(UserLayout.PICTURE), user.getProfileImagePathAndName());
         }
     }
 
@@ -70,7 +68,7 @@ public class UserSerializerTest {
             user.setGender(random.nextBoolean() ? "MALE" : "FEMALE");
             user.setName(generateRandomString(10, random));
             user.setPhoneNumber(generateRandomString(10, random));
-            user.setProfileImage(generateRandomString(10, random));
+            user.setProfileImagePathAndName(generateRandomString(10, random));
             Map<String, Object> serializedUser = serializer.serialize(user);
             User deserializedUser = serializer.deserialize("", serializedUser);
             Assert.assertEquals(deserializedUser.getAge(), user.getAge());
@@ -78,7 +76,7 @@ public class UserSerializerTest {
             Assert.assertEquals(deserializedUser.getGender(), user.getGender());
             Assert.assertEquals(deserializedUser.getName(), user.getName());
             Assert.assertEquals(deserializedUser.getPhoneNumber(), user.getPhoneNumber());
-            Assert.assertEquals(deserializedUser.getProfileImage(), user.getProfileImage());
+            Assert.assertEquals(deserializedUser.getProfileImagePathAndName(), user.getProfileImagePathAndName());
         }
     }
 

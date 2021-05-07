@@ -53,8 +53,8 @@ public class AppUserTest {
     @Test
     public void profileImageGetterAndSetterWork() {
         AppUser user = new AppUser("1234", "test.appart@epfl.ch");
-        user.setProfileImage("/home/Carlo/pictures/foo.jpg");
-        assertEquals("/home/Carlo/pictures/foo.jpg", user.getProfileImage());
+        user.setProfileImagePathAndName("/home/Carlo/pictures/foo.jpg");
+        assertEquals("/home/Carlo/pictures/foo.jpg", user.getProfileImagePathAndName());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class AppUserTest {
     public void imageSetterFailsWithNullParameters() {
         assertThrows(IllegalArgumentException.class, () -> {
             AppUser user = new AppUser("1234", "test.appart@epfl.ch");
-            user.setProfileImage(null);
+            user.setProfileImagePathAndName(null);
         });
     }
 

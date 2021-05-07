@@ -20,6 +20,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 
 /**
  * Adapter converting an apartment card into a CardViewHolder that will be given to the RecyclerView
@@ -79,8 +80,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         Card card = cards.get(position);
         holder.cardImageView.setOnClickListener(v -> {
             Intent intent = new Intent(context, AdActivity.class);
-            intent.putExtra("fromAdCreation", false);
-            intent.putExtra("adID", card.getAdId());
+            intent.putExtra("fromAdCreation", false); // not used currently
+            intent.putExtra(ActivityCommunicationLayout.PROVIDING_AD_ID, card.getAdId());
             context.startActivity(intent);
         });
 
