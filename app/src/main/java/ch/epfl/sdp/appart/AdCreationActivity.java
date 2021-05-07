@@ -247,14 +247,7 @@ public class AdCreationActivity extends AppCompatActivity {
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             Glide.with(this).load(uris.get(i)).into(photo);
             horizontalLayout.addView(myView);
-            if (i != 1) {
-                Space hspacer = new Space(this);
-                hspacer.setLayoutParams(new ViewGroup.LayoutParams(
-                        8,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                ));
-                horizontalLayout.addView(hspacer);
-            }
+
         }
     }
 

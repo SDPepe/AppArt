@@ -22,5 +22,9 @@
     <color name="inputBackground">#F9FBFF</color>
     <color name="inputStroke">#DFE8FF</color>
 
+    <!-- TextView color -->
+    <color name="textPrimary">#101012</color>
+    <color name="textSecondary">#6A6B6E</color>
+
 
 </resources>

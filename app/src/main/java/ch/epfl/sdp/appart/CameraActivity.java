@@ -176,14 +176,6 @@ public class CameraActivity extends AppCompatActivity {
         for (Uri i: listImageUri) {
             horizontalLayout.addView(uploadImage(i));
 
-            if (listImageUri.size() > 1) {
-                Space hspacer = new Space(this);
-                hspacer.setLayoutParams(new ViewGroup.LayoutParams(
-                    8,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                ));
-                horizontalLayout.addView(hspacer);
-            }
         }
     }
     private View uploadImage(Uri uri){

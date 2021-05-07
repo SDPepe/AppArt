@@ -258,16 +258,16 @@
                 android:scrollbars="vertical" />
 
             <HorizontalScrollView
-                android:id="@+id/picturesScroll_AdCreation_ScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+              android:id="@+id/picturesScroll_AdCreation_ScrollView"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp">
 
                 <LinearLayout
-                    android:id="@+id/pictures_AdCreation_linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
+                  android:id="@+id/pictures_AdCreation_linearLayout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal" />
             </HorizontalScrollView>
 
             <Button
