@@ -79,7 +79,7 @@ public interface DatabaseService extends DatabaseHostVisitor {
      * @throws IllegalArgumentException if user is null.
      */
     @NonNull
-    CompletableFuture<Boolean> updateUser(User user, Uri uri);
+    CompletableFuture<Boolean> updateUser(User user);
 
 
     /**
@@ -106,14 +106,23 @@ public interface DatabaseService extends DatabaseHostVisitor {
      * Upload a image
      *
      * @param uri  a Uri of the image.
-     * @param name a String represent the name of image.
-     * @param path a String represent the path where store the image.
+     * @param imagePathAndName a String represent the complete path of the image
      * @return A CompletableFuture<Boolean> that wraps a boolean if it
      * stored the image on the database. If an error
      * occurs, the future will deliver false.
      */
     @NonNull
-    CompletableFuture<Boolean> putImage(Uri uri, String name, String path);
+    CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName);
+
+    /**
+     * Delete an image
+     *
+     * @param imagePathAndName a String represent the complete path of the image.
+     * @return A CompletableFuture<Boolean> that wraps a boolean returning true
+     * if the image was correctly deleted from database, false otherwise.
+     */
+    @NonNull
+    public CompletableFuture<Boolean> deleteImage(String imagePathAndName);
 
 
 

@@ -36,7 +36,7 @@ public class UserVMTest {
     public void putAndGetUserTest() {
         User user = new AppUser("testId", "test@email.ch");
         vm.putUser(user);
-        assertTrue(vm.getPutCardConfirmed().getValue());
+        assertTrue(vm.getPutUserConfirmed().getValue());
         vm.getUser("testId");
         assertEquals(user, vm.getUser().getValue());
     }

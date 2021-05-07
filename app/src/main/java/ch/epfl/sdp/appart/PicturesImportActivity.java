@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ch.epfl.sdp.appart.panorama.PictureCardAdapter;
 import ch.epfl.sdp.appart.panorama.SwapNotifiable;

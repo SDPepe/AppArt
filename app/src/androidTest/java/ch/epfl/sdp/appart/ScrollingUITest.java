@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import android.widget.FrameLayout;
-import androidx.core.widget.TextViewCompat.AutoSizeTextType;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
