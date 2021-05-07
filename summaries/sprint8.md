@@ -9,6 +9,7 @@
 ## Filippo
 
 ## Lorenzo
+The issues with cirrus we had this week hugely delayed everyone's work, in particular Emilien and Antoine couldn't get their PRs merged and so I did not start working on my task since I had no code to work on. I still started reading doc that I think I will need and brainstorming what I should do once I get my hands on the code. Other than that I tried to spend as much time as possible on reiviewing PRs and commenting about other members code. I hope the issues with cirrus will be soon solved so that the workflow of the team is back to the good levels we had before.
 
 ## Antoine (scrum master)
 
