@@ -17,10 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,16 +27,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import androidx.lifecycle.ViewModelProvider;
-import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.UserViewModel;
 import com.bumptech.glide.Glide;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+
 import javax.inject.Inject;
 
 import static android.widget.Toast.makeText;
@@ -69,7 +66,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         listImageUri = new ArrayList<>();
         Intent intent = getIntent();
-        activity = intent.getStringExtra("Activity");
+        activity = intent.getStringExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
 
         Button cameraBtn = findViewById(R.id.camera_Camera_button);
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
@@ -84,20 +81,28 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void confirm(){
-        if(listImageUri.size() >= 1) {
-            if (activity.equals("Ads")) {
+        if (imageUri == null) {
+            Intent resultIntent = new Intent();
+            setResult(RESULT_CANCELED, resultIntent);
+            finish();
+            Toast.makeText(getApplicationContext(),R.string.canceledNoImage ,Toast.LENGTH_SHORT).show();
+        } else {
+            if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("size", listImageUri.size());
+                resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_SIZE, listImageUri.size());
                 int count = 0;
                 for (Uri i : listImageUri) {
-                    resultIntent.putExtra("imageUri" + count, i);
+                    resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI + count, i);
                     count++;
                 }
                 setResult(RESULT_OK, resultIntent);
                 finish();
-            } else if (activity.equals("User")) { }
-        } else {
-            Toast.makeText(getApplicationContext(),"You need to upload some image...",Toast.LENGTH_SHORT).show();
+            } else if (activity.equals(ActivityCommunicationLayout.USER_PROFILE_ACTIVITY)) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI, imageUri);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
         }
     }
 
@@ -116,7 +121,7 @@ public class CameraActivity extends AppCompatActivity {
     private void startCamera() {
         ContentValues val = new ContentValues();
         val.put(MediaStore.Images.Media.TITLE, "new picture");
-        val.put(Media.DESCRIPTION, "form the phone");
+        val.put(Media.DESCRIPTION, "from the phone");
         imageUri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, val);
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -145,21 +150,25 @@ public class CameraActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK)
+        if (requestCode == CAMERA_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
             setDisplayAction();
-
+        }
 
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
-
             imageUri = data.getData();
+            setDisplayAction();
+        }
+
+        if (resultCode == ActivityCommunicationLayout.RESULT_IS_FOR_TEST) {
+            imageUri = Uri.EMPTY;
             setDisplayAction();
         }
     }
 
-    private void  setDisplayAction(){
-        if(activity.equals("Ads")) {
+    private void setDisplayAction(){
+        if(activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
             displayListImage();
-        } else if (activity.equals("User")) {
+        } else if (activity.equals(ActivityCommunicationLayout.USER_PROFILE_ACTIVITY)) {
             displayImage();
         }
     }
@@ -192,7 +201,7 @@ public class CameraActivity extends AppCompatActivity {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
-
+    
 }
 
 

@@ -295,6 +295,12 @@ public class SimpleUserProfileActivityTest {
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
+
+        ViewInteraction imageView2 = onView(
+                allOf(withId(R.id.profilePicture_SimpleUserProfile_imageView),
+                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                        isDisplayed()));
+        imageView2.check(matches(isDisplayed()));
     }
 
     @Test
