@@ -122,7 +122,7 @@ public class AdCreationUITest {
     }
 
     @Test
-    public void cameraActivityWorksAndRespondsCorrectly() throws UiObjectNotFoundException {
+    public void cameraActivityWorksAndRespondsCorrectly() throws UiObjectNotFoundException, InterruptedException {
         onView(withId(R.id.addPhoto_AdCreation_button)).perform(scrollTo(), click());
         /* =================================================================================================== */
         /*                            CALL THE CAMERA AND RECEIVE A MOCK IMAGE BACK                            */
@@ -143,13 +143,15 @@ public class AdCreationUITest {
 
         // When an intent is sent to the Camera, this tells Espresso to respond with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);
-
+        //intending(hasComponent(CameraActivity.class.getName())).respondWith(result);
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
 
         // validate that an intent resolving to the "camera" activity has been sent out by app
+        Thread.sleep(1000);
         intended(toPackage("com.android.camera2"));
+        //intended(hasComponent(CameraActivity.class.getName()));
 
         // Initialize UiDevice instance
         UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
