@@ -3,8 +3,10 @@ package ch.epfl.sdp.appart.database.local;
 import android.util.Pair;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,18 +25,121 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 /**
  * This class is the one that will perform the reading and writing of an ad.
- * When reading or writing it will need the adFolderPath which corresponds to Context.getFilesDir().
+ * When reading or writing it will need the adFolderPath which corresponds to
+ * Context.getFilesDir().
  * This class shouldn't contain anything related to android.
+ *
+ * //TODO: getCards(), getAd(String adiId), getUser(String ownerId)
+ *
+ * //TODO: Do we do it, in multiple files or one. The simplest is to load all the files and fill maps (id -> data), but maybe it takes too much memory I don't know
+ * //TODO: Write unit tests but also test on android
+ * //TODO: Write complete documentation
+ * //TODO: Implement removeLocalAd(String cardId) --> Or maybe other interface if its better for the callers.
+ *
  */
 public class LocalAd {
 
     private static final String ID = "ID";
+    private static final String PHOTO_REFS = "photo_refs";
+
     private static final String favoritesFolder = "/favorites";
     private static final String profilePicName = "user_profile_pic.jpg";
     private static final String dataFileName = "ad.fav";
 
+    //TODO: Don't forget to close streams
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    /**
+     * This function allows us to retrieve the number of photos of the ad if
+     * it already exists in the favorites folder.
+     *
+     * @param adFolderPath the path to the local ad
+     * @return an int that represents the number of photos for the ad
+     */
+    private static int getNumberOfPhotos(String adFolderPath) {
+        String dataPath =
+                adFolderPath + FirebaseLayout.SEPARATOR + dataFileName;
+
+        FileInputStream fis;
+        List<Map<String, Object>> mapList;
+        try {
+            fis = new FileInputStream(dataPath);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            mapList = (List<Map<String, Object>>) ois.readObject();
+            ois.close();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+
+        Map<String, Object> adMap = mapList.get(1);
+        List<String> localPhotoRefs = (List<String>) adMap.get(PHOTO_REFS);
+
+        return localPhotoRefs.size();
+    }
+
+    /**
+     * This function allows to remove the extra photos that might stay on
+     * disk if the newly updated ad has less photos than the previous version.
+     *
+     * @param adFolderPath         the path to the local ad
+     * @param futureNumberOfPhotos the number of photos the updated version
+     *                             of the ad
+     * @return a boolean that indicates if the operation succeeded or not
+     */
+    private static boolean removeExtraPhotos(String adFolderPath,
+                                             int futureNumberOfPhotos) {
+        int curNumberOfPhotos = getNumberOfPhotos(adFolderPath);
+        int deletedFiles = 0;
+        if (curNumberOfPhotos > futureNumberOfPhotos) {
+            //futureSize comes from getSize on a list. Therefore, its minimum
+            // value is 0.
+            //If curSize is > futureSize then we can safely do curSize - 1
+            for (int i = futureNumberOfPhotos; i < curNumberOfPhotos; ++i) {
+                String photoPath =
+                        adFolderPath + FirebaseLayout.SEPARATOR + FirebaseLayout.PHOTO_NAME + i + ".jpg";
+                File photoToDelete = new File(photoPath);
+                if (photoToDelete.exists()) {
+                    if (photoToDelete.delete()) {
+                        deletedFiles++;
+                    }
+                }
+            }
+            return deletedFiles == (curNumberOfPhotos - futureNumberOfPhotos);
+        }
+        return true;
+    }
+
+    //TODO: Check if in some cases, the user does not have any profile pic
+
+    //TODO: Be very careful about what you store about the user on the local
+    // storage. Store only what the user wants to be visible. Like name, mail
+    // and phone number. Also, the user might want to display only its name
+    // and not the phone number.
+
+    //TODO: I don't think there are cases where we want to hide ad data. All ad data is public and nothing can come from recovering the id.
+    //TODO: Maybe some ad posters don't want to display the address to anybody that is not a student for example.
+
+    /**
+     * This function creates the folder for the local ad. If it already
+     * exists it calls removeExtraPhotos to make sure we do not leave any
+     * invalid data in the folder. It does not need to remove anything else
+     * since the ad data will be stored in a file that will be overwritten,
+     * same thing for the profile picture.
+     *
+     * @param adFolderPath         the path to the ad folder
+     * @param futureSuccess        future that indicates the overall success of
+     *                             writing a complete ad to local storage.
+     * @param futureNumberOfPhotos the number of photos of the newly updated
+     *                             ad, its sole purpose is to be used when
+     *                             the ad already exists on disk and we want
+     *                             to make sure
+     * @return
+     */
     private static boolean createFolder(String adFolderPath,
-                                        CompletableFuture<Void> futureSuccess) {
+                                        CompletableFuture<Void> futureSuccess
+            , int futureNumberOfPhotos) {
         //Creating local folder for the complete ad
         File adFolder = new File(adFolderPath);
         if (!adFolder.exists()) {
@@ -44,6 +149,8 @@ public class LocalAd {
                         "not create dir :" + adFolderPath));
                 return false;
             }
+        } else {
+            return removeExtraPhotos(adFolderPath, futureNumberOfPhotos);
         }
         return true;
     }
@@ -104,6 +211,8 @@ public class LocalAd {
      * path to the images so that on load, the images from local storage will
      * be displayed.
      *
+     * @param adId       the id of the ad, we need it because the ad doesn't
+     *                   store it
      * @param cardId     the card id
      * @param ad         the ad that will be written on disk
      * @param user       the user that will be written on disk
@@ -118,18 +227,21 @@ public class LocalAd {
      * @return a Void completable future to indicate whether the task has
      * succeeded or not.
      */
-    public static CompletableFuture<Void> writeCompleteAd(String cardId, Ad ad,
+    public static CompletableFuture<Void> writeCompleteAd(String adId,
+                                                          String cardId, Ad ad,
                                                           User user,
                                                           String appPath,
                                                           Function<String,
                                                                   CompletableFuture<Void>> loadImages) {
 
-        CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
 
+        CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
         String favoritesPath = appPath + favoritesFolder + "/";
         String adFolderPath = favoritesPath + cardId;
 
-        if (!createFolder(adFolderPath, futureSuccess)) return futureSuccess;
+        if (!createFolder(adFolderPath, futureSuccess,
+                ad.getPhotosRefs().size()))
+            return futureSuccess;
 
 
         //I think we do not need to do something specific if the folder
@@ -152,6 +264,8 @@ public class LocalAd {
 
         //Serializing
         Map<String, Object> adMap = AdSerializer.serialize(localAd);
+        adMap.put(ID, adId);
+        adMap.put(PHOTO_REFS, localAd.getPhotosRefs());
 
         Map<String, Object> userMap = UserSerializer.serialize(localUser);
         //We ad the id because it is not serialized
@@ -170,7 +284,7 @@ public class LocalAd {
             return futureSuccess;
 
         CompletableFuture<Void> futureImageLoad =
-                loadImages.apply(adFolderPath);
+                loadImages.apply(adFolderPath); //store les images sur le disk localadfolder/Photo0.jpg, Photo1.jpg
         futureImageLoad.thenAccept(arg -> futureSuccess.complete(null));
         futureImageLoad.exceptionally(e -> {
             futureSuccess.completeExceptionally(e);

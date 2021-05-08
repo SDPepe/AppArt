@@ -43,7 +43,6 @@ public class ApartmentInfoWindow implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(Marker marker) {
         View v = activity.getLayoutInflater().inflate(R.layout.infowindow,
                 null);
-
         TextView cityTextView =
                 v.findViewById(R.id.city_InfoWindow_textView);
         TextView priceTextView =

@@ -1,9 +1,11 @@
 package ch.epfl.sdp.appart.utils.serializers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
 
 public class AdSerializer {
@@ -26,16 +28,21 @@ public class AdSerializer {
     }
 
     /**
-     * This method has not been implemented, because the photo references of
-     * an ad are not serialized with the rest of the data.
-     * Thus, it is not possible to simply "unbox" a map to an ad just like that.
+     * The ad returned by this function doesn't have a valid photoRefs list.
+     * It is empty.
      *
-     * @param id
      * @param serializedData
      * @return
      */
-    public static Ad deserialize(String id,
-                                 Map<String, Object> serializedData) {
-        return null;
+    public static Ad deserialize(Map<String, Object> serializedData) {
+        return new Ad((String) serializedData.get(AdLayout.TITLE),
+                (long) serializedData.get(AdLayout.PRICE),
+                (PricePeriod) serializedData.get(AdLayout.PRICE_PERIOD),
+                (String) serializedData.get(AdLayout.STREET),
+                (String) serializedData.get(AdLayout.CITY),
+                (String) serializedData.get(AdLayout.ADVERTISER_ID),
+                (String) serializedData.get(AdLayout.DESCRIPTION),
+                new ArrayList<>(),
+                (boolean) serializedData.get(AdLayout.VR_TOUR));
     }
 }
