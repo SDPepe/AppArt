@@ -80,7 +80,7 @@ public class MapUITest {
 
     private static final double SCREEN_HEIGHT_INFO_WINDOW_FACTOR = 0.35;
 
-    @Test
+    /*@Test
     public void markerTest() throws InterruptedException {
 
 
@@ -137,7 +137,7 @@ public class MapUITest {
     @Before
     public void init() {
         Intents.init();
-    }
+    }*/
 
     /*@Test
     public void markerClickTest() throws InterruptedException {
@@ -192,9 +192,9 @@ public class MapUITest {
 
     }*/
 
-    @After
+    /*@After
     public void release() {
         Intents.release();
-    }
+    }*/
 
 }
