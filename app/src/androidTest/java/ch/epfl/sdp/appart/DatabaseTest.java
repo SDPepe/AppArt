@@ -60,7 +60,7 @@ public class DatabaseTest {
     User globalUser = null;
     FirestoreEmulatorDatabaseServiceWrapper database;
 
-    @Before
+    /*@Before
     public void setup() {
         database = (FirestoreEmulatorDatabaseServiceWrapper) db;
         db.clearCache().join();
@@ -114,7 +114,7 @@ public class DatabaseTest {
         retrievedUser = db.getUser(user.getUserId()).join();
 
         verifyUser(retrievedUser, age, name, userId, email, phoneNb);
-        */
+        *//*
         globalUser = retrievedUser;
     }
 
@@ -231,5 +231,5 @@ public class DatabaseTest {
         getCardsFilterTest();
         putImageThrowsOnNullParameters();
         deleteImageThrowsOnNullPathAndName();
-    }
+    }*/
 }
