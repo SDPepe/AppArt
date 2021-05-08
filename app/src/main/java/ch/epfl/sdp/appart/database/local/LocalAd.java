@@ -3,13 +3,10 @@ package ch.epfl.sdp.appart.database.local;
 import android.util.Pair;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -21,9 +18,14 @@ import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
-import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
 import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
+
+/**
+ * This class is the one that will perform the reading and writing of an ad.
+ * When reading or writing it will need the adFolderPath which corresponds to Context.getFilesDir().
+ * This class shouldn't contain anything related to android.
+ */
 public class LocalAd {
 
     private static final String ID = "ID";
@@ -31,7 +33,8 @@ public class LocalAd {
     private static final String profilePicName = "user_profile_pic.jpg";
     private static final String dataFileName = "ad.fav";
 
-    private static boolean createFolder(String adFolderPath, CompletableFuture<Void> futureSuccess) {
+    private static boolean createFolder(String adFolderPath,
+                                        CompletableFuture<Void> futureSuccess) {
         //Creating local folder for the complete ad
         File adFolder = new File(adFolderPath);
         if (!adFolder.exists()) {
@@ -39,7 +42,7 @@ public class LocalAd {
             if (!createdDir) {
                 futureSuccess.completeExceptionally(new IOException("Could " +
                         "not create dir :" + adFolderPath));
-                return  false;
+                return false;
             }
         }
         return true;
@@ -53,7 +56,8 @@ public class LocalAd {
         return localPhotoRefs;
     }
 
-    private static Pair<Ad, User> buildLocalStructures(Ad ad, User user, List<String> localPhotoRefs, String adFolderPath) {
+    private static Pair<Ad, User> buildLocalStructures(Ad ad, User user,
+                                                       List<String> localPhotoRefs, String adFolderPath) {
         Ad localAd = new Ad(ad.getTitle(), ad.getPrice(), ad.getPricePeriod()
                 , ad.getStreet(), ad.getCity(), ad.getAdvertiserId(),
                 ad.getDescription(), localPhotoRefs, ad.hasVRTour());
@@ -68,7 +72,8 @@ public class LocalAd {
         return new Pair<>(localAd, user);
     }
 
-    private static boolean writeFile(String adFolderPath, List<Map<String, Object>> mapList, CompletableFuture<Void> futureSuccess) {
+    private static boolean writeFile(String adFolderPath, List<Map<String,
+            Object>> mapList, CompletableFuture<Void> futureSuccess) {
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(adFolderPath + FirebaseLayout.SEPARATOR + dataFileName);
@@ -124,17 +129,23 @@ public class LocalAd {
         String favoritesPath = appPath + favoritesFolder + "/";
         String adFolderPath = favoritesPath + cardId;
 
-        if(!createFolder(adFolderPath, futureSuccess)) return futureSuccess;
+        if (!createFolder(adFolderPath, futureSuccess)) return futureSuccess;
 
 
-        //I think we do not need to do something specific if the folder already exists, we will just overwrite the files
-        //Maybe we need to check for the number of images so that if the ad has one image less than before we do not could keep a stale image in the folder
+        //I think we do not need to do something specific if the folder
+        // already exists, we will just overwrite the files
+        //Maybe we need to check for the number of images so that if the ad
+        // has one image less than before we do not could keep a stale image
+        // in the folder
 
         //Changing the photoRefs to local paths
-        List<String> localPhotoRefs = buildPhotoRefs(adFolderPath, ad.getPhotosRefs().size());
+        List<String> localPhotoRefs = buildPhotoRefs(adFolderPath,
+                ad.getPhotosRefs().size());
 
-        //Building local versions of the ad only because we can build the card from the ad
-        Pair<Ad, User> structures = buildLocalStructures(ad, user, localPhotoRefs, adFolderPath);
+        //Building local versions of the ad only because we can build the
+        // card from the ad
+        Pair<Ad, User> structures = buildLocalStructures(ad, user,
+                localPhotoRefs, adFolderPath);
 
         Ad localAd = structures.first;
         User localUser = structures.second;
@@ -146,14 +157,17 @@ public class LocalAd {
         //We ad the id because it is not serialized
         userMap.put(ID, localUser.getUserId());
 
-        //We use a list of HashMap so that it is simple to put all the data in a single file.
-        //Indeed, we can serialize the List as one big object and then retrieve the individual hash maps
+        //We use a list of HashMap so that it is simple to put all the data
+        // in a single file.
+        //Indeed, we can serialize the List as one big object and then
+        // retrieve the individual hash maps
         List<Map<String, Object>> mapList = new ArrayList<>();
         mapList.add(adMap);
         mapList.add(userMap);
 
         //Write file on disk
-        if(!writeFile(adFolderPath, mapList, futureSuccess)) return futureSuccess;
+        if (!writeFile(adFolderPath, mapList, futureSuccess))
+            return futureSuccess;
 
         CompletableFuture<Void> futureImageLoad =
                 loadImages.apply(adFolderPath);
@@ -166,7 +180,8 @@ public class LocalAd {
         return futureSuccess;
     }
 
-    /*public static CompletableFuture<LocalCompleteAd> loadCompleteAd(String fullPath) {
+    /*public static CompletableFuture<LocalCompleteAd> loadCompleteAd(String
+    fullPath) {
         CompletableFuture<LocalCompleteAd> futureCompleteAd =
                 new CompletableFuture<>();
 
@@ -201,7 +216,7 @@ public class LocalAd {
     }*/
 
     public static CompletableFuture<List<LocalCompleteAd>> findLocalAds(String appFolder) {
-        return  null;
+        return null;
     }
 
     public static class LocalCompleteAd {
