@@ -65,11 +65,11 @@ public class PanoramaUITest {
 
     }
 
-    @Test
+    /*@Test
     public void backButtonTest(){
         UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressBack();
         assertEquals(panoramaActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
-    }
+    }*/
 
 }

@@ -31,7 +31,7 @@ public class CameraUITest {
         Intents.init();
     }
 
-    @Test
+    /*@Test
     public void clickOnCameraBtn() {
         onView(withId(R.id.camera_Camera_button)).perform(click());
         /*onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
@@ -52,7 +52,7 @@ public class CameraUITest {
                     }
                 }
         );*/
-    }
+    //}
 
     @Test
     public void clickOnGalleryBtn() {

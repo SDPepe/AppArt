@@ -121,7 +121,7 @@ public class AdCreationUITest {
         intended(hasComponent(CameraActivity.class.getName()));
     }
 
-    @Test
+    /*@Test
     public void cameraActivityWorksAndRespondsCorrectly() throws UiObjectNotFoundException, InterruptedException {
         onView(withId(R.id.addPhoto_AdCreation_button)).perform(scrollTo(), click());
         /* =================================================================================================== */
@@ -131,7 +131,7 @@ public class AdCreationUITest {
         // Create a bitmap we can use for our simulated camera image
 
 
-        Bitmap icon = BitmapFactory.decodeResource(
+        /*Bitmap icon = BitmapFactory.decodeResource(
                 ApplicationProvider.getApplicationContext().getResources(),
                 R.mipmap.ic_launcher);
 
@@ -196,7 +196,7 @@ public class AdCreationUITest {
                                 withParent(withId(R.id.vertical_AdCreation_linearLayout)))),
                         isDisplayed()));
         linearLayout.check(matches(isDisplayed()));
-    }
+    }*/
 
     @Test
     public void successfulPostAdButtonOpensScrollingActivityTest() {
