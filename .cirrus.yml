@@ -17,7 +17,7 @@ check_android_task:
   install_sudo_script: |
     apt-get update
     apt-get install sudo -y
-  install_adb: 
+  install_adb: |
     sudo apt-get install android-tools-adb android-tools-fastboot
   start_emulator_background_script: |
     sudo adb kill-server
