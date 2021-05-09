@@ -43,6 +43,8 @@ check_android_task:
   check_script: |
     avdmanager list
     adb reconnect offline
+    adb wait-for-device
+    adb shell input keyevent 82
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
