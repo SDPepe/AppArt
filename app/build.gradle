@@ -112,16 +112,22 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
             'hilt_aggregated_deps/**',
             '**/*_Factory.class',
             '**/*_MembersInjector.class',
-            "ch/epfl/sdp/appart/login/LoginCallback.java",
-            "ch/epfl/sdp/appart/login/LoginService.java",
-            "ch/epfl/sdp/appart/database/Database.java",
-            "ch/epfl/sdp/appart/user/User.java",
-            "ch/epfl/sdp/appart/hilt/FireBaseModule.java",
-            "/epfl/sdp/appart/glide/visitor/DatabaseVisitorHost.java",
-            "ch/epfl/sdp/appart/glide/visitor/GlideLoaderVisitor.java",
-            "ch/epfl/sdp/appart/hilt/LoginModule.java",
-            "ch/epfl/sdp/appart/login/MockLoginServiceException.java",
-            "ch/epfl/sdp/appart/login/FirebaseEmulatorLoginServiceWrapper.java"
+            "**/LoginCallback.java",
+            "**/LoginService.java",
+            "**/Database.java",
+            "**/User.java",
+            "**/LocationModule_ProvideGeocoderFactory.java",
+            "**/LocationModule_ProvideLocationProviderFactory.java",
+            "**/FireBaseModule.java",
+            "**/DatabaseVisitorHost.java",
+            "**/GlideLoaderVisitor.java",
+            "**/DataBaseModule.java",
+            "**/LoginModule.java",
+            "**/LocationModule.java",
+            "**/MockLoginServiceException.java",
+            "**/FirebaseEmulatorLoginServiceWrapper.java",
+            "**/glide/**",
+            "**/appart/hilt/**"
     ]
     //"$project.buildDir/intermediates/javac/debug/classes"
     //"$project.buildDir/generated/ap_generated_sources/debug/out"
