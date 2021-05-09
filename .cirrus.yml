@@ -40,9 +40,8 @@ check_android_task:
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
-  print_avd_list:
+  check_script: |
     avdmanager list
-  check_script:
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
