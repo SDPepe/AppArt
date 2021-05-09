@@ -41,7 +41,12 @@ check_android_task:
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
   logcat_background_script: adb -e logcat *:E
-  wait_and_reconnect_script: avdmanager list avd | adb reconnect offline | adb wait-for-device | adb shell input keyevent 82
+  wait_and_reconnect_script: | 
+    avdmanager list avd
+    adb reconnect offline
+    adb wait-for-device
+    adb shell input keyevent 82
+    avdmanager list avd
   check_script: |
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
