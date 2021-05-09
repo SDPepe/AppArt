@@ -17,8 +17,7 @@ check_android_task:
   install_sudo_script: |
     apt-get update
     apt-get install sudo -y
-  install_adb: |
-    sudo apt-get install android-tools-adb android-tools-fastboot
+    apt-get install android-tools-adb android-tools-fastboot
   start_emulator_background_script: |
     sudo adb kill-server
     sudo adb start-server
@@ -41,6 +40,8 @@ check_android_task:
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
+  print_avd_list:
+    avdmanager list
   check_script:
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
