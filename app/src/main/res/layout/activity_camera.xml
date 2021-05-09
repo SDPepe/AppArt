@@ -62,12 +62,10 @@
         android:layout_width="191dp"
         android:layout_height="44dp"
         android:text="@string/cameraButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_Camera_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.80" />
+        app:layout_constraintTop_toBottomOf="@+id/gallery_Camera_button" />
 
     <Button
       android:id="@+id/confirm_Camera_button"
