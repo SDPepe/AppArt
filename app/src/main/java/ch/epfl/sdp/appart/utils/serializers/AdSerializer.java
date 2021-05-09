@@ -14,6 +14,8 @@ public class AdSerializer {
     private AdSerializer() {
     }
 
+    public final static String ADVERTISER_NAME = "advertiser_name"; //price_period
+
     public static Map<String, Object> serialize(Ad data) {
         Map<String, Object> adData = new HashMap<>();
         adData.put(AdLayout.ADVERTISER_ID, data.getAdvertiserId());
@@ -24,6 +26,7 @@ public class AdSerializer {
         adData.put(AdLayout.PRICE_PERIOD, data.getPricePeriod().ordinal());
         adData.put(AdLayout.STREET, data.getStreet());
         adData.put(AdLayout.TITLE, data.getTitle());
+        adData.put(ADVERTISER_NAME, data.getAdvertiserName());
         return adData;
     }
 
@@ -40,6 +43,7 @@ public class AdSerializer {
                 (PricePeriod) serializedData.get(AdLayout.PRICE_PERIOD),
                 (String) serializedData.get(AdLayout.STREET),
                 (String) serializedData.get(AdLayout.CITY),
+                (String)serializedData.get(ADVERTISER_NAME),
                 (String) serializedData.get(AdLayout.ADVERTISER_ID),
                 (String) serializedData.get(AdLayout.DESCRIPTION),
                 new ArrayList<>(),

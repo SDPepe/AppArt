@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +21,7 @@ import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
+import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
 import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 
@@ -28,14 +30,16 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  * When reading or writing it will need the adFolderPath which corresponds to
  * Context.getFilesDir().
  * This class shouldn't contain anything related to android.
- *
+ * <p>
  * //TODO: getCards(), getAd(String adiId), getUser(String ownerId)
- *
- * //TODO: Do we do it, in multiple files or one. The simplest is to load all the files and fill maps (id -> data), but maybe it takes too much memory I don't know
+ * <p>
+ * //TODO: Do we do it, in multiple files or one. The simplest is to load all
+ * the files and fill maps (id -> data), but maybe it takes too much memory I
+ * don't know
  * //TODO: Write unit tests but also test on android
  * //TODO: Write complete documentation
- * //TODO: Implement removeLocalAd(String cardId) --> Or maybe other interface if its better for the callers.
- *
+ * //TODO: Implement removeLocalAd(String cardId) --> Or maybe other
+ * interface if its better for the callers.
  */
 public class LocalAd {
 
@@ -45,6 +49,23 @@ public class LocalAd {
     private static final String favoritesFolder = "/favorites";
     private static final String profilePicName = "user_profile_pic.jpg";
     private static final String dataFileName = "ad.fav";
+
+    private final String appPath;
+
+    private final List<Card> cards;
+    private final Map<String, Ad> idsToAd;
+    private final Map<String, User> idsToUser;
+
+    private boolean isDataInitialized;
+
+    public LocalAd(String appPath) {
+        if(appPath == null) throw new IllegalArgumentException();
+        this.appPath = appPath;
+        this.cards = new ArrayList<>();
+        this.idsToAd = new HashMap<>();
+        this.idsToUser = new HashMap<>();
+        this.isDataInitialized = false;
+    }
 
     //TODO: Don't forget to close streams
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -67,6 +88,7 @@ public class LocalAd {
             ObjectInputStream ois = new ObjectInputStream(fis);
             mapList = (List<Map<String, Object>>) ois.readObject();
             ois.close();
+            fis.close();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
             return 0;
@@ -118,8 +140,10 @@ public class LocalAd {
     // and phone number. Also, the user might want to display only its name
     // and not the phone number.
 
-    //TODO: I don't think there are cases where we want to hide ad data. All ad data is public and nothing can come from recovering the id.
-    //TODO: Maybe some ad posters don't want to display the address to anybody that is not a student for example.
+    //TODO: I don't think there are cases where we want to hide ad data. All
+    // ad data is public and nothing can come from recovering the id.
+    //TODO: Maybe some ad posters don't want to display the address to
+    // anybody that is not a student for example.
 
     /**
      * This function creates the folder for the local ad. If it already
@@ -166,7 +190,8 @@ public class LocalAd {
     private static Pair<Ad, User> buildLocalStructures(Ad ad, User user,
                                                        List<String> localPhotoRefs, String adFolderPath) {
         Ad localAd = new Ad(ad.getTitle(), ad.getPrice(), ad.getPricePeriod()
-                , ad.getStreet(), ad.getCity(), ad.getAdvertiserId(),
+                , ad.getStreet(), ad.getCity(), ad.getAdvertiserName(),
+                ad.getAdvertiserId(),
                 ad.getDescription(), localPhotoRefs, ad.hasVRTour());
 
         User localUser = new AppUser(user.getUserId(), user.getUserEmail());
@@ -174,7 +199,7 @@ public class LocalAd {
         localUser.setName(user.getName());
         localUser.setAge(user.getAge());
         localUser.setGender(user.getGender());
-        localUser.setProfileImage(adFolderPath + FirebaseLayout.SEPARATOR + profilePicName);
+        localUser.setProfileImagePathAndName(adFolderPath + FirebaseLayout.SEPARATOR + profilePicName);
 
         return new Pair<>(localAd, user);
     }
@@ -187,6 +212,7 @@ public class LocalAd {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mapList);
             oos.close();
+            fos.close();
         } catch (IOException e) {
             e.printStackTrace();
             futureSuccess.completeExceptionally(e);
@@ -216,9 +242,6 @@ public class LocalAd {
      * @param cardId     the card id
      * @param ad         the ad that will be written on disk
      * @param user       the user that will be written on disk
-     * @param appPath    the path of the app folder. It is given to the
-     *                   function because we don't want to deal with anything
-     *                   related to android, such as the Context.
      * @param loadImages the function that will load the images. The String
      *                   argument will take the name of the folder where we
      *                   want to store the images. It will return a Void
@@ -227,10 +250,9 @@ public class LocalAd {
      * @return a Void completable future to indicate whether the task has
      * succeeded or not.
      */
-    public static CompletableFuture<Void> writeCompleteAd(String adId,
+    public CompletableFuture<Void> writeCompleteAd(String adId,
                                                           String cardId, Ad ad,
                                                           User user,
-                                                          String appPath,
                                                           Function<String,
                                                                   CompletableFuture<Void>> loadImages) {
 
@@ -284,7 +306,8 @@ public class LocalAd {
             return futureSuccess;
 
         CompletableFuture<Void> futureImageLoad =
-                loadImages.apply(adFolderPath); //store les images sur le disk localadfolder/Photo0.jpg, Photo1.jpg
+                loadImages.apply(adFolderPath); //store les images sur le
+        // disk localadfolder/Photo0.jpg, Photo1.jpg
         futureImageLoad.thenAccept(arg -> futureSuccess.complete(null));
         futureImageLoad.exceptionally(e -> {
             futureSuccess.completeExceptionally(e);
@@ -293,24 +316,24 @@ public class LocalAd {
 
         return futureSuccess;
     }
-
-    /*public static CompletableFuture<LocalCompleteAd> loadCompleteAd(String
-    fullPath) {
-        CompletableFuture<LocalCompleteAd> futureCompleteAd =
-                new CompletableFuture<>();
+    
+    private boolean readFolder(File folder) {
+        String cardId = folder.getName();
+        String dataPath = this.appPath + LocalAd.favoritesFolder + "/" + cardId + LocalAd.dataFileName;
 
         FileInputStream fis;
         List<Map<String, Object>> mapList;
         try {
-            fis = new FileInputStream(fullPath);
+            fis = new FileInputStream(dataPath);
             ObjectInputStream ois = new ObjectInputStream(fis);
             mapList = (List<Map<String, Object>>) ois.readObject();
             ois.close();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
-            futureCompleteAd.completeExceptionally(e);
-            return futureCompleteAd;
+            return false;
         }
+
+
 
         Map<String, Object> cardMap = mapList.get(0);
         Map<String, Object> adMap = mapList.get(1);
@@ -318,20 +341,69 @@ public class LocalAd {
 
         Card card = CardSerializer.deserialize((String) cardMap.get(ID),
                 cardMap);
+        //Maybe use a set instead, but then need to implement equals
+        this.cards.add(card);
+
 
 
         User user = UserSerializer.deserialize((String) userMap.get(ID),
                 userMap);
+        this.idsToUser.put((String)userMap.get(ID), user);
 
-        LocalCompleteAd completeAd = new LocalCompleteAd(card, null, user);
-        futureCompleteAd.complete(completeAd);
+        Ad ad = AdSerializer.deserialize(adMap);
+        this.idsToAd.put((String)adMap.get(ID), ad);
+        return true;
+    }
 
-        return futureCompleteAd;
-    }*/
+    private boolean readAllLocalData() {
+        String favoritesFolderPath = this.appPath + LocalAd.favoritesFolder;
+        File favFolder = new File(favoritesFolderPath);
+        File[] folders = favFolder.listFiles(File::isDirectory);
+        boolean failed = false;
+        for(File folder : folders) {
+            failed |= readFolder(folder);
+        }
+        if(!failed) {
+            this.isDataInitialized = true;
+        }
+        return failed;
+    }
 
-    public static CompletableFuture<List<LocalCompleteAd>> findLocalAds(String appFolder) {
+    public List<Card> getCards() {
+
+        if(this.isDataInitialized) {
+            return cards;
+        }
+        boolean success = readAllLocalData();
+        if(success) {
+            return cards;
+        }
+
         return null;
     }
+
+    public Ad getAd(String adId) {
+        if(this.isDataInitialized) {
+            return idsToAd.get(adId);
+        }
+        boolean success = readAllLocalData();
+        if(success) {
+            return idsToAd.get(adId);
+        }
+        return null;
+    }
+
+    public User getUser(String userId) {
+        if(this.isDataInitialized) {
+            return idsToUser.get(userId);
+        }
+        boolean success = readAllLocalData();
+        if(success) {
+            return idsToUser.get(userId);
+        }
+        return null;
+    }
+
 
     public static class LocalCompleteAd {
         public final Card card;
