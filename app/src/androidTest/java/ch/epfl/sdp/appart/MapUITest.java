@@ -174,7 +174,7 @@ public class MapUITest {
         //https://stackoverflow.com/questions/42505274/android-testing-google
         // -map-info-window-click
         Display display =
-                InstrumentationRegistry.getInstrumentation().getTargetContext().getDisplay();
+                InstrumentationRegistry.getInstrumentation().getContext().getDisplay();
         Point size = new Point();
         display.getRealSize(size);
         int screenWidth = size.x;
