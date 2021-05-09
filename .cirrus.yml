@@ -12,12 +12,12 @@ check_android_task:
     cpu: 8
     memory: 10G
   create_device_script:
-    echo no | avdmanager create avd --force --name test --device "pixel_2" --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
+    echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
   install_sudo_script: |
     apt-get update
     apt-get install sudo -y
   start_emulator_background_script:
-    sudo $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back emulated -camera-front none -selinux disabled
+    $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim
   download_fireabse_script : |
     curl -sL https://firebase.tools | bash
   start_firebase_background_script: |
