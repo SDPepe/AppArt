@@ -40,11 +40,13 @@ check_android_task:
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
-  check_script: |
+  logcat_background_script: adb -e logcat *:E
+  wait_and_reconnect: |
     avdmanager list
     adb reconnect offline
     adb wait-for-device
     adb shell input keyevent 82
+  check_script: |
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
