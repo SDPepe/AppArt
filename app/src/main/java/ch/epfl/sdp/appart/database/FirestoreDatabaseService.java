@@ -105,8 +105,8 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<Boolean> updateUser(@NonNull User user, Uri uri) {
-        return userHelper.updateUser(user, uri);
+    public CompletableFuture<Boolean> updateUser(@NonNull User user) {
+        return userHelper.updateUser(user);
     }
 
     @NotNull
@@ -126,8 +126,15 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
-        return imageHelper.putImage(uri, name, path);
+    public CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName) {
+        return imageHelper.putImage(uri, imagePathAndName);
+    }
+
+    @NonNull
+    @Override
+    @NotNull
+    public CompletableFuture<Boolean> deleteImage(String imagePathAndName) {
+        return imageHelper.deleteImage(imagePathAndName);
     }
 
     @Override

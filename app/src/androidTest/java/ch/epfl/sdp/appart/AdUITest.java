@@ -27,6 +27,7 @@ import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -34,7 +35,6 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -53,7 +53,7 @@ public class AdUITest {
 
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(), AdActivity.class);
-        intent.putExtra("cardID", testId);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID, testId);
     }
 
     @BindValue
@@ -93,12 +93,12 @@ public class AdUITest {
         intended(hasComponent(FullScreenImageActivity.class.getName()));
     }
 
-    @Test
+   /* @Test
     public void clickOnGoBackFinishes() {
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressBack();
         assertEquals(adActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
-    }
+    }*/
 
     @Test
     public void displayAdInfoTest() {

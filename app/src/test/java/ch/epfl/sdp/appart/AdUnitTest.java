@@ -24,7 +24,7 @@ public class AdUnitTest {
         List<String> refs = new ArrayList<>();
         refs.add("ref");
         ad = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
-                "1015 Lausanne", "unknown", "Cool place", refs,
+                "1015 Lausanne", "unknown", "unknown", "Cool place", refs,
                 false);
     }
 
@@ -33,7 +33,7 @@ public class AdUnitTest {
     public void exceptionOnNullArg1() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad(null, 1000, PricePeriod.MONTH, "Station 18",
-                    "1015 Lausanne", "unknown", "Cool place",
+                    "1015 Lausanne", "unknown", "unknown", "Cool place",
                     new ArrayList<>(), false);
         });
     }
@@ -42,7 +42,7 @@ public class AdUnitTest {
     public void exceptionOnNullArg2() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, null, "Station 18",
-                    "1015 Lausanne", "unknown", "Cool place",
+                    "1015 Lausanne", "unknown", "unknown", "Cool place",
                     new ArrayList<>(), false);
         });
     }
@@ -51,7 +51,7 @@ public class AdUnitTest {
     public void exceptionOnNullArg3() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, null,
-                    "1015 Lausanne", "unknown", "Cool place",
+                    "1015 Lausanne", "unknown", "unknown", "Cool place",
                     new ArrayList<>(), false);
         });
     }
@@ -60,7 +60,7 @@ public class AdUnitTest {
     public void exceptionOnNullArg4() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
-                    null, "unknown", "Cool place",
+                    null, "unknown", "unknown", "Cool place",
                     new ArrayList<>(), false);
         });
     }
@@ -69,7 +69,7 @@ public class AdUnitTest {
     public void exceptionOnNullArg5() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
-                    "1015 Lausanne", null, "Cool place",
+                    "1015 Lausanne", "unknown", null, "Cool place",
                     new ArrayList<>(), false);
         });
     }
@@ -78,7 +78,7 @@ public class AdUnitTest {
     public void exceptionOnNullArg6() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
-                    "1015 Lausanne", "unknown", null,
+                    "1015 Lausanne", "unknown", "unknown", null,
                     new ArrayList<>(), false);
         });
     }
@@ -87,7 +87,7 @@ public class AdUnitTest {
     public void exceptionOnNullArg7() {
         assertThrows(IllegalArgumentException.class, () -> {
             Ad failAd = new Ad("Ad title", 1000, PricePeriod.MONTH, "Station 18",
-                    "1015 Lausanne", "unknown", "Cool place",
+                    "1015 Lausanne", "unknown", "unknown", "Cool place",
                     null, false);
         });
     }

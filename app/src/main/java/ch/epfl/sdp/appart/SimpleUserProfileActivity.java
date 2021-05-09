@@ -3,16 +3,19 @@ package ch.epfl.sdp.appart;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.core.content.res.ResourcesCompat;
+
+import javax.inject.Inject;
+
 import androidx.lifecycle.ViewModelProvider;
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -23,6 +26,9 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
 
     /* User ViewModel */
     UserViewModel mViewModel;
+
+    @Inject
+    DatabaseService database;
 
     /* UI components */
     private EditText nameText;
@@ -51,7 +57,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_SimpleUserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_SimpleUserProfile_imageView);
 
-        String advertiserId = getIntent().getStringExtra("advertiserId");
+        String advertiserId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_USER_ID);
 
         /* get user from database from user ID */
         mViewModel.getUser(advertiserId);
@@ -105,15 +111,8 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        String[] verifier = this.advertiserUser.getProfileImage().split(":");
-        if (verifier[0].equals("userIcon")){
-            int id = Integer.parseInt(verifier[1]);
-            Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
-            this.imageView.setImageDrawable(iconImage);
-        } else {
-            // TODO: set actual user-specific profile picture with sessionUser.getProfileImage()
-        }
+        database.accept(new GlideImageViewLoader(this, imageView,
+                this.advertiserUser.getProfileImagePathAndName()));
     }
-
-
+    
 }

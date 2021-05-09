@@ -62,7 +62,7 @@ public class PanoramaActivity extends AppCompatActivity {
         plManager = new PLManager(this);
         plManager.setContentView(findViewById(R.id.content_Panorama_relativeLayout));
         plManager.onCreate();
-        plManager.setAccelerometerEnabled(false);
+        plManager.setAccelerometerEnabled(true);
         plManager.setInertiaEnabled(false);
         plManager.setZoomEnabled(false);
 

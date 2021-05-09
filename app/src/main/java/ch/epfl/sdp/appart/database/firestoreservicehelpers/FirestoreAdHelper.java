@@ -13,7 +13,6 @@ import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,16 +21,14 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
-import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
+import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 /**
  * Helper class to add ads to and retrieve them from Firestore.
@@ -98,9 +95,11 @@ public class FirestoreAdHelper {
         List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
         Log.d("URI", "size" + uriList.size());
         for (int i = 0; i < uriList.size(); i++) {
-            String name = FirebaseLayout.PHOTO_NAME + i + ".jpeg"; // TODO modify to support other extensions
+            // TODO: support more image formats
+            String name = FirebaseLayout.PHOTO_NAME + i + FirebaseLayout.JPEG;
             actualRefs.add(name);
-            imagesUploadResults.add(imageHelper.putImage(uriList.get(i), name, storagePath));
+            String imagePathAndName = storagePath.concat(FirebaseLayout.SEPARATOR.concat(name));
+            imagesUploadResults.add(imageHelper.putImage(uriList.get(i), imagePathAndName));
         }
         // check whether any of the uploads failed
         checkPhotosUpload(imagesUploadResults, imagesResult, newAdRef, cardRef, storage.getReference(storagePath));
@@ -132,6 +131,7 @@ public class FirestoreAdHelper {
 
     private void getAndCheckPartialAd(CompletableFuture<Ad.AdBuilder> result,
                                       String adId) {
+
         db.collection(adsPath).document(adId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
@@ -147,7 +147,18 @@ public class FirestoreAdHelper {
                         .withDescription((String) documentSnapshot.get(AdLayout.DESCRIPTION))
                         .hasVRTour((boolean) documentSnapshot.get(AdLayout.VR_TOUR));
 
-                result.complete(builder);
+                db.collection(FirebaseLayout.USERS_DIRECTORY).document((String) documentSnapshot.get(AdLayout.ADVERTISER_ID)).get().addOnCompleteListener(
+                        taskUser -> {
+                    if (taskUser.isSuccessful()) {
+                        String advertiserName = (String) taskUser.getResult().get("name");
+                        builder.withAdvertiserName(advertiserName);
+                        result.complete(builder);
+                    } else {
+                        result.completeExceptionally(new DatabaseServiceException(
+                                taskUser.getException().getMessage()));
+                    }
+                });
+
             } else {
                 result.completeExceptionally(new DatabaseServiceException(Objects.requireNonNull(
                         task.getException()).getMessage()));
@@ -210,7 +221,7 @@ public class FirestoreAdHelper {
     }
 
     /**
-     * Checks whether the upload of ad information to FIrestore completed successfully. If it didn't,
+     * Checks whether the upload of ad information to Firestore completed successfully. If it didn't,
      * cleans up and completes exceptionally.
      */
     private void checkAdUpload(CompletableFuture<Void> result, Ad ad, DocumentReference adRef,

@@ -20,7 +20,7 @@ public class UserSerializer {
         docData.put(UserLayout.GENDER, data.getGender());
         docData.put(UserLayout.NAME, data.getName());
         docData.put(UserLayout.PHONE, data.getPhoneNumber());
-        docData.put(UserLayout.PICTURE, data.getProfileImage());
+        docData.put(UserLayout.PICTURE, data.getProfileImagePathAndName());
         return docData;
     }
 
@@ -49,8 +49,7 @@ public class UserSerializer {
 
         Object rawPfpRef = data.get(UserLayout.PICTURE);
         if (rawPfpRef != null) {
-            user.setProfileImage((String) rawPfpRef); //WARNING WAS
-            // "profilePicture" before not matching our actual
+            user.setProfileImagePathAndName((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
         }
 
         return user;

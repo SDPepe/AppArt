@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -31,6 +32,7 @@ public class GoogleMapService implements MapService {
     private GoogleMap.InfoWindowAdapter infoWindowAdapter = null;
     private SupportMapFragment mapFragment = null;
     private Runnable onReadyCallback = null;
+    private GoogleMap.OnInfoWindowClickListener infoWindowClickListener = null;
 
     @Inject
     public GoogleMapService() {
@@ -64,6 +66,10 @@ public class GoogleMapService implements MapService {
 
         if (infoWindowAdapter != null) {
             map.setInfoWindowAdapter(infoWindowAdapter);
+        }
+
+        if (infoWindowClickListener != null) {
+            map.setOnInfoWindowClickListener(infoWindowClickListener);
         }
 
         try {
@@ -124,8 +130,13 @@ public class GoogleMapService implements MapService {
             cameraLoc.latitude = pos.target.latitude;
             futureLocation.complete(cameraLoc);
         });
-
         return futureLocation;
+    }
+
+    @Override
+    public void setOnInfoWindowClickListener(Consumer<Marker> infoWindowClickListener) {
+        this.infoWindowClickListener =
+                infoWindowClickListener::accept;
     }
 
 
