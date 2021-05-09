@@ -60,7 +60,7 @@ public class DatabaseTest {
     User globalUser = null;
     FirestoreEmulatorDatabaseServiceWrapper database;
 
-    /*@Before
+    @Before
     public void setup() {
         database = (FirestoreEmulatorDatabaseServiceWrapper) db;
         db.clearCache().join();
@@ -100,8 +100,8 @@ public class DatabaseTest {
 
         verifyUser(retrievedUser, age, name, userId, email, phoneNb);
 
-/*
-        email = "newFakeEmail@testappart.ch";
+
+        /*email = "newFakeEmail@testappart.ch";
         name = "TestName2";
         age = 30;
 
@@ -113,8 +113,8 @@ public class DatabaseTest {
 
         retrievedUser = db.getUser(user.getUserId()).join();
 
-        verifyUser(retrievedUser, age, name, userId, email, phoneNb);
-        *//*
+        verifyUser(retrievedUser, age, name, userId, email, phoneNb);*/
+
         globalUser = retrievedUser;
     }
 
@@ -231,5 +231,5 @@ public class DatabaseTest {
         getCardsFilterTest();
         putImageThrowsOnNullParameters();
         deleteImageThrowsOnNullPathAndName();
-    }*/
+    }
 }

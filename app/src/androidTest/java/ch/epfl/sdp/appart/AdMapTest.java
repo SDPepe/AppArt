@@ -76,7 +76,7 @@ public class AdMapTest {
             new AndroidLocationService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
 
-    /*@Test
+    @Test
     public void markerTest() {
 
         UiDevice device =
@@ -104,5 +104,5 @@ public class AdMapTest {
                 lessThanOrEqualTo(0.05));
 
 
-    }*/
+    }
 }

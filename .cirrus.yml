@@ -1,8 +1,8 @@
 check_android_task:
   name: Run Android tests
   env:
-    API_LEVEL: 28
-    TARGET: default
+    API_LEVEL: 30
+    TARGET: google_apis
     ARCH: x86
     CC_TEST_REPORTER_ID: ENCRYPTED[6770a26c58a75c6cd70782dcb463e28fca45e9c25eb04028e3bb17ba2740442e2b5d3c50602172f9f39a2456c4b8af3a]
     MAPS_API_KEY: ENCRYPTED[df7ed70a48a8d0c79c72494f7b16709f3948ae29f07ed6a2776b0f6dcce50a46abb0b640fa39586859c10ccd1c5449b9]
@@ -12,7 +12,7 @@ check_android_task:
     cpu: 8
     memory: 10G
   create_device_script:
-    echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
+    echo no | avdmanager create avd --force --name test --device "pixel_2" --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
   start_emulator_background_script:
     $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
   install_sudo_script: |
