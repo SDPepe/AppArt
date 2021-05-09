@@ -31,7 +31,7 @@ import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
- * This class manages the UI of the Panorama.
+ * This class manages the UI of the Panorama.s
  */
 @AndroidEntryPoint
 public class PanoramaActivity extends AppCompatActivity {
