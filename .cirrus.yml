@@ -24,7 +24,7 @@ check_android_task:
     firebase emulators:start
   build_script: |
     chmod +x gradlew
-    sudo ./gradlew assembleDebugAndroidTest
+    ./gradlew assembleDebugAndroidTest
   wait_for_emulator_script: |
     sudo adb wait-for-device
     sudo adb shell input keyevent 82
