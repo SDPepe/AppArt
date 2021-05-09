@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.database.firestoreservicehelpers;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -48,6 +49,7 @@ public class FirestoreUserHelper {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
         }
+
 
         CompletableFuture<User> result = new CompletableFuture<>();
 
