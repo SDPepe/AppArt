@@ -38,7 +38,7 @@ check_android_task:
     ./cc-test-reporter before-build
   logcat_background_script: adb -e logcat *:E
   check_script: |
-    sudo ./gradlew check connectedCheck --stacktrace
+    ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
     ./cc-test-reporter format-coverage ./app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml --input-type jacoco
