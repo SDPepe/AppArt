@@ -42,6 +42,7 @@ check_android_task:
     ./cc-test-reporter before-build
   check_script: |
     avdmanager list
+    adb reconnect offline
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
