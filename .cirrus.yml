@@ -26,12 +26,12 @@ check_android_task:
     chmod +x gradlew
     ./gradlew assembleDebugAndroidTest
   wait_for_emulator_script: |
-    sudo adb wait-for-device
-    sudo adb shell input keyevent 82
+    adb wait-for-device
+    adb shell input keyevent 82
   disable_animations_script: |
-    sudo adb shell settings put global window_animation_scale 0.0
-    sudo adb shell settings put global transition_animation_scale 0.0
-    sudo adb shell settings put global animator_duration_scale 0.0
+    adb shell settings put global window_animation_scale 0.0
+    adb shell settings put global transition_animation_scale 0.0
+    adb shell settings put global animator_duration_scale 0.0
   prepare_codeclimate_script: |
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
