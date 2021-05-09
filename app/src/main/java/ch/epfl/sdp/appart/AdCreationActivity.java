@@ -69,6 +69,7 @@ public class AdCreationActivity extends AppCompatActivity {
             startActivityForResult(intent, PICTURES_IMPORT_ACTIVITY_RESULT);
         });
 
+        /*
         if (MainActivity.isDemoMode()) {
 
             ((TextView)findViewById(R.id.title_AdCreation_editText)).setText("Cool Ad");
@@ -90,11 +91,13 @@ public class AdCreationActivity extends AppCompatActivity {
             fillHorizontalViewWithPictures(findViewById(R.id.panorama_AdCreation_linearLayout), panoramasUris);
 
         }
+         */
     }
 
     private void setTextView(TextView textView, String content) {
         textView.setText(content);
     }
+
     /**
      * Sets values to viewmodel and confirm creation. If some fields are not filled, it shows a
      * snackbar message.
@@ -233,7 +236,7 @@ public class AdCreationActivity extends AppCompatActivity {
         }
     }
 
-    private void fillHorizontalViewWithPictures(LinearLayout horizontalLayout, List<Uri> uris) {
+    protected void fillHorizontalViewWithPictures(LinearLayout horizontalLayout, List<Uri> uris) {
 
         if (uris == null || uris.isEmpty()) {
             return;
@@ -257,6 +260,14 @@ public class AdCreationActivity extends AppCompatActivity {
                 horizontalLayout.addView(hspacer);
             }
         }
+    }
+
+    protected void setPanoramas(List<Uri> uris) {
+        this.panoramaUris = uris;
+    }
+
+    protected void setPictures(List<Uri> uris) {
+        this.picturesUris = uris;
     }
 
 }
