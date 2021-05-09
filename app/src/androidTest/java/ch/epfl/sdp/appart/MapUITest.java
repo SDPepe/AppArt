@@ -1,10 +1,19 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
+import android.content.Context;
 import android.graphics.Point;
 import android.view.Display;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.action.CoordinatesProvider;
+import androidx.test.espresso.action.GeneralClickAction;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -139,6 +148,26 @@ public class MapUITest {
         Intents.init();
     }
 
+    public static ViewAction clickXY(final int x, final int y){
+        return new GeneralClickAction(
+                Tap.SINGLE,
+                new CoordinatesProvider() {
+                    @Override
+                    public float[] calculateCoordinates(View view) {
+
+                        final int[] screenPos = new int[2];
+                        view.getLocationOnScreen(screenPos);
+
+                        final float screenX = screenPos[0] + x;
+                        final float screenY = screenPos[1] + y;
+                        float[] coordinates = {screenX, screenY};
+
+                        return coordinates;
+                    }
+                },
+                Press.FINGER);
+    }
+
     @Test
     public void markerClickTest() throws InterruptedException {
 
@@ -173,8 +202,9 @@ public class MapUITest {
 
         //https://stackoverflow.com/questions/42505274/android-testing-google
         // -map-info-window-click
-        Display display =
-                InstrumentationRegistry.getInstrumentation().getTargetContext().getDisplay();
+        WindowManager windowManager =
+                (WindowManager) InstrumentationRegistry.getInstrumentation().getTargetContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
         Point size = new Point();
         display.getRealSize(size);
         int screenWidth = size.x;
