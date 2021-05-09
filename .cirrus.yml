@@ -12,7 +12,7 @@ check_android_task:
     cpu: 8
     memory: 10G
   create_device_script:
-    echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
+    echo no | avdmanager create avd --force --name test --device "pixel_2" --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
   install_sudo_script: |
     apt-get update
     apt-get install sudo -y
