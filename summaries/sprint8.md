@@ -7,6 +7,7 @@
 ## Émilien
 
 ## Filippo
+This week I worked on the design refactor. I started changing the colors and fonts of the buttons by creating primary styles and secondary styles based on the importance of the buttons, plus I made sure that every button is the same size. As a second thing I changed the various layouts of the application to make sure that the margins are the same for everyone and in particulary now all that the sizes are not in a fixed number of pixels but they fit with any size of screen. lastly I had to adapt the various UI tests for the new layouts. In general I thought it would take less, but since I had to do a complete refactor it took me a lot longer than expected and in addition due to cirrus problems I have not yet been able to merge my work into the master. Next week I think I will continue the refactor design for the new activities in order to have a very user friendly application.
 
 ## Lorenzo
 The issues with cirrus we had this week hugely delayed everyone's work, in particular Emilien and Antoine couldn't get their PRs merged and so I did not start working on my task since I had no code to work on. I still started reading doc that I think I will need and brainstorming what I should do once I get my hands on the code. Other than that I tried to spend as much time as possible on reiviewing PRs and commenting about other members code. I hope the issues with cirrus will be soon solved so that the workflow of the team is back to the good levels we had before.
