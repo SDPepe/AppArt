@@ -45,7 +45,7 @@ public final class AndroidLocationService implements LocationService {
 
     private LocationCallback locationCallback;
     private final RequestQueue queue;
-    private final String api_key;
+    //private final String api_key;
 
     @Inject
     public AndroidLocationService(Context context) {
@@ -55,7 +55,7 @@ public final class AndroidLocationService implements LocationService {
                 LocationServices.getFusedLocationProviderClient(context);
 
         this.queue = Volley.newRequestQueue(context);
-        this.api_key = context.getResources().getString(R.string.maps_api_key);
+        //this.api_key = context.getResources().getString(R.string.maps_api_key);
 
     }
 
@@ -136,7 +136,7 @@ public final class AndroidLocationService implements LocationService {
         CompletableFuture<Location> futureLocation = new CompletableFuture<>();
         try {
             String url = "https://maps.googleapis" +
-                    ".com/maps/api/geocode/json?address=" + URLEncoder.encode(address, "UTF-8") + "&key=" + api_key;
+                    ".com/maps/api/geocode/json?address=" + URLEncoder.encode(address, "UTF-8") + "&key="/* + api_key*/;
             JsonObjectRequest request = new JsonObjectRequest(url,
                     new JSONObject(), jsonObject -> {
                 double lat = 0;
