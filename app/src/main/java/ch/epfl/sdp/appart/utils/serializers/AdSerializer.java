@@ -23,7 +23,7 @@ public class AdSerializer {
         adData.put(AdLayout.DESCRIPTION, data.getDescription());
         adData.put(AdLayout.VR_TOUR, data.hasVRTour());
         adData.put(AdLayout.PRICE, data.getPrice());
-        adData.put(AdLayout.PRICE_PERIOD, data.getPricePeriod().ordinal());
+        adData.put(AdLayout.PRICE_PERIOD, data.getPricePeriod());
         adData.put(AdLayout.STREET, data.getStreet());
         adData.put(AdLayout.TITLE, data.getTitle());
         adData.put(ADVERTISER_NAME, data.getAdvertiserName());

@@ -1,7 +1,5 @@
 package ch.epfl.sdp.appart.database.local;
 
-import android.util.Pair;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,7 +19,6 @@ import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
-import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
 import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 
@@ -31,24 +28,21 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  * Context.getFilesDir().
  * This class shouldn't contain anything related to android.
  * <p>
- * //TODO: getCards(), getAd(String adiId), getUser(String ownerId)
- * <p>
- * //TODO: Do we do it, in multiple files or one. The simplest is to load all
- * the files and fill maps (id -> data), but maybe it takes too much memory I
- * don't know
  * //TODO: Write unit tests but also test on android
  * //TODO: Write complete documentation
  * //TODO: Implement removeLocalAd(String cardId) --> Or maybe other
+ * //TODO: Implement BITMAP loading
  * interface if its better for the callers.
  */
 public class LocalAd {
 
     private static final String ID = "ID";
     private static final String PHOTO_REFS = "photo_refs";
+    private static final String CARD_ID = "CARD_ID";
 
     private static final String favoritesFolder = "/favorites";
     private static final String profilePicName = "user_profile_pic.jpg";
-    private static final String dataFileName = "ad.fav";
+    private static final String dataFileName = "data.fav";
 
     private final String appPath;
 
@@ -59,16 +53,13 @@ public class LocalAd {
     private boolean isDataInitialized;
 
     public LocalAd(String appPath) {
-        if(appPath == null) throw new IllegalArgumentException();
+        if (appPath == null) throw new IllegalArgumentException();
         this.appPath = appPath;
         this.cards = new ArrayList<>();
         this.idsToAd = new HashMap<>();
         this.idsToUser = new HashMap<>();
         this.isDataInitialized = false;
     }
-
-    //TODO: Don't forget to close streams
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     /**
      * This function allows us to retrieve the number of photos of the ad if
@@ -187,21 +178,36 @@ public class LocalAd {
         return localPhotoRefs;
     }
 
-    private static Pair<Ad, User> buildLocalStructures(Ad ad, User user,
-                                                       List<String> localPhotoRefs, String adFolderPath) {
+    private static Ad buildLocalAd(Ad ad, String adFolderPath) {
+        List<String> localPhotoRefs = buildPhotoRefs(adFolderPath,
+                ad.getPhotosRefs().size());
+
         Ad localAd = new Ad(ad.getTitle(), ad.getPrice(), ad.getPricePeriod()
                 , ad.getStreet(), ad.getCity(), ad.getAdvertiserName(),
                 ad.getAdvertiserId(),
                 ad.getDescription(), localPhotoRefs, ad.hasVRTour());
+        return localAd;
+    }
 
+    private static User buildLocalUser(User user, String adFolderPath) {
         User localUser = new AppUser(user.getUserId(), user.getUserEmail());
-        localUser.setPhoneNumber(user.getPhoneNumber());
-        localUser.setName(user.getName());
+        if (user.getPhoneNumber() != null) {
+            localUser.setPhoneNumber(user.getPhoneNumber());
+        }
+        if (user.getName() != null) {
+            localUser.setName(user.getName());
+        }
+
         localUser.setAge(user.getAge());
-        localUser.setGender(user.getGender());
+
+        if (user.getGender() != null) {
+            localUser.setGender(user.getGender());
+        }
+
+
         localUser.setProfileImagePathAndName(adFolderPath + FirebaseLayout.SEPARATOR + profilePicName);
 
-        return new Pair<>(localAd, user);
+        return localUser;
     }
 
     private static boolean writeFile(String adFolderPath, List<Map<String,
@@ -251,15 +257,20 @@ public class LocalAd {
      * succeeded or not.
      */
     public CompletableFuture<Void> writeCompleteAd(String adId,
-                                                          String cardId, Ad ad,
-                                                          User user,
-                                                          Function<String,
-                                                                  CompletableFuture<Void>> loadImages) {
+                                                   String cardId, Ad ad,
+                                                   User user,
+                                                   Function<String,
+                                                           CompletableFuture<Void>> loadImages, String currentUserId) {
 
-
+        //For now we re read the full favorites every time, this might be
+        // optimized later
+        this.isDataInitialized = false;
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
         String favoritesPath = appPath + favoritesFolder + "/";
-        String adFolderPath = favoritesPath + cardId;
+
+        //This path should allow multiple users per phone as the userId is
+        // used to name the folder
+        String adFolderPath = favoritesPath + currentUserId + "/" + cardId;
 
         if (!createFolder(adFolderPath, futureSuccess,
                 ad.getPhotosRefs().size()))
@@ -271,27 +282,23 @@ public class LocalAd {
         //Maybe we need to check for the number of images so that if the ad
         // has one image less than before we do not could keep a stale image
         // in the folder
-
-        //Changing the photoRefs to local paths
-        List<String> localPhotoRefs = buildPhotoRefs(adFolderPath,
-                ad.getPhotosRefs().size());
+        // in the folder
 
         //Building local versions of the ad only because we can build the
         // card from the ad
-        Pair<Ad, User> structures = buildLocalStructures(ad, user,
-                localPhotoRefs, adFolderPath);
-
-        Ad localAd = structures.first;
-        User localUser = structures.second;
+        Ad localAd = buildLocalAd(ad, adFolderPath);
+        User localUser = buildLocalUser(user, adFolderPath);
 
         //Serializing
         Map<String, Object> adMap = AdSerializer.serialize(localAd);
         adMap.put(ID, adId);
         adMap.put(PHOTO_REFS, localAd.getPhotosRefs());
+        adMap.put(CARD_ID, cardId);
 
         Map<String, Object> userMap = UserSerializer.serialize(localUser);
         //We ad the id because it is not serialized
         userMap.put(ID, localUser.getUserId());
+
 
         //We use a list of HashMap so that it is simple to put all the data
         // in a single file.
@@ -316,10 +323,10 @@ public class LocalAd {
 
         return futureSuccess;
     }
-    
+
     private boolean readFolder(File folder) {
-        String cardId = folder.getName();
-        String dataPath = this.appPath + LocalAd.favoritesFolder + "/" + cardId + LocalAd.dataFileName;
+        String dataPath =
+                folder.getPath() + "/" + LocalAd.dataFileName;
 
         FileInputStream fis;
         List<Map<String, Object>> mapList;
@@ -328,78 +335,89 @@ public class LocalAd {
             ObjectInputStream ois = new ObjectInputStream(fis);
             mapList = (List<Map<String, Object>>) ois.readObject();
             ois.close();
+            fis.close();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
             return false;
         }
 
 
-
-        Map<String, Object> cardMap = mapList.get(0);
-        Map<String, Object> adMap = mapList.get(1);
-        Map<String, Object> userMap = mapList.get(2);
-
-        Card card = CardSerializer.deserialize((String) cardMap.get(ID),
-                cardMap);
-        //Maybe use a set instead, but then need to implement equals
-        this.cards.add(card);
-
+        Map<String, Object> adMap = mapList.get(0);
+        Map<String, Object> userMap = mapList.get(1);
 
 
         User user = UserSerializer.deserialize((String) userMap.get(ID),
                 userMap);
-        this.idsToUser.put((String)userMap.get(ID), user);
+        this.idsToUser.put((String) userMap.get(ID), user);
 
         Ad ad = AdSerializer.deserialize(adMap);
-        this.idsToAd.put((String)adMap.get(ID), ad);
+
+        Ad adWithRef = new Ad(ad.getTitle(), ad.getPrice(),
+                ad.getPricePeriod(), ad.getStreet(), ad.getCity(),
+                ad.getAdvertiserName(), ad.getAdvertiserId(),
+                ad.getDescription(),
+                (List<java.lang.String>) adMap.get(PHOTO_REFS), ad.hasVRTour());
+
+        this.idsToAd.put((String) adMap.get(ID), adWithRef);
+
+        //photoRefs.get(0) maybe unsafe but I don't think really think so
+        //TODO:!!!! It is if the ad doesn't have any photos
+        Card card = new Card((String) adMap.get(CARD_ID),
+                (String) adMap.get(ID), user.getUserId(), adWithRef.getCity(),
+                adWithRef.getPrice(), adWithRef.getPhotosRefs().get(0),
+                adWithRef.hasVRTour());
+        //Maybe use a set instead, but then need to implement equals
+        this.cards.add(card);
+
         return true;
     }
 
-    private boolean readAllLocalData() {
-        String favoritesFolderPath = this.appPath + LocalAd.favoritesFolder;
+    private boolean readAllLocalDataForAUser(String wantedUserID) {
+        String favoritesFolderPath =
+                this.appPath + LocalAd.favoritesFolder + "/" + wantedUserID;
         File favFolder = new File(favoritesFolderPath);
         File[] folders = favFolder.listFiles(File::isDirectory);
         boolean failed = false;
-        for(File folder : folders) {
+        for (File folder : folders) {
             failed |= readFolder(folder);
         }
-        if(!failed) {
+        if (!failed) {
             this.isDataInitialized = true;
         }
         return failed;
     }
 
-    public List<Card> getCards() {
+    public List<Card> getCards(String currentUserID) {
 
-        if(this.isDataInitialized) {
+        if (this.isDataInitialized) {
             return cards;
         }
-        boolean success = readAllLocalData();
-        if(success) {
+        boolean success = readAllLocalDataForAUser(currentUserID);
+        if (success) {
             return cards;
         }
 
         return null;
     }
 
-    public Ad getAd(String adId) {
-        if(this.isDataInitialized) {
+    public Ad getAd(String adId, String currentUserID) {
+        if (this.isDataInitialized) {
             return idsToAd.get(adId);
         }
-        boolean success = readAllLocalData();
-        if(success) {
+        boolean success = readAllLocalDataForAUser(currentUserID);
+        if (success) {
             return idsToAd.get(adId);
         }
         return null;
     }
 
-    public User getUser(String userId) {
-        if(this.isDataInitialized) {
-            return idsToUser.get(userId);
+    public User getUser(String currentUserID, String wantedUserID) {
+        if (this.isDataInitialized) {
+            return idsToUser.get(wantedUserID);
         }
-        boolean success = readAllLocalData();
-        if(success) {
-            return idsToUser.get(userId);
+        boolean success = readAllLocalDataForAUser(currentUserID);
+        if (success) {
+            return idsToUser.get(wantedUserID);
         }
         return null;
     }
