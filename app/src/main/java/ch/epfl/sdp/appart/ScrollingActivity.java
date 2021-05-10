@@ -38,6 +38,9 @@ public class ScrollingActivity extends ToolbarActivity {
     @Inject
     DatabaseService database;
 
+    @Inject
+    ApplicationConfiguration configuration;
+
     private RecyclerView recyclerView;
 
     @Override
@@ -112,7 +115,7 @@ public class ScrollingActivity extends ToolbarActivity {
      */
     private void onFloatingButtonAction() {
         //AdCreationActivity.class
-        Intent intent = new Intent(this, ApplicationConfiguration.demoModeSelector(AdCreationActivity.class, AdCreationActivityDemo.class));
+        Intent intent = new Intent(this, configuration.demoModeSelector(AdCreationActivity.class, AdCreationActivityDemo.class));
         startActivity(intent);
     }
 

@@ -42,11 +42,11 @@ public class ApplicationConfigurationTest {
     @Test
     public void CheckDemoModeSelectsRightClass() {
         mainActivityRule.getScenario().onActivity(activity -> configuration.setDemoMode(activity, false));
-        Class<?> selected1 = ApplicationConfiguration.demoModeSelector(Dummy1.class, Dummy2.class);
+        Class<?> selected1 = configuration.demoModeSelector(Dummy1.class, Dummy2.class);
         assertEquals(selected1, Dummy1.class);
         assertEquals(configuration.isDemoMode(), false);
         mainActivityRule.getScenario().onActivity(activity -> configuration.setDemoMode(activity, true));
-        Class<?> selected2 = ApplicationConfiguration.demoModeSelector(Dummy1.class, Dummy2.class);
+        Class<?> selected2 = configuration.demoModeSelector(Dummy1.class, Dummy2.class);
         assertEquals(selected2, Dummy2.class);
         assertEquals(configuration.isDemoMode(), true);
     }

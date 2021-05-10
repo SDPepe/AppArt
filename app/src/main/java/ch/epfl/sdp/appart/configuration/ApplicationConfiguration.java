@@ -9,13 +9,13 @@ import ch.epfl.sdp.appart.MainActivity;
 public class ApplicationConfiguration {
 
     //whether or not we are demoing
-    private static boolean demoMode;
+    private boolean demoMode;
 
     @Inject
     public ApplicationConfiguration() {}
 
     /**
-     * MainActivity is here to enforce the fact that the app must be configure at the
+     * MainActivity is here to enforce the fact that the app must be configure from the
      * main activity only.
      * @param mainActivity
      * @param demoMode
@@ -37,11 +37,11 @@ public class ApplicationConfiguration {
      * the demo one.
      * @param normal
      * @param demo
-     * @param <T>
-     * @param <U>
+     * @param
+     * @param
      * @return
      */
-    public static <T, U> Class<?> demoModeSelector(Class<T> normal, Class<U> demo) {
+    public Class<?> demoModeSelector(Class<?> normal, Class<?> demo) {
         if (demoMode) {
             return demo;
         } else {

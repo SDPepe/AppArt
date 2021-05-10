@@ -19,8 +19,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.AppConfigurationModule;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -45,7 +47,7 @@ import static org.hamcrest.Matchers.is;
 
 
 //@RunWith(AndroidJUnit4.class)
-@UninstallModules(DatabaseModule.class)
+@UninstallModules({DatabaseModule.class, AppConfigurationModule.class})
 @HiltAndroidTest
 public class ScrollingUITest {
 
@@ -58,6 +60,9 @@ public class ScrollingUITest {
     @BindValue
     DatabaseService database = new MockDatabaseService();
 
+    //just to reset demo mode
+    @BindValue
+    ApplicationConfiguration configuration = new ApplicationConfiguration();
 
     @Before
     public void init() {
