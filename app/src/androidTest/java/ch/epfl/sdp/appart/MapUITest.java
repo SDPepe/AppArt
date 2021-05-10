@@ -1,8 +1,10 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
+import android.content.Context;
 import android.graphics.Point;
 import android.view.Display;
+import android.view.WindowManager;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.test.espresso.intent.Intents;
@@ -173,8 +175,9 @@ public class MapUITest {
 
         //https://stackoverflow.com/questions/42505274/android-testing-google
         // -map-info-window-click
-        Display display =
-                InstrumentationRegistry.getInstrumentation().getTargetContext().getDisplay();
+        WindowManager windowManager =
+                (WindowManager) InstrumentationRegistry.getInstrumentation().getTargetContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
         Point size = new Point();
         display.getRealSize(size);
         int screenWidth = size.x;
