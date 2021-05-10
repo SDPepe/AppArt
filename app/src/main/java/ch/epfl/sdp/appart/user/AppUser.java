@@ -1,8 +1,14 @@
 package ch.epfl.sdp.appart.user;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 
 /**
@@ -21,6 +27,7 @@ public class AppUser implements User {
     private Gender gender;
     private String profileImagePathAndName;
     private List<String> adsIds;
+    private Set<String> favoritesIds;
 
 /* default values */
     private static final String DEFAULT_IMAGE_NAME_NO_GENDER = "user_example_no_gender";
@@ -41,6 +48,7 @@ public class AppUser implements User {
         this.email = email;
         this.gender = Gender.NOT_SELECTED;
         this.adsIds = new ArrayList<>();
+        favoritesIds = new HashSet<>();
         setDefaultProfileImage();
 
         /* As default, everything before '@' in email is selected as name,
@@ -216,6 +224,21 @@ public class AppUser implements User {
         if (id == null)
             throw new IllegalArgumentException("The argument is null");
         adsIds.add(id);
+    }
+
+    @Override
+    public Set<String> getFavoritesIds() {
+        return favoritesIds;
+    }
+
+    @Override
+    public void addFavorite(String id) {
+        if (id == null)
+            throw new IllegalArgumentException("id can't be null");
+        if (!favoritesIds.contains(id))
+            favoritesIds.add(id);
+        else
+            favoritesIds.remove(id);
     }
 
     /**

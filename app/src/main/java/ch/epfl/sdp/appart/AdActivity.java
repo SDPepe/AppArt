@@ -3,7 +3,11 @@ package ch.epfl.sdp.appart;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
@@ -24,6 +29,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -35,9 +41,9 @@ public class AdActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
+    
     @Inject
     LoginService login;
-    String adId;
 
     public static class Intents {
         public static final String INTENT_PANORAMA_PICTURES = "panoramas_pictures_references";
@@ -46,6 +52,8 @@ public class AdActivity extends ToolbarActivity {
 
     private String advertiserId;
     private ArrayList<String> panoramasReferences = new ArrayList<>();
+
+    private String adId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,5 +191,26 @@ public class AdActivity extends ToolbarActivity {
         intent.putExtra("imageId", imageId);
         startActivity(intent);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.ad_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO check the user is logged in
+        if (item.getItemId() == R.id.action_add_favorite) {
+            database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
+                u.addFavorite(adId);
+                database.updateUser(u);
+            });
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

@@ -32,12 +32,11 @@ public class MockDatabaseService implements DatabaseService {
     private final List<String> images = new ArrayList<>();
 
     public MockDatabaseService() {
-
-        cards.add(new Card("unknown1", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
-        cards.add(new Card("unknown2", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
-        cards.add(new Card("unknown3", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
-        cards.add(new Card("unknown4", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
-        cards.add(new Card("unknown5", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("1111", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("2222", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("3333", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("4444", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+        cards.add(new Card("5555", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
 
         images.add("users/default/user_example_female.png");
         images.add("users/default/user_example_male.png");
@@ -78,6 +77,7 @@ public class MockDatabaseService implements DatabaseService {
 
         users.put("vetterli-id", vetterli);
         users.put("3333", new AppUser("3333", "carlo@epfl.ch"));
+        users.put("5555", new AppUser("5555", "emilien@epfl.ch"));
     }
 
     @NotNull
