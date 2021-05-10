@@ -9,7 +9,7 @@ import ch.epfl.sdp.appart.MainActivity;
 public class ApplicationConfiguration {
 
     //whether or not we are demoing
-    private boolean demoMode;
+    private boolean demoMode = false;
 
     @Inject
     public ApplicationConfiguration() {}
