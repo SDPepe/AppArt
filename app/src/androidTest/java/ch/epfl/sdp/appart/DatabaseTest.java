@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreEmulatorDatabaseServiceWrapper;
-import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
@@ -38,8 +38,8 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @UninstallModules({DatabaseModule.class, LoginModule.class})
@@ -163,6 +163,7 @@ public class DatabaseTest {
 
         builder.withTitle(title);
         builder.withStreet(street);
+        builder.withAdvertiserName(globalUser.getName());
         builder.withAdvertiserId(globalUser.getUserId());
         builder.withCity(city);
         builder.withDescription(desc);
@@ -214,11 +215,21 @@ public class DatabaseTest {
         assertThat(cards.size(), is(1));
     }
 
+    public void putImageThrowsOnNullParameters() {
+        assertThrows(IllegalArgumentException.class, () -> db.putImage(null, null).get());
+    }
+
+    public void deleteImageThrowsOnNullPathAndName() {
+        assertThrows(IllegalArgumentException.class, () -> db.deleteImage(null).get());
+    }
+
     @Test
     public void databaseTest() throws IOException {
         addingUsersAndUpdateTest();
         addingAdAndGetTest();
         updateCardTest();
         getCardsFilterTest();
+        putImageThrowsOnNullParameters();
+        deleteImageThrowsOnNullPathAndName();
     }
 }

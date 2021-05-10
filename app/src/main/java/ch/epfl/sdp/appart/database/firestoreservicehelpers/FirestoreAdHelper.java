@@ -15,7 +15,6 @@ import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,16 +24,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
-import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
+import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 /**
  * Helper class to add ads to and retrieve them from Firestore.
@@ -47,6 +44,7 @@ public class FirestoreAdHelper {
     private final FirestoreCardHelper cardHelper;
     private final String adsPath;
     private final AdSerializer serializer;
+    private final UserSerializer userSerializer;
 
     public FirestoreAdHelper() {
         db = FirebaseFirestore.getInstance();
@@ -55,6 +53,7 @@ public class FirestoreAdHelper {
         cardHelper = new FirestoreCardHelper();
         adsPath = FirebaseLayout.ADS_DIRECTORY;
         serializer = new AdSerializer();
+        userSerializer = new UserSerializer();
     }
 
     @NotNull
@@ -112,7 +111,7 @@ public class FirestoreAdHelper {
         for (int i = 0; i < uris.size(); i++) {
             String name = prefix + i + ".jpeg"; // TODO modify to support other extensions
             references.add(name);
-            imagesUploadFutures.add(imageHelper.putImage(uris.get(i), name, path));
+            imagesUploadFutures.add(imageHelper.putImage(uris.get(i), path + name));
         }
         return new Pair<>(references, imagesUploadFutures);
     }
@@ -126,14 +125,29 @@ public class FirestoreAdHelper {
         DocumentReference cardRef = db.collection(FirebaseLayout.CARDS_DIRECTORY).document();
 
         //storage path is the the path pointing to the ads directory in a folder named with the ad id
-        String storagePath = adsPath + FirebaseLayout.SEPARATOR + newAdRef.getId();
+        String storagePath = adsPath + FirebaseLayout.SEPARATOR + newAdRef.getId() + FirebaseLayout.SEPARATOR;
 
+        //HEAD here
         //first we upload the pictures and check that the upload was successful
         Pair<List<String>, List<CompletableFuture<Boolean>>> uploadPicturesResultPair =
                 uploadIndexedImages(picturesUris, FirebaseLayout.PHOTO_NAME, storagePath);
         List<String> picturesReferences = uploadPicturesResultPair.first;
         List<CompletableFuture<Boolean>> uploadImagesFutures = uploadPicturesResultPair.second;
-
+/*
+=======
+        // upload photos
+        List<String> actualRefs = new ArrayList<>();
+        List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
+        Log.d("URI", "size" + uriList.size());
+        for (int i = 0; i < uriList.size(); i++) {
+            // TODO: support more image formats
+            String name = FirebaseLayout.PHOTO_NAME + i + FirebaseLayout.JPEG;
+            actualRefs.add(name);
+            String imagePathAndName = storagePath.concat(FirebaseLayout.SEPARATOR.concat(name));
+            imagesUploadResults.add(imageHelper.putImage(uriList.get(i), imagePathAndName));
+        }
+>>>>>>> origin/master
+ */
         // check whether any of the uploads failed
         CompletableFuture<Void> picturesCheckFuture =
                 checkPhotosUpload(uploadImagesFutures, newAdRef, cardRef, storage.getReference(storagePath));
@@ -194,7 +208,18 @@ public class FirestoreAdHelper {
                         .withDescription((String) documentSnapshot.get(AdLayout.DESCRIPTION))
                         .hasVRTour((boolean) documentSnapshot.get(AdLayout.VR_TOUR));
 
-                result.complete(builder);
+                db.collection(FirebaseLayout.USERS_DIRECTORY).document((String) documentSnapshot.get(AdLayout.ADVERTISER_ID)).get().addOnCompleteListener(
+                        taskUser -> {
+                    if (taskUser.isSuccessful()) {
+                        String advertiserName = (String) taskUser.getResult().get("name");
+                        builder.withAdvertiserName(advertiserName);
+                        result.complete(builder);
+                    } else {
+                        result.completeExceptionally(new DatabaseServiceException(
+                                taskUser.getException().getMessage()));
+                    }
+                });
+
             } else {
                 result.completeExceptionally(new DatabaseServiceException(Objects.requireNonNull(
                         task.getException()).getMessage()));
@@ -273,7 +298,7 @@ public class FirestoreAdHelper {
     }
 
     /**
-     * Checks whether the upload of ad information to FIrestore completed successfully. If it didn't,
+     * Checks whether the upload of ad information to Firestore completed successfully. If it didn't,
      * cleans up and completes exceptionally.
      */
     private CompletableFuture<Void> uploadAdFromReferences(Ad ad, DocumentReference adRef,

@@ -1,6 +1,6 @@
 package ch.epfl.sdp.appart;
 
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -9,16 +9,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import javax.inject.Inject;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
-
-import static ch.epfl.sdp.appart.utils.UIUtils.makeSnakeForUserUpdateFailed;
 
 /**
  * This class manages the UI of the user profile, the user may edit
@@ -34,9 +41,14 @@ public class UserProfileActivity extends AppCompatActivity {
     /* User ViewModel */
     UserViewModel mViewModel;
 
+    @Inject
+    DatabaseService database;
+
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
+    private FloatingActionButton changeImageButton;
+    private FloatingActionButton removeImageButton;
     private EditText nameEditText;
     private EditText ageEditText;
     private EditText phoneNumberEditText;
@@ -44,7 +56,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView uniAccountClaimer;
     private TextView emailTextView;
     private ImageView imageView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +66,10 @@ public class UserProfileActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         /* UI components initialisation */
-        this.modifyButton = findViewById(R.id.modifyButton);
-        this.doneButton = findViewById(R.id.doneButton);
+        this.modifyButton = findViewById(R.id.editProfile_UserProfile_button);
+        this.doneButton = findViewById(R.id.doneEditing_UserProfile_button);
+        this.removeImageButton = findViewById(R.id.removeImage_UserProfile_button);
+        this.changeImageButton = findViewById(R.id.editImage_UserProfile_button);
         this.nameEditText = findViewById(R.id.name_UserProfile_editText);
         this.ageEditText = findViewById(R.id.age_UserProfile_editText);
         this.emailTextView = findViewById(R.id.emailText_UserProfile_textView);
@@ -66,19 +79,13 @@ public class UserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_UserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_UserProfile_imageView);
 
+        this.imageView.setEnabled(false);
+        this.removeImageButton.setVisibility(View.GONE);
+        this.changeImageButton.setVisibility(View.GONE);
+
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
         mViewModel.getUser().observe(this, this::setSessionUserToLocal);
-
-        mViewModel.getUri().observe(this, this::setProfileImage);
-    }
-
-
-    /**
-     * closes activity when back button pressed on UI
-     */
-    public void goBack(View view) {
-        finish();
     }
 
     /**
@@ -95,9 +102,68 @@ public class UserProfileActivity extends AppCompatActivity {
     public void editProfile(View view) {
         this.modifyButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
+        this.changeImageButton.setVisibility(View.VISIBLE);
+        if (!this.sessionUser.hasDefaultProfileImage()) {
+            this.removeImageButton.setVisibility(View.VISIBLE);
+        }
 
         /* enable editing in all UI components */
         enableDisableEntries();
+    }
+
+    /**
+     * removes the profile image from database and sets default user icon
+     * called by the remove button under imageView
+     */
+    public void removeProfileImage(View view) {
+        mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
+        this.sessionUser.setDefaultProfileImage();
+        imageView.setImageResource(android.R.color.transparent);
+        this.removeImageButton.setVisibility(View.GONE);
+    }
+
+    /**
+     * changes the profile image of the user
+     * called by the imageView button
+     */
+    public void changeProfileImage(View view) {
+        Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
+        startActivityForResult(intent, 1);
+    }
+
+
+    /**
+     * manages the output of camera activity and updates the profile image
+     * in firestore and firebase storage using user view-model
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                this.doneButton.setEnabled(false);
+                Uri profileUri = data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI);
+                mViewModel.setUri(profileUri);
+                imageView.setImageURI(profileUri);
+                mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
+
+                StringBuilder imagePathInDb = new StringBuilder();
+                imagePathInDb
+                        .append(FirebaseLayout.USERS_DIRECTORY)
+                        .append(FirebaseLayout.SEPARATOR)
+                        .append(this.sessionUser.getUserId())
+                        .append(FirebaseLayout.SEPARATOR)
+                        .append(FirebaseLayout.PROFILE_IMAGE_NAME)
+                        .append(System.currentTimeMillis())
+                        .append(FirebaseLayout.JPEG);
+                        // TODO: support more image formats
+
+                this.sessionUser.setProfileImagePathAndName(imagePathInDb.toString());
+                mViewModel.updateImage(this.sessionUser.getUserId());
+                mViewModel.getUpdateImageConfirmed().observe(this, this::imageUpdateResult);
+            }
+        }
     }
 
     /**
@@ -115,6 +181,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
+        this.removeImageButton.setVisibility(View.GONE);
+        this.changeImageButton.setVisibility(View.GONE);
     }
 
     /**
@@ -132,8 +200,15 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the updated user information to the firestore database
      */
     private void setSessionUserToDatabase(View view) {
-      mViewModel.updateUser(this.sessionUser);
-      mViewModel.getUpdateCardConfirmed().observe(this, this::informationUpdateResult);
+        mViewModel.updateUser(this.sessionUser);
+        mViewModel.getUpdateUserConfirmed().observe(this, this::informationUpdateResult);
+    }
+
+    private void imageUpdateResult(Boolean updateResult) {
+        if (!updateResult) {
+            UIUtils.makeSnakeForUserUpdateFailed(this.doneButton, R.string.updateUserImageFailedInDB);
+        }
+        this.doneButton.setEnabled(true);
     }
 
     private void informationUpdateResult(Boolean updateResult) {
@@ -163,11 +238,21 @@ public class UserProfileActivity extends AppCompatActivity {
         String ageString = ((EditText) findViewById(R.id.age_UserProfile_editText)).getText().toString().trim();
         if (!ageString.equals("")) {
             this.sessionUser.setAge(Integer.parseInt(ageString));
+        } else {
+            this.sessionUser.setAge(0);
         }
 
         this.sessionUser.setName(((TextView) findViewById(R.id.name_UserProfile_editText)).getText().toString());
-        this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
         this.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumber_UserProfile_editText)).getText().toString().trim());
+
+        this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
+
+        /* LOOKS USELESS because of method naming: in case the user changed gender
+           gender the gender is locally updated above. This method then updates the correct
+           correct default user icon accordingly to the newly selected gender */
+        if (this.sessionUser.hasDefaultProfileImage()) {
+            this.sessionUser.setDefaultProfileImage();
+        }
     }
 
     /**
@@ -193,22 +278,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        String[] verifier = this.sessionUser.getProfileImage().split(":");
-        if (verifier[0].equals("userIcon")){
-            int id = Integer.parseInt(verifier[1]);
-            Drawable iconImage = ResourcesCompat.getDrawable(getResources(), id, null);
-            this.imageView.setImageDrawable(iconImage);
-        } else {
-            // TODO: set actual user-specific profile picture with sessionUser.getProfileImage()
-        }
+        database.accept(new GlideImageViewLoader(this, imageView,
+                this.sessionUser.getProfileImagePathAndName()));
     }
-
-    /**
-     * Set user profile image
-     */
-    private void setProfileImage(Uri uri){
-        imageView.setImageURI(uri);
-    }
-
-
 }

@@ -16,6 +16,7 @@ public class Ad {
     private final PricePeriod pricePeriod;
     private final String street;
     private final String city;
+    private final String advertiserName;
     private final String advertiserId;
     private final String description;
     private final List<String> photosReferences;
@@ -36,7 +37,7 @@ public class Ad {
      * @param hasVRTour    whether the apartment offers a VR tour
      */
     public Ad(String title, long price, PricePeriod pricePeriod, String street, String city,
-              String advertiserId, String description, List<String> photosRefs, List<String> panoramaReferences, boolean hasVRTour) {
+              String advertiserName, String advertiserId, String description, List<String> photosRefs, List<String> panoramaReferences, boolean hasVRTour) {
         if (title == null || pricePeriod == null || street == null || city == null ||
                 advertiserId == null || description == null || photosRefs == null)
             throw new IllegalArgumentException("An argument is null!");
@@ -44,6 +45,7 @@ public class Ad {
         this.title = title;
         this.price = price;
         this.pricePeriod = pricePeriod;
+        this.advertiserName = advertiserName;
         this.advertiserId = advertiserId;
         this.street = street;
         this.city = city;
@@ -64,6 +66,10 @@ public class Ad {
 
     public PricePeriod getPricePeriod() {
         return pricePeriod;
+    }
+
+    public String getAdvertiserName() {
+        return advertiserName;
     }
 
     public String getAdvertiserId() {
@@ -105,6 +111,7 @@ public class Ad {
         private PricePeriod pricePeriod;
         private String street;
         private String city;
+        private String advertiserName;
         private String advertiserId;
         private String description;
         private List<String> photosRefs;
@@ -133,6 +140,11 @@ public class Ad {
 
         public AdBuilder withCity(String city) {
             this.city = city;
+            return this;
+        }
+
+        public AdBuilder withAdvertiserName(String advertiserName) {
+            this.advertiserName = advertiserName;
             return this;
         }
 
@@ -172,6 +184,7 @@ public class Ad {
                     pricePeriod,
                     street,
                     city,
+                    advertiserName,
                     advertiserId,
                     description,
                     photosRefs,

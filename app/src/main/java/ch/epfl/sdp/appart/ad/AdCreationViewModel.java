@@ -52,10 +52,10 @@ public class AdCreationViewModel extends ViewModel {
      */
     public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
-        Ad ad = new Ad(title, price, pricePeriod, street, city, user.getUserId(), description,
+        Ad ad = new Ad(title, price, pricePeriod, street, city, user.getName(), user.getUserId(), description,
                 new ArrayList<>(), new ArrayList<>(), VRTourEnable);
-
         CompletableFuture<String> result = db.putAd(ad, photosUri, panoramasUris);
+
         return result.thenApply(s -> {
             user.addAdId(s);
             return true;

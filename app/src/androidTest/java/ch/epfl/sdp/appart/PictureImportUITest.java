@@ -19,7 +19,6 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
-import ch.epfl.sdp.appart.panorama.PictureCardAdapter;
 import ch.epfl.sdp.appart.panorama.SwapNotifiable;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -32,9 +31,6 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 @HiltAndroidTest
 public class PictureImportUITest {

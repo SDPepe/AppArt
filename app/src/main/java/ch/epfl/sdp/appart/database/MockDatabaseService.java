@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.ad.Ad;
-import ch.epfl.sdp.appart.ad.ContactInfo;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoaderVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderListenerVisitor;
 import ch.epfl.sdp.appart.glide.visitor.GlideLoaderVisitor;
@@ -30,6 +29,7 @@ public class MockDatabaseService implements DatabaseService {
     private final Ad ad;
     private final Map<String, User> users = new HashMap<>();
     private static final String ANDROID_FILE_PATH = "file:///android_asset/";
+    private final List<String> images = new ArrayList<>();
 
     public MockDatabaseService() {
 
@@ -38,6 +38,11 @@ public class MockDatabaseService implements DatabaseService {
         cards.add(new Card("unknown3", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown4", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("unknown5", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+
+        images.add("users/default/user_example_female.png");
+        images.add("users/default/user_example_male.png");
+        images.add("users/default/user_example_no_gender.png");
+        images.add("users/test/path/photo.jpeg");
 
         List<String> picturesReferences = Arrays.asList(
                 "fake_ad_1.jpg",
@@ -52,6 +57,7 @@ public class MockDatabaseService implements DatabaseService {
                 .withPrice(100000)
                 .withPricePeriod(PricePeriod.MONTH)
                 .withStreet("Station 18").withCity("1015 Lausanne")
+                .withAdvertiserName("Martin Vetterli")
                 .withAdvertiserId("vetterli-id")
                 .withDescription("Ever wanted the EPFL campus all for yourself?")
                 .withPicturesReferences(picturesReferences)
@@ -127,7 +133,7 @@ public class MockDatabaseService implements DatabaseService {
 
     @NotNull
     @Override
-    public CompletableFuture<Boolean> updateUser(User user, Uri uri) {
+    public CompletableFuture<Boolean> updateUser(User user) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         if (users.containsValue(user)) {
             users.put(user.getUserId(), user);
@@ -151,14 +157,27 @@ public class MockDatabaseService implements DatabaseService {
         return result;
     }
 
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        if (imagePathAndName == null){
+            result.completeExceptionally(new IllegalArgumentException());
+        } else {
+            images.add(imagePathAndName);
+            result.complete(true);
+        }
+        return result;
+    }
 
     @NonNull
     @Override
-    public CompletableFuture<Boolean> putImage(Uri uri, String name, String path) {
+    public CompletableFuture<Boolean> deleteImage(String imagePathAndName) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
-        if (uri == null || name == null || path == null){
+        if (imagePathAndName == null){
             result.completeExceptionally(new IllegalArgumentException());
         } else {
+            images.remove(imagePathAndName);
             result.complete(true);
         }
         return result;
@@ -169,6 +188,10 @@ public class MockDatabaseService implements DatabaseService {
         CompletableFuture<Void> futureClear = new CompletableFuture<>();
         futureClear.complete(null);
         return futureClear;
+    }
+
+    public List<String> getImages() {
+        return this.images;
     }
 
     public void accept(GlideLoaderVisitor visitor) {

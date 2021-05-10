@@ -31,8 +31,8 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
     private final MutableLiveData<String> adDescription = new MutableLiveData<>();
-    private final MutableLiveData<String> adAdvertiser = new MutableLiveData<>(); // name of user
-    private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>(); // id of announcer
+    private final MutableLiveData<String> adAdvertiserName = new MutableLiveData<>();
+    private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>();
     private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
     private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
 
@@ -58,8 +58,7 @@ public class AdViewModel extends ViewModel {
             this.adTitle.setValue(ad.getTitle());
             this.adPrice.setValue(ad.getPrice() + " / " + ad.getPricePeriod().toString());
             this.adDescription.setValue(ad.getDescription());
-
-            //this.adAdvertiser.setValue(ad.getContactInfo().name);
+            this.adAdvertiserName.setValue(ad.getAdvertiserName());
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
 
             this.adPhotosRefs.setValue(ad.getPhotosRefs());
@@ -81,7 +80,7 @@ public class AdViewModel extends ViewModel {
 
     public LiveData<String> getDescription() { return adDescription; }
 
-    public LiveData<String> getAdvertiser() { return adAdvertiser; }
+    public LiveData<String> getAdAdvertiserName() { return adAdvertiserName; }
 
     public LiveData<String> getAdvertiserId() { return adAdvertiserId; }
 

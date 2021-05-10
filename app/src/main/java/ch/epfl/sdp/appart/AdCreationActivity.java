@@ -2,8 +2,6 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +32,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.ad.PricePeriod;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -207,19 +206,19 @@ public class AdCreationActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     private void takePhoto() {
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra("Activity","Ads");
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.AD_CREATION_ACTIVITY);
         startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+        if (requestCode == 1){
             if (resultCode == RESULT_OK) {
-                int size = data.getIntExtra("size", 0);
+                int size = data.getIntExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
                 List<Uri> listUri = new ArrayList<>();
-                for(int i = 0; i< size; i++) {
-                 listUri.add(data.getParcelableExtra("imageUri"+i));
+                for(int i = 0; i< size; i++){
+                 listUri.add(data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI + i));
                 }
                 picturesUris = listUri;
                 fillHorizontalViewWithPictures(findViewById(R.id.pictures_AdCreation_linearLayout), listUri);

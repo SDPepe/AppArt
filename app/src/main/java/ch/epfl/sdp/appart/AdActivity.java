@@ -24,6 +24,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -61,11 +62,11 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getAddress().observe(this, this::updateAddress);
         mViewModel.getPrice().observe(this, this::updatePrice);
         mViewModel.getDescription().observe(this, this::updateDescription);
-        mViewModel.getAdvertiser().observe(this, this::updateAdvertiser);
+        mViewModel.getAdAdvertiserName().observe(this, this::updateAdvertiserName);
         mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
         mViewModel.observePanoramasReferences(this, this::updatePanoramasReferences);
 
-        adId = getIntent().getStringExtra("adID");
+        adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
         mViewModel.initAd(adId);
     }
 
@@ -120,7 +121,7 @@ public class AdActivity extends ToolbarActivity {
         setIfNotNull(descriptionView, description);
     }
 
-    private void updateAdvertiser(String username) {
+    private void updateAdvertiserName(String username) {
         TextView usernameView = findViewById(R.id.user_field_Ad_textView);
         setIfNotNull(usernameView, username);
     }
@@ -154,7 +155,7 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openContactInfo(View view) {
         Intent intent = new Intent(this, SimpleUserProfileActivity.class);
-        intent.putExtra("advertiserId", this.advertiserId);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_USER_ID, this.advertiserId);
         startActivity(intent);
     }
 

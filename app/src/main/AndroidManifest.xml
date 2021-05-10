@@ -25,7 +25,6 @@
             android:name=".MapActivity"
             android:exported="true" />
         <activity android:name=".FullScreenImageActivity" />
-        <activity android:name=".LocationActivity" />
         <activity android:name=".SimpleUserProfileActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".UserProfileActivity" />
