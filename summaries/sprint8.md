@@ -2,6 +2,8 @@
 
 ## Quentin
 
+This week I finilized my work on syncronizing the panoramas images with firebase and allows user to post ads with panoramas images and to show them in the created ad. I created a class StoragePathBuilder that allows creating path with less boiler plate code. It's really a wrapper of StringBuilder but speciailized in build path for the database. I aslo created a comparator for firebase images. When we retrieve the images from firebase we compare thier index to show them in some order. This class uses regex to check that the images name is well formed according to our conventions and it allows sorting an array containing such images.
+
 ## Carlo
 
 ## Émilien
