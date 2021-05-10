@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/action_add_favorite"
+        android:icon="@drawable/favorite_button"
+        android:title="@string/add_to_favorites"
+        app:showAsAction="ifRoom" />
+
     <!-- Settings, should always be in the overflow -->
     <item
         android:id="@+id/action_settings"
@@ -22,7 +28,4 @@
         android:id="@+id/action_logout"
         android:title="@string/action_logout"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/map_Toolbar_item"
-        android:title="@string/action_map" />
 </menu>
