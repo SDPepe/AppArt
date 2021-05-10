@@ -192,7 +192,6 @@ public class MapUITest {
         intended(allOf(hasComponent(AdActivity.class.getName()), hasExtra(
                 "adID", card.getAdId())));
 
-
     }
 
     @After

@@ -140,10 +140,9 @@ public class AdCreationUITest {
         Intent resultIntent = new Intent();
         resultIntent.putExtra("data", icon);
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
-
+        //com.android.camera2
         // When an intent is sent to the Camera, this tells Espresso to respond with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);
-
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.camera_Camera_button)).perform(click());
