@@ -234,6 +234,7 @@ public class AdActivity extends ToolbarActivity {
                 })
                 // if update successful, save ad locally
                 .thenAccept(res -> {
+                    // TODO get bitmaps from list of images
                     // TODO use antoine API to save ad locally, complete result accordingly
                     /*
                     .exceptionally(e -> {

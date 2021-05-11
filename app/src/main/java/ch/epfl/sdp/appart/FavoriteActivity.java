@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -10,6 +11,7 @@ import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +35,18 @@ public class FavoriteActivity extends ToolbarActivity {
 
         FavoriteViewModel mViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
 
-        //TODO handle database exception
-        mViewModel.initHome();
+        mViewModel.initHome()
+                .exceptionally(e -> {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
+                    return null;
+                })
+                .thenAccept(res -> {
+                    recyclerView = findViewById(R.id.recycler_favorites);
+                    recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
+                    recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
+                    mViewModel.getFavorites().observe(this, this::updateList);
 
-        recyclerView = findViewById(R.id.recycler_favorites);
-        recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
-        recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
-        mViewModel.getFavorites().observe(this, this::updateList);
+                });
     }
 
     /**
