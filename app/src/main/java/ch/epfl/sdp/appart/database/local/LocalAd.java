@@ -8,8 +8,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -50,6 +52,7 @@ public class LocalAd {
     private final List<Card> cards;
     private final Map<String, Ad> idsToAd;
     private final Map<String, User> idsToUser;
+    private final Set<String> userIds;
 
     private boolean firstLoad;
 
@@ -60,6 +63,7 @@ public class LocalAd {
         this.idsToAd = new HashMap<>();
         this.idsToUser = new HashMap<>();
         this.firstLoad = false;
+        this.userIds = new HashSet<>();
     }
 
     /**
@@ -293,7 +297,10 @@ public class LocalAd {
         //Adding the data to memory if we have done the first load
         if (this.firstLoad) {
             this.idsToAd.put(adId, localAd);
-            this.idsToUser.put(localUser.getUserId(), localUser);
+            if(!this.userIds.contains(localUser.getUserId())) {
+                this.idsToUser.put(localUser.getUserId(), localUser);
+                this.userIds.add(localUser.getUserId());
+            }
             this.cards.add(localCard);
         }
 
@@ -364,7 +371,11 @@ public class LocalAd {
 
         User user = UserSerializer.deserialize((String) userMap.get(ID),
                 userMap);
-        this.idsToUser.put((String) userMap.get(ID), user);
+        if(!userIds.contains(user.getUserId())) {
+            this.idsToUser.put((String) userMap.get(ID), user);
+            this.userIds.add(user.getUserId());
+        }
+
 
         Ad ad = AdSerializer.deserialize(adMap);
 
@@ -440,6 +451,7 @@ public class LocalAd {
         this.cards.clear();
         this.idsToAd.clear();
         this.idsToUser.clear();
+        this.userIds.clear();
     }
 
     public void cleanFavorites() {
@@ -480,6 +492,7 @@ public class LocalAd {
         this.idsToUser.remove(userId);
         this.idsToAd.remove(adId);
         this.cards.remove(cardIdx);
+        this.userIds.remove(userId);
     }
 
 }
