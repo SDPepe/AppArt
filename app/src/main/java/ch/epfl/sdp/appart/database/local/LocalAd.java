@@ -1,25 +1,18 @@
 package ch.epfl.sdp.appart.database.local;
 
-import com.google.common.collect.Collections2;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.function.Supplier;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
@@ -38,7 +31,7 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  * <p>
  * //TODO: Write unit tests but also test on android
  * //TODO: Write complete documentation
- * //TODO: Implement removeLocalAd(String cardId) --> Or maybe other
+ * //TODO: Store users separately
  * //TODO: Implement BITMAP loading
  * interface if its better for the callers.
  */
@@ -58,7 +51,7 @@ public class LocalAd {
     private final Map<String, Ad> idsToAd;
     private final Map<String, User> idsToUser;
 
-    private boolean isDataInitialized;
+    private boolean firstLoad;
 
     public LocalAd(String appPath) {
         if (appPath == null) throw new IllegalArgumentException();
@@ -66,7 +59,7 @@ public class LocalAd {
         this.cards = new ArrayList<>();
         this.idsToAd = new HashMap<>();
         this.idsToUser = new HashMap<>();
-        this.isDataInitialized = false;
+        this.firstLoad = false;
     }
 
     /**
@@ -271,17 +264,6 @@ public class LocalAd {
                                                    User user,
                                                    Function<String,
                                                            CompletableFuture<Void>> loadImages, String currentUserId) {
-
-        //For now we re read the full favorites every time, this might be
-        // optimized later
-        //Maybe we could use the ids to just remove the entry in the specific
-        // data structure
-        if (this.isDataInitialized) {
-            this.isDataInitialized = false;
-            this.cards.clear();
-            this.idsToUser.clear();
-            this.idsToAd.clear();
-        }
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
         String favoritesPath = appPath + favoritesFolder + "/";
 
@@ -305,6 +287,16 @@ public class LocalAd {
         // card from the ad
         Ad localAd = buildLocalAd(ad, adFolderPath);
         User localUser = buildLocalUser(user, adFolderPath);
+        Card localCard = buildCardFromAd(localAd, cardId, adId,
+                localUser.getUserId());
+
+        //Adding the data to memory if we have done the first load
+        if (this.firstLoad) {
+            this.idsToAd.put(adId, localAd);
+            this.idsToUser.put(localUser.getUserId(), localUser);
+            this.cards.add(localCard);
+        }
+
 
         //Serializing
         Map<String, Object> adMap = AdSerializer.serialize(localAd);
@@ -339,6 +331,13 @@ public class LocalAd {
         });
 
         return futureSuccess;
+    }
+
+    private Card buildCardFromAd(Ad ad, String cardID, String adID,
+                                 String userID) {
+        return new Card(cardID, adID, userID, ad.getCity(),
+                ad.getPrice(), ad.getPhotosRefs().get(0),
+                ad.hasVRTour());
     }
 
     private boolean readFolder(File folder) {
@@ -377,12 +376,11 @@ public class LocalAd {
 
         this.idsToAd.put((String) adMap.get(ID), adWithRef);
 
+
         //photoRefs.get(0) maybe unsafe but I don't think really think so
         //TODO:!!!! It is if the ad doesn't have any photos
-        Card card = new Card((String) adMap.get(CARD_ID),
-                (String) adMap.get(ID), user.getUserId(), adWithRef.getCity(),
-                adWithRef.getPrice(), adWithRef.getPhotosRefs().get(0),
-                adWithRef.hasVRTour());
+        Card card = buildCardFromAd(adWithRef, (String) adMap.get(CARD_ID),
+                (String) adMap.get(ID), user.getUserId());
         //Maybe use a set instead, but then need to implement equals
         this.cards.add(card);
 
@@ -399,49 +397,26 @@ public class LocalAd {
             success &= readFolder(folder);
         }
         if (success) {
-            this.isDataInitialized = true;
+            this.firstLoad = true;
         }
         return success;
     }
 
     public List<Card> getCards(String currentUserID) {
-
-        if (this.isDataInitialized) {
-            return cards;
-        }
-        boolean success = readAllLocalDataForAUser(currentUserID);
-        if (success) {
-            return cards;
-        }
-
-        return null;
+        return getFromMemory(currentUserID, () -> cards);
     }
 
     public Ad getAd(String adId, String currentUserID) {
-        if (this.isDataInitialized) {
-            return idsToAd.get(adId);
-        }
-        boolean success = readAllLocalDataForAUser(currentUserID);
-        if (success) {
-            return idsToAd.get(adId);
-        }
-        return null;
+        return getFromMemory(currentUserID, () -> idsToAd.get(adId));
     }
 
     public User getUser(String currentUserID, String wantedUserID) {
-        if (this.isDataInitialized) {
-            return idsToUser.get(wantedUserID);
-        }
-        boolean success = readAllLocalDataForAUser(currentUserID);
-        if (success) {
-            return idsToUser.get(wantedUserID);
-        }
-        return null;
+        return getFromMemory(currentUserID, () -> idsToUser.get(wantedUserID));
     }
 
     private void deleteDir(File dir) {
         File[] files = dir.listFiles();
-        if(files != null) {
+        if (files != null) {
             for (final File file : files) {
                 deleteDir(file);
             }
@@ -449,8 +424,19 @@ public class LocalAd {
         dir.delete();
     }
 
+    private <T> T getFromMemory(String currentUserID, Supplier<T> returnFunc) {
+        if(this.firstLoad) {
+            return returnFunc.get();
+        }
+        boolean success = readAllLocalDataForAUser(currentUserID);
+        if (success) {
+            return returnFunc.get();
+        }
+        return null;
+    }
+
     private void clearMemory() {
-        this.isDataInitialized = false;
+        this.firstLoad = false;
         this.cards.clear();
         this.idsToAd.clear();
         this.idsToUser.clear();
@@ -463,9 +449,9 @@ public class LocalAd {
     }
 
     public int findCardById(String cardId) {
-        for(int i = 0; i < this.cards.size(); ++i) {
+        for (int i = 0; i < this.cards.size(); ++i) {
             Card card = this.cards.get(i);
-            if(card.getId().equals(cardId)) {
+            if (card.getId().equals(cardId)) {
                 return i;
             }
         }
@@ -474,18 +460,23 @@ public class LocalAd {
 
 
     public void removeCard(String cardId, String currentUserID) {
-        String pathToCard = this.appPath + LocalAd.favoritesFolder + "/" + currentUserID + "/" + cardId;
+        String pathToCard =
+                this.appPath + LocalAd.favoritesFolder + "/" + currentUserID + "/" + cardId;
         deleteDir(new File(pathToCard));
 
         int cardIdx = findCardById(cardId);
 
-        if(cardIdx == -1) return;
+        if (cardIdx == -1) return;
 
         Card card = this.cards.get(cardIdx);
 
         String adId = card.getAdId();
         String userId = card.getUserId();
 
+        //TODO: There is one card per ad so it is ok to remove the card and
+        // the ad. However, a user might have posted several ads, therefore
+        // we need to check before removing the user from memory.
+        // We should maybe store the users in a separate folder.
         this.idsToUser.remove(userId);
         this.idsToAd.remove(adId);
         this.cards.remove(cardIdx);
