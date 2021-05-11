@@ -44,8 +44,8 @@
     <!-- Strings for User Profile UI -->
     <string name="uniAccountClaimer">  UNI account  </string>
     <string name="backButtonText"> BACK </string>
-    <string name="editProfileButtonText"> EDIT PROFILE </string>
-    <string name="doneButtonText"> DONE </string>
+    <string name="editProfileButtonText"> Edit profile </string>
+    <string name="doneButtonText"> Confirm </string>
     <string name="ageText"> Age </string>
     <string name="phoneNumberText"> Phone </string>
     <string name="nameText"> Name </string>
