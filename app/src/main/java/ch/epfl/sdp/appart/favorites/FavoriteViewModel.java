@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -52,33 +53,24 @@ public class FavoriteViewModel extends ViewModel {
      * fetched info and updates the local db.
      */
     public CompletableFuture<Void> initHome() {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+
         // load from local db
+        localLoad()
+                // after local load fetch from databaseservice and update content
+                // try to fetch even if local load fails
+                .whenComplete((e, res) ->
+                        fetchAndUpdate()
+                                .exceptionally(e1 -> {
+                                    result.completeExceptionally(e1);
+                                    return null;
+                                })
+                                .thenAccept(res1 -> {
+                                    result.complete(null);
+                                })
+                );
 
-        // fetch from databaseservice and update content
-
-        CompletableFuture<User> user = database.getUser(loginService.getCurrentUser().getUserId());
-        user.exceptionally(e -> {
-            Log.d("EXCEPTION_DB", e.getMessage());
-            return null;
-        });
-        user.thenAccept(u -> {
-            CompletableFuture<List<Card>> cards = database.getCards();
-            cards.exceptionally(e -> {
-                Log.d("EXCEPTION_DB", e.getMessage());
-                return null;
-            });
-            cards.thenAccept(cs -> {
-                Set<String> favoritesIds = u.getFavoritesIds();
-                List<Card> filteredCards = new LinkedList<>();
-                for (Card c : cs) {
-                    if (favoritesIds.contains(c.getAdId()))
-                        filteredCards.add(c);
-                }
-                lFavorites.setValue(filteredCards);
-            });
-        });
-
-        return new CompletableFuture<>();
+        return result;
     }
 
 
@@ -92,15 +84,65 @@ public class FavoriteViewModel extends ViewModel {
     /**
      * Loads content from local database
      */
-    private CompletableFuture<Void> localLoad(){
+    private CompletableFuture<Void> localLoad() {
+        // TODO use antoine API to load cards from local db
         throw new NotImplementedError();
     }
 
     /**
      * Fetches info from the DatabaseService and if successful updates the local database
+     *
      * @return
      */
     private CompletableFuture<Void> fetchAndUpdate() {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<User> user = database.getUser(loginService.getCurrentUser().getUserId());
+
+        // if any exception, complete exceptionally.
+        // if good results, from user get favorites, then get all cards and filter keeping favorites
+        // only, set favorites values and update local db
+        user
+                .exceptionally(e -> {
+                    Log.d("EXCEPTION_DB", e.getMessage());
+                    result.completeExceptionally(e);
+                    return null;
+                })
+                .thenAccept(u -> {
+                    CompletableFuture<List<Card>> cards = database.getCards();
+                    cards
+                            .exceptionally(e -> {
+                                Log.d("EXCEPTION_DB", e.getMessage());
+                                result.completeExceptionally(e);
+                                return null;
+                            })
+                            .thenAccept(cs -> {
+                                Set<String> favoritesIds = u.getFavoritesIds();
+                                List<Card> filteredCards = new LinkedList<>();
+                                for (Card c : cs) {
+                                    if (favoritesIds.contains(c.getAdId()))
+                                        filteredCards.add(c);
+                                }
+                                lFavorites.setValue(filteredCards);
+                                updateLocalDB(filteredCards)
+                                        .exceptionally(e -> {
+                                            result.completeExceptionally(e);
+                                            return null;
+                                        })
+                                        .thenAccept(res -> {
+                                            result.complete(null);
+                                        });
+                            });
+                });
+
+        return result;
+    }
+
+    /**
+     * Retrieves the complete ads from the favorite cards, then updates the local database
+     */
+    private CompletableFuture<Void> updateLocalDB(List<Card> cards) {
+        // TODO get ads from cards
+        // TODO use antoine API to write ads
         throw new NotImplementedError();
     }
 }
