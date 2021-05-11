@@ -71,7 +71,14 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
 
         adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
-        mViewModel.initAd(adId);
+        String openingActivity = getIntent().getStringExtra(
+                ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
+        // init content, show a toast if load failed
+        mViewModel.initAd(adId, openingActivity.equals(ActivityCommunicationLayout.FAVORITES_ACTIVITY))
+                .exceptionally(e -> {
+                    Toast.makeText(this, R.string.loadFail_Ad, Toast.LENGTH_SHORT).show();
+                    return null;
+                });
     }
 
     private void updateTitle(String title) {
@@ -223,7 +230,7 @@ public class AdActivity extends ToolbarActivity {
     /**
      * Save new ad id in database and if successful save ad locally
      */
-    private void saveFavorite(CompletableFuture<Void> result, User user){
+    private void saveFavorite(CompletableFuture<Void> result, User user) {
         user.addFavorite(adId);
         database.updateUser(user)
                 .exceptionally(e -> {

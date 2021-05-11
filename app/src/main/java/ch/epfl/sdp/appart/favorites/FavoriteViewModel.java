@@ -93,8 +93,6 @@ public class FavoriteViewModel extends ViewModel {
 
     /**
      * Fetches info from the DatabaseService and if successful updates the local database
-     *
-     * @return
      */
     private CompletableFuture<Void> fetchAndUpdate() {
         CompletableFuture<Void> result = new CompletableFuture<>();

@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import kotlin.NotImplementedError;
 
 
 /**
@@ -38,27 +39,25 @@ public class AdViewModel extends ViewModel {
     }
 
     /**
-     * Fetches the ad info from the database and sets the information to the LiveData fields.
+     * Fetches the ad info from the database and sets the information to the LiveData fields. If the
+     * activity was opened from the favorites page, load the data from the local db first and then
+     * fetch from server to ensure latest data is shown.
      *
      * @param id the unique ID of the ad in the database
+     * @param fromFavorites
+     * @return a completable future to let the activity know if the action was successful
      */
-    public void initAd(String id) {
+    public CompletableFuture<Void> initAd(String id, Boolean fromFavorites) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<Void> loadResult = new CompletableFuture<>();
+        if (fromFavorites)
+            localLoad(loadResult, id);
+        else
+            loadResult.complete(null);
 
-        CompletableFuture<Ad> futureAd = db.getAd(id);
-        futureAd.exceptionally(e -> {
-            Log.d("ANNOUNCE", "DATABASE FAIL");
-            return null;
-        });
-        futureAd.thenAccept(ad -> {
-            this.adAddress.setValue(ad.getStreet() + ", " + ad.getCity());
-            this.adTitle.setValue(ad.getTitle());
-            this.adPrice.setValue(ad.getPrice() + " / " + ad.getPricePeriod().toString());
-            this.adDescription.setValue(ad.getDescription());
-            this.adAdvertiserName.setValue(ad.getAdvertiserName());
-            this.adAdvertiserId.setValue(ad.getAdvertiserId());
-
-            this.adPhotosRefs.setValue(ad.getPhotosRefs());
-        });
+        // even if local load fails, try to load from server
+        loadResult.whenComplete((e,res) -> fetchAndSet(result, id));
+        return result;
     }
 
     // Getters
@@ -76,4 +75,55 @@ public class AdViewModel extends ViewModel {
 
     public LiveData<String> getAdvertiserId() { return adAdvertiserId; }
 
+    /**
+     * Loads data from the local DB
+     */
+    private void localLoad(CompletableFuture<Void> result, String adId){
+        // TODO use antoine API to get ad from local DB
+        // TODO set values
+        throw new NotImplementedError();
+    }
+
+    /**
+     * Fetches ad data from the server
+     */
+    private void fetchAndSet(CompletableFuture<Void> result, String adId) {
+        db.getAd(adId)
+                .exceptionally(e -> {
+                    Log.d("ANNOUNCE", "DATABASE FAIL");
+                    result.completeExceptionally(e);
+                    return null;
+                })
+                .thenAccept(ad -> {
+                    setAdValues(ad);
+                    result.complete(null);
+                });
+    }
+
+    /**
+     * Helper to set values from an ad
+     */
+    private void setAdValues(Ad ad){
+        this.adAddress.setValue(addressFrom(ad.getStreet(), ad.getCity()));
+        this.adTitle.setValue(ad.getTitle());
+        this.adPrice.setValue(priceFrom(ad.getPrice(), ad.getPricePeriod()));
+        this.adDescription.setValue(ad.getDescription());
+        this.adAdvertiserName.setValue(ad.getAdvertiserName());
+        this.adAdvertiserId.setValue(ad.getAdvertiserId());
+        this.adPhotosRefs.setValue(ad.getPhotosRefs());
+    }
+
+    /**
+     * Helper to concatenate an address string
+     */
+    private String addressFrom(String street, String city) {
+        return street + ", " + city;
+    }
+
+    /**
+     * Helper to concatenate a price
+     */
+    private String priceFrom(long price, PricePeriod period) {
+        return price + " / " + period.toString();
+    }
 }
