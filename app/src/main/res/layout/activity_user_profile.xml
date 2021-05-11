@@ -397,10 +397,26 @@
       android:layout_height="wrap_content"
       android:orientation="vertical"
       app:layout_constraintGuide_percent="@dimen/vertical_1" />
+
     <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline26"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
       app:layout_constraintGuide_percent="@dimen/vertical_2" />
+
+    <ProgressBar
+      android:id="@+id/progress_UserProfile_ProgressBar"
+      android:layout_width="100dp"
+      android:layout_height="100dp"
+      android:progress="80"
+      android:useLevel="false"
+      android:visibility="invisible"
+      android:elevation="10dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      android:progressDrawable="@drawable/style_rolling"
+      />
 </androidx.constraintlayout.widget.ConstraintLayout>
