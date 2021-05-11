@@ -1,17 +1,25 @@
 package ch.epfl.sdp.appart.database.local;
 
+import com.google.common.collect.Collections2;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
@@ -165,6 +173,8 @@ public class LocalAd {
                 return false;
             }
         } else {
+            //We can just remove the extra photos because FileOutputStream
+            // overwrites the whole file
             return removeExtraPhotos(adFolderPath, futureNumberOfPhotos);
         }
         return true;
@@ -264,7 +274,14 @@ public class LocalAd {
 
         //For now we re read the full favorites every time, this might be
         // optimized later
-        this.isDataInitialized = false;
+        //Maybe we could use the ids to just remove the entry in the specific
+        // data structure
+        if (this.isDataInitialized) {
+            this.isDataInitialized = false;
+            this.cards.clear();
+            this.idsToUser.clear();
+            this.idsToAd.clear();
+        }
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
         String favoritesPath = appPath + favoritesFolder + "/";
 
@@ -377,14 +394,14 @@ public class LocalAd {
                 this.appPath + LocalAd.favoritesFolder + "/" + wantedUserID;
         File favFolder = new File(favoritesFolderPath);
         File[] folders = favFolder.listFiles(File::isDirectory);
-        boolean failed = false;
+        boolean success = true;
         for (File folder : folders) {
-            failed |= readFolder(folder);
+            success &= readFolder(folder);
         }
-        if (!failed) {
+        if (success) {
             this.isDataInitialized = true;
         }
-        return failed;
+        return success;
     }
 
     public List<Card> getCards(String currentUserID) {
@@ -422,17 +439,56 @@ public class LocalAd {
         return null;
     }
 
-
-    public static class LocalCompleteAd {
-        public final Card card;
-        public final Ad ad;
-        public final User user;
-
-        public LocalCompleteAd(Card card, Ad ad, User user) {
-            this.card = card;
-            this.ad = ad;
-            this.user = user;
+    private void deleteDir(File dir) {
+        File[] files = dir.listFiles();
+        if(files != null) {
+            for (final File file : files) {
+                deleteDir(file);
+            }
         }
+        dir.delete();
+    }
+
+    private void clearMemory() {
+        this.isDataInitialized = false;
+        this.cards.clear();
+        this.idsToAd.clear();
+        this.idsToUser.clear();
+    }
+
+    public void cleanFavorites() {
+        File favoritesDir = new File(this.appPath + LocalAd.favoritesFolder);
+        deleteDir(favoritesDir);
+        clearMemory();
+    }
+
+    public int findCardById(String cardId) {
+        for(int i = 0; i < this.cards.size(); ++i) {
+            Card card = this.cards.get(i);
+            if(card.getId().equals(cardId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    public void removeCard(String cardId, String currentUserID) {
+        String pathToCard = this.appPath + LocalAd.favoritesFolder + "/" + currentUserID + "/" + cardId;
+        deleteDir(new File(pathToCard));
+
+        int cardIdx = findCardById(cardId);
+
+        if(cardIdx == -1) return;
+
+        Card card = this.cards.get(cardIdx);
+
+        String adId = card.getAdId();
+        String userId = card.getUserId();
+
+        this.idsToUser.remove(userId);
+        this.idsToAd.remove(adId);
+        this.cards.remove(cardIdx);
     }
 
 }

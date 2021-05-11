@@ -2,9 +2,16 @@ package ch.epfl.sdp.appart;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
@@ -12,6 +19,13 @@ import ch.epfl.sdp.appart.database.local.LocalAd;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+
 
 public class LocalAdTest {
 
@@ -93,14 +107,33 @@ public class LocalAdTest {
             .build();
 
     @Test
-    public void simpleWriteLocalAdTests() {
+    public void simpleWriteLocalAdTests() throws IOException {
         LocalAd localAd = new LocalAd(".");
 
-        //TODO: Need to test folders already existing to see remove functionnality
+        //TODO: Need to test folders already existing to see remove
+        // functionality
         //TODO: Need to test corrupt data
         //TODO: Need to test several ad per users
-        localAd.writeCompleteAd("ad1", "card1", ad1, users.get(0), str -> CompletableFuture.completedFuture(null), "currentUser");
-        localAd.writeCompleteAd("ad2", "card1", ad1, users.get(0), str -> CompletableFuture.completedFuture(null), "currentUser");
-        List<Card> cards = localAd.getCards("currentUser");
+        localAd.cleanFavorites();
+
+        localAd.writeCompleteAd("ad1", "card1", ad1, users.get(0),
+                str -> CompletableFuture.completedFuture(null), "currentUser");
+        localAd.writeCompleteAd("ad2", "card2", ad2, users.get(1),
+                str -> CompletableFuture.completedFuture(null), "currentUser");
+        localAd.writeCompleteAd("ad3", "card3", ad3, users.get(2),
+                str -> CompletableFuture.completedFuture(null), "currentUser");
+        localAd.writeCompleteAd("ad4", "card4", ad4, users.get(3),
+                str -> CompletableFuture.completedFuture(null), "currentUser");
+        localAd.writeCompleteAd("ad5", "card5", ad5, users.get(4),
+                str -> CompletableFuture.completedFuture(null), "currentUser");
+
+
+        List<Card> cardsRetrieved = localAd.getCards("currentUser");
+        assertEquals(cards, cardsRetrieved);
+
+
+
+
+        localAd.cleanFavorites();
     }
 }
