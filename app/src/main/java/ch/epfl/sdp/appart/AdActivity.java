@@ -198,7 +198,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Adds ad to favorites list in database and if successful it saves the ad in the localDB
+     * Check if user is logged in and add new favorite ad to user
      */
     private CompletableFuture<Void> addNewFavorite() {
         CompletableFuture<Void> result = new CompletableFuture<>();
@@ -210,29 +210,37 @@ public class AdActivity extends ToolbarActivity {
             );
             return result;
         }
-        // get user info, add ad to favorites list and update user
         database.getUser(user.getUserId())
                 .exceptionally(e -> {
                     result.completeExceptionally(
                             new DatabaseServiceException(getString(R.string.favFail_Ad)));
                     return null;
                 })
-                .thenAccept(u -> {
-                    u.addFavorite(adId);
-                    database.updateUser(u)
-                            .exceptionally(e -> {
-                                result.completeExceptionally(
-                                        new DatabaseServiceException(
-                                                getString(R.string.favFail_Ad)));
-                                return null;
-                            })
-                            // if update successful, save ad locally
-                            .thenAccept(res -> {
-                                // TODO use antoine API to save ad locally, complete result accordingly
-                                    });
-                });
+                .thenAccept(u -> saveFavorite(result, u));
         return result;
     }
 
-
+    /**
+     * Save new ad id in database and if successful save ad locally
+     */
+    private void saveFavorite(CompletableFuture<Void> result, User user){
+        user.addFavorite(adId);
+        database.updateUser(user)
+                .exceptionally(e -> {
+                    result.completeExceptionally(
+                            new DatabaseServiceException(
+                                    getString(R.string.favFail_Ad)));
+                    return null;
+                })
+                // if update successful, save ad locally
+                .thenAccept(res -> {
+                    // TODO use antoine API to save ad locally, complete result accordingly
+                    /*
+                    .exceptionally(e -> {
+                        result.completeExceptionally(new DatabaseServiceException(getString(R.string.favFail_Ad)));
+                        return null; });
+                    .thenAccept(res -> result.complete(null));
+                     */
+                });
+    }
 }
