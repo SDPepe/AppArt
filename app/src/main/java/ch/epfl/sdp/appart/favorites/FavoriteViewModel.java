@@ -96,45 +96,50 @@ public class FavoriteViewModel extends ViewModel {
      */
     private CompletableFuture<Void> fetchAndUpdate() {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        CompletableFuture<User> user = database.getUser(loginService.getCurrentUser().getUserId());
 
         // if any exception, complete exceptionally.
         // if good results, from user get favorites, then get all cards and filter keeping favorites
         // only, set favorites values and update local db
-        user
+        database.getUser(loginService.getCurrentUser().getUserId())
                 .exceptionally(e -> {
                     Log.d("EXCEPTION_DB", e.getMessage());
                     result.completeExceptionally(e);
                     return null;
                 })
                 .thenAccept(u -> {
-                    CompletableFuture<List<Card>> cards = database.getCards();
-                    cards
+                    database.getCards()
                             .exceptionally(e -> {
                                 Log.d("EXCEPTION_DB", e.getMessage());
                                 result.completeExceptionally(e);
                                 return null;
                             })
                             .thenAccept(cs -> {
-                                Set<String> favoritesIds = u.getFavoritesIds();
-                                List<Card> filteredCards = new LinkedList<>();
-                                for (Card c : cs) {
-                                    if (favoritesIds.contains(c.getAdId()))
-                                        filteredCards.add(c);
-                                }
-                                lFavorites.setValue(filteredCards);
-                                updateLocalDB(filteredCards)
-                                        .exceptionally(e -> {
-                                            result.completeExceptionally(e);
-                                            return null;
-                                        })
-                                        .thenAccept(res -> {
-                                            result.complete(null);
-                                        });
+                                filterAndUpdate(result, u, cs);
                             });
                 });
 
         return result;
+    }
+
+    /**
+     * Filters cards with user favorites, then sets values and updates the local database
+     */
+    private void filterAndUpdate(CompletableFuture<Void> result, User user, List<Card> cards) {
+        Set<String> favoritesIds = user.getFavoritesIds();
+        List<Card> filteredCards = new LinkedList<>();
+        for (Card c : cards) {
+            if (favoritesIds.contains(c.getAdId()))
+                filteredCards.add(c);
+        }
+        lFavorites.setValue(filteredCards);
+        updateLocalDB(filteredCards)
+                .exceptionally(e -> {
+                    result.completeExceptionally(e);
+                    return null;
+                })
+                .thenAccept(res -> {
+                    result.complete(null);
+                });
     }
 
     /**
