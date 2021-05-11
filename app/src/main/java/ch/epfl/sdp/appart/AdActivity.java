@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
@@ -185,7 +186,7 @@ public class AdActivity extends ToolbarActivity {
         if (item.getItemId() == R.id.action_add_favorite) {
             addNewFavorite()
                     .exceptionally(e -> {
-                        Toast.makeText(this, R.string.favFail_Ad, Toast.LENGTH_SHORT);
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
                         return null;
                     })
                     .thenAccept(res ->
@@ -197,15 +198,40 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Adds ad to favorites list in database and saves it in the localDB
+     * Adds ad to favorites list in database and if successful it saves the ad in the localDB
      */
     private CompletableFuture<Void> addNewFavorite() {
-        // TODO check the user is logged in
-        database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
-            u.addFavorite(adId);
-            database.updateUser(u);
-        });
-        throw new NotImplementedError();
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        // check that the user is logged in
+        User user = login.getCurrentUser();
+        if (user == null) {
+            result.completeExceptionally(
+                    new UnsupportedOperationException(getString(R.string.userNotLoggedIn_Ad))
+            );
+            return result;
+        }
+        // get user info, add ad to favorites list and update user
+        database.getUser(user.getUserId())
+                .exceptionally(e -> {
+                    result.completeExceptionally(
+                            new DatabaseServiceException(getString(R.string.favFail_Ad)));
+                    return null;
+                })
+                .thenAccept(u -> {
+                    u.addFavorite(adId);
+                    database.updateUser(u)
+                            .exceptionally(e -> {
+                                result.completeExceptionally(
+                                        new DatabaseServiceException(
+                                                getString(R.string.favFail_Ad)));
+                                return null;
+                            })
+                            // if update successful, save ad locally
+                            .thenAccept(res -> {
+                                // TODO use antoine API to save ad locally, complete result accordingly
+                                    });
+                });
+        return result;
     }
 
 
