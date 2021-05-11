@@ -33,7 +33,7 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adDescription = new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiserName = new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> adPhotosReferences = new MutableLiveData<>();
     private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
 
     @Inject
@@ -61,7 +61,7 @@ public class AdViewModel extends ViewModel {
             this.adAdvertiserName.setValue(ad.getAdvertiserName());
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
 
-            this.adPhotosRefs.setValue(ad.getPhotosRefs());
+            this.adPhotosReferences.setValue(ad.getPhotosRefs());
             this.panoramasReferences.setValue(ad.getPanoramaReferences());
         });
     }
@@ -72,7 +72,7 @@ public class AdViewModel extends ViewModel {
     // Getters
     public LiveData<String> getTitle() { return adTitle; }
 
-    public LiveData<List<String>> getPhotosRefs() { return adPhotosRefs; }
+    public LiveData<List<String>> getPhotosRefs() { return adPhotosReferences; }
 
     public LiveData<String> getAddress() { return adAddress; }
 

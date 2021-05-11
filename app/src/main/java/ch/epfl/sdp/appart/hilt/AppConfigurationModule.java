@@ -19,7 +19,7 @@ import dagger.hilt.components.SingletonComponent;
 public class AppConfigurationModule {
     @Singleton
     @Provides
-    public static ApplicationConfiguration provideGeocoder(@ApplicationContext Context context) {
+    public static ApplicationConfiguration provideAntoine(@ApplicationContext Context context) {
         return new ApplicationConfiguration();
     }
 }

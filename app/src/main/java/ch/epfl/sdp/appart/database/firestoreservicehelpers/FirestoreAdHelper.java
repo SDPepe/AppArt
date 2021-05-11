@@ -60,8 +60,6 @@ public class FirestoreAdHelper {
     @NonNull
     public CompletableFuture<Ad> getAd(String adId) {
         CompletableFuture<Ad> result = new CompletableFuture<>();
-        //CompletableFuture<Ad.AdBuilder> partialAdResult = new CompletableFuture<>();
-        //CompletableFuture<List<String>> imagesIdsResult = new CompletableFuture<>();
 
         // get images, if successful try to retrieve the other ad fields
         CompletableFuture<List<String>> picturesReferencesFutures =
@@ -133,21 +131,7 @@ public class FirestoreAdHelper {
                 uploadIndexedImages(picturesUris, FirebaseLayout.PHOTO_NAME, storagePath);
         List<String> picturesReferences = uploadPicturesResultPair.first;
         List<CompletableFuture<Boolean>> uploadImagesFutures = uploadPicturesResultPair.second;
-/*
-=======
-        // upload photos
-        List<String> actualRefs = new ArrayList<>();
-        List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
-        Log.d("URI", "size" + uriList.size());
-        for (int i = 0; i < uriList.size(); i++) {
-            // TODO: support more image formats
-            String name = FirebaseLayout.PHOTO_NAME + i + FirebaseLayout.JPEG;
-            actualRefs.add(name);
-            String imagePathAndName = storagePath.concat(FirebaseLayout.SEPARATOR.concat(name));
-            imagesUploadResults.add(imageHelper.putImage(uriList.get(i), imagePathAndName));
-        }
->>>>>>> origin/master
- */
+
         // check whether any of the uploads failed
         CompletableFuture<Void> picturesCheckFuture =
                 checkPhotosUpload(uploadImagesFutures, newAdRef, cardRef, storage.getReference(storagePath));
@@ -235,7 +219,6 @@ public class FirestoreAdHelper {
     private CompletableFuture<Void> setPhotosReferencesForAd(List<String> actualRefs, CollectionReference collectionReference) {
 
         CompletableFuture<Void> result = new CompletableFuture<>();
-        //List<CompletableFuture<Void>> photosIdResults = new ArrayList<>();
         CompletableFuture<Void>[] photosIdResults = new CompletableFuture[actualRefs.size()];
 
         //iterate over all images references to set their reference in the firebase ad
@@ -246,7 +229,6 @@ public class FirestoreAdHelper {
             data.put(AdLayout.PICTURE_ELEMENT_ID_FIELD, actualRefs.get(i));
 
             CompletableFuture<Void> photoIdResult = new CompletableFuture<>();
-            //photosIdResults.add(photoIdResult);
             photosIdResults[i] = photoIdResult;
 
             //set the data in firestore in the given collection by creating a new document in it

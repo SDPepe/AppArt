@@ -12,14 +12,6 @@ import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
- * To run tests :
- * firebase emulators:start
- * ./gradlew check connectedCheck --stacktrace
- * To insert in configuration :
- *  -e "email" "youremail" -e "password" "yourpsw" --ez "demo_mode" true
- */
-
-/**
  * The main UI class.
  */
 @AndroidEntryPoint

@@ -66,8 +66,6 @@ public class PanoramaActivity extends AppCompatActivity {
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
         rightButton = (ImageButton) findViewById(R.id.rightImage_Panorama_imageButton);
 
-        // TODO will have to switch to future when it will load from db
-        getImages();
         currImage = 0;
 
         // init PL manager
@@ -145,11 +143,6 @@ public class PanoramaActivity extends AppCompatActivity {
         if (currImage == 1)
             enableLeftButton();
     }
-
-    /**
-     * Init the list of panorama images, set the current image index to 0, load image.
-     */
-    private void getImages() {}
 
     /**
      * Load image at current index into panorama

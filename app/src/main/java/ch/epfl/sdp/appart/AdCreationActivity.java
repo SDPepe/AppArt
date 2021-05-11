@@ -68,29 +68,6 @@ public class AdCreationActivity extends AppCompatActivity {
             startActivityForResult(intent, PICTURES_IMPORT_ACTIVITY_RESULT);
         });
 
-        /*
-        if (MainActivity.isDemoMode()) {
-
-            ((TextView)findViewById(R.id.title_AdCreation_editText)).setText("Cool Ad");
-            ((TextView)findViewById(R.id.street_AdCreation_editText)).setText("Funny Street");
-            ((TextView)findViewById(R.id.number_AdCreation_ediText)).setText("1A");
-            ((TextView)findViewById(R.id.npa_AdCreation_editText)).setText("1000");
-            ((TextView)findViewById(R.id.city_AdCreation_editText)).setText("Lausanne");
-            ((TextView)findViewById(R.id.price_AdCreation_editText)).setText("1234");
-            ((TextView)findViewById(R.id.description_AdCreation_editText)).setText("Welcome to Appart !");
-            //"android.resource://ch.epfl.sdp.appart/"
-            Uri simplePictureUri = Uri.parse("file:///android_asset/Ads/fake_ad_1.jpg");
-            Uri panoramaUri = Uri.parse("file:///android_asset/panorama_test.jpg");
-            List<Uri> picturesUris = Arrays.asList(simplePictureUri, simplePictureUri, simplePictureUri);
-            List<Uri> panoramasUris = Arrays.asList(panoramaUri, panoramaUri, panoramaUri);
-            this.picturesUris = picturesUris;
-            this.panoramaUris = panoramasUris;
-
-            fillHorizontalViewWithPictures(findViewById(R.id.pictures_AdCreation_linearLayout), picturesUris);
-            fillHorizontalViewWithPictures(findViewById(R.id.panorama_AdCreation_linearLayout), panoramasUris);
-
-        }
-         */
     }
 
     private void setTextView(TextView textView, String content) {
@@ -259,14 +236,6 @@ public class AdCreationActivity extends AppCompatActivity {
                 horizontalLayout.addView(hspacer);
             }
         }
-    }
-
-    protected void setPanoramas(List<Uri> uris) {
-        this.panoramaUris = uris;
-    }
-
-    protected void setPictures(List<Uri> uris) {
-        this.picturesUris = uris;
     }
 
 }
