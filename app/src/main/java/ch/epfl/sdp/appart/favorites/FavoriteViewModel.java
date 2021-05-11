@@ -51,6 +51,8 @@ public class FavoriteViewModel extends ViewModel {
      * It first loads from the local db, then fetches from the server (skipping the check whether
      * the fetch is necessary) and if the fetch is successful it updates the content with the
      * fetched info and updates the local db.
+     * If any task fails, it returns a future completed exceptionally where the exception message is
+     * the string to show to the user.
      */
     public CompletableFuture<Void> initHome() {
         CompletableFuture<Void> result = new CompletableFuture<>();

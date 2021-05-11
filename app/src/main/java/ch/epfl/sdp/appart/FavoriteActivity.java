@@ -37,6 +37,8 @@ public class FavoriteActivity extends ToolbarActivity {
 
         mViewModel.initHome()
                 .exceptionally(e -> {
+                    // when initHome completes exceptionally, the exception message is the string to
+                    // show to user (see favoriteVM)
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
                     return null;
                 })
