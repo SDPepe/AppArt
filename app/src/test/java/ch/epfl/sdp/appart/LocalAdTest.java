@@ -40,7 +40,6 @@ public class LocalAdTest {
             new AppUser("user2", "test1@appart.ch"),
             new AppUser("user3", "test2@appart.ch"),
             new AppUser("user4", "test3@appart.ch"),
-            new AppUser("user5", "test4@appart.ch"),
             new AppUser("user5", "test4@appart.ch"));
 
     List<String> picturesReferences = Arrays.asList(
@@ -130,6 +129,12 @@ public class LocalAdTest {
 
         List<Card> cardsRetrieved = localAd.getCards("currentUser");
         assertEquals(cards, cardsRetrieved);
+
+        for(int i = 0; i < users.size(); ++i) {
+            AppUser userRetrieved = (AppUser) localAd.getUser("currentUser", "user" + (i+1));
+            assertEquals((AppUser) users.get(i), userRetrieved);
+        }
+
 
 
 

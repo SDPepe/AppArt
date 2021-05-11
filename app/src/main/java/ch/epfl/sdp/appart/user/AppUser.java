@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 
 /**
  * This class represents a generic user of our application - it is used to manage
@@ -254,6 +255,14 @@ public class AppUser implements User {
      */
     public Boolean hasDefaultProfileImage() {
         return !this.profileImagePathAndName.contains(this.userId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.userId == null) return false;
+        if (!(o instanceof AppUser)) return false;
+        AppUser other = (AppUser) o;
+        return this.userId.equals(other.userId);
     }
 
 }

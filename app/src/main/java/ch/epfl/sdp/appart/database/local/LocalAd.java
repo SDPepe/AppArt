@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.database.local;
 
+import android.graphics.Bitmap;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,10 +35,11 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  * <p>
  * //TODO: Write unit tests but also test on android
  * //TODO: Write complete documentation
- * //TODO: Change loading to account for the act that the ad and the user are
+ * //TODO: Refactor
+ * //TODO: Do not use CompletableFutures only booleans
+ * //TODO: Implement the other todos
  * not stored in the same folder. We need to load the user first and then the
  * ad. We need to load the ad, get the id and then load the user.
- * //TODO: Implement BITMAP loading
  * interface if its better for the callers.
  */
 public class LocalAd {
@@ -44,11 +47,14 @@ public class LocalAd {
     private static final String ID = "ID";
     private static final String PHOTO_REFS = "photo_refs";
     private static final String CARD_ID = "CARD_ID";
+    private static final String USER_ID = "USER_ID";
 
     private static final String favoritesFolder = "/favorites";
-    private static final String profilePicName = "user_profile_pic.jpg";
+    private static final String profilePicName = "user_profile_pic.jpeg";
     private static final String dataFileName = "data.fav";
     private static final String usersFolder = "/users";
+    private static final String userData = "user.data";
+    private static final String currentUserData = "currentUser.data";
 
     private final String appPath;
 
@@ -56,6 +62,8 @@ public class LocalAd {
     private final Map<String, Ad> idsToAd;
     private final Map<String, User> idsToUser;
     private final Set<String> userIds;
+
+    private User currentUser = null;
 
     private boolean firstLoad;
 
@@ -208,7 +216,7 @@ public class LocalAd {
     private static List<String> buildPhotoRefs(String adFolderPath, int size) {
         List<String> localPhotoRefs = new ArrayList<>();
         for (int i = 0; i < size; ++i) {
-            localPhotoRefs.add(adFolderPath + FirebaseLayout.SEPARATOR + FirebaseLayout.PHOTO_NAME + i + ".jpg");
+            localPhotoRefs.add(adFolderPath + FirebaseLayout.SEPARATOR + FirebaseLayout.PHOTO_NAME + i + ".jpeg");
         }
         return localPhotoRefs;
     }
@@ -246,10 +254,11 @@ public class LocalAd {
     }
 
     private static boolean writeFile(String path, Map<String,
-            Object> map, CompletableFuture<Void> futureSuccess) {
+            Object> map, CompletableFuture<Void> futureSuccess,
+                                     String filename) {
         FileOutputStream fos;
         try {
-            fos = new FileOutputStream(path + FirebaseLayout.SEPARATOR + dataFileName);
+            fos = new FileOutputStream(path + FirebaseLayout.SEPARATOR + filename);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(map);
             oos.close();
@@ -257,6 +266,21 @@ public class LocalAd {
         } catch (IOException e) {
             e.printStackTrace();
             futureSuccess.completeExceptionally(e);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean saveBitmap(Bitmap bitmap, String path) {
+        File photo = new File(path);
+
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(photo);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -283,19 +307,13 @@ public class LocalAd {
      * @param cardId     the card id
      * @param ad         the ad that will be written on disk
      * @param user       the user that will be written on disk
-     * @param loadImages the function that will load the images. The String
-     *                   argument will take the name of the folder where we
-     *                   want to store the images. It will return a Void
-     *                   completable future to indicate when it has finished,
-     *                   and whether it has succeeded or not.
      * @return a Void completable future to indicate whether the task has
      * succeeded or not.
      */
     public CompletableFuture<Void> writeCompleteAd(String adId,
                                                    String cardId, Ad ad,
                                                    User user,
-                                                   Function<String,
-                                                           CompletableFuture<Void>> loadImages, String currentUserId) {
+                                                   List<Bitmap> adPhotos, String currentUserId, Function<String, CompletableFuture<Void>> loadProfilePic) {
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
         String favoritesPath = appPath + favoritesFolder + "/";
 
@@ -324,8 +342,18 @@ public class LocalAd {
 
         //Adding the data to memory if we have done the first load
         if (this.firstLoad) {
-            this.idsToAd.put(adId, localAd);
-            this.cards.add(localCard);
+            if(!this.idsToAd.containsKey(adId)) {
+                this.idsToAd.put(adId, localAd);
+            } else {
+                this.idsToAd.replace(adId, localAd);
+            }
+
+            if(!this.cards.contains(localCard)) {
+                this.cards.add(localCard);
+            } else {
+                this.cards.remove(localCard);
+                this.cards.add(localCard);
+            }
             if (!this.userIds.contains(localUser.getUserId())) {
                 this.idsToUser.put(localUser.getUserId(), localUser);
             }
@@ -340,7 +368,8 @@ public class LocalAd {
             //We ad the id because it is not serialized
             userMap.put(ID, localUser.getUserId());
 
-            if (!writeFile(adFolderPath, userMap, futureSuccess))
+            if (!writeFile(favoritesPath + usersFolder + "/" + localUser.getUserId(), userMap,
+                    futureSuccess, userData))
                 return futureSuccess;
         }
 
@@ -353,21 +382,34 @@ public class LocalAd {
         adMap.put(ID, adId);
         adMap.put(PHOTO_REFS, localAd.getPhotosRefs());
         adMap.put(CARD_ID, cardId);
+        adMap.put(USER_ID, localUser.getUserId());
 
         //Write file on disk
-        if (!writeFile(adFolderPath, adMap, futureSuccess))
+        if (!writeFile(adFolderPath, adMap, futureSuccess,
+                LocalAd.dataFileName))
             return futureSuccess;
 
+        boolean photoSaveSuccess = true;
+        for(int i = 0; i < adPhotos.size(); ++i) {
+            photoSaveSuccess &= saveBitmap(adPhotos.get(i), adFolderPath + "/" + FirebaseLayout.PHOTO_NAME + i + ".jpeg");
+        }
+        if(!photoSaveSuccess) {
+            futureSuccess.completeExceptionally(new IOException("Couldn't save bitmaps"));
+            return futureSuccess;
+        }
+
+        //futureProfilePic
 
         //We need to change this to BitMap loading
-        CompletableFuture<Void> futureImageLoad =
-                loadImages.apply(adFolderPath);
-        futureImageLoad.thenAccept(arg -> futureSuccess.complete(null));
-        futureImageLoad.exceptionally(e -> {
+        CompletableFuture<Void> futureProfilePic =
+                loadProfilePic.apply(adFolderPath + "/" + profilePicName);
+        futureProfilePic.thenAccept(arg -> futureSuccess.complete(null));
+        futureProfilePic.exceptionally(e -> {
             futureSuccess.completeExceptionally(e);
             return null;
         });
 
+        futureSuccess.complete(null);
         return futureSuccess;
     }
 
@@ -378,33 +420,21 @@ public class LocalAd {
                 ad.hasVRTour());
     }
 
-    private boolean readFolder(File folder) {
+    private boolean readAdFolder(File folder) {
         String dataPath =
                 folder.getPath() + "/" + LocalAd.dataFileName;
 
         FileInputStream fis;
-        List<Map<String, Object>> mapList;
+        Map<String, Object> adMap;
         try {
             fis = new FileInputStream(dataPath);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            mapList = (List<Map<String, Object>>) ois.readObject();
+            adMap = (Map<String, Object>) ois.readObject();
             ois.close();
             fis.close();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
             return false;
-        }
-
-
-        Map<String, Object> adMap = mapList.get(0);
-        Map<String, Object> userMap = mapList.get(1);
-
-
-        User user = UserSerializer.deserialize((String) userMap.get(ID),
-                userMap);
-        if (!userIds.contains(user.getUserId())) {
-            this.idsToUser.put((String) userMap.get(ID), user);
-            this.userIds.add(user.getUserId());
         }
 
 
@@ -422,21 +452,21 @@ public class LocalAd {
         //photoRefs.get(0) maybe unsafe but I don't think really think so
         //TODO:!!!! It is if the ad doesn't have any photos
         Card card = buildCardFromAd(adWithRef, (String) adMap.get(CARD_ID),
-                (String) adMap.get(ID), user.getUserId());
+                (String) adMap.get(ID), (String) adMap.get(USER_ID));
         //Maybe use a set instead, but then need to implement equals
         this.cards.add(card);
 
         return true;
     }
 
-    private boolean readAllLocalDataForAUser(String wantedUserID) {
+    private boolean readAdDataForAUser(String currentUserID) {
         String favoritesFolderPath =
-                this.appPath + LocalAd.favoritesFolder + "/" + wantedUserID;
+                this.appPath + LocalAd.favoritesFolder + "/" + currentUserID;
         File favFolder = new File(favoritesFolderPath);
         File[] folders = favFolder.listFiles(File::isDirectory);
         boolean success = true;
         for (File folder : folders) {
-            success &= readFolder(folder);
+            success &= readAdFolder(folder);
         }
         if (success) {
             this.firstLoad = true;
@@ -466,11 +496,55 @@ public class LocalAd {
         dir.delete();
     }
 
+    private boolean readUserFolder(File userFile) {
+        String dataPath = userFile.getPath() + "/" + userData;
+        File userDataFile = new File(dataPath);
+        FileInputStream fis;
+        Map<String, Object> userMap;
+        try {
+            fis = new FileInputStream(userDataFile);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            userMap = (Map<String, Object>) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+        User user = UserSerializer.deserialize((String) userMap.get(ID),
+                userMap);
+        if (!idsToUser.containsKey((String)userMap.get(ID))) {
+            this.idsToUser.put((String) userMap.get(ID), user);
+            this.userIds.add(user.getUserId());
+        }
+
+        return true;
+    }
+
+    private boolean readUsers() {
+        String userPath = this.appPath + LocalAd.favoritesFolder + usersFolder;
+        File userFolder = new File(userPath);
+        boolean success = true;
+        for (File folder : userFolder.listFiles(File::isDirectory)) {
+            success &= readUserFolder(folder);
+        }
+        if (success) {
+            this.firstLoad = true;
+        }
+        return success;
+
+
+    }
+
     private <T> T getFromMemory(String currentUserID, Supplier<T> returnFunc) {
         if (this.firstLoad) {
             return returnFunc.get();
         }
-        boolean success = readAllLocalDataForAUser(currentUserID);
+        boolean success = readAdDataForAUser(currentUserID);
+        success &= readUsers();
+
         if (success) {
             return returnFunc.get();
         }
@@ -524,6 +598,90 @@ public class LocalAd {
         this.idsToAd.remove(adId);
         this.cards.remove(cardIdx);
         this.userIds.remove(userId);
+    }
+
+    public CompletableFuture<Void> setCurrentUser(User currentUser, Function<String, CompletableFuture<Void>> profilePicLoad) {
+        this.currentUser = currentUser;
+
+        CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
+
+        String currentUserPath = this.appPath + favoritesFolder + "/" + currentUserData;
+
+        File currentUserFile = new File(currentUserPath);
+        if(!currentUserFile.exists()) {
+            throw new IllegalStateException();
+        }
+
+        User currentLocalUser = new AppUser(currentUser.getUserId(), currentUser.getUserEmail());
+        if (currentUser.getPhoneNumber() != null) {
+            currentLocalUser.setPhoneNumber(currentUser.getPhoneNumber());
+        }
+        if (currentUser.getName() != null) {
+            currentLocalUser.setName(currentUser.getName());
+        }
+
+        currentLocalUser.setAge(currentUser.getAge());
+
+        if (currentUser.getGender() != null) {
+            currentLocalUser.setGender(currentUser.getGender());
+        }
+
+        //TODO: Only change this if the current user has not the default profile picture
+        String profilePicPath = this.appPath + favoritesFolder + FirebaseLayout.SEPARATOR + profilePicName;
+        currentLocalUser.setProfileImagePathAndName(profilePicPath);
+
+        CompletableFuture<Void> futureProfilePic =
+                profilePicLoad.apply(this.appPath + favoritesFolder + "/" + profilePicName);
+        futureProfilePic.thenAccept(arg -> futureSuccess.complete(null));
+        futureProfilePic.exceptionally(e -> {
+            futureSuccess.completeExceptionally(e);
+            return null;
+        });
+
+
+        Map<String, Object> userMap = UserSerializer.serialize(currentLocalUser);
+        //We ad the id because it is not serialized
+        userMap.put(ID, currentLocalUser.getUserId());
+        if(!writeFile(this.appPath + favoritesFolder, userMap,
+                futureSuccess, userData)) {
+            return futureSuccess;
+        }
+
+        futureSuccess.complete(null);
+
+        return futureSuccess;
+    }
+
+    private User loadCurrentUserOnDisk() {
+        String currentUserPath = this.appPath + favoritesFolder + "/" + currentUserData;
+
+        File currentUserFile = new File(currentUserPath);
+        if(!currentUserFile.exists()) return null;
+
+        FileInputStream fis;
+        Map<String, Object> userMap;
+        try {
+            fis = new FileInputStream(currentUserFile);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            userMap = (Map<String, Object>) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+        User user = UserSerializer.deserialize((String) userMap.get(ID),
+                userMap);
+
+
+        return user;
+    }
+
+    public User loadCurrentUser() {
+        if(this.currentUser != null) return this.currentUser;
+        return loadCurrentUserOnDisk();
     }
 
 }
