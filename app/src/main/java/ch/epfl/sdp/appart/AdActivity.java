@@ -14,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
@@ -31,6 +33,7 @@ import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.NotImplementedError;
 
 /**
  * This class manages the UI of the ad.
@@ -40,7 +43,7 @@ public class AdActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
-    
+
     @Inject
     LoginService login;
 
@@ -134,16 +137,6 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Method called when the device back button is pressed.
-     * <p>
-     * It goes back to the scrolling activity.
-     */
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
-    /**
      * Method called when you want open the contact info.
      *
      * @param view
@@ -171,7 +164,7 @@ public class AdActivity extends ToolbarActivity {
         startActivity(intent);
     }
 
-    private void openImageFullscreen(String imageId){
+    private void openImageFullscreen(String imageId) {
         Intent intent = new Intent(this, FullScreenImageActivity.class);
         intent.putExtra("imageId", imageId);
         startActivity(intent);
@@ -184,17 +177,35 @@ public class AdActivity extends ToolbarActivity {
         return true;
     }
 
+    /**
+     * Adds ad to favorites, shows a toast with the action result
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO check the user is logged in
         if (item.getItemId() == R.id.action_add_favorite) {
-            database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
-                u.addFavorite(adId);
-                database.updateUser(u);
-            });
+            addNewFavorite()
+                    .exceptionally(e -> {
+                        Toast.makeText(this, R.string.favFail_Ad, Toast.LENGTH_SHORT);
+                        return null;
+                    })
+                    .thenAccept(res ->
+                            Toast.makeText(this, R.string.favSuccess_Ad, Toast.LENGTH_SHORT)
+                    );
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Adds ad to favorites list in database and saves it in the localDB
+     */
+    private CompletableFuture<Void> addNewFavorite() {
+        // TODO check the user is logged in
+        database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
+            u.addFavorite(adId);
+            database.updateUser(u);
+        });
+        throw new NotImplementedError();
     }
 
 

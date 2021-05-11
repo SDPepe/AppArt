@@ -23,6 +23,8 @@
     <string name="contactbutton_text">show contact info</string>
     <string name="seeLocationText">See location</string>
     <string name="intentLocationForMap">LOCATION</string>
+    <string name="favFail_Ad">Failed to add to favorites, please retry later</string>
+    <string name="favSuccess_Ad">Added to favorites!</string>
 
     <!-- Mock ad stuff -->
 

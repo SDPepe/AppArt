@@ -93,13 +93,6 @@ public class AdUITest {
         intended(hasComponent(FullScreenImageActivity.class.getName()));
     }
 
-   /* @Test
-    public void clickOnGoBackFinishes() {
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        mDevice.pressBack();
-        assertEquals(adActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
-    }*/
-
     @Test
     public void displayAdInfoTest() {
         Ad testAd = database.getAd(testId).join();
