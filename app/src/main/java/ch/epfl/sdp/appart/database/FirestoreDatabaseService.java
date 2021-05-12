@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -119,8 +120,8 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
-        return adHelper.putAd(ad, uriList);
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> picturesUris, List<Uri> panoramasUris) {
+        return adHelper.putAd(ad, picturesUris, panoramasUris);
     }
 
     @NotNull

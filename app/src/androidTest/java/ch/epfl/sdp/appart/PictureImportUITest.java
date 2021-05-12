@@ -1,11 +1,15 @@
 package ch.epfl.sdp.appart;
 
+import android.Manifest;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,6 +39,9 @@ public class PictureImportUITest {
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+    @Rule(order = 2)
     public ActivityScenarioRule<PicturesImportActivity> pictureImportActivityRule = new ActivityScenarioRule<>(PicturesImportActivity.class);
 
     @Before
@@ -42,6 +49,8 @@ public class PictureImportUITest {
         Intents.init();
         hiltRule.inject();
     }
+
+
 
     @After
     public void release() {

@@ -18,7 +18,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 @HiltAndroidTest
 public class CameraUITest {
 
-
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 

@@ -55,7 +55,7 @@ public class MockDatabaseTest {
 
     @Test
     public void updateCorrectCard() {
-        Card test = new Card("unknown1", "adId", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg");
+        Card test = new Card("1111", "adId", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg");
         try {
             assertTrue(dataBase.updateCard(test).get());
         } catch (ExecutionException | InterruptedException e) {
@@ -87,15 +87,17 @@ public class MockDatabaseTest {
     @Test
     public void putAdWorksWithGoodValue() throws ExecutionException, InterruptedException {
         Ad ad = new Ad("title", 1000, PricePeriod.DAY, "", "", "", "",
-                "", new ArrayList<>(), false);
-        assertEquals("1234", dataBase.putAd(ad, new ArrayList<>()).get());
+                "", new ArrayList<>(), new ArrayList<>(), false);
+        assertEquals("1234", dataBase.putAd(ad, new ArrayList<>(), new ArrayList<>()).get());
+
     }
 
     @Test
     public void putAdWorksThrowsOnBadValue() throws ExecutionException, InterruptedException {
+
         Ad ad = new Ad("failing", 1000, PricePeriod.DAY, "", "", "","",
-                "", new ArrayList<>(), false);
-        assertThrows(ExecutionException.class, () -> dataBase.putAd(ad, new ArrayList<>()).get());
+                "", new ArrayList<>(), new ArrayList<>(), false);
+        assertThrows(ExecutionException.class, () -> dataBase.putAd(ad, new ArrayList<>(), new ArrayList<>()).get());
     }
 
     @Test
