@@ -115,7 +115,7 @@
     <string name="leftButtonDescription_Panorama">Load previous image</string>
     <string name="rightButtonDescription_Panorama">Load next image</string>
     <string name="snackbarError_Panorama">There was an error loading the image, please try again later.</string>
-  
+
     <!-- LocationActivity stuff -->
     <string name="permissionGranted">Permission granted</string>
 

@@ -48,7 +48,7 @@ public class GlideImageViewLoaderListener extends GlideVisitor implements GlideL
     @Override
     public void visit(MockDatabaseService database) {
         Glide.with(context)
-                .load(imageReference).listener(this.listener)
+                .load(database.prependAndroidFilePath(imageReference)).listener(this.listener)
                 .into(view);
     }
 }
