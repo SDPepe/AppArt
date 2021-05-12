@@ -11,8 +11,6 @@
       android:id="@+id/gallery_Camera_button"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/margin_button"
-      android:layout_marginEnd="@dimen/margin_button"
       android:paddingStart="40dp"
       android:paddingEnd="16dp"
       android:background="@drawable/style_secondary"
@@ -28,8 +26,6 @@
       android:id="@+id/camera_Camera_button"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/margin_button"
-      android:layout_marginEnd="@dimen/margin_button"
       android:paddingStart="40dp"
       android:paddingEnd="16dp"
       android:background="@drawable/style_secondary"
@@ -45,8 +41,6 @@
       android:id="@+id/confirm_Camera_button"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/margin_button"
-      android:layout_marginEnd="@dimen/margin_button"
       android:background="@drawable/style_primary"
       android:text="@string/confirmCameraButtonText"
       android:textAllCaps="false"
@@ -76,7 +70,8 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_percent="0.05" />
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
+
     <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline17"
       android:layout_width="wrap_content"

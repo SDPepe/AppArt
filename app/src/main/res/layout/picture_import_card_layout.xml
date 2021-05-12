@@ -1,89 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:backgroundTint="#FFFFFF"
-    android:elevation="8dp">
+    >
 
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:background="#FFFFFF"
-        android:backgroundTint="#FBFBFB"
-        app:cardElevation="6dp"
-        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp">
 
-            <ImageView
+        <ImageView
                 android:id="@+id/image_view_PictureImport"
-                android:layout_width="417dp"
-                android:layout_height="270dp"
-                android:layout_margin="5dp"
-                android:layout_marginTop="5dp"
-                android:elevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+          app:srcCompat="@drawable/ic_launcher_background"
+        />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp">
+        <LinearLayout
+          android:layout_width="140dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom"
+          android:gravity="center"
+          android:orientation="horizontal"
+          android:paddingBottom="10dp"
+          android:paddingEnd="2dp"
+          android:paddingStart="16dp"
+          android:paddingTop="2dp"
+          android:clipToPadding="false"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          >
 
             <Button
-                android:id="@+id/up_button_card_PictureImport"
-                android:layout_width="61dp"
-                android:layout_height="50dp"
-                android:text="+"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.045"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.693" />
-
+              android:id="@+id/up_button_card_PictureImport"
+              android:layout_width="41dp"
+              android:layout_height="33dp"
+              android:layout_gravity="center"
+              android:layout_marginRight="16dp"
+              android:background="@drawable/style_secondary"
+              android:drawableLeft="@drawable/ic_arrow_up" />
             <Button
-                android:id="@+id/down_button_card_PictureImport"
-                android:layout_width="61dp"
-                android:layout_height="43dp"
-                android:text="-"
-                android:translationZ="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.045"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.895" />
+              android:id="@+id/down_button_card_PictureImport"
+              android:layout_width="41dp"
+              android:layout_height="33dp"
+              android:layout_gravity="center"
+              android:background="@drawable/style_secondary"
+              android:drawableLeft="@drawable/ic_arrow_down"
 
-            <TextView
-                android:id="@+id/index_textView_PictureImport"
-                android:layout_width="80dp"
-                android:layout_height="49dp"
-                android:text="Index"
-                android:textSize="30sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.048"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.07" />
+              />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+          android:id="@+id/index_textView_PictureImport"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Index"
+          android:textSize="30sp"
+          android:paddingStart="16dp"
+          android:paddingTop="16dp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.cardview.widget.CardView>
 

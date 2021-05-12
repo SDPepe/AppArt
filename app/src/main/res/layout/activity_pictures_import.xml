@@ -1,54 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".PicturesImportActivity">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".PicturesImportActivity">
 
     <Button
-        android:id="@+id/add_PictureImport_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.908"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.979" />
+      android:id="@+id/add_PictureImport_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:paddingStart="40dp"
+      android:paddingEnd="16dp"
+      android:background="@drawable/style_secondary"
+      android:drawableEnd="@drawable/ic_gallery"
+      android:text="@string/galleryButtonText"
+      android:textAllCaps="false"
+      android:textColor="@color/primaryStart"
+      android:textSize="16sp"
+      android:layout_marginBottom="16dp"
+      android:layout_marginTop="16dp"
+      app:layout_constraintBottom_toTopOf="@+id/finish_PictureImport_button"
+      app:layout_constraintStart_toStartOf="@+id/guideline27"
+      app:layout_constraintEnd_toEndOf="@+id/guideline28"
+      app:layout_constraintTop_toBottomOf="@+id/panorama_PictureImport_ConstraintLayout" />
 
     <Button
-        android:id="@+id/finish_PictureImport_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="import"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+      android:id="@+id/finish_PictureImport_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@drawable/style_primary"
+      android:text="@string/confirmCameraButtonText"
+      android:textAllCaps="false"
+      android:textColor="#FFFFFF "
+      android:textSize="16sp"
+      android:layout_marginBottom="16dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline27"
+      app:layout_constraintEnd_toEndOf="@+id/guideline28"
+      app:layout_constraintTop_toBottomOf="@+id/add_PictureImport_button" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="360dp"
-        android:layout_height="637dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+      android:id="@+id/panorama_PictureImport_ConstraintLayout"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      app:layout_constraintStart_toStartOf="@+id/guideline27"
+      app:layout_constraintEnd_toEndOf="@+id/guideline28"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toTopOf="@+id/add_PictureImport_button">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_PictureImport"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+              android:id="@+id/recyclerView_PictureImport"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline27"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline28"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
