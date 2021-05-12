@@ -47,6 +47,7 @@ public class AdSerializer {
                 (String) serializedData.get(AdLayout.ADVERTISER_ID),
                 (String) serializedData.get(AdLayout.DESCRIPTION),
                 new ArrayList<>(),
+                new ArrayList<>(),
                 (boolean) serializedData.get(AdLayout.VR_TOUR));
     }
 }

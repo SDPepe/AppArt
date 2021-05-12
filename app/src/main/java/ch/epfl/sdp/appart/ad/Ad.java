@@ -6,8 +6,10 @@ import java.util.List;
 /**
  * Object representing an ad of an apartment.
  * <p>
- * It contains all the apartment info and some info about the user that created the ad. For the
- * moment an ad cannot be modified after creation, so the class does not offer setters.
+ * It contains all the apartment info and some info about the user that
+ * created the ad. For the
+ * moment an ad cannot be modified after creation, so the class does not
+ * offer setters.
  */
 public class Ad {
 
@@ -36,8 +38,11 @@ public class Ad {
      * @param photosRefs   the list of references to the ad images
      * @param hasVRTour    whether the apartment offers a VR tour
      */
-    public Ad(String title, long price, PricePeriod pricePeriod, String street, String city,
-              String advertiserName, String advertiserId, String description, List<String> photosRefs, List<String> panoramaReferences, boolean hasVRTour) {
+    public Ad(String title, long price, PricePeriod pricePeriod,
+              String street, String city,
+              String advertiserName, String advertiserId, String description,
+              List<String> photosRefs, List<String> panoramaReferences,
+              boolean hasVRTour) {
         if (title == null || pricePeriod == null || street == null || city == null ||
                 advertiserId == null || description == null || photosRefs == null)
             throw new IllegalArgumentException("An argument is null!");
@@ -92,10 +97,34 @@ public class Ad {
         return photosReferences;
     }
 
-    public List<String> getPanoramaReferences() { return  panoramaReferences; }
+    public List<String> getPanoramaReferences() {
+        return panoramaReferences;
+    }
 
     public boolean hasVRTour() {
         return hasVRTour;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Ad)) return false;
+        Ad other = (Ad) o;
+        boolean equals = this.title.equals(other.title);
+        equals = equals && this.price == other.price;
+        equals = equals && this.pricePeriod.equals(other.pricePeriod);
+        equals = equals && this.street.equals(other.street);
+        equals = equals && this.city.equals(other.city);
+        equals = equals && this.advertiserName.equals(other.advertiserName);
+        equals = equals && this.advertiserId.equals(other.advertiserId);
+        equals = equals && this.description.equals(other.description);
+        //We do not compare photo references because they are changed when stored on the local db
+        //The best thing would be to have the id in the ad data structure
+        //equals = equals && this.photosReferences.equals(other.photosReferences);
+        //equals = equals && this.panoramaReferences.equals(other.panoramaReferences);
+        equals = equals && this.hasVRTour == other.hasVRTour;
+
+
+        return equals;
     }
 
 
@@ -198,7 +227,6 @@ public class Ad {
         }
 
     }
-
 
 
 }
