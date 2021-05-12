@@ -107,12 +107,12 @@ public class AdCreationActivity extends AppCompatActivity {
             return;
         }
         // TODO add back when new loading image system is finished
-        /*if (!mViewModel.hasPhotos()){
+        if (picturesUris == null || picturesUris.size() == 0) {
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarNoPhotos_AdCreation),
                     Snackbar.LENGTH_SHORT).show();
             return;
-        }*/
+        }
 
         // set values to viewmodel
         setVMValues();

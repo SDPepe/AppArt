@@ -97,7 +97,6 @@ public class FirestoreAdHelper {
         // upload photos
         List<String> actualRefs = new ArrayList<>();
         List<CompletableFuture<Boolean>> imagesUploadResults = new ArrayList<>();
-        Log.d("URI", "size" + uriList.size());
         for (int i = 0; i < uriList.size(); i++) {
             // TODO: support more image formats
             String name = FirebaseLayout.PHOTO_NAME + i + FirebaseLayout.JPEG;
@@ -238,7 +237,8 @@ public class FirestoreAdHelper {
                     cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
                     infoUpload.complete(null);
                 });
-        setPhotosReferencesForAd(idsUpload, imagesRefsList, adRef);
+        if (imagesRef != null)
+            setPhotosReferencesForAd(idsUpload, imagesRefsList, adRef);
         CompletableFuture.allOf(infoUpload, idsUpload)
                 .thenAccept(res -> result.complete(null))
                 .exceptionally(e -> {
@@ -286,12 +286,15 @@ public class FirestoreAdHelper {
             Log.d("Ad creation", "ad upload failed");
             adRef.delete();
             cardRef.delete();
-            imagesRef.listAll().addOnSuccessListener(listResult -> {
-                List<StorageReference> items = listResult.getItems();
-                for (StorageReference item : items) {
-                    item.delete();
-                }
-            }).addOnFailureListener(e -> Log.d("Ad upload", "Failed to cleanup after failed upload"));
+            // imagesRef might be null if no image was given
+            if (imagesRef != null) {
+                imagesRef.listAll().addOnSuccessListener(listResult -> {
+                    List<StorageReference> items = listResult.getItems();
+                    for (StorageReference item : items) {
+                        item.delete();
+                    }
+                }).addOnFailureListener(e -> Log.d("Ad upload", "Failed to cleanup after failed upload"));
+            }
 
             // TODO create exception
             result.completeExceptionally(
