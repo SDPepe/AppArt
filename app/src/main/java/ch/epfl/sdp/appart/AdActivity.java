@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -48,7 +49,13 @@ public class AdActivity extends ToolbarActivity {
     @Inject
     LoginService login;
 
+    public static class Intents {
+        public static final String INTENT_PANORAMA_PICTURES = "panoramas_pictures_references";
+        public static final String INTENT_AD_ID = "adId";
+    }
+
     private String advertiserId;
+    private ArrayList<String> panoramasReferences = new ArrayList<>();
 
     private String adId;
 
@@ -69,6 +76,7 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getDescription().observe(this, this::updateDescription);
         mViewModel.getAdAdvertiserName().observe(this, this::updateAdvertiserName);
         mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
+        mViewModel.observePanoramasReferences(this, this::updatePanoramasReferences);
 
         adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
         String openingActivity = getIntent().getStringExtra(
@@ -110,6 +118,11 @@ public class AdActivity extends ToolbarActivity {
             // open image fullscreen on tap
             myView.setOnClickListener(e -> openImageFullscreen(fullRef));
         }
+    }
+
+    private void updatePanoramasReferences(List<String> references) {
+        panoramasReferences.clear();
+        panoramasReferences.addAll(references);
     }
 
     private void updateAddress(String address) {
@@ -162,6 +175,8 @@ public class AdActivity extends ToolbarActivity {
      */
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
+        intent.putStringArrayListExtra(Intents.INTENT_PANORAMA_PICTURES, panoramasReferences);
+        intent.putExtra(Intents.INTENT_AD_ID, adId);
         startActivity(intent);
     }
 

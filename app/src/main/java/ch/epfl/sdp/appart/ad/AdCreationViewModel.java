@@ -31,7 +31,7 @@ public class AdCreationViewModel extends ViewModel {
     private String description;
     private boolean VRTourEnable;
     private List<Uri> photosUri;
-    private List<Uri> panoramaPicturesUri;
+    private List<Uri> panoramasUris;
 
     final DatabaseService db;
     final LoginService ls;
@@ -41,7 +41,7 @@ public class AdCreationViewModel extends ViewModel {
         this.db = db;
         this.ls = ls;
         photosUri = new ArrayList<>();
-        panoramaPicturesUri = new ArrayList<>();
+        panoramasUris = new ArrayList<>();
     }
 
     /**
@@ -53,8 +53,9 @@ public class AdCreationViewModel extends ViewModel {
     public CompletableFuture<Boolean> confirmCreation() {
         User user = ls.getCurrentUser();
         Ad ad = new Ad(title, price, pricePeriod, street, city, user.getName(), user.getUserId(), description,
-                new ArrayList<>(), VRTourEnable);
-        CompletableFuture<String> result = db.putAd(ad, photosUri);
+                new ArrayList<>(), new ArrayList<>(), VRTourEnable);
+        CompletableFuture<String> result = db.putAd(ad, photosUri, panoramasUris);
+
         return result.thenApply(s -> {
             user.addAdId(s);
             return true;
@@ -99,6 +100,8 @@ public class AdCreationViewModel extends ViewModel {
     public void setUri(List<Uri> uri) {
         photosUri = uri;
     }
+
+    public void setPanoramaUri(List<Uri> uris) { panoramasUris = uris; }
 
     public boolean hasPhotos() {
         return photosUri != null && photosUri.size() >= 1;

@@ -50,7 +50,7 @@ public final class GlideImageViewLoader extends GlideVisitor implements GlideLoa
     @Override
     public void visit(MockDatabaseService database) {
         Glide.with(context)
-                .load(imageReference)
+                .load(database.prependAndroidFilePath(imageReference))
                 .into(view);
     }
 

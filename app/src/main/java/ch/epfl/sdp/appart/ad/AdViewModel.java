@@ -2,8 +2,11 @@ package ch.epfl.sdp.appart.ad;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -31,7 +34,8 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adDescription = new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiserName = new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> adPhotosRefs = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> adPhotosReferences = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
 
     @Inject
     public AdViewModel(DatabaseService db) {
@@ -60,10 +64,13 @@ public class AdViewModel extends ViewModel {
         return result;
     }
 
+    public <T> void observePanoramasReferences(LifecycleOwner owner, @NonNull Observer<? super List<String>> observer) {
+        panoramasReferences.observe(owner, observer);
+    }
     // Getters
     public LiveData<String> getTitle() { return adTitle; }
 
-    public LiveData<List<String>> getPhotosRefs() { return adPhotosRefs; }
+    public LiveData<List<String>> getPhotosRefs() { return adPhotosReferences; }
 
     public LiveData<String> getAddress() { return adAddress; }
 
@@ -110,7 +117,8 @@ public class AdViewModel extends ViewModel {
         this.adDescription.setValue(ad.getDescription());
         this.adAdvertiserName.setValue(ad.getAdvertiserName());
         this.adAdvertiserId.setValue(ad.getAdvertiserId());
-        this.adPhotosRefs.setValue(ad.getPhotosRefs());
+            this.adPhotosReferences.setValue(ad.getPhotosRefs());
+            this.panoramasReferences.setValue(ad.getPanoramaReferences());
     }
 
     /**
