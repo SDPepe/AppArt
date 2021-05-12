@@ -29,6 +29,7 @@ public class AppUser implements User {
     private String profileImagePathAndName;
     private List<String> adsIds;
     private Set<String> favoritesIds;
+    private boolean hasDefaultProfileImage = true;
 
 /* default values */
     private static final String DEFAULT_IMAGE_NAME_NO_GENDER = "user_example_no_gender";
@@ -151,6 +152,7 @@ public class AppUser implements User {
             throw new IllegalArgumentException("ERROR - image parameter was null");
         }
         this.profileImagePathAndName = img;
+        this.hasDefaultProfileImage = false;
     }
 
     /**
@@ -269,6 +271,7 @@ public class AppUser implements User {
                 .append(findDrawableIdByGender());
 
         this.profileImagePathAndName = defaultImagePathInDb.toString();
+        this.hasDefaultProfileImage = true;
     }
 
     /**
@@ -277,7 +280,7 @@ public class AppUser implements User {
      * user previously uploaded a profile image
      */
     public Boolean hasDefaultProfileImage() {
-        return !this.profileImagePathAndName.contains(this.userId);
+        return this.hasDefaultProfileImage;
     }
 
     @Override

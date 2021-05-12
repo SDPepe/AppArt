@@ -25,36 +25,40 @@ import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
 import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
-
 /**
- * This class is the one that will perform the reading and writing of an ad.
- * When reading or writing it will need the adFolderPath which corresponds to
- * Context.getFilesDir().
- * This class shouldn't contain anything related to android.
- * <p>
- * because we want to have quick access to it.
- * not stored in the same folder. We need to load the user first and then the
- * ad. We need to load the ad, get the id and then load the user.
- * interface if its better for the callers.
+ * This class represents the local database. It will perform the storing of
+ * data "on disk", and the reading of data "from disk". It is unaware of the
+ * android context except for the Bitmap type and the appFolder it receives.
+ * This appFolder is supposed to be Context.getFilesDir(). A current user
+ * must be stored in order for the database to work. Either it is already on
+ * disk and we can read it, or the caller must set it. One thing that is not
+ * handled for now is the privacy of the users, maybe we don't want to store
+ * everything "on disk".
  */
 @SuppressWarnings("unchecked")
 public class LocalDatabase {
 
+    /*
+        Keys for the different maps.
+     */
     private static final String ID = "ID";
-    private static final String PHOTO_REFS = "photo_refs";
+    private static final String PHOTO_REFS = "PHOTO_REFS";
     private static final String CARD_ID = "CARD_ID";
     private static final String USER_ID = "USER_ID";
-    private static final String PANORAMA_REFS = "panorama_refs";
+    private static final String PANORAMA_REFS = "PANORAMA_REFS";
 
-    private static final String favoritesFolder = "/favorites";
-    //TODO: Clean this
+    /*
+        Folders and paths.
+     */
+    private static final String favoritesFolder = "favorites";
     private static final String profilePicName =
             FirebaseLayout.PROFILE_IMAGE_NAME + ".jpeg";
     private static final String dataFileName = "data.fav";
-    private static final String usersFolder = "/users";
+    private static final String usersFolder = "users";
     private static final String userData = "user.data";
     private static final String currentUserData = "currentUser.data";
 
@@ -70,6 +74,10 @@ public class LocalDatabase {
 
     private boolean firstLoad;
 
+    /**
+     * Builds a local database.
+     * @param appPath the path to the app folder on the phone.
+     */
     public LocalDatabase(String appPath) {
         if (appPath == null) throw new IllegalArgumentException();
         this.appPath = appPath;
@@ -96,45 +104,64 @@ public class LocalDatabase {
     }
 
     private String getFavoritesPath() {
-        return this.appPath + favoritesFolder;
+        return new StoragePathBuilder().toDirectory(this.appPath).toDirectory(favoritesFolder).build();
     }
 
     private String getAdFolderPath(String cardID) throws IOException,
             ClassNotFoundException {
 
-        return this.getFavoritesPath() + "/" + getCurrentUser().getUserId() + "/" + cardID;
+        return new StoragePathBuilder().toDirectory(this.getFavoritesPath()).toDirectory(getCurrentUser().getUserId()).toDirectory(cardID).build();
     }
 
     private String getAdDataPath(String cardID) throws IOException,
             ClassNotFoundException {
-        return getAdFolderPath(cardID) + "/" + dataFileName;
+        return new StoragePathBuilder().toDirectory(getAdFolderPath(cardID)).withFile(dataFileName);
     }
 
     private String getAdDataPathFromAdFolder(String adFolderPath) {
-        return adFolderPath + "/" + dataFileName;
+        return new StoragePathBuilder().toDirectory(adFolderPath).withFile(dataFileName);
     }
 
     private String getPhotoPathFromAdFolder(String adFolderPath,
                                             String photoName) {
-        return adFolderPath + "/" + photoName;
+        return new StoragePathBuilder().toDirectory(adFolderPath).withFile(photoName);
     }
 
     private String getUserPathFromFavorites(String favoritesPath,
                                             String userID) throws IOException
             , ClassNotFoundException {
-        return favoritesPath + "/" + getCurrentUser().getUserId() + "/" + usersFolder + "/" + userID;
+        return new StoragePathBuilder().toDirectory(favoritesPath).toDirectory(getCurrentUser().getUserId()).toDirectory(usersFolder).toDirectory(userID).build();
     }
 
     private String getProfilePicPathFromAdFolder(String adFolderPath) {
-        return adFolderPath + FirebaseLayout.SEPARATOR + profilePicName;
+        return new StoragePathBuilder().toDirectory(adFolderPath).withFile(profilePicName);
     }
 
     private String getCurrentUserPath() {
-        return this.appPath + favoritesFolder + "/" + currentUserData;
+        return new StoragePathBuilder().toDirectory(this.appPath).toDirectory(favoritesFolder).withFile(currentUserData);
+    }
+
+    private String getCurrentUserFolderPath() throws IOException,
+            ClassNotFoundException {
+        return new StoragePathBuilder().toDirectory(getFavoritesPath()).toDirectory(getCurrentUser().getUserId()).build();
     }
 
     private String getProfilePicPath() {
-        return this.appPath + favoritesFolder + "/" + profilePicName;
+        return new StoragePathBuilder().toDirectory(this.appPath).toDirectory(favoritesFolder).withFile(profilePicName);
+    }
+
+    private String getUserPath(String userID) throws IOException,
+            ClassNotFoundException {
+        return new StoragePathBuilder().toDirectory(this.appPath).toDirectory(favoritesFolder).toDirectory(getCurrentUser().getUserId()).toDirectory(usersFolder).toDirectory(userID).build();
+    }
+
+    private String getUsersFolder() throws IOException, ClassNotFoundException {
+        return new StoragePathBuilder().toDirectory(this.appPath).toDirectory(favoritesFolder).toDirectory(getCurrentUser().getUserId()).toDirectory(usersFolder).build();
+    }
+
+    private String getProfilePicForUserPath(String userID) throws IOException
+            , ClassNotFoundException {
+        return new StoragePathBuilder().toDirectory(getUserPath(userID)).withFile(profilePicName);
     }
 
     private Map<String, Object> readMapObject(String path) throws IOException
@@ -433,12 +460,12 @@ public class LocalDatabase {
     }
 
     private CompletableFuture<Void> writeProfilePic(Function<String,
-            CompletableFuture<Void>> loadProfilePic, String adFolderPath) {
+            CompletableFuture<Void>> loadProfilePic, String userID) throws IOException, ClassNotFoundException {
 
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
         //We need to change this to BitMap loading
         CompletableFuture<Void> futureProfilePic =
-                loadProfilePic.apply(adFolderPath + "/" + profilePicName);
+                loadProfilePic.apply(getProfilePicForUserPath(userID));
         futureProfilePic.thenAccept(arg -> futureSuccess.complete(null));
         futureProfilePic.exceptionally(e -> {
             futureSuccess.completeExceptionally(e);
@@ -480,6 +507,9 @@ public class LocalDatabase {
                                                    List<Bitmap> panoramas,
                                                    Function<String,
                                                            CompletableFuture<Void>> loadProfilePic) throws IOException, ClassNotFoundException {
+
+        if (adId == null || cardId == null || ad == null || user == null || adPhotos == null || panoramas == null)
+            throw new IllegalArgumentException();
         String favoritesPath = getFavoritesPath();
 
         //This path should allow multiple users per phone as the userId is
@@ -543,7 +573,14 @@ public class LocalDatabase {
                     "Error while writing the ad photos !"));
             return futureSuccess;
         }
-        futureSuccess.complete(null);
+        if (loadProfilePic != null && !localUser.hasDefaultProfileImage()) {
+            writeProfilePic(loadProfilePic, localUser.getUserId()).thenAccept(o -> futureSuccess.complete(null)).exceptionally(e -> {
+                futureSuccess.completeExceptionally(e);
+                return null;
+            });
+        } else {
+            futureSuccess.complete(null);
+        }
         return futureSuccess;
     }
 
@@ -563,8 +600,10 @@ public class LocalDatabase {
     @SuppressWarnings("unchecked")
     private boolean readAdFolder(File folder) throws IOException,
             ClassNotFoundException {
+
+
         String dataPath =
-                folder.getPath() + "/" + LocalDatabase.dataFileName;
+                new StoragePathBuilder().toDirectory(folder.getPath()).withFile(dataFileName);
 
         Map<String, Object> adMap = readMapObject(dataPath);
 
@@ -592,14 +631,15 @@ public class LocalDatabase {
         return true;
     }
 
-    private boolean readAdDataForAUser(String currentUserID) throws IOException, ClassNotFoundException {
-        String favoritesFolderPath =
-                this.appPath + LocalDatabase.favoritesFolder + "/" + currentUserID;
-        File favFolder = new File(favoritesFolderPath);
+    private boolean readAdDataForAUser() throws IOException,
+            ClassNotFoundException {
+        String currentUserFolderPath = getCurrentUserFolderPath();
+
+        File favFolder = new File(getCurrentUserFolderPath());
 
         Predicate<File> isDirectoryPredicate = File::isDirectory;
         Predicate<File> isNotUsersFolder = file -> !file.getName().equals(
-                "users");
+                usersFolder);
 
         FileFilter fileFilter =
                 isDirectoryPredicate.and(isNotUsersFolder)::test;
@@ -615,18 +655,19 @@ public class LocalDatabase {
         return success;
     }
 
-    public List<Card> getCards(String currentUserID) throws IOException,
+    public List<Card> getCards() throws IOException,
             ClassNotFoundException {
-        return getFromMemory(currentUserID, () -> cards);
+        return getFromMemory(() -> cards);
     }
 
-    public Ad getAd(String adId, String currentUserID) throws IOException,
+    public Ad getAd(String adId) throws IOException,
             ClassNotFoundException {
-        return getFromMemory(currentUserID, () -> idsToAd.get(adId));
+        return getFromMemory(() -> idsToAd.get(adId));
     }
 
-    public User getUser(String currentUserID, String wantedUserID) throws IOException, ClassNotFoundException {
-        return getFromMemory(currentUserID, () -> idsToUser.get(wantedUserID));
+    public User getUser(String wantedUserID) throws IOException,
+            ClassNotFoundException {
+        return getFromMemory(() -> idsToUser.get(wantedUserID));
     }
 
     private void deleteDir(File dir) {
@@ -642,7 +683,8 @@ public class LocalDatabase {
     private boolean readUserFolder(File userFile) throws IOException,
             ClassNotFoundException {
 
-        String dataPath = userFile.getPath() + "/" + userData;
+        String dataPath =
+                new StoragePathBuilder().toDirectory(userFile.getPath()).withFile(userData);
         Map<String, Object> userMap = readMapObject(dataPath);
 
 
@@ -657,8 +699,7 @@ public class LocalDatabase {
     }
 
     private boolean readUsers() throws IOException, ClassNotFoundException {
-        String userPath =
-                this.appPath + LocalDatabase.favoritesFolder + "/" + getCurrentUser().getUserId() + usersFolder;
+        String userPath = getUsersFolder();
         File userFolder = new File(userPath);
         boolean success = true;
         for (File folder : userFolder.listFiles(File::isDirectory)) {
@@ -672,11 +713,12 @@ public class LocalDatabase {
 
     }
 
-    private <T> T getFromMemory(String currentUserID, Supplier<T> returnFunc) throws IOException, ClassNotFoundException {
+    private <T> T getFromMemory(Supplier<T> returnFunc) throws IOException,
+            ClassNotFoundException {
         if (this.firstLoad) {
             return returnFunc.get();
         }
-        boolean success = readAdDataForAUser(currentUserID);
+        boolean success = readAdDataForAUser();
         success &= readUsers();
 
         if (success) {
@@ -695,7 +737,8 @@ public class LocalDatabase {
     }
 
     public void cleanFavorites() {
-        File favoritesDir = new File(this.appPath + LocalDatabase.favoritesFolder);
+        File favoritesDir =
+                new File(getFavoritesPath());
         deleteDir(favoritesDir);
         clearMemory();
     }
@@ -711,9 +754,9 @@ public class LocalDatabase {
     }
 
 
-    public void removeCard(String cardId, String currentUserID) {
-        String pathToCard =
-                this.appPath + LocalDatabase.favoritesFolder + "/" + currentUserID + "/" + cardId;
+    public void removeCard(String cardId) throws IOException,
+            ClassNotFoundException {
+        String pathToCard = getAdFolderPath(cardId);
         deleteDir(new File(pathToCard));
 
         int cardIdx = findCardById(cardId);
@@ -741,9 +784,7 @@ public class LocalDatabase {
         if (!isUserUsed) {
             this.userIds.remove(userId);
             this.idsToUser.remove(userId);
-            String userPath =
-                    getFavoritesPath() + "/" + currentUserID + usersFolder +
-                            "/" + userId;
+            String userPath = getUserPath(userId);
             deleteDir(new File(userPath));
         }
     }
@@ -834,6 +875,6 @@ public class LocalDatabase {
 
     public List<String> getPanoramasPaths(String adID) throws IOException,
             ClassNotFoundException {
-        return getFromMemory(getCurrentUser().getUserId(), () -> this.adIdsToPanoramas.get(adID));
+        return getFromMemory(() -> this.adIdsToPanoramas.get(adID));
     }
 }
