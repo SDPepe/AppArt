@@ -168,12 +168,12 @@ public class DatabaseTest {
         builder.withCity(city);
         builder.withDescription(desc);
         builder.withPrice(price);
-        builder.withPhotosIds(photoIds);
+        builder.withPicturesReferences(photoIds);
         builder.withPricePeriod(pricePeriod);
         builder.hasVRTour(hasVRTour);
 
         Ad ad = builder.build();
-        String adId = db.putAd(ad, uriList).join();
+        String adId = db.putAd(ad, uriList, uriList).join();
 
         List<Card> retrievedCards = this.db.getCards().join();
         assertThat(retrievedCards.size(), is(1));

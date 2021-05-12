@@ -84,8 +84,8 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
     @NotNull
     @NonNull
     @Override
-    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
-        return db.putAd(ad, uriList);
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> picturesUris, List<Uri> panoramasUris) {
+        return db.putAd(ad, picturesUris, panoramasUris);
     }
 
     @NonNull
