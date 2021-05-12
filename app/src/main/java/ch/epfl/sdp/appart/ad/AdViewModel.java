@@ -117,8 +117,8 @@ public class AdViewModel extends ViewModel {
         this.adDescription.setValue(ad.getDescription());
         this.adAdvertiserName.setValue(ad.getAdvertiserName());
         this.adAdvertiserId.setValue(ad.getAdvertiserId());
-            this.adPhotosReferences.setValue(ad.getPhotosRefs());
-            this.panoramasReferences.setValue(ad.getPanoramaReferences());
+        this.adPhotosReferences.setValue(ad.getPhotosRefs());
+        this.panoramasReferences.setValue(ad.getPanoramaReferences());
     }
 
     /**
