@@ -120,8 +120,8 @@ public class FirestoreDatabaseService implements DatabaseService {
     @NotNull
     @Override
     @NonNull
-    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
-        return adHelper.putAd(ad, uriList);
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> picturesUris, List<Uri> panoramasUris) {
+        return adHelper.putAd(ad, picturesUris, panoramasUris);
     }
 
     @NotNull

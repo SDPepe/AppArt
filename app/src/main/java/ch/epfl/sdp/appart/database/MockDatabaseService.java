@@ -28,6 +28,7 @@ public class MockDatabaseService implements DatabaseService {
     private final List<Card> cards = new ArrayList<>();
     private final Ad ad;
     private final Map<String, User> users = new HashMap<>();
+    private static final String ANDROID_FILE_PATH = "file:///android_asset/";
     private final List<String> images = new ArrayList<>();
 
     public MockDatabaseService() {
@@ -43,11 +44,11 @@ public class MockDatabaseService implements DatabaseService {
         images.add("users/test/path/photo.jpeg");
 
         List<String> picturesReferences = Arrays.asList(
-                "file:///android_asset/fake_ad_1.jpg",
-                "file:///android_asset/fake_ad_2.jpg",
-                "file:///android_asset/fake_ad_3.jpg",
-                "file:///android_asset/fake_ad_4.jpg",
-                "file:///android_asset/fake_ad_5.jpg"
+                "fake_ad_1.jpg",
+                "fake_ad_2.jpg",
+                "fake_ad_3.jpg",
+                "fake_ad_4.jpg",
+                "fake_ad_5.jpg"
         );
 
         ad = new Ad.AdBuilder()
@@ -58,7 +59,8 @@ public class MockDatabaseService implements DatabaseService {
                 .withAdvertiserName("Martin Vetterli")
                 .withAdvertiserId("vetterli-id")
                 .withDescription("Ever wanted the EPFL campus all for yourself?")
-                .withPhotosIds(picturesReferences)
+                .withPicturesReferences(picturesReferences)
+                .withPanoramaReferences(picturesReferences) //put the pictures since its mocked
                 .hasVRTour(false)
                 .build();
 
@@ -145,7 +147,7 @@ public class MockDatabaseService implements DatabaseService {
     // TODO implement uriList
     @NotNull
     @Override
-    public CompletableFuture<String> putAd(Ad ad, List<Uri> uriList) {
+    public CompletableFuture<String> putAd(Ad ad, List<Uri> picturesUris, List<Uri> panoramaUris) {
         CompletableFuture<String> result = new CompletableFuture<>();
         if (ad.getTitle().equals("failing")){
             result.completeExceptionally(new IllegalStateException());
@@ -203,5 +205,14 @@ public class MockDatabaseService implements DatabaseService {
     @Override
     public void accept(GlideLoaderListenerVisitor visitor) {
         visitor.visit(this);
+    }
+
+    /**
+     * Returns ANDROID_FILE_PATH + fileName
+     * @param fileName the filename
+     * @return the complete path String
+     */
+    public String prependAndroidFilePath(String fileName) {
+        return ANDROID_FILE_PATH + fileName;
     }
 }

@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.scrolling.ScrollingViewModel;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -35,6 +36,10 @@ public class ScrollingActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
+
+    @Inject
+    ApplicationConfiguration configuration;
+
     private RecyclerView recyclerView;
 
     @Override
@@ -96,7 +101,8 @@ public class ScrollingActivity extends ToolbarActivity {
      * Opens the Ad creation activity.
      */
     private void onFloatingButtonAction() {
-        Intent intent = new Intent(this, AdCreationActivity.class);
+        //AdCreationActivity.class
+        Intent intent = new Intent(this, configuration.demoModeSelector(AdCreationActivity.class, AdCreationActivityDemo.class));
         startActivity(intent);
     }
 

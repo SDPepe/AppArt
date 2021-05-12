@@ -153,6 +153,7 @@ public class CameraActivity extends AppCompatActivity {
 
         if (requestCode == GALLERY_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
             imageUri = data.getData();
+            this.getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             setDisplayAction();
         }
 
