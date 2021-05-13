@@ -150,7 +150,7 @@ public class UserAdsActivityTest {
         ViewInteraction imageView = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
         imageView.check(matches(isDisplayed()));
     }
-    
+
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
