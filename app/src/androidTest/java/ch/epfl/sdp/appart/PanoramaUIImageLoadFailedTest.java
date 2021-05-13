@@ -51,6 +51,4 @@ public class PanoramaUIImageLoadFailedTest {
             activity.hasCurrentImageLoadingFailed().thenAccept(s -> assertThat(s, is(false)));
         });
     }
-
-
 }
