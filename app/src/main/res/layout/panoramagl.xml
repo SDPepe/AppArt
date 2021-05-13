@@ -27,7 +27,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.95"
-            app:srcCompat="@drawable/left_arrow_action" />
+            android:background="@drawable/style_secondary"
+            app:srcCompat="@drawable/ic_arrow_backward" />
 
         <ImageButton
             android:id="@+id/rightImage_Panorama_imageButton"
@@ -41,7 +42,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.95"
-            app:srcCompat="@drawable/right_arrow_action" />
+            android:background="@drawable/style_secondary"
+            app:srcCompat="@drawable/ic_arrow_forward" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
