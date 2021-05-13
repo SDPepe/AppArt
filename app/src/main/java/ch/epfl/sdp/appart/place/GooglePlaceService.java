@@ -16,12 +16,21 @@ import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlusCode;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -29,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -42,7 +52,7 @@ public class GooglePlaceService {
 
     private final static String googlePlaceBaseUrl = "https://maps.googleapis.com/maps/api/place/findplacefromtext/";
     private String apiKey;
-    private String result;
+    private PlacesClient client;
 
     @Inject
     public GooglePlaceService() {}
@@ -50,65 +60,194 @@ public class GooglePlaceService {
     public void initialize(Activity activity) {
         apiKey = activity.getResources().getString(R.string.maps_api_key);
         Places.initialize(activity.getApplicationContext(), apiKey);
-        Place place = Place.builder().setAddress("Rue de Neuchâtel 3").build();
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitNetwork().build());
-        try {
-             result = getRawPlaceSearch("Rue de Neuchâtel 3");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int i = 0;
+        client = Places.createClient(activity.getApplicationContext());
+        CompletableFuture<List<PlaceOfInterest>> a = getPlacesOfInterests(new Address("Rue de Neuchâtel 3"));
+        a.thenAccept(aa -> {
+           int i = 0;
+        });
+        a.exceptionally(e -> {
+            return null;
+        });
+
+    }
+
+    public CompletableFuture<List<PlaceOfInterest>> getPlacesOfInterests(Address address) {
+        CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
+
+        CompletableFuture<String> rawResult = getRawPlaceSearch(address.getAddress());
+        CompletableFuture<JSONArray> extract = extractCandidates(rawResult);
+        CompletableFuture<List<String>> placeIds = getPlacesIds(extract);
+
+        placeIds.thenAccept(ids -> {
+
+            CompletableFuture<Place>[] places = new CompletableFuture[ids.size()];
+
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+            for (int i = 0; i < ids.size(); i++) {
+                String id = ids.get(i);
+                CompletableFuture<Place> placeFuture = new CompletableFuture<>();
+                FetchPlaceRequest request = FetchPlaceRequest.newInstance(id, placeFields);
+                client.fetchPlace(request).addOnSuccessListener((response) -> {
+                    Place place = response.getPlace();
+                    placeFuture.complete(place);
+                }).addOnFailureListener(e -> {
+                    placeFuture.completeExceptionally(e);
+                });
+                places[i] = placeFuture;
+            }
+
+            CompletableFuture.allOf(places).thenAccept(ignoredVoid -> {
+                List<PlaceOfInterest> placesOfInterest = new ArrayList<>();
+                for (int i = 0; i < places.length; i++) {
+
+                }
+                result.complete(placesOfInterest);
+            }).exceptionally(e -> {
+                result.completeExceptionally(e);
+                return null;
+            });
+
+
+        });
+
+        placeIds.exceptionally(e -> {
+            result.completeExceptionally(e);
+           return null;
+        });
+
+        return result;
+    }
+
+
+    /**
+     * Extract the place ids form the provided <type>JSONArray</type>.
+     * @param candidates a  <type>CompletableFuture<JSONArray></></type>
+     * @return <type>CompletableFuture<List<String>></type>
+     */
+    private CompletableFuture<List<String>> getPlacesIds(CompletableFuture<JSONArray> candidates) {
+        CompletableFuture<List<String>> result = new CompletableFuture<>();
+
+        candidates.thenAccept(candidatesJson -> {
+            try {
+                List<String> intermediate = new ArrayList<>();
+                for (int i = 0; i < candidatesJson.length(); i++) {
+                    JSONObject element = (JSONObject) candidatesJson.get(i);
+                    String id = element.getString("place_id");
+                    intermediate.add(id);
+                }
+                result.complete(intermediate);
+            } catch (JSONException e) {
+                result.completeExceptionally(e);
+            }
+        });
+
+        candidates.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+
+        return result;
     }
 
     /**
-     * Base on the sdp project
+     * Based on the sdp project. Make a query to google place to retrieve the place.
      * @param address
      * @return
      * @throws IOException
      */
-    public String getRawPlaceSearch(String address) throws IOException {
+    private CompletableFuture<String> getRawPlaceSearch(String address) {
 
         URL url = new GooglePlacesURLBuilder(apiKey)
                     .withAddress(address)
                     .withFieldPlaceId()
-                    .withFieldFormattedAddress()
                     .build();
 
-        InputStream stream = null;
-        HttpsURLConnection connection = null;
-        String result = null;
-        try {
-            connection = (HttpsURLConnection) url.openConnection();
-            connection.setReadTimeout(3000);
-            connection.setConnectTimeout(3000);
-            connection.setRequestMethod("GET");
+        CompletableFuture<String> result = new CompletableFuture<>();
+        CompletableFuture.supplyAsync(() -> {
+            InputStream stream = null;
+            HttpsURLConnection connection = null;
+            String potentialResult = null;
+            try {
+                connection = (HttpsURLConnection) url.openConnection();
+                connection.setReadTimeout(3000);
+                connection.setConnectTimeout(3000);
+                connection.setRequestMethod("GET");
 
-            // Already true by default but setting just in case; needs to be true since this request
-            // is carrying an input (response) body.
-            connection.setDoInput(true);
-            // Open communications link (network traffic occurs here).
-            connection.connect();
+                // Already true by default but setting just in case; needs to be true since this request
+                // is carrying an input (response) body.
+                connection.setDoInput(true);
+                // Open communications link (network traffic occurs here).
+                connection.connect();
 
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpsURLConnection.HTTP_OK) {
-                throw new IOException("HTTP error code: " + responseCode);
+                int responseCode = connection.getResponseCode();
+                if (responseCode != HttpsURLConnection.HTTP_OK) {
+                    throw new IOException("HTTP error code: " + responseCode);
+                }
+
+                // Retrieve the response body as an InputStream.
+                stream = connection.getInputStream();
+                if (stream != null) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+                    potentialResult = reader.lines().collect(Collectors.joining("\n"));
+                }
+            } catch (IOException e) {
+                result.completeExceptionally(e);
+            } finally {
+                // Close Stream and disconnect HTTPS connection.
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                       result.completeExceptionally(e);
+                    }
+                }
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
 
-            // Retrieve the response body as an InputStream.
-            stream = connection.getInputStream();
-            if (stream != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-                result = reader.lines().collect(Collectors.joining("\n"));
+            result.complete(potentialResult);
+            return null;
+        });
+        return result;
+    }
+
+    /**
+     * Convert the raw json string to a json array.
+     * @param rawSearch
+     * @return
+     */
+    private CompletableFuture<JSONArray> extractCandidates(CompletableFuture<String> rawSearch) {
+
+        CompletableFuture<JSONArray> result = new CompletableFuture<>();
+
+        rawSearch.thenAccept(raw -> {
+            JSONObject json = null;
+
+            try {
+                json = (JSONObject) new JSONTokener(raw).nextValue();
+                String status = (String) json.get("status");
+                if (!status.equals("OK")) {
+                    result.completeExceptionally(new IllegalStateException("failed to get "));
+                }
+                JSONArray candidatesJson = json.getJSONArray("candidates");
+
+                if (candidatesJson == null) {
+                    result.completeExceptionally(new IllegalStateException("failed to convert candidates to json object"));
+                } else {
+                    result.complete(candidatesJson);
+                }
+
+            } catch (JSONException e) {
+                result.completeExceptionally(e);
             }
-        } finally {
-            // Close Stream and disconnect HTTPS connection.
-            if (stream != null) {
-                stream.close();
-            }
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
+        });
+
+        rawSearch.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+
         return result;
     }
 
