@@ -114,7 +114,7 @@ public class FavoriteUITest {
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                2),
+                                0),
                         isDisplayed()));
         appCompatEditText.perform(replaceText("emilien@epfl.ch"), closeSoftKeyboard());
 
@@ -124,7 +124,7 @@ public class FavoriteUITest {
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                3),
+                                1),
                         isDisplayed()));
         appCompatEditText2.perform(replaceText("5555"), closeSoftKeyboard());
 
@@ -192,11 +192,11 @@ public class FavoriteUITest {
                         isDisplayed()));
         appCompatTextView2.perform(click());
 
-        ViewInteraction viewGroup = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
-        viewGroup.check(matches(isDisplayed()));
+        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 0),isDisplayed()));
 
-        ViewInteraction viewGroup2 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 1));
-        viewGroup2.check(matches(isDisplayed()));
+
+        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 1),isDisplayed()));
+
 
         pressBack();
 
