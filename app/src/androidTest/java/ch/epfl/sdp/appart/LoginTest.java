@@ -3,7 +3,6 @@ package ch.epfl.sdp.appart;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
