@@ -71,8 +71,8 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
      */
     @Override
     public void onBackPressed() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        finish();
+       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+       finish();
     }
 
     public void onStartButton(View view) {
