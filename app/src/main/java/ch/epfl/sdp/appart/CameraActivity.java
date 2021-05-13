@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import androidx.core.content.ContextCompat;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,19 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        PermissionRequest.askForCameraPermission(this, () -> {
+            Log.d("PERMISSION", "Camera permission granted");
+            initActivity();
+        }, () -> {
+            Log.d("PERMISSION", "Camera permission refused");
+            finish();
+        });
+
+
+    }
+
+    private void initActivity(){
         listImageUri = new ArrayList<>();
         Intent intent = getIntent();
         activity = intent.getStringExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
@@ -69,7 +84,7 @@ public class CameraActivity extends AppCompatActivity {
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
         Button confirmBtn = findViewById(R.id.confirm_Camera_button);
 
-        cameraBtn.setOnClickListener(w -> askCamPermission());
+        cameraBtn.setOnClickListener(w -> startCamera());
         galleryBtn.setOnClickListener((v) -> {
             Intent gallery = new Intent(Intent.ACTION_OPEN_DOCUMENT, Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(gallery, GALLERY_REQUEST_CODE);
@@ -100,17 +115,6 @@ public class CameraActivity extends AppCompatActivity {
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
-        }
-    }
-
-    private void askCamPermission() {
-        if (ContextCompat.checkSelfPermission(this, permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            //show popup to request permission
-            ActivityCompat
-                    .requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
-        } else {
-            startCamera();
         }
     }
 
