@@ -1,14 +1,12 @@
 package ch.epfl.sdp.appart;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
-import ch.epfl.sdp.appart.userAds.UserAdsViewModel;
+import ch.epfl.sdp.appart.ad.UserAdsViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.userAds;
+package ch.epfl.sdp.appart.ad;
 
 import android.util.Log;
 
@@ -41,12 +41,12 @@ public class UserAdsViewModel extends ViewModel {
                 return null;
             });
             cards.thenAccept(cs -> {
-                List<String> userAdsIds = u.getAdsIds();
                 List<Card> filteredCards = new LinkedList<>();
                 for (Card c : cs) {
-                    if (userAdsIds.contains(c.getAdId()))
+                    if (c.getUserId().equals(u.getUserId()))
                         filteredCards.add(c);
                 }
+                Log.d("user_ads", "number of added cards : " + filteredCards.size());
                 lUserAds.setValue(filteredCards);
             });
         });
