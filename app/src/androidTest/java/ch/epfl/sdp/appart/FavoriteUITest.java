@@ -70,8 +70,7 @@ public class FavoriteUITest {
         Intents.init();
         hiltRule.inject();
     }
-
-
+    
     /**
      * taken from :
      * https://stackoverflow.com/questions/29378552/in-espresso-how-to-avoid-ambiguousviewmatcherexception-when-multiple-views-matc
