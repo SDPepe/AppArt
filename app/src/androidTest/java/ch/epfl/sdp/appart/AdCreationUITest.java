@@ -194,7 +194,31 @@ public class AdCreationUITest {
                         isDisplayed()));
         linearLayout.check(matches(isDisplayed()));
     }
-    
+
+    @Test
+    public void successfulPostAdButtonOpensScrollingActivityTest() {
+        //populate ad info
+        onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.street_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.city_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.description_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.number_AdCreation_ediText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
+        onView(withId(R.id.npa_AdCreation_editText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
+        onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
+        closeSoftKeyboard();
+
+        //create ad
+        onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
+        // TODO go back to adactivity when user is synced with firestore
+        //intended(hasComponent(AdActivity.class.getName()));
+        intended(hasComponent(ScrollingActivity.class.getName()));
+    }
 
     @Test
     public void failedPostAdButtonShowsSnackbarTest() {
@@ -217,7 +241,7 @@ public class AdCreationUITest {
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
         onView(withId(com.google.android.material.R.id.snackbar_text))
-                .check(matches(withText(R.string.snackbarNoPhotos_AdCreation)));
+                .check(matches(withText(R.string.snackbarFailed_AdCreation)));
     }
 
     @Test
