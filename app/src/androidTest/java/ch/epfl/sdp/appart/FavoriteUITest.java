@@ -289,4 +289,5 @@ public class FavoriteUITest {
     public void release() {
         Intents.release();
     }
+    
 }
