@@ -19,8 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AdCreationActivityDemo"></activity>
-        <activity android:name=".FavoriteActivity"/>
+        <activity android:name=".PlaceActivity"></activity>
+        <activity android:name=".AdCreationActivityDemo" />
+        <activity android:name=".FavoriteActivity" />
         <activity android:name=".PicturesImportActivity" />
         <activity
             android:name=".MapActivity"
@@ -43,7 +44,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
