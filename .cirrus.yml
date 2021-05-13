@@ -16,12 +16,15 @@ check_android_task:
     sdkmanager "system-images;android-$API_LEVEL;$TARGET;$ARCH"
     sdkmanager --list
   create_device_script:
-    echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
-  start_emulator_background_script:
-    $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
+    echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH" --device "pixel_3"
   install_sudo_script: |
     apt-get update
     apt-get install sudo -y
+    apt-get install --assume-yes android-tools-adb android-tools-fastboot
+  start_emulator_background_script: |
+    sudo adb kill-server
+    sudo adb start-server
+    sudo $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim -camera-back none
   download_fireabse_script : |
     curl -sL https://firebase.tools | bash
   start_firebase_background_script: |
@@ -42,6 +45,12 @@ check_android_task:
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
   logcat_background_script: adb -e logcat *:E
+  wait_and_reconnect_script: | 
+    avdmanager list avd
+    adb reconnect offline
+    adb wait-for-device
+    adb shell input keyevent 82
+    avdmanager list avd
   check_script: |
     ./gradlew check connectedCheck --stacktrace
   report_codeclimate_script: |

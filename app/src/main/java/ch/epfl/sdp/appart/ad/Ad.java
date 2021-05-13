@@ -19,7 +19,8 @@ public class Ad {
     private final String advertiserName;
     private final String advertiserId;
     private final String description;
-    private final List<String> photosRefs;
+    private final List<String> photosReferences;
+    private final List<String> panoramaReferences;
     private final boolean hasVRTour;
 
     /**
@@ -36,7 +37,7 @@ public class Ad {
      * @param hasVRTour    whether the apartment offers a VR tour
      */
     public Ad(String title, long price, PricePeriod pricePeriod, String street, String city,
-              String advertiserName, String advertiserId, String description, List<String> photosRefs, boolean hasVRTour) {
+              String advertiserName, String advertiserId, String description, List<String> photosRefs, List<String> panoramaReferences, boolean hasVRTour) {
         if (title == null || pricePeriod == null || street == null || city == null ||
                 advertiserId == null || description == null || photosRefs == null)
             throw new IllegalArgumentException("An argument is null!");
@@ -49,7 +50,8 @@ public class Ad {
         this.street = street;
         this.city = city;
         this.description = description;
-        this.photosRefs = photosRefs;
+        this.photosReferences = photosRefs;
+        this.panoramaReferences = panoramaReferences;
         this.hasVRTour = hasVRTour;
     }
 
@@ -87,8 +89,10 @@ public class Ad {
     }
 
     public List<String> getPhotosRefs() {
-        return photosRefs;
+        return photosReferences;
     }
+
+    public List<String> getPanoramaReferences() { return  panoramaReferences; }
 
     public boolean hasVRTour() {
         return hasVRTour;
@@ -111,6 +115,7 @@ public class Ad {
         private String advertiserId;
         private String description;
         private List<String> photosRefs;
+        private List<String> panoramaReferences;
         private boolean hasVRTour;
 
         public AdBuilder withTitle(String title) {
@@ -154,9 +159,15 @@ public class Ad {
         }
 
 
-        public AdBuilder withPhotosIds(List<String> photosIds) {
+        public AdBuilder withPicturesReferences(List<String> photosIds) {
             this.photosRefs = new ArrayList<>();
             this.photosRefs.addAll(photosIds);
+            return this;
+        }
+
+        public AdBuilder withPanoramaReferences(List<String> panoramaReferences) {
+            this.panoramaReferences = new ArrayList<>();
+            this.panoramaReferences.addAll(panoramaReferences);
             return this;
         }
 
@@ -177,6 +188,7 @@ public class Ad {
                     advertiserId,
                     description,
                     photosRefs,
+                    panoramaReferences,
                     hasVRTour
             );
         }
