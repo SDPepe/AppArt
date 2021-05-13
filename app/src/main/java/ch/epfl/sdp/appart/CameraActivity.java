@@ -32,6 +32,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class CameraActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
-    
+
 
     @Override
     @SuppressWarnings("deprecation")
@@ -71,11 +72,9 @@ public class CameraActivity extends AppCompatActivity {
             Log.d("PERMISSION", "Camera permission refused");
             finish();
         });
-
-
     }
 
-    private void initActivity(){
+    private void initActivity() {
         listImageUri = new ArrayList<>();
         Intent intent = getIntent();
         activity = intent.getStringExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
@@ -92,12 +91,12 @@ public class CameraActivity extends AppCompatActivity {
         confirmBtn.setOnClickListener(v -> confirm());
     }
 
-    private void confirm(){
+    private void confirm() {
         if (imageUri == null) {
             Intent resultIntent = new Intent();
             setResult(RESULT_CANCELED, resultIntent);
             finish();
-            Toast.makeText(getApplicationContext(),R.string.canceledNoImage ,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.canceledNoImage, Toast.LENGTH_SHORT).show();
         } else {
             if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
                 Intent resultIntent = new Intent();
@@ -167,37 +166,39 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    private void setDisplayAction(){
-        if(activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
+    private void setDisplayAction() {
+        if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
             displayListImage();
         } else if (activity.equals(ActivityCommunicationLayout.USER_PROFILE_ACTIVITY)) {
             displayImage();
         }
     }
 
-    private void displayImage(){
+    private void displayImage() {
         LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
         horizontalLayout.removeAllViews();
         horizontalLayout.addView(uploadImage(imageUri));
     }
-    private void displayListImage(){
+
+    private void displayListImage() {
         listImageUri.add(imageUri);
         LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
         horizontalLayout.removeAllViews();
-        for (Uri i: listImageUri) {
+        for (Uri i : listImageUri) {
             horizontalLayout.addView(uploadImage(i));
         }
     }
-    private View uploadImage(Uri uri){
+
+    private View uploadImage(Uri uri) {
         LayoutInflater inflater =
-            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
         ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
         photo.setImageURI(uri);
-        photo.setPadding(16,0,16,0);
+        photo.setPadding(16, 0, 16, 0);
         return myView;
     }
-    
+
     public void goBack(View view) {
         finish();
     }
@@ -207,7 +208,7 @@ public class CameraActivity extends AppCompatActivity {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
-    
+
 }
 
 

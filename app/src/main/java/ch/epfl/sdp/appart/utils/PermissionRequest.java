@@ -46,8 +46,7 @@ public class PermissionRequest {
                                               Runnable permissionRefused) {
         ActivityResultLauncher<String[]> requestPermissionLauncher;
         String[] permissions;
-
-
+        
         if (Build.VERSION.SDK_INT < 29) {
             permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -73,14 +72,14 @@ public class PermissionRequest {
     private static ActivityResultLauncher<String[]> resultLauncherFor(Activity activity,
                                                                       Runnable permissionGranted,
                                                                       Runnable permissionRefused,
-                                                                      String... permissions){
+                                                                      String... permissions) {
         return ((ComponentActivity) activity).registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
                     Boolean everythingGranted = true;
-                    for (int i = 0; i < permissions.length; i++){
+                    for (int i = 0; i < permissions.length; i++) {
                         if (!isGranted.get(permissions[i])) everythingGranted = false;
                     }
-                    if (everythingGranted){
+                    if (everythingGranted) {
                         permissionGranted.run();
                     } else {
                         permissionRefused.run();
@@ -91,11 +90,11 @@ public class PermissionRequest {
     /**
      * Checks if the given permissions are granted, if not ask for them
      */
-    private static boolean permissionsAlreadyGranted(Activity activity, String... permissions){
+    private static boolean permissionsAlreadyGranted(Activity activity, String... permissions) {
         Boolean everythingGranted = true;
-        for (int i = 0; i < permissions.length; i++){
+        for (int i = 0; i < permissions.length; i++) {
             if (ActivityCompat.checkSelfPermission(activity, permissions[i])
-                    != PackageManager.PERMISSION_GRANTED){
+                    != PackageManager.PERMISSION_GRANTED) {
                 everythingGranted = false;
             }
         }
