@@ -96,11 +96,12 @@ public interface DatabaseService extends DatabaseHostVisitor {
      * Stores the ad in the database
      *
      * @param ad      the ad to add to the database
-     * @param uriList the list of images to add to the ad
+     * @param picturesUris the list of images to add to the ad
+     * @param panoramasUris the list of uris of the panormas
      * @return a future that wraps the ID of the new ad
      */
     @NonNull
-    CompletableFuture<String> putAd(Ad ad, List<Uri> uriList);
+    CompletableFuture<String> putAd(Ad ad, List<Uri> picturesUris, List<Uri> panoramasUris);
 
     /**
      * Upload a image

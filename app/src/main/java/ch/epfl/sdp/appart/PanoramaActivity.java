@@ -14,29 +14,27 @@ import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
+import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
+import ch.epfl.sdp.appart.utils.FirebaseIndexedImagesComparator;
+import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
- * This class manages the UI of the Panorama.
+ * This class manages the UI of the Panorama.s
  */
 @AndroidEntryPoint
 public class PanoramaActivity extends AppCompatActivity {
-
-    /**
-     * WARNING : For people using bitmaps loaded with Glide:
-     * DON'T STORE THE BITMAP ANYWHERE IT WOULD GET RECYCLED BY SOMEONE ELSE
-     * Glide has a Cache and take care of its own recycling. as the commented
-     * line above would be uncommented and would contain a Glide's loaded Bitmap
-     * The activity would have called recycled() on this bitmap when closing.
-     * This would have caused an IllegalState and its hard to debug.
-     */
 
     @Inject
     DatabaseService database;
@@ -46,16 +44,28 @@ public class PanoramaActivity extends AppCompatActivity {
     ImageButton leftButton;
     ImageButton rightButton;
     private Bitmap bitmap;
+    private String currentAdId;
+
+
+    //only meant for testing and should be used a single time !
+    private CompletableFuture<Boolean> hasCurrentImageLoadingFailed = new CompletableFuture<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panoramagl);
+
+        Bundle extras = this.getIntent().getExtras();
+        if (extras != null && extras.containsKey(AdActivity.Intents.INTENT_PANORAMA_PICTURES)
+                && extras.containsKey(AdActivity.Intents.INTENT_AD_ID))  {
+            images = extras.getStringArrayList(AdActivity.Intents.INTENT_PANORAMA_PICTURES);
+            Collections.sort(images, new FirebaseIndexedImagesComparator());
+            currentAdId = extras.getString(AdActivity.Intents.INTENT_AD_ID);
+        }
+
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
         rightButton = (ImageButton) findViewById(R.id.rightImage_Panorama_imageButton);
 
-        // TODO will have to switch to future when it will load from db
-        getImages();
         currImage = 0;
 
         // init PL manager
@@ -70,8 +80,8 @@ public class PanoramaActivity extends AppCompatActivity {
         disableLeftButton();
         if (images.size() < 2)
             disableRightButton();
-    }
 
+    }
 
     @Override
     protected void onResume() {
@@ -91,6 +101,7 @@ public class PanoramaActivity extends AppCompatActivity {
         plManager.onDestroy();
         super.onDestroy();
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -134,34 +145,31 @@ public class PanoramaActivity extends AppCompatActivity {
     }
 
     /**
-     * Init the list of panorama images, set the current image index to 0, load image.
-     */
-    private void getImages() {
-        images = new ArrayList<>();
-        // TODO change with database call to get image references
-        images.add("file:///android_asset/panorama_test.jpg");
-        images.add("file:///android_asset/panorama_test_2.jpg");
-        //images.add("file:///android_asset/panorama_test_3.jpg");
-        //images.add("file:///android_asset/panorama_test_4.jpg");
-    }
-
-    /**
      * Load image at current index into panorama
      */
     private void loadImage() {
         PLSphericalPanorama panorama = new PLSphericalPanorama();
 
         CompletableFuture<Bitmap> bitmapFuture = new CompletableFuture<>();
-        database.accept(new GlideBitmapLoader(this, bitmapFuture, images.get(currImage)));
+
+        String imagePath = new StoragePathBuilder()
+                .toAdsStorageDirectory()
+                .toDirectory(currentAdId)
+                .withFile(images.get(currImage));
+
+        database.accept(new GlideBitmapLoader(this, bitmapFuture, imagePath));
 
         bitmapFuture.thenApply(bitmap -> {
+            hasCurrentImageLoadingFailed.complete(true);
             panorama.setImage(new PLImage(bitmap, true));
             panorama.getCamera().lookAtAndZoomFactor(30.0f, 90.0f, 0.5f, false);
             plManager.setPanorama(panorama);
             this.bitmap = bitmap;
             return bitmap;
         });
+
         bitmapFuture.exceptionally(e -> {
+            hasCurrentImageLoadingFailed.complete(false);
             Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarError_Panorama),
                     Snackbar.LENGTH_SHORT).show();
@@ -199,6 +207,16 @@ public class PanoramaActivity extends AppCompatActivity {
     private void enableRightButton() {
         rightButton.setEnabled(true);
         rightButton.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * WARNING should be used only for testing
+     * @return a future that complete once the image has loaded and will be true if success,
+     * false otherwise.
+     */
+    @Deprecated
+    public CompletableFuture<Boolean> hasCurrentImageLoadingFailed() {
+        return this.hasCurrentImageLoadingFailed;
     }
 
 }

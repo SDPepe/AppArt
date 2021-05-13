@@ -6,12 +6,21 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 
+import javax.inject.Inject;
+
+import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * The main UI class.
  */
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
-    private static boolean DEMO_MODE = false;
+    //private static boolean DEMO_MODE = false;
+
+    @Inject
+    public ApplicationConfiguration configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(ActivityCommunicationLayout.PROVIDING_PASSWORD, extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
         }
         if (extras != null && extras.containsKey("demo_mode")) {
-            DEMO_MODE = extras.getBoolean("demo_mode");
+            configuration.setDemoMode(this, extras.getBoolean("demo_mode"));
         }
         startActivity(intent);
     }
 
-    public static boolean isDemoMode() {
-        return DEMO_MODE;
-    }
+    //public static boolean isDemoMode() {
+    //    return DEMO_MODE;
+    //}
 }

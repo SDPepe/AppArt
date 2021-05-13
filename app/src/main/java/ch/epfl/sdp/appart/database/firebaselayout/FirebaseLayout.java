@@ -28,6 +28,11 @@ public final class FirebaseLayout {
     public static final String PHOTO_NAME = "Photo";
 
     /**
+     * Default name of panorama added to FirebaseStorage
+     */
+    public static final String PANORAMA_NAME = "Panorama";
+
+    /*
      * Default name of profile picture image added to FirebaseStorage
      */
     public static final String PROFILE_IMAGE_NAME = "profileImage";

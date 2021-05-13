@@ -1,5 +1,34 @@
 package ch.epfl.sdp.appart;
 
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+
+import android.widget.FrameLayout;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.AppConfigurationModule;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import dagger.hilt.android.testing.BindValue;
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
+
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -42,7 +71,7 @@ import org.junit.Test;
 
 
 //@RunWith(AndroidJUnit4.class)
-@UninstallModules(DatabaseModule.class)
+@UninstallModules({DatabaseModule.class, AppConfigurationModule.class})
 @HiltAndroidTest
 public class ScrollingUITest {
 
@@ -55,6 +84,9 @@ public class ScrollingUITest {
     @BindValue
     DatabaseService database = new MockDatabaseService();
 
+    //just to reset demo mode
+    @BindValue
+    ApplicationConfiguration configuration = new ApplicationConfiguration();
 
     @Before
     public void init() {
