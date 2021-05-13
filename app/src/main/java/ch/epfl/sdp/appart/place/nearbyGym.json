@@ -1,0 +1,675 @@
+{
+  "html_attributions" : [],
+  "results" : [
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7796263,
+          "lng" : 6.638603
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7807290802915,
+            "lng" : 6.639751780291502
+          },
+          "southwest" : {
+            "lat" : 46.7780311197085,
+            "lng" : 6.637053819708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Christophe Massages Esthetic Mixte",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "place_id" : "ChIJL1M2XoPPjUcRcMCI1IKEtzs",
+      "plus_code" : {
+        "compound_code" : "QJHQ+VC Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+VC"
+      },
+      "rating" : 5,
+      "reference" : "ChIJL1M2XoPPjUcRcMCI1IKEtzs",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 1,
+      "vicinity" : "Ruelle de la Forge 6, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7794108,
+          "lng" : 6.640933
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7808460802915,
+            "lng" : 6.642359380291501
+          },
+          "southwest" : {
+            "lat" : 46.7781481197085,
+            "lng" : 6.639661419708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Let's Go Fitness",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 3712,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/105089347045665970772\"\u003eLet&#39;s Go Fitness\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKf59xKiZ5XyuyKVjg3i1cbuBpjT2ueeMhuiPAFPpGlodCgB1zO3wZZXwW9btR1INuRJvev9xeo-9dkk7NjLq-FpCtDdSuWo-0_f3uO4lcXbLTlZ5mHtBGqVLqLSAyLOOamw3cdWh-ws2g0G1rvz3FwxswzisnKVEI8FpDV_5FVd0Y1",
+          "width" : 5568
+        }
+      ],
+      "place_id" : "ChIJ_Ysq3YTPjUcRxO8FiJdm1Q4",
+      "plus_code" : {
+        "compound_code" : "QJHR+Q9 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHR+Q9"
+      },
+      "rating" : 4,
+      "reference" : "ChIJ_Ysq3YTPjUcRxO8FiJdm1Q4",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 52,
+      "vicinity" : "Rue des Remparts 10, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77592,
+          "lng" : 6.645878999999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7772823802915,
+            "lng" : 6.647172280291502
+          },
+          "southwest" : {
+            "lat" : 46.7745844197085,
+            "lng" : 6.644474319708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Belgym",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 2976,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/104481950605540937534\"\u003eHaelaTiks\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKCy410oBSguA_InxqJ8o98FlPdvY15NNRrvt6Jahem-FCU-s0xjgBJGyTJ7aea2ESrxCInCf3hczpmpapkM-BMj-ucOVnSBNg-nVuJh_7c2eEDSQZ_Wjl9E22_Q0nC0hEFgJ9kOEn3MXwfHwk6_L7BppFMBvwzGvko-eQ_4Ig9FuJm",
+          "width" : 3968
+        }
+      ],
+      "place_id" : "ChIJHT0T7Y7PjUcRzlb5Fkq6eTk",
+      "plus_code" : {
+        "compound_code" : "QJGW+99 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJGW+99"
+      },
+      "reference" : "ChIJHT0T7Y7PjUcRzlb5Fkq6eTk",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Rue des Philosophes 5, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7811072,
+          "lng" : 6.645087699999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78242063029149,
+            "lng" : 6.646408230291502
+          },
+          "southwest" : {
+            "lat" : 46.7797226697085,
+            "lng" : 6.643710269708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Let's Go Fitness",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 3712,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/110619715122857951013\"\u003eLet&#39;s Go Fitness\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKmsRkjkONopRsA9R2AbC9ofsMIrzV9mmqF8-6TZ2oRq9WdQ4R6QY4HjaS2x9VVzNrMgPhkmohHbqkRrIGFfuQMk2BLaftRwTs2bC-EPPd_ALDPN0DVNldOKHGXbawv8O-f5pFZ-Rh_xCNHhrq_SnuliOsJuAszT0vD1XrzOIvNiR9V",
+          "width" : 5568
+        }
+      ],
+      "place_id" : "ChIJU6EffY_PjUcRrenaXawDsU0",
+      "plus_code" : {
+        "compound_code" : "QJJW+C2 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJW+C2"
+      },
+      "rating" : 4.3,
+      "reference" : "ChIJU6EffY_PjUcRrenaXawDsU0",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 101,
+      "vicinity" : "Rue des Pêcheurs 8B, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.78171200000001,
+          "lng" : 6.636076200000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78306338029149,
+            "lng" : 6.637402330291502
+          },
+          "southwest" : {
+            "lat" : 46.7803654197085,
+            "lng" : 6.634704369708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Fitness des Arcades Sàrl",
+      "photos" : [
+        {
+          "height" : 990,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/114698966085074967766\"\u003ePaulo Couto\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKUUmYF_-9L4iX-TjKWx3G9Ay3KQ7agama5WXFjqvgyciAzxZeqahzeVjtzLGqzA3CwHKmA6Hcyz5r_sH5640fLcvio6-sixbB_Xfax-x32IxF5c8dJF99hw3hdTcBGBLNi93dSo6oQ2DQoBB8Uhm-aT7n1lkPhNI9RuZrqePke9rUP",
+          "width" : 1915
+        }
+      ],
+      "place_id" : "ChIJserkTYLPjUcRLIddFWfX-e0",
+      "plus_code" : {
+        "compound_code" : "QJJP+MC Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+MC"
+      },
+      "rating" : 4.4,
+      "reference" : "ChIJserkTYLPjUcRLIddFWfX-e0",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 23,
+      "vicinity" : "Rue de Neuchâtel 18, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7793843,
+          "lng" : 6.6396284
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7810192802915,
+            "lng" : 6.641268180291502
+          },
+          "southwest" : {
+            "lat" : 46.7783213197085,
+            "lng" : 6.638570219708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "TRYverdon",
+      "place_id" : "ChIJEV-4uITPjUcR9_XmPnxxdhs",
+      "rating" : 5,
+      "reference" : "ChIJEV-4uITPjUcR9_XmPnxxdhs",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 1,
+      "vicinity" : "Rue du Lac, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77847269999999,
+          "lng" : 6.639066
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.77987768029149,
+            "lng" : 6.640257280291502
+          },
+          "southwest" : {
+            "lat" : 46.7771797197085,
+            "lng" : 6.637559319708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+      "name" : "Mrs. Viviane Martin Yoga",
+      "place_id" : "ChIJL6nWrITPjUcR4AIh71IbVYM",
+      "plus_code" : {
+        "compound_code" : "QJHQ+9J Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+9J"
+      },
+      "reference" : "ChIJL6nWrITPjUcR4AIh71IbVYM",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Rue du Four 21, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77913859999999,
+          "lng" : 6.642609299999998
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7804729302915,
+            "lng" : 6.644071130291501
+          },
+          "southwest" : {
+            "lat" : 46.7777749697085,
+            "lng" : 6.641373169708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Bms Center - Physiothérapie & Coaching : Erwan Dumont",
+      "photos" : [
+        {
+          "height" : 724,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/112941264141158637637\"\u003eBMS CENTER - Physiothérapie &amp; coaching : Erwan Dumont\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJ_TcicjYXTVnIuPpDfsSLQDVNB1E2e0PG-IL_AFGO4xMLlzKLEbDNpdoQorQoyKwnhhR9Kyf--m7kAoxbWhvLusuAtjLM1VH9T68VVuRllWEKs3oetxMc_hT6ieAeNGWAcIcejqN5BffvSWnokt4Ulplgtt0jrjhb2oXDAhPg3J7Pw",
+          "width" : 724
+        }
+      ],
+      "place_id" : "ChIJA8Q_xoHPjUcRvkJjCUHor5A",
+      "plus_code" : {
+        "compound_code" : "QJHV+M2 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHV+M2"
+      },
+      "reference" : "ChIJA8Q_xoHPjUcRvkJjCUHor5A",
+      "scope" : "GOOGLE",
+      "types" : [
+        "physiotherapist",
+        "gym",
+        "health",
+        "point_of_interest",
+        "establishment"
+      ],
+      "vicinity" : "Place de la Tannerie 1, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.781538,
+          "lng" : 6.636343999999998
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7829407302915,
+            "lng" : 6.637611680291501
+          },
+          "southwest" : {
+            "lat" : 46.7802427697085,
+            "lng" : 6.634913719708496
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "LE SOUS-SOL",
+      "place_id" : "ChIJQVetkhzPjUcRCT3z8bfTqC0",
+      "plus_code" : {
+        "compound_code" : "QJJP+JG Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+JG"
+      },
+      "reference" : "ChIJQVetkhzPjUcRCT3z8bfTqC0",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Rue de Neuchâtel 16, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7763678,
+          "lng" : 6.639336999999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7777784302915,
+            "lng" : 6.640752730291503
+          },
+          "southwest" : {
+            "lat" : 46.77508046970851,
+            "lng" : 6.638054769708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+      "name" : "Mr. Roger Louys Sophrologie",
+      "place_id" : "ChIJW6oBdJvPjUcRVJAOb3erqNU",
+      "plus_code" : {
+        "compound_code" : "QJGQ+GP Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJGQ+GP"
+      },
+      "reference" : "ChIJW6oBdJvPjUcRVJAOb3erqNU",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Rue des Jordils 39, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.78540199999999,
+          "lng" : 6.638734500000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78662843029149,
+            "lng" : 6.640236030291502
+          },
+          "southwest" : {
+            "lat" : 46.78393046970849,
+            "lng" : 6.637538069708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Salle de gym de la marive",
+      "place_id" : "ChIJD7FhUnXPjUcRcj5OPJ2Ve3Y",
+      "plus_code" : {
+        "compound_code" : "QJPQ+5F Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJPQ+5F"
+      },
+      "reference" : "ChIJD7FhUnXPjUcRcj5OPJ2Ve3Y",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Quai de Nogent 1, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.78306519999999,
+          "lng" : 6.632257199999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78444233029149,
+            "lng" : 6.633667330291502
+          },
+          "southwest" : {
+            "lat" : 46.78174436970849,
+            "lng" : 6.630969369708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+      "name" : "CYB (Club Yverdonnois de Boxe)",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 3024,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/103441318862910883930\"\u003eCYB (Club Yverdonnois de Boxe)\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIohc7Vgtqbvwg_UnoYSWnUqNUGTi1FI-F09VmykNSecw6t17o-VwdV1gKyQl9c9wdFF7CCtTpCZHCwTK298kAw--V5IwUHm-DKYpfJLsjxiMVIPkWZgi6lyUs9LCfsDV3MrDvDUlfOiX5q2QJMx5-z_XRG0bBCFhcXpH6DPzcJ-xyy",
+          "width" : 4032
+        }
+      ],
+      "place_id" : "ChIJl4DOx3jPjUcREX4QI8oTfuc",
+      "plus_code" : {
+        "compound_code" : "QJMJ+6W Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJMJ+6W"
+      },
+      "rating" : 4.9,
+      "reference" : "ChIJl4DOx3jPjUcREX4QI8oTfuc",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 7,
+      "vicinity" : "Chemin du Fontenay 7, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.78065369999999,
+          "lng" : 6.6475931
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78196323029149,
+            "lng" : 6.649064830291503
+          },
+          "southwest" : {
+            "lat" : 46.77926526970849,
+            "lng" : 6.646366869708499
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Paradigm To Last",
+      "place_id" : "ChIJ01aNAY_PjUcRQ3yxQry6kLs",
+      "plus_code" : {
+        "compound_code" : "QJJX+72 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJX+72"
+      },
+      "reference" : "ChIJ01aNAY_PjUcRQ3yxQry6kLs",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Avenue des Sports 28, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7759152,
+          "lng" : 6.645879699999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7772823802915,
+            "lng" : 6.647172630291502
+          },
+          "southwest" : {
+            "lat" : 46.7745844197085,
+            "lng" : 6.644474669708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+      "name" : "Aventure intérieure - yoga et sons",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 480,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/109065324837578081019\"\u003eAventure intérieure - yoga et sons\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKgxELIHJ_GTgK3bkwLOu-etwqLI3LXn818FfbOZucgR7GfqaI53xfyAnxPJZEBP0mB-MNjFYOeaYx0LXDjvNlsckivLNzS1pZlbi2N1uNmg49yrkw6eUf3M24MKKQNWP375nOYb3cgSpanFZiuGEtpfE2dxCwIikkmBkbhxtml7xnH",
+          "width" : 1924
+        }
+      ],
+      "place_id" : "ChIJR5Dg_1bPjUcRul2BMQXMLtE",
+      "plus_code" : {
+        "compound_code" : "QJGW+99 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJGW+99"
+      },
+      "reference" : "ChIJR5Dg_1bPjUcRul2BMQXMLtE",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Rue des Philosophes 5, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7856847,
+          "lng" : 6.6437848
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7866230802915,
+            "lng" : 6.644668980291502
+          },
+          "southwest" : {
+            "lat" : 46.7839251197085,
+            "lng" : 6.641971019708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "BoxUp - Parc des rives",
+      "photos" : [
+        {
+          "height" : 4000,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/116330760906132350204\"\u003eBoxUp Officiel\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKpeYqhrN1Y3dfSaiMkO-lLMe0yRrYOW6SnULDjwic8K3ls3mAvELc9VO-Tr9vD6D1V-7PoExyWXWptzWT_kNZVbtVGpWDVWBVth8PZjFDz1OpzSnyRYbv8rXIQQNxVz95Qj6UOgklJXVMM2EqXh_eYLMN59QTHMZzalej6Eath1FpR",
+          "width" : 6000
+        }
+      ],
+      "place_id" : "ChIJCyZaoYPPjUcREK3UUCuh68M",
+      "plus_code" : {
+        "compound_code" : "QJPV+7G Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJPV+7G"
+      },
+      "rating" : 5,
+      "reference" : "ChIJCyZaoYPPjUcREK3UUCuh68M",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 1,
+      "vicinity" : "Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7832731,
+          "lng" : 6.6300881
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78451923029151,
+            "lng" : 6.631196430291502
+          },
+          "southwest" : {
+            "lat" : 46.78182126970851,
+            "lng" : 6.628498469708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Salle de gymnastique",
+      "place_id" : "ChIJ12Ye_lPPjUcRAmr6NxQBSuY",
+      "plus_code" : {
+        "compound_code" : "QJMJ+82 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJMJ+82"
+      },
+      "reference" : "ChIJ12Ye_lPPjUcRAmr6NxQBSuY",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Rue du Cheminet 29, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7880154,
+          "lng" : 6.638410299999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7894152802915,
+            "lng" : 6.639901530291501
+          },
+          "southwest" : {
+            "lat" : 46.7867173197085,
+            "lng" : 6.637203569708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+      "name" : "La Roselière, Centre de Yoga",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 1836,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/109267960696260383864\"\u003eCentre de Yoga La Roselière - Viviane Martin-Prélaz\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwLGTLWtUD1EBuZMdEOj0JAB_N7GBu9mDo9dIgEAQfG-Sq1auuNAmXBNjsybdhYBRTnXka1oan8elwnPzE3OENG5YlegwE_FO6McbfCqLJD9-7AAsitMpa0YRMSRIOz3jBqRyvBifWnsuOBAZUO-Rn6iLZJep8JWFWPHnCW4oazOogD1",
+          "width" : 3264
+        }
+      ],
+      "place_id" : "ChIJIS3FrITPjUcR696rAo9UP7c",
+      "plus_code" : {
+        "compound_code" : "QJQQ+69 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJQQ+69"
+      },
+      "rating" : 5,
+      "reference" : "ChIJIS3FrITPjUcR696rAo9UP7c",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 3,
+      "vicinity" : "Rue de la Roselière 3, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7781139,
+          "lng" : 6.651739699999998
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.77948498029151,
+            "lng" : 6.652988280291502
+          },
+          "southwest" : {
+            "lat" : 46.77678701970851,
+            "lng" : 6.650290319708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Invictus Studio",
+      "place_id" : "ChIJCQNXKOPPjUcRoUg64t4t060",
+      "plus_code" : {
+        "compound_code" : "QMH2+6M Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QMH2+6M"
+      },
+      "reference" : "ChIJCQNXKOPPjUcRoUg64t4t060",
+      "scope" : "GOOGLE",
+      "types" : [ "gym", "health", "point_of_interest", "establishment" ],
+      "vicinity" : "Avenue Haldimand 103, Yverdon-les-Bains"
+    }
+  ],
+  "status" : "OK"
+}

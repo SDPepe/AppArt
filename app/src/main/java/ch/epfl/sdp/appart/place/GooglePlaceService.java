@@ -39,50 +39,57 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.location.Location;
 import dagger.hilt.android.scopes.ActivityScoped;
 
 @ActivityScoped
 public class GooglePlaceService {
 
-    private final static String googlePlaceBaseUrl = "https://maps.googleapis.com/maps/api/place/findplacefromtext/";
     private String apiKey;
     private PlacesClient client;
 
     @Inject
     public GooglePlaceService() {}
 
-    public void initialize(Activity activity) {
-        apiKey = activity.getResources().getString(R.string.maps_api_key);
-        Places.initialize(activity.getApplicationContext(), apiKey);
-        client = Places.createClient(activity.getApplicationContext());
-        CompletableFuture<List<PlaceOfInterest>> a = getPlacesOfInterests(new Address("Rue de Neuchâtel 3"));
-        a.thenAccept(aa -> {
-           int i = 0;
-        });
-        a.exceptionally(e -> {
-            return null;
-        });
-
+    public void initialize(Context context) {
+        apiKey = context.getResources().getString(R.string.maps_api_key);
+        Places.initialize(context.getApplicationContext(), apiKey);
+        client = Places.createClient(context.getApplicationContext());
     }
 
-    public CompletableFuture<List<PlaceOfInterest>> getPlacesOfInterests(Address address) {
+    /**
+     *
+     * @param address
+     * @param radius
+     * @param type
+     * @return
+     */
+    public CompletableFuture<List<PlaceOfInterest>> getPlacesOfInterests(Address address, int radius, String type) {
         CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
 
-        CompletableFuture<String> rawResult = getRawPlaceSearch(address.getAddress());
-        CompletableFuture<JSONArray> extract = extractCandidates(rawResult);
+        CompletableFuture<String> rawResult = getRawPlaceSearch(address.getLocation(), radius, type);
+        CompletableFuture<JSONArray> extract = parseNearbySearch(rawResult);
         CompletableFuture<List<String>> placeIds = getPlacesIds(extract);
 
         placeIds.thenAccept(ids -> {
 
             CompletableFuture<Place>[] places = new CompletableFuture[ids.size()];
-
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+            //warning !!! some fields are not free !!!
+            List<Place.Field> placeFields = Arrays.asList(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.LAT_LNG,
+                    Place.Field.ADDRESS,
+                    Place.Field.PHOTO_METADATAS,
+                    Place.Field.TYPES
+            );
             for (int i = 0; i < ids.size(); i++) {
                 String id = ids.get(i);
                 CompletableFuture<Place> placeFuture = new CompletableFuture<>();
@@ -99,7 +106,11 @@ public class GooglePlaceService {
             CompletableFuture.allOf(places).thenAccept(ignoredVoid -> {
                 List<PlaceOfInterest> placesOfInterest = new ArrayList<>();
                 for (int i = 0; i < places.length; i++) {
-
+                    try {
+                        placesOfInterest.add(new PlaceAdapter(places[i].get()).getPlaceOfInterest());
+                    } catch (ExecutionException | InterruptedException e) {
+                        result.completeExceptionally(e);
+                    }
                 }
                 result.complete(placesOfInterest);
             }).exceptionally(e -> {
@@ -151,16 +162,12 @@ public class GooglePlaceService {
 
     /**
      * Based on the sdp project. Make a query to google place to retrieve the place.
-     * @param address
      * @return
      * @throws IOException
      */
-    private CompletableFuture<String> getRawPlaceSearch(String address) {
+    private CompletableFuture<String> getRawPlaceSearch(Location location, int radius, String type) {
 
-        URL url = new GooglePlacesURLBuilder(apiKey)
-                    .withAddress(address)
-                    .withFieldPlaceId()
-                    .build();
+        URL url = new NearbySearchPlaceURLBuilder(apiKey, location, radius, type).getUrl();
 
         CompletableFuture<String> result = new CompletableFuture<>();
         CompletableFuture.supplyAsync(() -> {
@@ -212,8 +219,39 @@ public class GooglePlaceService {
         return result;
     }
 
+    private CompletableFuture<JSONArray> parseNearbySearch(CompletableFuture<String> rawSearch) {
+        CompletableFuture<JSONArray> result = new CompletableFuture<>();
+        rawSearch.thenAccept(raw -> {
+            JSONObject json = null;
+
+            try {
+                json = (JSONObject) new JSONTokener(raw).nextValue();
+                String status = (String) json.get("status");
+                if (!(status.equals("OK") || status.equals("ZERO_RESULTS"))) {
+                    result.completeExceptionally(new IllegalStateException("failed to get the query"));
+                }
+                JSONArray candidatesJson = json.getJSONArray("results");
+
+                if (candidatesJson == null) {
+                    result.completeExceptionally(new IllegalStateException("failed to convert candidates to json object"));
+                } else {
+                    result.complete(candidatesJson);
+                }
+
+            } catch (JSONException e) {
+                result.completeExceptionally(e);
+            }
+        });
+        rawSearch.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+        return result;
+    }
+
     /**
-     * Convert the raw json string to a json array.
+     * Convert the raw json string to a json array. This function must be used when searching with
+     * find by text.
      * @param rawSearch
      * @return
      */
@@ -227,8 +265,8 @@ public class GooglePlaceService {
             try {
                 json = (JSONObject) new JSONTokener(raw).nextValue();
                 String status = (String) json.get("status");
-                if (!status.equals("OK")) {
-                    result.completeExceptionally(new IllegalStateException("failed to get "));
+                if (!(status.equals("OK") || status.equals("ZERO_RESULTS"))) {
+                    result.completeExceptionally(new IllegalStateException("failed to get the query"));
                 }
                 JSONArray candidatesJson = json.getJSONArray("candidates");
 
@@ -251,8 +289,48 @@ public class GooglePlaceService {
         return result;
     }
 
+    private static class NearbySearchPlaceURLBuilder {
+
+        private final static String TEXT_SEARCH_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
+        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
+        private URL url;
+
+        public NearbySearchPlaceURLBuilder(String apiKey, Location location, int radius, String type) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(TEXT_SEARCH_BASE_URL).append("json?");
+            //sb.append("query=").append(convertSpacesToPlus(text)).append("&");
+            sb.append("location=").append(location.latitude).append(",").append(location.longitude).append("&");
+            sb.append("radius=").append(radius).append("&");
+            sb.append("type=").append(type.trim()).append("&");
+            sb.append("key=").append(apiKey);
+            try {
+                url = new URL(sb.toString());
+            } catch (MalformedURLException e) {
+                throw new IllegalStateException("the built url is malformed !");
+            }
+        }
+
+        public URL getUrl() {
+            return url;
+        }
+
+        private String convertSpacesToPlus(String s) {
+            StringBuilder sb = new StringBuilder();
+            String[] split = s.split(" ");
+            for (int i = 0; i < split.length; i++) {
+                sb.append(split[i].trim());
+                if (i < split.length - 1) {
+                    sb.append("+");
+                }
+            }
+            return sb.toString();
+        }
+
+    }
+
     private static class GooglePlacesURLBuilder {
 
+        private final static String googlePlaceBaseUrl = "https://maps.googleapis.com/maps/api/place/findplacefromtext/";
         private static final String OUTPUT_FIELD = "json";
         private static final String INPUT_FIELD = "input";
         private static final String FIELDS_FIELD = "fields";
@@ -266,6 +344,7 @@ public class GooglePlaceService {
         private static final String FIELD_SEPARATOR = ",";
 
         protected enum QueryField { PLACE_ID, FORMATTED_ADDRESS }
+        protected enum QueryType { FIND_PLACE_FROM_TEXT, NEARBY, TEXT_SEARCH }
 
         private final ArrayList<String> targetedFields = new ArrayList<>();
         private final String apiKey;

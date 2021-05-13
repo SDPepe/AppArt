@@ -1,0 +1,921 @@
+{
+  "html_attributions" : [],
+  "next_page_token" : "ATtYBwIcfCry8BjKat8M60CVqSboO35RPcjmXOCLwbsIZU2JuUL1pcoPehVQg7v_ziL2gbpS2uKHAVanR8l6Dd5Z2FqkFbu6PS4ku0p3GXFmP1AKmon3qka3AHiatSfknpXF1_PFShruUuNpWKr2D03VR9rg3cLyUgJh8swekVvO0oAf__Ek8bxgQiAvg73v0MZ_JoAxc32RPJvBCNy0jRR_TSICsf2otKeVtvwd5CtEWxcPlD-O0bSDnNOiaskA5m9yMuZPTlxQf3pHCBuDALYYGM9aWeeM4b8h5ORif4ajAuro8foA_Hw94H8lmpe7dJ6a0FURY6i1QcqiOn313NJaRm8-lTQ3ZpnNvCUUjxcFUO_EwPgFuc5P1wEXHR39lYgLpGmqtcsI-Y8Nt2NAXF071MiCxYys9DzWyTblapxunSCniaABSs-2ETH8Rmcn",
+  "results" : [
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7752056,
+          "lng" : 6.649564599999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.77645338029151,
+            "lng" : 6.650751730291502
+          },
+          "southwest" : {
+            "lat" : 46.77375541970851,
+            "lng" : 6.648053769708499
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Hotel La Prairie",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 2268,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/116859597692594868211\"\u003eDaniel\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKSUo_pUEjRvrBYcOjPK0YBpIsF_t5ZPQpgjEFIS_9I1ZvalKerMEQmG56TCcIc7WcFdLIEiJUAgQelnGY1SL_NwAxGJ_qPmIiKUNTH3N_9EOTZUJxCsP3Lg0lhuooY1Zni0N1kvZFKCUBjeSB0UhsTcUNl7USE1GFjAQQxJKsQSrWd",
+          "width" : 4032
+        }
+      ],
+      "place_id" : "ChIJa2tozMjPjUcRrVeu47CCbgw",
+      "plus_code" : {
+        "compound_code" : "QJGX+3R Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJGX+3R"
+      },
+      "rating" : 4.1,
+      "reference" : "ChIJa2tozMjPjUcRrVeu47CCbgw",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "lodging", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 289,
+      "vicinity" : "Avenue des Bains 9, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7811871,
+          "lng" : 6.636597599999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7825024802915,
+            "lng" : 6.637879830291502
+          },
+          "southwest" : {
+            "lat" : 46.7798045197085,
+            "lng" : 6.635181869708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Café Le Tempo, Yverdon",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 371,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/107178438079478656266\"\u003eLe Tempo, Albertina De Almeida Ferreira Silva\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwLNiMkEtXxqHJRap_7f6u867RkRFfg7_wn6TwqOdctw9LQnCnvL5V-KvaV0etQ9vdtU6ebf6Mj2yD3NTYnpKqnsI3w-gOHQl-0mjvvhcW_UWKOwpCJpOWmFBAaLNoO8Cd5bVD0YKpj1fSxgsDCLAfjokmXygmQjMHzue3xUwszEyHKu",
+          "width" : 1000
+        }
+      ],
+      "place_id" : "ChIJe7TGpYPPjUcRrXasvV3OMm0",
+      "plus_code" : {
+        "compound_code" : "QJJP+FJ Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+FJ"
+      },
+      "price_level" : 1,
+      "rating" : 4.3,
+      "reference" : "ChIJe7TGpYPPjUcRrXasvV3OMm0",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 138,
+      "vicinity" : "Quai de la Thièle 3, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.779691,
+          "lng" : 6.642081300000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7809656802915,
+            "lng" : 6.643604080291503
+          },
+          "southwest" : {
+            "lat" : 46.7782677197085,
+            "lng" : 6.640906119708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "La Grange Da Antonio",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 1200,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/107074030823607650617\"\u003eLa Grange Da Antonio\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwI9yLHSX5vADdd1qwUr6cOiZYaqWvMDXZxOWs7WfMN1_hTVuWHYzDen0Vxb0acJs7p-2Q6xGdh3ioRG5DbLCbF3dc1qP45BL2iCCFkYReQtuBvMeIMqGixl82kGBawXT4Gf7uwJ-Ziu0WSSDwFW-XLmTMpLJT7u9eKRR1duiJIXiVJS",
+          "width" : 1600
+        }
+      ],
+      "place_id" : "ChIJP6jcG4XPjUcRqZYJiaA-MTI",
+      "plus_code" : {
+        "compound_code" : "QJHR+VR Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHR+VR"
+      },
+      "price_level" : 2,
+      "rating" : 4.2,
+      "reference" : "ChIJP6jcG4XPjUcRqZYJiaA-MTI",
+      "scope" : "GOOGLE",
+      "types" : [
+        "restaurant",
+        "meal_delivery",
+        "meal_takeaway",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "user_ratings_total" : 628,
+      "vicinity" : "Rue du Casino 9, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7767792,
+          "lng" : 6.6476688
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7781163302915,
+            "lng" : 6.648982680291502
+          },
+          "southwest" : {
+            "lat" : 46.7754183697085,
+            "lng" : 6.646284719708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Les 4 Marronniers",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 3024,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/102639388520624259181\"\u003eMechri Sabrine\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIFwhUjj2POn3oEO6P4ZUZRj2ljJJf2lvLddLsreQ6AjuNyFnHGjxgOLfQDieH6IdyDFRVaWCyrNdAo0umrvFp_cqmlswIf6BupXzDki-ln52ihGrob21saB-n6zAxFKjPScFz3KmwcSxEn5VXEwz21psDhiDGB-oanR-FXY0ZoOsI",
+          "width" : 4032
+        }
+      ],
+      "place_id" : "ChIJKfeBx5HPjUcROwVF0-54uQg",
+      "plus_code" : {
+        "compound_code" : "QJGX+P3 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJGX+P3"
+      },
+      "price_level" : 2,
+      "rating" : 4.2,
+      "reference" : "ChIJKfeBx5HPjUcROwVF0-54uQg",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 192,
+      "vicinity" : "Rue Cordey 4, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "CLOSED_TEMPORARILY",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7823663,
+          "lng" : 6.6365676
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7837375302915,
+            "lng" : 6.637995630291502
+          },
+          "southwest" : {
+            "lat" : 46.7810395697085,
+            "lng" : 6.635297669708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Restaurant Le Club 7/77 - Yverdon",
+      "permanently_closed" : true,
+      "photos" : [
+        {
+          "height" : 1360,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/100962119712338516424\"\u003eRestaurant Le Club 7/77 - Yverdon\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKqxbHAfr_z6tTMK0jmcd33dWvM_HRB59HADMdOZ69R9a0gnf_xpvcLf1PSbP-DkhnC6bqZxCa13eoJJFxXJHIef-CaIyI19hWjRW6b_rv6-iIw4bktmYW4joG-z0JjUdrVHgkHD-nqgBAvKvIBCXTDrk-2HZJQqNDjlzqDACJ-qCzr",
+          "width" : 2048
+        }
+      ],
+      "place_id" : "ChIJxVUsNYLPjUcRwAlNseD91yo",
+      "plus_code" : {
+        "compound_code" : "QJJP+WJ Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+WJ"
+      },
+      "rating" : 4.6,
+      "reference" : "ChIJxVUsNYLPjUcRwAlNseD91yo",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 5,
+      "vicinity" : "Quai de la Thièle 13, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7776909,
+          "lng" : 6.6422768
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.77909203029149,
+            "lng" : 6.643665880291502
+          },
+          "southwest" : {
+            "lat" : 46.77639406970849,
+            "lng" : 6.640967919708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "La Brass rY, Irena Jeremic",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 3542,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/113728801321514375691\"\u003eLa Brass rY, Irena Jeremic\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwLd_KkM0JSAh8X6d6UbKTIyPTdJdfhrsq2uwr9Fx6cwOGk4B6A934lKWn6bK0LF8YDexQEJM6mEO3HYBUfIFuFAwUnKbsWl28AGB_2VHjLhGnE9swvfBBrdqYqAvzHgWkM9WDE0Ytt2ahgLd5hZg9reeIs-WdJIl_NWY0StUHA5fii6",
+          "width" : 5312
+        }
+      ],
+      "place_id" : "ChIJdebCyJrPjUcRAakLxYnYT6g",
+      "plus_code" : {
+        "compound_code" : "QJHR+3W Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHR+3W"
+      },
+      "price_level" : 2,
+      "rating" : 4.3,
+      "reference" : "ChIJdebCyJrPjUcRAakLxYnYT6g",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "bar", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 266,
+      "vicinity" : "Rue de la Plaine 8, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77606699999999,
+          "lng" : 6.6400267
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7774587802915,
+            "lng" : 6.641432030291503
+          },
+          "southwest" : {
+            "lat" : 46.7747608197085,
+            "lng" : 6.638734069708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/cafe-71.png",
+      "name" : "Le café de la promenade",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 1325,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/114524570712466043772\"\u003eLe café de la promenade\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwLMPGvUvPg629MywRfGiSs8CbhKFrknOpdkp6XzNKt7lGX6rMZYxdNBfosM-Y6nBu41aUZUd9IGL3ptT8Bihlt3BF82el5aSZShNiWa0ow0m1cK438lAmtLVCPBFcUGUFuYQKhBYDfRGM48Jcg_QI692ipB610z9RTqe8DOwQyhZuQz",
+          "width" : 2000
+        }
+      ],
+      "place_id" : "ChIJvWxECJvPjUcRAHpVHueqKX0",
+      "plus_code" : {
+        "compound_code" : "QJGR+C2 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJGR+C2"
+      },
+      "price_level" : 1,
+      "rating" : 4.6,
+      "reference" : "ChIJvWxECJvPjUcRAHpVHueqKX0",
+      "scope" : "GOOGLE",
+      "types" : [
+        "cafe",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "user_ratings_total" : 310,
+      "vicinity" : "Rue des Jordils 23, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7795031,
+          "lng" : 6.642555400000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7808086302915,
+            "lng" : 6.643805230291502
+          },
+          "southwest" : {
+            "lat" : 46.7781106697085,
+            "lng" : 6.641107269708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "AS Accueil Services Sàrl",
+      "place_id" : "ChIJJ2LNF4XPjUcRq4xKw_yPPlc",
+      "plus_code" : {
+        "compound_code" : "QJHV+R2 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHV+R2"
+      },
+      "reference" : "ChIJJ2LNF4XPjUcRq4xKw_yPPlc",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "vicinity" : "Rue du Casino 7, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7788397,
+          "lng" : 6.6386104
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78026518029149,
+            "lng" : 6.639809530291501
+          },
+          "southwest" : {
+            "lat" : 46.77756721970849,
+            "lng" : 6.637111569708496
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Le Dôme",
+      "place_id" : "ChIJY8InqITPjUcR3qCI-hR-YLU",
+      "plus_code" : {
+        "compound_code" : "QJHQ+GC Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+GC"
+      },
+      "rating" : 4,
+      "reference" : "ChIJY8InqITPjUcR3qCI-hR-YLU",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 2,
+      "vicinity" : "Rue du Milieu 39, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.779809,
+          "lng" : 6.638686999999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7814341302915,
+            "lng" : 6.640328630291503
+          },
+          "southwest" : {
+            "lat" : 46.7787361697085,
+            "lng" : 6.637630669708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Confiserie Schneider Rue du Lac",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 461,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/111123008021743034024\"\u003eConfiserie Schneider Rue du Lac\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJhgAmeGpMeZ5o9sITfNoxVvdj0W4W16_bDKywaz-wQ9Xg8d4jqB5wFhiLEMQwnvhr7XtueLTNACPbqWDRPXGLhOTtoFjHoNz93a6J2cWmLLv33IBfaGxn3ekf2WZcas2JO9bKdVvnt6sZMIH5lcL5USlcmWd43vYIZK2ndtBqXLDx6",
+          "width" : 631
+        }
+      ],
+      "place_id" : "ChIJg5_1YIPPjUcR9STFALjhDqk",
+      "plus_code" : {
+        "compound_code" : "QJHQ+WF Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+WF"
+      },
+      "rating" : 3.9,
+      "reference" : "ChIJg5_1YIPPjUcR9STFALjhDqk",
+      "scope" : "GOOGLE",
+      "types" : [
+        "bakery",
+        "meal_delivery",
+        "grocery_or_supermarket",
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "user_ratings_total" : 14,
+      "vicinity" : "Rue du Lac 39, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7798521,
+          "lng" : 6.638554999999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78144108029149,
+            "lng" : 6.639648280291502
+          },
+          "southwest" : {
+            "lat" : 46.77874311970849,
+            "lng" : 6.636950319708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Olé Tapas",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 2918,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/110113646775311317420\"\u003eAUSDERAU MARCO\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJZSV3iDPLiV4Xi-P9DsJxpWLmYcfa2G4wwguBxEuszs5M_ihQYCvMyj-9c_3QKgzDaiJHHJB4VogQVABjNhX-fRhjxO5pngLa4Gtzs552iU6gfsnA2BFhB-wmIfzFB5ICF5HTyXVeUdihaGW0nS_KGkPzqH4kbXmMLuZgxTvlruSA",
+          "width" : 4707
+        }
+      ],
+      "place_id" : "ChIJIeAgYYPPjUcRbPZHivCBC-8",
+      "plus_code" : {
+        "compound_code" : "QJHQ+WC Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+WC"
+      },
+      "price_level" : 2,
+      "rating" : 4,
+      "reference" : "ChIJIeAgYYPPjUcRbPZHivCBC-8",
+      "scope" : "GOOGLE",
+      "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 337,
+      "vicinity" : "Rue du Lac 41, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.779052,
+          "lng" : 6.6392492
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7803718802915,
+            "lng" : 6.640059830291502
+          },
+          "southwest" : {
+            "lat" : 46.7776739197085,
+            "lng" : 6.637361869708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Vingt-Deux",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 1908,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/114827038294187208015\"\u003eVingt-Deux\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKljSdYBE6M8XO3NkwfTC3vi8ENFkvKE4R1C4AtpfP1SiqoIS94i0bBJ9ieQIqDnwVekJb6sfM_xhNEIQM3pEISnxpa3kmsY9k-wgilI7xLZzl43oEOfYrmp4LukL5l9uKe1SXgz-9Heqol3fqO03uBmv4dDHZBGTJXcAOZzc-VVxEQ",
+          "width" : 2543
+        }
+      ],
+      "place_id" : "ChIJ0Qi9r4TPjUcR0PTknHO222M",
+      "plus_code" : {
+        "compound_code" : "QJHQ+JM Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+JM"
+      },
+      "price_level" : 2,
+      "rating" : 4.4,
+      "reference" : "ChIJ0Qi9r4TPjUcR0PTknHO222M",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 66,
+      "vicinity" : "Rue du Milieu 22, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77888890000001,
+          "lng" : 6.638611099999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7802921802915,
+            "lng" : 6.639799030291501
+          },
+          "southwest" : {
+            "lat" : 46.7775942197085,
+            "lng" : 6.637101069708496
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Mamma Mia",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 1079,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/109483436736036315652\"\u003eMamma Mia\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJCOQnQsqzt0pR3vTRC34hhbkjsgaxRvKzE3phh2fkUOFxSi2VCdHg4pDAimC40JMF2mdroWXNtgzxXTGL_rpmc4TDqPAe5lpZ8YvgV7AuHm3ZfbwxIrEnYMPJjVz_LnJ5IAhb0lYj9s9SyBrOawC1B2V-vQdJl32CenHHRCw2hzGLD",
+          "width" : 1920
+        }
+      ],
+      "place_id" : "ChIJ304pVoPPjUcRxl22wtUJcX4",
+      "plus_code" : {
+        "compound_code" : "QJHQ+HC Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+HC"
+      },
+      "price_level" : 2,
+      "rating" : 4.1,
+      "reference" : "ChIJ304pVoPPjUcRxl22wtUJcX4",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 254,
+      "vicinity" : "Rue du Milieu 39, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7796177,
+          "lng" : 6.6406309
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78096668029149,
+            "lng" : 6.641979880291502
+          },
+          "southwest" : {
+            "lat" : 46.77826871970849,
+            "lng" : 6.639281919708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Restaurant de La Place",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 810,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/114346614728040916362\"\u003eRestaurant de La Place\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKAuCvtggA2ArxGLCeu7xAMB-pckh74FPj3uTLdbACCTLwgIHYFLHSr9_K_SOny3guB0bdStBwgT2wC1JSq4QZWnxan7He95ylu5Bec0-CUMJ347QVf7XKd5LerSRBkXPlNal4TyFDLdwVPwBCStSOWbElprZw3ysQNhSqhRjyFdUFN",
+          "width" : 1440
+        }
+      ],
+      "place_id" : "ChIJG0W114TPjUcRVIJRfc8WeKc",
+      "plus_code" : {
+        "compound_code" : "QJHR+R7 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHR+R7"
+      },
+      "price_level" : 2,
+      "rating" : 4.1,
+      "reference" : "ChIJG0W114TPjUcRVIJRfc8WeKc",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 456,
+      "vicinity" : "Place Pestalozzi 9, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7814667,
+          "lng" : 6.640897700000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7826422802915,
+            "lng" : 6.642092330291502
+          },
+          "southwest" : {
+            "lat" : 46.77994431970851,
+            "lng" : 6.639394369708499
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+      "name" : "k kiosk",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 2560,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/112569502794754915008\"\u003eEdwin Flüeli\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJ2CoX7MwdQtV2p3Kw4iSc77kOsYetZG91kJGRbXfjrgRJ8wMtmhPVg4UrHwhX8ZkttGV6ljtIJFnJKJpWSHk-VLnexR8cMboSUnuat_3BWCazJjU269CEF6sbWuOqNQTQ0-gD3AEPeHUDrmgHxRywWjIWar0zI0zxMJe-tMVdx4HC6",
+          "width" : 1536
+        }
+      ],
+      "place_id" : "ChIJm1cYQ4TPjUcRQxmu6JhFWN8",
+      "plus_code" : {
+        "compound_code" : "QJJR+H9 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJR+H9"
+      },
+      "rating" : 2.4,
+      "reference" : "ChIJm1cYQ4TPjUcRQxmu6JhFWN8",
+      "scope" : "GOOGLE",
+      "types" : [
+        "convenience_store",
+        "liquor_store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "user_ratings_total" : 10,
+      "vicinity" : "Avenue de la Gare 8, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7778134,
+          "lng" : 6.642147899999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7791623802915,
+            "lng" : 6.643496880291502
+          },
+          "southwest" : {
+            "lat" : 46.7764644197085,
+            "lng" : 6.640798919708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Le Bar du Coq",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 781,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/102142208362585059834\"\u003eLe Bar du Coq\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJ07PyaMYLcPvRGt_MIgU5x7zmEPs88dffkNvs25_Y9z0Cf-QtnQYsqQ4SU9WIGwa-kyYPUzKs9uPSQxvjStFzKfQb5AhBAgDAANd_OASsr9KXFyCcLjZ3EmGxf7D3tfeL4Z5hy8HKtdohjcIRxUu5s-wvXGcwf1H14SKYWzLz4peg",
+          "width" : 1467
+        }
+      ],
+      "place_id" : "ChIJSxCLz5rPjUcRAwEwhURyhoI",
+      "plus_code" : {
+        "compound_code" : "QJHR+4V Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHR+4V"
+      },
+      "price_level" : 2,
+      "rating" : 4.4,
+      "reference" : "ChIJSxCLz5rPjUcRAwEwhURyhoI",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 753,
+      "vicinity" : "Rue du Valentin 2, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7811216,
+          "lng" : 6.635549499999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78258913029151,
+            "lng" : 6.637218980291502
+          },
+          "southwest" : {
+            "lat" : 46.77989116970851,
+            "lng" : 6.634521019708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Migros Take Away",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "place_id" : "ChIJ1ZEzOYjFjUcRQ-K8U_Yb3es",
+      "plus_code" : {
+        "compound_code" : "QJJP+C6 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+C6"
+      },
+      "rating" : 3.7,
+      "reference" : "ChIJ1ZEzOYjFjUcRQ-K8U_Yb3es",
+      "scope" : "GOOGLE",
+      "types" : [
+        "meal_takeaway",
+        "convenience_store",
+        "bakery",
+        "supermarket",
+        "grocery_or_supermarket",
+        "cafe",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "user_ratings_total" : 3,
+      "vicinity" : "Rue de Neuchâtel 3, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "CLOSED_TEMPORARILY",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.78131579999999,
+          "lng" : 6.635525400000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78276393029149,
+            "lng" : 6.637146430291503
+          },
+          "southwest" : {
+            "lat" : 46.7800659697085,
+            "lng" : 6.634448469708499
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Migros Restaurant",
+      "permanently_closed" : true,
+      "photos" : [
+        {
+          "height" : 2322,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/114830938369066598727\"\u003eFlorentina Leordean\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwLFUULh8PORg5ES8iuZ0nvHJJn0_rrtbTf_dFL5qcPqjDz4-v9ndNArsdoIncI-wn60MiHZtmYl1SUlAzmkI_nAk3DbzIFkzKOlzbk2HvqNXka0vqI_IoEhCbt9hXVuWBfwO_ODmUCg9qTG978ZOltcJ0PbQ5KXDAdh1FLB0ZmmIRXm",
+          "width" : 4128
+        }
+      ],
+      "place_id" : "ChIJrwG9P7lvjkcRbanlz-Ytszo",
+      "plus_code" : {
+        "compound_code" : "QJJP+G6 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+G6"
+      },
+      "rating" : 3.6,
+      "reference" : "ChIJrwG9P7lvjkcRbanlz-Ytszo",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "cafe", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 105,
+      "vicinity" : "Rue de Neuchâtel 3, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7845479,
+          "lng" : 6.647097
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78591748029149,
+            "lng" : 6.648387830291501
+          },
+          "southwest" : {
+            "lat" : 46.7832195197085,
+            "lng" : 6.645689869708496
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Restaurant du Tennis",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 2304,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/112610169879009626867\"\u003eRestaurant du Tennis\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwLzG7ldJhziK0L9jl3G5UeiXWV-a3ZozUJOSI23Ej75KpN_uq2WRFIveGPxC513duXVtmcuRFnHQE-tg9Hv9AihZgBxnXk_h07hYq7Hy8WXcd0Bp-Fza_zD_59SoD_Uivpsrtdm3xmvAgMIkQ32RbM90aeNO2YnbTRwK_-foigy6tlR",
+          "width" : 3456
+        }
+      ],
+      "place_id" : "ChIJTfFY74jPjUcRW7thykjRMXE",
+      "plus_code" : {
+        "compound_code" : "QJMW+RR Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJMW+RR"
+      },
+      "price_level" : 2,
+      "rating" : 4.2,
+      "reference" : "ChIJTfFY74jPjUcRW7thykjRMXE",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 362,
+      "vicinity" : "Rue des Pêcheurs 17, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7857314,
+          "lng" : 6.6464496
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7869850802915,
+            "lng" : 6.647711980291501
+          },
+          "southwest" : {
+            "lat" : 46.7842871197085,
+            "lng" : 6.645014019708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Le Ranch - Restaurant",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 1960,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/116282530972513652230\"\u003eLe Ranch - Restaurant\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIKnLGGP-DRcfru-0Aseu8T18ns6IiyaxCroAQYy3CunDhTSWeNqg9040Q0t2a7sMyk9upyzg5pBFvdCx2nrHPtfWIaVuJAEFioAe4mDhXBrZKdqLQeJvs8H3Ok9JZlen5ZkiPNA4Kb3fZCgDOW3ycUtNzmjCUerS7OTpaGSGIfwSt6",
+          "width" : 4032
+        }
+      ],
+      "place_id" : "ChIJR8lze4jPjUcRuFSXrWG_MSk",
+      "plus_code" : {
+        "compound_code" : "QJPW+7H Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJPW+7H"
+      },
+      "price_level" : 2,
+      "rating" : 4.5,
+      "reference" : "ChIJR8lze4jPjUcRuFSXrWG_MSk",
+      "scope" : "GOOGLE",
+      "types" : [ "cafe", "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 507,
+      "vicinity" : "Chemin des Bosquets 1, Yverdon-les-Bains"
+    }
+  ],
+  "status" : "OK"
+}
