@@ -46,7 +46,7 @@ public class PermissionRequest {
                                               Runnable permissionRefused) {
         ActivityResultLauncher<String[]> requestPermissionLauncher;
         String[] permissions;
-        
+
         if (Build.VERSION.SDK_INT < 29) {
             permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -64,6 +64,31 @@ public class PermissionRequest {
         } else {
             permissionGranted.run();
         }
+    }
+
+    public static void askForActivityRecognitionPermission(Activity activity, Runnable permissionGranted,
+                                                           Runnable permissionRefused) {
+        ActivityResultLauncher<String[]> requestPermissionLauncher;
+        String[] permissions;
+
+        if (Build.VERSION.SDK_INT < 29) {
+            permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACTIVITY_RECOGNITION};
+        } else {
+            permissions = new String[]{
+                    Manifest.permission.ACTIVITY_RECOGNITION};
+        }
+
+        requestPermissionLauncher = resultLauncherFor(activity, permissionGranted,
+                permissionRefused, permissions);
+
+        if (!permissionsAlreadyGranted(activity, permissions)) {
+            requestPermissionLauncher.launch(permissions);
+        } else {
+            permissionGranted.run();
+        }
+
     }
 
     /**
