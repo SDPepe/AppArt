@@ -1,7 +1,7 @@
 package ch.epfl.sdp.appart;
 
-import android.Manifest;
-import android.Manifest.permission;
+import static android.widget.Toast.makeText;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -21,27 +21,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
-import ch.epfl.sdp.appart.user.UserViewModel;
-import com.bumptech.glide.Glide;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
-import static android.widget.Toast.makeText;
 
 /**
  * This class manages the UI of the Camera.
