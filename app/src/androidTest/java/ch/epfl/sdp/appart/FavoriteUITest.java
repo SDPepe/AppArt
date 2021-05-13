@@ -156,11 +156,6 @@ public class FavoriteUITest {
 
         ViewInteraction actionMenuItemView = onView(
                 allOf(withId(R.id.action_add_favorite), withContentDescription("Add to Favorites"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.account_Ad_toolbar),
-                                        1),
-                                0),
                         isDisplayed()));
         actionMenuItemView.perform(click());
 
