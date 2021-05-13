@@ -4,7 +4,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import android.widget.FrameLayout;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -12,7 +11,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,29 +44,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.intent.Intents;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.database.MockDatabaseService;
-import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import dagger.hilt.android.testing.BindValue;
-import dagger.hilt.android.testing.HiltAndroidRule;
-import dagger.hilt.android.testing.HiltAndroidTest;
-import dagger.hilt.android.testing.UninstallModules;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
 
 //@RunWith(AndroidJUnit4.class)
 @UninstallModules({DatabaseModule.class, AppConfigurationModule.class})

@@ -11,11 +11,8 @@ import org.junit.Test;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
-import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import ch.epfl.sdp.appart.hilt.LoginModule;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
-import dagger.hilt.android.testing.UninstallModules;
 import static org.junit.Assert.assertEquals;
 
 @HiltAndroidTest
