@@ -48,6 +48,7 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_logout:
                 loginService.signOut();
+                // TODO remove currentUser from localDB
                 Intent intentLogout = new Intent(this, LoginActivity.class);
                 startActivity(intentLogout);
                 return true;

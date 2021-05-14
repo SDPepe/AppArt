@@ -33,10 +33,18 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        /*
+         * If a currentUser is stored locally, auto-login with it and then try to fetch
+         * it from the server. If the fetch is successful, update local currentUser and
+         * start the activity. Otherwise, act as the app is offline and start the activity
+         * with the local currentUser.
+         * If no currentUser is stored locally, ask for login credentials as we did before.
+         */
         // TODO get current user from local db
-        User user = new AppUser("replace", "this");
+        User user = /*localDB.getCurrentUser()*/new AppUser("replace", "this");
 
-        if (user != null){ // TODO maybe a try catch is needed
+        if (user != null){
+            // TODO try to fetch from db and update current user if successful
             startScrollingActivity();
         } else {
             Bundle extras = this.getIntent().getExtras();
