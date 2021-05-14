@@ -193,6 +193,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private void setSessionUserToLocal(User user){
         this.sessionUser = user;
 
+        // TODO if user null show toast -> means no user in localDB and server fetch failed
         /* set attributes of session user to the UI components */
         getAndSetCurrentAttributes();
     }

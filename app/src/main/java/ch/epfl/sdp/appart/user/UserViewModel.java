@@ -13,7 +13,9 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import io.grpc.Context;
 
 
 @HiltViewModel
@@ -58,14 +60,16 @@ public class UserViewModel extends ViewModel {
      * @param user the user to update in database
      */
     public void updateUser(User user) {
-        // TODO show toast if update failed
         CompletableFuture<Boolean> updateUser = db.updateUser(user);
         updateUser.exceptionally(e -> {
             Log.d("UPDATE USER", "DATABASE FAIL");
             return null;
         });
-        // TODO save locally if update completed
-        updateUser.thenAccept(mUpdateUserConfirmed::setValue);
+        updateUser.thenAccept(b -> {
+            CompletableFuture<Void> localSaveResult = new CompletableFuture<>();
+            // TODO call localDB API to save new user info, setValue according to result
+            mUpdateUserConfirmed.setValue(b);
+        });
     }
 
     /**
@@ -74,26 +78,23 @@ public class UserViewModel extends ViewModel {
      *
      * @param userId the id of the user
      */
-    public void updateImage(String userId){
-        StringBuilder imagePathAndName = new StringBuilder();
-        // TODO use pathbuilder
-        imagePathAndName
-                .append(FirebaseLayout.USERS_DIRECTORY)
-                .append(FirebaseLayout.SEPARATOR)
-                .append(userId)
-                .append(FirebaseLayout.SEPARATOR)
-                .append(FirebaseLayout.PROFILE_IMAGE_NAME)
-                .append(System.currentTimeMillis())
-                .append(FirebaseLayout.JPEG);
+    public void updateImage(String userId) {
+        String imagePathAndName = new StoragePathBuilder()
+                .toUsersStorageDirectory()
+                .toDirectory(userId)
+                .withFile(FirebaseLayout.PROFILE_IMAGE_NAME +
+                        System.currentTimeMillis() +
+                        FirebaseLayout.JPEG);
 
-        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName.toString());
-        // TODO show toast if update failed
+        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName);
         updateImage.exceptionally(e -> {
             Log.d("UPDATE IMAGE", "DATABASE FAIL");
             return null;
         });
-        // TODO save image locally if update completed
-        updateImage.thenAccept(mUpdateImageConfirmed::setValue);
+        updateImage.thenAccept(b -> {
+            // TODO use localDB API to save image locally, then setValue according to result
+            mUpdateImageConfirmed.setValue(b);
+        });
     }
 
     /**
@@ -102,15 +103,16 @@ public class UserViewModel extends ViewModel {
      *
      * @param profilePicture this is the complete path for the user's image: user.getProfileImage()
      */
-    public void deleteImage(String profilePicture){
-        // TODO show toast if failed
+    public void deleteImage(String profilePicture) {
         CompletableFuture<Boolean> deleteImage = db.deleteImage(profilePicture);
         deleteImage.exceptionally(e -> {
             Log.d("DELETE IMAGE", "DATABASE FAIL");
             return null;
         });
-        // TODO update localdb if completed
-        deleteImage.thenAccept(mDeleteImageConfirmed::setValue);
+        deleteImage.thenAccept(b -> {
+            // TODO use localDB API to delete local image, then setValue according to result
+            mDeleteImageConfirmed.setValue(b);
+        });
     }
 
     /**
@@ -119,26 +121,42 @@ public class UserViewModel extends ViewModel {
      * @param userId the unique Id of the user to retrieve from database
      */
     public void getUser(String userId) {
-        // TODO get user locally, then try to fetch from db
+        User user = /*localDB.getUser(userId)*/ new AppUser("replace", "this");
+        if (user != null) mUser.setValue(user);
+
         CompletableFuture<User> getUser = db.getUser(userId);
         getUser.exceptionally(e -> {
             Log.d("GET USER", "DATABASE FAIL");
+            // if no user in localDB and server fetch failed, set value to null
+            if (user == null) mUser.setValue(null);
             return null;
         });
-        getUser.thenAccept(mUser::setValue);
+        // if server fetch worked, update user in localDB
+        getUser.thenAccept( u -> {
+            // TODO use localDB API to update user stored locally
+            mUser.setValue(u);
+        });
     }
 
     /**
      * Get the current user from the database and updates the LiveData
      */
     public void getCurrentUser() {
-        // TODO get locally, then try to fetch from db
+        User user = /*localDB.getCurrentUser()*/ new AppUser("replace", "this");
+        if (user != null) mUser.setValue(user);
+
         CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
         getCurrentUser.exceptionally(e -> {
             Log.d("GET USER", "DATABASE FAIL");
+            // if no currentUser in localDB and server fetch failed, set value to null
+            if (user == null) mUser.setValue(null);
             return null;
         });
-        getCurrentUser.thenAccept(mUser::setValue);
+        // if server fetch worked, update user in localDB
+        getCurrentUser.thenAccept( cu -> {
+            // TODO use localDB API to update current user stored locally
+            mUser.setValue(cu);
+        });
     }
 
     /*
@@ -177,6 +195,6 @@ public class UserViewModel extends ViewModel {
     public Uri getUri() {
         return profileImageUri;
     }
-    
+
 
 }
