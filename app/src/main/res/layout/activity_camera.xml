@@ -1,84 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/camera_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CameraActivity">
-
-    <ImageButton
-      android:id="@+id/back_Camera_button"
-      android:layout_width="wrap_content"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/camera_layout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".CameraActivity">
+    
+    <Button
+      android:id="@+id/gallery_Camera_button"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="56dp"
-      android:background="#00FFFFFF"
-      android:contentDescription="@string/backbutton_desc"
+      android:paddingStart="40dp"
+      android:paddingEnd="16dp"
+      android:background="@drawable/style_secondary"
+      android:drawableEnd="@drawable/ic_gallery"
+      android:text="@string/galleryButtonText"
+      android:textAllCaps="false"
+      android:textColor="@color/primaryStart"
+      android:textSize="16sp"
+      app:layout_constraintBottom_toTopOf="@+id/guideline18"
+      app:layout_constraintEnd_toStartOf="@+id/guideline17"
+      app:layout_constraintStart_toStartOf="@+id/guideline16" />
+    <Button
+      android:id="@+id/camera_Camera_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:paddingStart="40dp"
+      android:paddingEnd="16dp"
+      android:background="@drawable/style_secondary"
+      android:drawableEnd="@drawable/ic_camera"
+      android:text="@string/cameraButtonText"
+      android:textAllCaps="false"
+      android:textColor="@color/primaryStart"
+      android:textSize="16sp"
+      app:layout_constraintBottom_toTopOf="@+id/guideline19"
+      app:layout_constraintEnd_toStartOf="@+id/guideline17"
+      app:layout_constraintStart_toStartOf="@+id/guideline16" />
+    <Button
+      android:id="@+id/confirm_Camera_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@drawable/style_primary"
+      android:text="@string/confirmCameraButtonText"
+      android:textAllCaps="false"
+      android:textColor="#FFFFFF "
+      android:textSize="16sp"
+      app:layout_constraintBottom_toTopOf="@+id/guideline20"
+      app:layout_constraintEnd_toStartOf="@+id/guideline17"
+      app:layout_constraintStart_toStartOf="@+id/guideline16" />
+
+    <HorizontalScrollView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toTopOf="@+id/guideline21"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      android:onClick="goBack"
-      app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/guideline22">
 
+        <LinearLayout
+          android:id="@+id/image_Camera_linearLayout"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:orientation="horizontal" />
+    </HorizontalScrollView>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline16"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintBottom_toTopOf="@+id/gallery_Camera_button"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
 
-        <HorizontalScrollView
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:fillViewport="true"
-          android:scrollbars="none">
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline17"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_2" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline18"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="0.65" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline19"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="0.75" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline20"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="0.85" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline21"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="0.55" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline22"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="0.10670315" />
 
-            <LinearLayout
-              android:id="@+id/image_Camera_linearLayout"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="horizontal" />
-        </HorizontalScrollView>
-    </LinearLayout>
-
-
-    <Button
-        android:id="@+id/gallery_Camera_button"
-        android:layout_width="199dp"
-        android:layout_height="44dp"
-        android:text="@string/galleryButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.70" />
-
-    <Button
-        android:id="@+id/camera_Camera_button"
-        android:layout_width="191dp"
-        android:layout_height="44dp"
-        android:text="@string/cameraButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.80" />
-
-    <Button
-      android:id="@+id/confirm_Camera_button"
-      android:layout_width="191dp"
-      android:layout_height="44dp"
-      android:text="@string/confirmCameraButtonText"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.498"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.90" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

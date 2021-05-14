@@ -83,7 +83,7 @@ public class UserProfileActivityTest {
     /* Used to grant camera permission always */
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
-            GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
+        GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
@@ -99,191 +99,186 @@ public class UserProfileActivityTest {
     @Test
     public void userProfileActivityTest() throws UiObjectNotFoundException {
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.email_Login_editText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
+            allOf(withId(R.id.email_Login_editText),
+                childAtPosition(
+                    childAtPosition(
+                        withId(android.R.id.content),
+                        0),
+                    0),
+                isDisplayed()));
         appCompatEditText.perform(replaceText("carlo@epfl.ch"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.password_Login_editText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                3),
-                        isDisplayed()));
+            allOf(withId(R.id.password_Login_editText),
+                childAtPosition(
+                    childAtPosition(
+                        withId(android.R.id.content),
+                        0),
+                    1),
+                isDisplayed()));
         appCompatEditText2.perform(replaceText("3333"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.login_Login_button), withText("Login"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
+            allOf(withId(R.id.login_Login_button), withText("Log In!"),
+                isDisplayed()));
         appCompatButton.perform(click());
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.login_Scrolling_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
+            allOf(withContentDescription("More options"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.login_Scrolling_toolbar),
+                        1),
+                    0),
+                isDisplayed()));
         overflowMenuButton.perform(click());
 
         ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Account"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
+            allOf(withId(R.id.title), withText("Account"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.content),
+                        0),
+                    0),
+                isDisplayed()));
         appCompatTextView.perform(click());
 
         ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                1),
-                        isDisplayed()));
+            allOf(withId(R.id.editProfile_UserProfile_button), withText("Edit profile"),
+                childAtPosition(
+                    childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),
+                        1),
+                    1),
+                isDisplayed()));
         appCompatButton2.perform(click());
 
         ViewInteraction textInputEditText = onView(
-                allOf(withId(R.id.name_UserProfile_editText), withText("carlo"),
+            allOf(withId(R.id.name_UserProfile_editText), withText("carlo"),
+                childAtPosition(
+                    allOf(withId(R.id.name_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.name_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                0)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            0)),
+                    1),
+                isDisplayed()));
         textInputEditText.perform(click());
 
         ViewInteraction textInputEditText2 = onView(
-                allOf(withId(R.id.name_UserProfile_editText), withText("carlo"),
+            allOf(withId(R.id.name_UserProfile_editText), withText("carlo"),
+                childAtPosition(
+                    allOf(withId(R.id.name_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.name_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                0)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            0)),
+                    1),
+                isDisplayed()));
         textInputEditText2.perform(replaceText("TEST"));
 
         ViewInteraction textInputEditText3 = onView(
-                allOf(withId(R.id.name_UserProfile_editText), withText("TEST"),
+            allOf(withId(R.id.name_UserProfile_editText), withText("TEST"),
+                childAtPosition(
+                    allOf(withId(R.id.name_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.name_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                0)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            0)),
+                    1),
+                isDisplayed()));
         textInputEditText3.perform(closeSoftKeyboard());
 
         ViewInteraction textInputEditText4 = onView(
-                allOf(withId(R.id.name_UserProfile_editText), withText("TEST"),
+            allOf(withId(R.id.name_UserProfile_editText), withText("TEST"),
+                childAtPosition(
+                    allOf(withId(R.id.name_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.name_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                0)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            0)),
+                    1),
+                isDisplayed()));
         textInputEditText4.perform(pressImeActionButton());
 
         ViewInteraction textInputEditText5 = onView(
-                allOf(withId(R.id.age_UserProfile_editText), withText(""),
+            allOf(withId(R.id.age_UserProfile_editText), withText(""),
+                childAtPosition(
+                    allOf(withId(R.id.age_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.age_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                1)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            1)),
+                    1),
+                isDisplayed()));
         textInputEditText5.perform(replaceText("1000"));
 
         ViewInteraction textInputEditText6 = onView(
-                allOf(withId(R.id.age_UserProfile_editText), withText("1000"),
+            allOf(withId(R.id.age_UserProfile_editText), withText("1000"),
+                childAtPosition(
+                    allOf(withId(R.id.age_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.age_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                1)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            1)),
+                    1),
+                isDisplayed()));
         textInputEditText6.perform(closeSoftKeyboard());
 
         ViewInteraction textInputEditText7 = onView(
-                allOf(withId(R.id.age_UserProfile_editText), withText("1000"),
+            allOf(withId(R.id.age_UserProfile_editText), withText("1000"),
+                childAtPosition(
+                    allOf(withId(R.id.age_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.age_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                1)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            1)),
+                    1),
+                isDisplayed()));
         textInputEditText7.perform(pressImeActionButton());
 
         ViewInteraction textInputEditText8 = onView(
-                allOf(withId(R.id.phoneNumber_UserProfile_editText),
+            allOf(withId(R.id.phoneNumber_UserProfile_editText),
+                childAtPosition(
+                    allOf(withId(R.id.phoneNumber_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.phoneNumber_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                2)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            2)),
+                    1),
+                isDisplayed()));
         textInputEditText8.perform(replaceText("+39 3333333333"));
 
         ViewInteraction textInputEditText9 = onView(
-                allOf(withId(R.id.phoneNumber_UserProfile_editText), withText("+39 3333333333"),
+            allOf(withId(R.id.phoneNumber_UserProfile_editText), withText("+39 3333333333"),
+                childAtPosition(
+                    allOf(withId(R.id.phoneNumber_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.phoneNumber_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                2)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            2)),
+                    1),
+                isDisplayed()));
         textInputEditText9.perform(closeSoftKeyboard());
 
         ViewInteraction textInputEditText10 = onView(
-                allOf(withId(R.id.phoneNumber_UserProfile_editText), withText("+39 3333333333"),
+            allOf(withId(R.id.phoneNumber_UserProfile_editText), withText("+39 3333333333"),
+                childAtPosition(
+                    allOf(withId(R.id.phoneNumber_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.phoneNumber_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                2)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            2)),
+                    1),
+                isDisplayed()));
         textInputEditText10.perform(pressImeActionButton());
 
         ViewInteraction appCompatSpinner = onView(
-                allOf(withId(R.id.gender_UserProfile_spinner),
+            allOf(withId(R.id.gender_UserProfile_spinner),
+                childAtPosition(
+                    allOf(withId(R.id.gender_UserProfile_layout),
                         childAtPosition(
-                                allOf(withId(R.id.gender_UserProfile_layout),
-                                        childAtPosition(
-                                                withId(R.id.attributes_UserProfile_layout),
-                                                3)),
-                                1),
-                        isDisplayed()));
+                            withId(R.id.attributes_UserProfile_layout),
+                            3)),
+                    1),
+                isDisplayed()));
         appCompatSpinner.perform(click());
 
         DataInteraction appCompatTextView2 = onData(anything())
-                .inAdapterView(childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(3);
+            .inAdapterView(childAtPosition(
+                withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                0))
+            .atPosition(3);
         appCompatTextView2.perform(click());
 
 
@@ -301,8 +296,8 @@ public class UserProfileActivityTest {
 
         // Create a bitmap we can use for our simulated camera image
         Bitmap icon = BitmapFactory.decodeResource(
-                ApplicationProvider.getApplicationContext().getResources(),
-                R.mipmap.ic_launcher);
+            ApplicationProvider.getApplicationContext().getResources(),
+            R.mipmap.ic_launcher);
 
         // Build a result to return from the Camera app
         Intent resultIntent = new Intent();
@@ -339,24 +334,18 @@ public class UserProfileActivityTest {
         }
 
         ViewInteraction appCompatButton4 = onView(
-                allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
-                        childAtPosition(
-                                allOf(withId(R.id.camera_layout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                4),
-                        isDisplayed()));
+            allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
+                isDisplayed()));
         appCompatButton4.perform(click());
 
         ViewInteraction appCompatButton5 = onView(
-                allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                0),
-                        isDisplayed()));
+            allOf(withId(R.id.doneEditing_UserProfile_button), withText("Confirm"),
+                childAtPosition(
+                    childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),
+                        1),
+                    0),
+                isDisplayed()));
         appCompatButton5.perform(click());
 
         /* after the done button the previous image should have been removed and the new one updated */
@@ -369,26 +358,26 @@ public class UserProfileActivityTest {
 
 
         ViewInteraction appCompatButton6 = onView(
-                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                1),
-                        isDisplayed()));
+            allOf(withId(R.id.editProfile_UserProfile_button), withText("Edit profile"),
+                childAtPosition(
+                    childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),
+                        1),
+                    1),
+                isDisplayed()));
         appCompatButton6.perform(click());
 
 
         onView(withId(R.id.removeImage_UserProfile_button)).perform(click());
 
         ViewInteraction appCompatButton8 = onView(
-                allOf(withId(R.id.doneEditing_UserProfile_button), withText("DONE"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                0),
-                        isDisplayed()));
+            allOf(withId(R.id.doneEditing_UserProfile_button), withText("Confirm"),
+                childAtPosition(
+                    childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),
+                        1),
+                    0),
+                isDisplayed()));
         appCompatButton8.perform(click());
 
         mockImages = ((MockDatabaseService) database).getImages();
@@ -400,129 +389,129 @@ public class UserProfileActivityTest {
         assertFalse(mockImages.get(mockImages.size() - 1).contains("users/3333/profileImage"));
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.email_UserProfile_textView), withText("Email"),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-                        isDisplayed()));
+            allOf(withId(R.id.email_UserProfile_textView), withText("Email"),
+                withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                isDisplayed()));
         textView.check(matches(withText("Email")));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.emailText_UserProfile_textView), withText("carlo@epfl.ch"),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-                        isDisplayed()));
+            allOf(withId(R.id.emailText_UserProfile_textView), withText("carlo@epfl.ch"),
+                withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                isDisplayed()));
         textView2.check(matches(withText("carlo@epfl.ch")));
 
         ViewInteraction imageView = onView(
-                allOf(withId(R.id.profilePicture_UserProfile_imageView), withContentDescription("profile picture"),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-                        isDisplayed()));
+            allOf(withId(R.id.profilePicture_UserProfile_imageView), withContentDescription("profile picture"),
+                withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                isDisplayed()));
         imageView.check(matches(isDisplayed()));
 
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.uniAccountClaimer_UserProfile_textView), withText("UNI account"),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-                        isDisplayed()));
+            allOf(withId(R.id.uniAccountClaimer_UserProfile_textView), withText("UNI account"),
+                withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                isDisplayed()));
         textView3.check(matches(withText("UNI account")));
 
         ViewInteraction linearLayout = onView(
-                allOf(withId(R.id.attributes_UserProfile_layout),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-                        isDisplayed()));
+            allOf(withId(R.id.attributes_UserProfile_layout),
+                withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                isDisplayed()));
         linearLayout.check(matches(isDisplayed()));
 
         ViewInteraction linearLayout2 = onView(
-                allOf(withId(R.id.name_UserProfile_layout),
-                        withParent(allOf(withId(R.id.attributes_UserProfile_layout),
-                                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
-                        isDisplayed()));
+            allOf(withId(R.id.name_UserProfile_layout),
+                withParent(allOf(withId(R.id.attributes_UserProfile_layout),
+                    withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
+                isDisplayed()));
         linearLayout2.check(matches(isDisplayed()));
 
         ViewInteraction textView4 = onView(
-                allOf(withId(R.id.name_UserProfile_textView), withText("Name"),
-                        withParent(allOf(withId(R.id.name_UserProfile_layout),
-                                withParent(withId(R.id.attributes_UserProfile_layout)))),
-                        isDisplayed()));
+            allOf(withId(R.id.name_UserProfile_textView), withText("Name"),
+                withParent(allOf(withId(R.id.name_UserProfile_layout),
+                    withParent(withId(R.id.attributes_UserProfile_layout)))),
+                isDisplayed()));
         textView4.check(matches(withText("Name")));
 
         ViewInteraction editText = onView(
-                allOf(withId(R.id.name_UserProfile_editText), withText("TEST"),
-                        withParent(allOf(withId(R.id.name_UserProfile_layout),
-                                withParent(withId(R.id.attributes_UserProfile_layout)))),
-                        isDisplayed()));
+            allOf(withId(R.id.name_UserProfile_editText), withText("TEST"),
+                withParent(allOf(withId(R.id.name_UserProfile_layout),
+                    withParent(withId(R.id.attributes_UserProfile_layout)))),
+                isDisplayed()));
         editText.check(matches(withText("TEST")));
 
         ViewInteraction linearLayout3 = onView(
-                allOf(withId(R.id.age_UserProfile_layout),
-                        withParent(allOf(withId(R.id.attributes_UserProfile_layout),
-                                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
-                        isDisplayed()));
+            allOf(withId(R.id.age_UserProfile_layout),
+                withParent(allOf(withId(R.id.attributes_UserProfile_layout),
+                    withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
+                isDisplayed()));
         linearLayout3.check(matches(isDisplayed()));
 
         ViewInteraction textView5 = onView(
-                allOf(withId(R.id.age_UserProfile_textView), withText("Age"),
-                        withParent(allOf(withId(R.id.age_UserProfile_layout),
-                                withParent(withId(R.id.attributes_UserProfile_layout)))),
-                        isDisplayed()));
+            allOf(withId(R.id.age_UserProfile_textView), withText("Age"),
+                withParent(allOf(withId(R.id.age_UserProfile_layout),
+                    withParent(withId(R.id.attributes_UserProfile_layout)))),
+                isDisplayed()));
         textView5.check(matches(withText("Age")));
 
         ViewInteraction editText2 = onView(
-                allOf(withId(R.id.age_UserProfile_editText), withText("1000"),
-                        withParent(allOf(withId(R.id.age_UserProfile_layout),
-                                withParent(withId(R.id.attributes_UserProfile_layout)))),
-                        isDisplayed()));
+            allOf(withId(R.id.age_UserProfile_editText), withText("1000"),
+                withParent(allOf(withId(R.id.age_UserProfile_layout),
+                    withParent(withId(R.id.attributes_UserProfile_layout)))),
+                isDisplayed()));
         editText2.check(matches(withText("1000")));
 
         ViewInteraction linearLayout4 = onView(
-                allOf(withId(R.id.phoneNumber_UserProfile_layout),
-                        withParent(allOf(withId(R.id.attributes_UserProfile_layout),
-                                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
-                        isDisplayed()));
+            allOf(withId(R.id.phoneNumber_UserProfile_layout),
+                withParent(allOf(withId(R.id.attributes_UserProfile_layout),
+                    withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
+                isDisplayed()));
         linearLayout4.check(matches(isDisplayed()));
 
         ViewInteraction textView6 = onView(
-                allOf(withId(R.id.phoneNumber_UserProfile_textView), withText("Phone"),
-                        withParent(allOf(withId(R.id.phoneNumber_UserProfile_layout),
-                                withParent(withId(R.id.attributes_UserProfile_layout)))),
-                        isDisplayed()));
+            allOf(withId(R.id.phoneNumber_UserProfile_textView), withText("Phone"),
+                withParent(allOf(withId(R.id.phoneNumber_UserProfile_layout),
+                    withParent(withId(R.id.attributes_UserProfile_layout)))),
+                isDisplayed()));
         textView6.check(matches(withText("Phone")));
 
         ViewInteraction editText3 = onView(
-                allOf(withId(R.id.phoneNumber_UserProfile_editText), withText("+39 3333333333"),
-                        withParent(allOf(withId(R.id.phoneNumber_UserProfile_layout),
-                                withParent(withId(R.id.attributes_UserProfile_layout)))),
-                        isDisplayed()));
+            allOf(withId(R.id.phoneNumber_UserProfile_editText), withText("+39 3333333333"),
+                withParent(allOf(withId(R.id.phoneNumber_UserProfile_layout),
+                    withParent(withId(R.id.attributes_UserProfile_layout)))),
+                isDisplayed()));
         editText3.check(matches(withText("+39 3333333333")));
 
         ViewInteraction linearLayout5 = onView(
-                allOf(withId(R.id.gender_UserProfile_layout),
-                        withParent(allOf(withId(R.id.attributes_UserProfile_layout),
-                                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
-                        isDisplayed()));
+            allOf(withId(R.id.gender_UserProfile_layout),
+                withParent(allOf(withId(R.id.attributes_UserProfile_layout),
+                    withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
+                isDisplayed()));
         linearLayout5.check(matches(isDisplayed()));
 
         ViewInteraction textView7 = onView(
-                allOf(withId(R.id.gender_UserProfile_textView), withText("Gender"),
-                        withParent(allOf(withId(R.id.gender_UserProfile_layout),
-                                withParent(withId(R.id.attributes_UserProfile_layout)))),
-                        isDisplayed()));
+            allOf(withId(R.id.gender_UserProfile_textView), withText("Gender"),
+                withParent(allOf(withId(R.id.gender_UserProfile_layout),
+                    withParent(withId(R.id.attributes_UserProfile_layout)))),
+                isDisplayed()));
         textView7.check(matches(withText("Gender")));
 
         ViewInteraction spinner = onView(
-                allOf(withId(R.id.gender_UserProfile_spinner),
-                        withParent(allOf(withId(R.id.gender_UserProfile_layout),
-                                withParent(withId(R.id.attributes_UserProfile_layout)))),
-                        isDisplayed()));
+            allOf(withId(R.id.gender_UserProfile_spinner),
+                withParent(allOf(withId(R.id.gender_UserProfile_layout),
+                    withParent(withId(R.id.attributes_UserProfile_layout)))),
+                isDisplayed()));
         spinner.check(matches(isDisplayed()));
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.editProfile_UserProfile_button), withText("EDIT PROFILE"),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-                        isDisplayed()));
+            allOf(withId(R.id.editProfile_UserProfile_button), withText("Edit profile"),
+                withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+                isDisplayed()));
         button.check(matches(isDisplayed()));
 
     }
 
     private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
+        final Matcher<View> parentMatcher, final int position) {
 
         return new TypeSafeMatcher<View>() {
             @Override
@@ -535,7 +524,7 @@ public class UserProfileActivityTest {
             public boolean matchesSafely(View view) {
                 ViewParent parent = view.getParent();
                 return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
+                    && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
     }
