@@ -42,6 +42,7 @@ public final class GlideImageViewLoader extends GlideVisitor implements GlideLoa
 
     @Override
     public void visit(FirestoreDatabaseService database) {
+        // TODO add image .error(drawable) -> https://github.com/bumptech/glide/issues/509#issuecomment-271577007
         Glide.with(context)
                 .load(database.getStorageReference(imageReference))
                 .into(view);
@@ -49,6 +50,7 @@ public final class GlideImageViewLoader extends GlideVisitor implements GlideLoa
 
     @Override
     public void visit(MockDatabaseService database) {
+        // TODO add image .error(drawable)
         Glide.with(context)
                 .load(database.prependAndroidFilePath(imageReference))
                 .into(view);
