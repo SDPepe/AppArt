@@ -10,6 +10,8 @@ This week I worked on multiple things. First, I finished merging the favorites f
 ## Filippo
 
 ## Lorenzo
+I kept on working on the logic for linking server and local database. I finished laying down the code, now I only need the localDB api code from Antoine and the tests on the PR, and my task will be then finished.
+THere has been really good communication between Antoined and I for the structure of the lcoalDB, he put a lot of effort into writing code that could be easily usable by me. I really appreciated him taking the time to go off his ideas so that we could settle on a design that would fit the need of both.
 
 ## Antoine (scrum master)
 
