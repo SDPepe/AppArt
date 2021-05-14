@@ -61,7 +61,6 @@
 
     <!--  -->
 
-    <string name="cameraAdButtonDesc">Add Picture</string>
     <string name="createPanoramaTourButton">Panorama Tour</string>
     <string name="cameraButtonText">Camera</string>
     <string name="galleryButtonText">Gallery</string>
