@@ -19,6 +19,7 @@ import com.google.android.libraries.places.api.model.PlusCode;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -37,10 +38,13 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
@@ -53,7 +57,7 @@ import dagger.hilt.android.scopes.ActivityScoped;
 public class GooglePlaceService {
 
     private String apiKey;
-    private PlacesClient client;
+    //private PlacesClient client;
 
     @Inject
     public GooglePlaceService() {}
@@ -61,100 +65,80 @@ public class GooglePlaceService {
     public void initialize(Context context) {
         apiKey = context.getResources().getString(R.string.maps_api_key);
         Places.initialize(context.getApplicationContext(), apiKey);
-        client = Places.createClient(context.getApplicationContext());
+        //client = Places.createClient(context.getApplicationContext());
     }
 
     /**
-     *
-     * @param address
-     * @param radius
-     * @param type
-     * @return
+     * Retrieve the top nearby location within the radius range.
+     * @param location The <type>Location</type> from which the search is made.
+     * @param radius an <type>int</type> corresponding to the radius of search in meters.
+     * @param type the <type>String</type> that represent the type to search for.
+     * @param top if you want to get only a subset of results, an <type>int</type>
+     * @return A CompletableFuture<List<PlaceOfInterest>> the places of interest in a future.
      */
-    public CompletableFuture<List<PlaceOfInterest>> getPlacesOfInterests(Address address, int radius, String type) {
+    public CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, int radius, String type, int top) {
+        CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type);
         CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
-
-        CompletableFuture<String> rawResult = getRawPlaceSearch(address.getLocation(), radius, type);
-        CompletableFuture<JSONArray> extract = parseNearbySearch(rawResult);
-        CompletableFuture<List<String>> placeIds = getPlacesIds(extract);
-
-        placeIds.thenAccept(ids -> {
-
-            CompletableFuture<Place>[] places = new CompletableFuture[ids.size()];
-            //warning !!! some fields are not free !!!
-            List<Place.Field> placeFields = Arrays.asList(
-                    Place.Field.ID,
-                    Place.Field.NAME,
-                    Place.Field.LAT_LNG,
-                    Place.Field.ADDRESS,
-                    Place.Field.PHOTO_METADATAS,
-                    Place.Field.TYPES
-            );
-            for (int i = 0; i < ids.size(); i++) {
-                String id = ids.get(i);
-                CompletableFuture<Place> placeFuture = new CompletableFuture<>();
-                FetchPlaceRequest request = FetchPlaceRequest.newInstance(id, placeFields);
-                client.fetchPlace(request).addOnSuccessListener((response) -> {
-                    Place place = response.getPlace();
-                    placeFuture.complete(place);
-                }).addOnFailureListener(e -> {
-                    placeFuture.completeExceptionally(e);
-                });
-                places[i] = placeFuture;
-            }
-
-            CompletableFuture.allOf(places).thenAccept(ignoredVoid -> {
-                List<PlaceOfInterest> placesOfInterest = new ArrayList<>();
-                for (int i = 0; i < places.length; i++) {
-                    try {
-                        placesOfInterest.add(new PlaceAdapter(places[i].get()).getPlaceOfInterest());
-                    } catch (ExecutionException | InterruptedException e) {
-                        result.completeExceptionally(e);
-                    }
-                }
-                result.complete(placesOfInterest);
-            }).exceptionally(e -> {
-                result.completeExceptionally(e);
-                return null;
-            });
-
-
+        placesFuture.thenAccept(places -> {
+           result.complete(places.subList(0, top));
         });
-
-        placeIds.exceptionally(e -> {
+        placesFuture.exceptionally(e -> {
             result.completeExceptionally(e);
-           return null;
+            return null;
         });
-
         return result;
     }
 
-
     /**
-     * Extract the place ids form the provided <type>JSONArray</type>.
-     * @param candidates a  <type>CompletableFuture<JSONArray></></type>
-     * @return <type>CompletableFuture<List<String>></type>
+     * Retrieve the nearby location within the radius range.
+     * @param location The <type>Location</type> from which the search is made.
+     * @param radius an <type>int</type> corresponding to the radius of search in meters.
+     * @param type the <type>String</type> that represent the type to search for.
+     * @return A CompletableFuture<List<PlaceOfInterest>> the places of interest in a future.
      */
-    private CompletableFuture<List<String>> getPlacesIds(CompletableFuture<JSONArray> candidates) {
-        CompletableFuture<List<String>> result = new CompletableFuture<>();
+    public CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, int radius, String type) {
+        CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
 
-        candidates.thenAccept(candidatesJson -> {
-            try {
-                List<String> intermediate = new ArrayList<>();
-                for (int i = 0; i < candidatesJson.length(); i++) {
-                    JSONObject element = (JSONObject) candidatesJson.get(i);
-                    String id = element.getString("place_id");
-                    intermediate.add(id);
+        CompletableFuture<String> rawResult = getRawPlaceSearch(location, radius, type);
+        CompletableFuture<JSONArray> queriesResults = parseNearbySearch(rawResult);
+
+        queriesResults.thenAccept(queriesJson -> {
+
+            List<PlaceOfInterest> places = new ArrayList<>();
+
+            for (int i = 0; i < queriesJson.length(); i++) {
+                try {
+                    PlaceOfInterest place = new PlaceOfInterest();
+                    JSONObject element = (JSONObject) queriesJson.get(i);
+                    place.setId(element.optString("place_id"));
+                    place.setName(element.optString("name"));
+                    place.setAddress(element.optString("vicinity"));
+                    place.setRating(element.optDouble("rating"));
+
+                    JSONArray typesArray = element.getJSONArray("types");
+                    Set<String> types = new HashSet<>();
+                    for (int j = 0; j < typesArray.length(); j ++) {
+                        types.add(typesArray.optString(i));
+                    }
+
+                    place.setTypes(types);
+
+                    JSONObject geometryJson = element.getJSONObject("geometry");
+                    JSONObject locationJson = geometryJson.getJSONObject("location");
+                    place.setLocation(locationJson.optDouble("lng"), locationJson.optDouble("lat"));
+
+                    places.add(place);
+
+                } catch (JSONException e) {
+                    result.completeExceptionally(e);
                 }
-                result.complete(intermediate);
-            } catch (JSONException e) {
-                result.completeExceptionally(e);
-            }
-        });
 
-        candidates.exceptionally(e -> {
-            result.completeExceptionally(e);
-            return null;
+            }
+            result.complete(places);
+        });
+        queriesResults.exceptionally(e -> {
+           result.completeExceptionally(e);
+           return null;
         });
 
         return result;
@@ -230,12 +214,12 @@ public class GooglePlaceService {
                 if (!(status.equals("OK") || status.equals("ZERO_RESULTS"))) {
                     result.completeExceptionally(new IllegalStateException("failed to get the query"));
                 }
-                JSONArray candidatesJson = json.getJSONArray("results");
+                JSONArray resultsJson = json.getJSONArray("results");
 
-                if (candidatesJson == null) {
+                if (resultsJson == null) {
                     result.completeExceptionally(new IllegalStateException("failed to convert candidates to json object"));
                 } else {
-                    result.complete(candidatesJson);
+                    result.complete(resultsJson);
                 }
 
             } catch (JSONException e) {
@@ -246,46 +230,6 @@ public class GooglePlaceService {
             result.completeExceptionally(e);
             return null;
         });
-        return result;
-    }
-
-    /**
-     * Convert the raw json string to a json array. This function must be used when searching with
-     * find by text.
-     * @param rawSearch
-     * @return
-     */
-    private CompletableFuture<JSONArray> extractCandidates(CompletableFuture<String> rawSearch) {
-
-        CompletableFuture<JSONArray> result = new CompletableFuture<>();
-
-        rawSearch.thenAccept(raw -> {
-            JSONObject json = null;
-
-            try {
-                json = (JSONObject) new JSONTokener(raw).nextValue();
-                String status = (String) json.get("status");
-                if (!(status.equals("OK") || status.equals("ZERO_RESULTS"))) {
-                    result.completeExceptionally(new IllegalStateException("failed to get the query"));
-                }
-                JSONArray candidatesJson = json.getJSONArray("candidates");
-
-                if (candidatesJson == null) {
-                    result.completeExceptionally(new IllegalStateException("failed to convert candidates to json object"));
-                } else {
-                    result.complete(candidatesJson);
-                }
-
-            } catch (JSONException e) {
-                result.completeExceptionally(e);
-            }
-        });
-
-        rawSearch.exceptionally(e -> {
-            result.completeExceptionally(e);
-            return null;
-        });
-
         return result;
     }
 
@@ -311,131 +255,6 @@ public class GooglePlaceService {
         }
 
         public URL getUrl() {
-            return url;
-        }
-
-        private String convertSpacesToPlus(String s) {
-            StringBuilder sb = new StringBuilder();
-            String[] split = s.split(" ");
-            for (int i = 0; i < split.length; i++) {
-                sb.append(split[i].trim());
-                if (i < split.length - 1) {
-                    sb.append("+");
-                }
-            }
-            return sb.toString();
-        }
-
-    }
-
-    private static class GooglePlacesURLBuilder {
-
-        private final static String googlePlaceBaseUrl = "https://maps.googleapis.com/maps/api/place/findplacefromtext/";
-        private static final String OUTPUT_FIELD = "json";
-        private static final String INPUT_FIELD = "input";
-        private static final String FIELDS_FIELD = "fields";
-        private static final String KEY_FIELD = "key";
-        private static final String INPUT_TYPE = "inputtype=textquery";
-        private static final List<String> PARAMETERS_FIELDS = Arrays.asList("place_id", "formatted_address");
-        private static final String SEPARATOR = "&";
-        private static final String START_QUERY = "?";
-        private static final String SPACE_SEPARATOR = "%20";
-        private static final String START_FIELD = "=";
-        private static final String FIELD_SEPARATOR = ",";
-
-        protected enum QueryField { PLACE_ID, FORMATTED_ADDRESS }
-        protected enum QueryType { FIND_PLACE_FROM_TEXT, NEARBY, TEXT_SEARCH }
-
-        private final ArrayList<String> targetedFields = new ArrayList<>();
-        private final String apiKey;
-        private String address;
-
-        public GooglePlacesURLBuilder(String apiKey) {
-            if (apiKey == null || apiKey.isEmpty()) {
-                throw new IllegalStateException("api key cannot be null or empty !");
-            }
-            this.apiKey = apiKey;
-        }
-
-        public GooglePlacesURLBuilder withAddress(String address) {
-            this.address = address;
-            return this;
-        }
-
-        public GooglePlacesURLBuilder withField(QueryField field) {
-            targetedFields.add(PARAMETERS_FIELDS.get(field.ordinal()));
-            return this;
-        }
-
-        public GooglePlacesURLBuilder withFields(List<QueryField> fields) {
-            for (QueryField field : fields) {
-                withField(field);
-            }
-            return this;
-        }
-
-        public GooglePlacesURLBuilder withFieldPlaceId() {
-            return withField(QueryField.PLACE_ID);
-        }
-
-        public GooglePlacesURLBuilder withFieldFormattedAddress() {
-            return withField(QueryField.FORMATTED_ADDRESS);
-        }
-
-        public URL build() {
-
-            if (targetedFields.size() == 0) {
-                throw new IllegalStateException("you must specify target fields in the URL");
-            }
-
-            StringBuilder sb = new StringBuilder();
-            //append the base query url
-            sb.append(googlePlaceBaseUrl);
-            //append the type of output we want, no separator required for the first
-            sb.append(OUTPUT_FIELD).append(START_QUERY);
-
-            //format input
-            String[] separatedBySpaces = address.split(" ");
-            StringBuilder f = new StringBuilder();
-
-            for (int i = 0; i < separatedBySpaces.length; i++) {
-                f.append(separatedBySpaces[i]);
-                if (i < separatedBySpaces.length - 1) {
-                    f.append(SPACE_SEPARATOR);
-                }
-            }
-
-            String formatted = f.toString();
-
-            //append the input
-            sb.append(INPUT_FIELD).append(START_FIELD).append(formatted).append(SEPARATOR);
-
-            //append input type
-            sb.append(INPUT_TYPE).append(SEPARATOR);
-
-            StringBuilder p = new StringBuilder();
-
-            for (int i = 0; i < targetedFields.size(); i++) {
-                p.append(targetedFields.get(i));
-                if (i < targetedFields.size() - 1) {
-                    p.append(FIELD_SEPARATOR);
-                }
-            }
-
-            String fieldsFormatted = p.toString();
-
-            //append targeted fields
-            sb.append(FIELDS_FIELD).append(START_FIELD).append(fieldsFormatted).append(SEPARATOR);
-
-            //append the key at the end
-            sb.append(KEY_FIELD).append(START_FIELD).append(apiKey);
-
-            URL url = null;
-            try {
-                url = new URL(sb.toString());
-            } catch (MalformedURLException e) {
-                throw new IllegalStateException("the built url is malformed !");
-            }
             return url;
         }
 
