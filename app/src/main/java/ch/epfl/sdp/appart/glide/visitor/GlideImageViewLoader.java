@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 
@@ -42,17 +43,17 @@ public final class GlideImageViewLoader extends GlideVisitor implements GlideLoa
 
     @Override
     public void visit(FirestoreDatabaseService database) {
-        // TODO add image .error(drawable) -> https://github.com/bumptech/glide/issues/509#issuecomment-271577007
         Glide.with(context)
                 .load(database.getStorageReference(imageReference))
+                .error(R.drawable.no_connection)
                 .into(view);
     }
 
     @Override
     public void visit(MockDatabaseService database) {
-        // TODO add image .error(drawable)
         Glide.with(context)
                 .load(database.prependAndroidFilePath(imageReference))
+                .error(R.drawable.no_connection)
                 .into(view);
     }
 
