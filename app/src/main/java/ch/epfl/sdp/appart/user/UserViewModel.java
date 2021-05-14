@@ -37,7 +37,7 @@ public class UserViewModel extends ViewModel {
         this.ls = loginService;
     }
 
-
+    // TODO is this needed?
     /**
      * Puts the user in the database and updates the LiveData
      *
@@ -58,11 +58,13 @@ public class UserViewModel extends ViewModel {
      * @param user the user to update in database
      */
     public void updateUser(User user) {
+        // TODO show toast if update failed
         CompletableFuture<Boolean> updateUser = db.updateUser(user);
         updateUser.exceptionally(e -> {
             Log.d("UPDATE USER", "DATABASE FAIL");
             return null;
         });
+        // TODO save locally if update completed
         updateUser.thenAccept(mUpdateUserConfirmed::setValue);
     }
 
@@ -74,6 +76,7 @@ public class UserViewModel extends ViewModel {
      */
     public void updateImage(String userId){
         StringBuilder imagePathAndName = new StringBuilder();
+        // TODO use pathbuilder
         imagePathAndName
                 .append(FirebaseLayout.USERS_DIRECTORY)
                 .append(FirebaseLayout.SEPARATOR)
@@ -82,13 +85,14 @@ public class UserViewModel extends ViewModel {
                 .append(FirebaseLayout.PROFILE_IMAGE_NAME)
                 .append(System.currentTimeMillis())
                 .append(FirebaseLayout.JPEG);
-                // TODO: support more image formats
 
         CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName.toString());
+        // TODO show toast if update failed
         updateImage.exceptionally(e -> {
             Log.d("UPDATE IMAGE", "DATABASE FAIL");
             return null;
         });
+        // TODO save image locally if update completed
         updateImage.thenAccept(mUpdateImageConfirmed::setValue);
     }
 
@@ -99,11 +103,13 @@ public class UserViewModel extends ViewModel {
      * @param profilePicture this is the complete path for the user's image: user.getProfileImage()
      */
     public void deleteImage(String profilePicture){
+        // TODO show toast if failed
         CompletableFuture<Boolean> deleteImage = db.deleteImage(profilePicture);
         deleteImage.exceptionally(e -> {
             Log.d("DELETE IMAGE", "DATABASE FAIL");
             return null;
         });
+        // TODO update localdb if completed
         deleteImage.thenAccept(mDeleteImageConfirmed::setValue);
     }
 
@@ -113,6 +119,7 @@ public class UserViewModel extends ViewModel {
      * @param userId the unique Id of the user to retrieve from database
      */
     public void getUser(String userId) {
+        // TODO get user locally, then try to fetch from db
         CompletableFuture<User> getUser = db.getUser(userId);
         getUser.exceptionally(e -> {
             Log.d("GET USER", "DATABASE FAIL");
@@ -125,6 +132,7 @@ public class UserViewModel extends ViewModel {
      * Get the current user from the database and updates the LiveData
      */
     public void getCurrentUser() {
+        // TODO get locally, then try to fetch from db
         CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
         getCurrentUser.exceptionally(e -> {
             Log.d("GET USER", "DATABASE FAIL");

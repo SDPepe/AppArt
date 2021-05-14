@@ -256,7 +256,9 @@ public class AdActivity extends ToolbarActivity {
                 })
                 // if update successful, save ad locally
                 .thenAccept(res -> {
-                    // TODO get bitmaps from list of images
+                    // TODO get bitmaps from list of images -> findViewById(R.id.horizontal_children_Ad_linearLayout)
+                    // TODO get panorama images
+                    // TODO get user image with glide bitmaploader
                     // TODO use antoine API to save ad locally, complete result accordingly
                     /*
                     .exceptionally(e -> {

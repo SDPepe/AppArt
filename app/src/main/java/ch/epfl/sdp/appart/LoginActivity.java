@@ -12,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.UIUtils;
@@ -30,10 +31,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Bundle extras = this.getIntent().getExtras();
-        if(extras != null && extras.containsKey(ActivityCommunicationLayout.PROVIDING_EMAIL)  && extras.containsKey(ActivityCommunicationLayout.PROVIDING_PASSWORD)){
-            ((EditText)findViewById(R.id.email_Login_editText)).setText(extras.getString(ActivityCommunicationLayout.PROVIDING_EMAIL));
-            ((EditText)findViewById(R.id.password_Login_editText)).setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
+        // TODO get current user from local db
+        User user = new AppUser("replace", "this");
+
+        if (user != null){ // TODO maybe a try catch is needed
+            startScrollingActivity();
+        } else {
+            Bundle extras = this.getIntent().getExtras();
+            if(extras != null && extras.containsKey(ActivityCommunicationLayout.PROVIDING_EMAIL)  && extras.containsKey(ActivityCommunicationLayout.PROVIDING_PASSWORD)){
+                ((EditText)findViewById(R.id.email_Login_editText)).setText(extras.getString(ActivityCommunicationLayout.PROVIDING_EMAIL));
+                ((EditText)findViewById(R.id.password_Login_editText)).setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
+            }
         }
     }
 
@@ -55,10 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
             return null;
         });
-        loginFuture.thenAccept(user -> {
-            Intent intent = new Intent(this, ScrollingActivity.class);
-            startActivity(intent);
-        });
+        loginFuture.thenAccept(user -> startScrollingActivity());
 
     }
 
@@ -81,6 +86,11 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void resetPassword(View view) {
         Intent intent = new Intent(this, ResetActivity.class);
+        startActivity(intent);
+    }
+
+    private void startScrollingActivity(){
+        Intent intent = new Intent(this, ScrollingActivity.class);
         startActivity(intent);
     }
 }
