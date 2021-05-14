@@ -1,59 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ResetActivity">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".ResetActivity">
 
-    <TextView
-        android:layout_width="281dp"
-        android:layout_height="103dp"
-        android:text="@string/resetConfirmationViewText"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.745" />
+    <Button
+      android:id="@+id/password_Reset_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/margin_button"
+      android:layout_marginEnd="@dimen/margin_button"
+      android:background="@drawable/style_primary"
+      android:onClick="resetPassword"
+      android:text="@string/reset_button"
+      android:textAllCaps="false"
+      android:textColor="#FFFFFF"
+      app:layout_constraintBottom_toTopOf="@+id/guideline10"
+      app:layout_constraintEnd_toStartOf="@+id/guideline11"
+      app:layout_constraintStart_toStartOf="@+id/guideline13" />
+    <Button
+      android:id="@+id/log_in_Reset_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:onClick="backToLogin"
+      android:text="@string/goToLoginFromResetButtonText"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
-        android:id="@+id/email_Reset_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/email_reset"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/password_Reset_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.858"
-        android:autofillHints="" />
-
-    <Button
-        android:id="@+id/password_Reset_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="resetPassword"
-        android:text="@string/reset_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/log_in_Reset_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="backToLogin"
-        android:text="@string/goToLoginFromResetButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.946"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+      android:id="@+id/email_Reset_editText"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:autofillHints=""
+      android:ems="10"
+      android:hint="@string/email_reset"
+      android:inputType="textEmailAddress"
+      android:background="@drawable/edit_text_default"
+      app:layout_constraintBottom_toTopOf="@+id/guideline12"
+      app:layout_constraintEnd_toStartOf="@+id/guideline11"
+      app:layout_constraintStart_toStartOf="@+id/guideline13"
+      android:drawableStart="@drawable/ic_person"
+      android:drawablePadding="@dimen/ic_padding"/>
+    <TextView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:text="@string/resetConfirmationViewText"
+      android:textAlignment="center"
+      android:textSize="12sp"
+      app:layout_constraintBottom_toTopOf="@+id/guideline9"
+      app:layout_constraintEnd_toStartOf="@+id/guideline11"
+      app:layout_constraintStart_toStartOf="@+id/guideline13" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline9"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="@dimen/horizontal_3" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline10"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="@dimen/horizontal_2" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline11"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_2" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline12"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_percent="@dimen/horizontal_1" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline13"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

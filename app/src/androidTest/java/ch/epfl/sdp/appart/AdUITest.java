@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.LinearLayout;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 
 import org.hamcrest.Description;
@@ -33,7 +31,6 @@ import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
-import static android.app.Activity.RESULT_CANCELED;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -42,7 +39,6 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertEquals;
 
 @UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest

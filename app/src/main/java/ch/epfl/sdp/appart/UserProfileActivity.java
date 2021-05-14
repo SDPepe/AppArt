@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import javax.inject.Inject;
 
@@ -47,8 +46,8 @@ public class UserProfileActivity extends AppCompatActivity {
     /* UI components */
     private Button modifyButton;
     private Button doneButton;
-    private FloatingActionButton changeImageButton;
-    private FloatingActionButton removeImageButton;
+    private Button changeImageButton;
+    private Button removeImageButton;
     private EditText nameEditText;
     private EditText ageEditText;
     private EditText phoneNumberEditText;
@@ -105,6 +104,8 @@ public class UserProfileActivity extends AppCompatActivity {
         this.changeImageButton.setVisibility(View.VISIBLE);
         if (!this.sessionUser.hasDefaultProfileImage()) {
             this.removeImageButton.setVisibility(View.VISIBLE);
+        } else {
+            this.removeImageButton.setVisibility(View.INVISIBLE);
         }
 
         /* enable editing in all UI components */
@@ -119,7 +120,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
         this.sessionUser.setDefaultProfileImage();
         imageView.setImageResource(android.R.color.transparent);
-        this.removeImageButton.setVisibility(View.GONE);
+        this.removeImageButton.setVisibility(View.INVISIBLE);
     }
 
     /**
