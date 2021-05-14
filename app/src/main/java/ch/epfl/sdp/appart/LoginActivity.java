@@ -3,8 +3,10 @@ package ch.epfl.sdp.appart;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
+import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.concurrent.CompletableFuture;
@@ -58,12 +60,27 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
+        ProgressBar progressBar = findViewById(R.id.progress_Login_ProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+
         CompletableFuture<User> loginFuture = loginService.loginWithEmail(email, password);
         loginFuture.exceptionally(e -> {
             UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
+            progressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+
             return null;
         });
-        loginFuture.thenAccept(user -> startScrollingActivity());
+        loginFuture.thenAccept(user ->  {
+            progressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            startScrollingActivity();
+        });
 
     }
 

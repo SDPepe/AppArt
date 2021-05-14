@@ -39,8 +39,6 @@ import dagger.hilt.android.testing.UninstallModules;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 @UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest

@@ -6,15 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".AdActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline14"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline15"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_2" />
+
 
     <ScrollView
-        android:id="@+id/horizontal_AdCreation_scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+      android:id="@+id/horizontal_AdCreation_scrollView"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/guideline15"
+      app:layout_constraintStart_toStartOf="@+id/guideline14"
+      app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/vertical_AdCreation_linearLayout"
@@ -26,9 +39,9 @@
                 android:id="@+id/title_AdCreation_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:ems="10"
                 android:hint="@string/editTitleAdCreation"
                 android:inputType="textPersonName"
@@ -49,7 +62,6 @@
                     android:id="@+id/street_AdCreation_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
                     android:text="@string/streetAdCreation"
                     android:textSize="18sp" />
 
@@ -57,7 +69,6 @@
                     android:id="@+id/number_AdCreation_textView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
                     android:text="@string/numberAdCreation"
@@ -79,8 +90,6 @@
                     android:id="@+id/street_AdCreation_editText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/editStreetAdCreation"
@@ -91,8 +100,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
                     android:layout_weight="0"
                     android:hint="@string/editNumberAdCreation"
                     android:inputType="text"
@@ -113,8 +120,6 @@
                     android:id="@+id/city_AdCreation_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:text="@string/cityAdCreation"
                     android:textSize="18sp" />
@@ -123,7 +128,6 @@
                     android:id="@+id/npa_AdCreation_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="0"
                     android:text="@string/npaAdCreation"
@@ -143,9 +147,6 @@
                     android:id="@+id/city_AdCreation_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/editCityAdCreation"
@@ -156,8 +157,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
                     android:layout_weight="0"
                     android:hint="@string/editNpaAdCreation"
                     android:inputType="number"
@@ -178,8 +177,6 @@
                     android:id="@+id/price_AdCreation_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:text="@string/priceAdCreation"
                     android:textSize="18sp" />
@@ -188,7 +185,6 @@
                     android:id="@+id/pricePeriod_AdCreation_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="0"
                     android:text="@string/periodAdCreation"
@@ -202,6 +198,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
                 <EditText
@@ -216,25 +213,23 @@
                     android:inputType="number" />
 
                 <TextView
-                    android:id="@+id/francs_AdCreation_textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/francsAdCreation"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
+                  android:id="@+id/francs_AdCreation_textView"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:layout_marginStart="8dp"
+                  android:layout_marginEnd="16dp"
+                  android:text="@string/francsAdCreation"
+                  android:textAlignment="center"
+                  android:textSize="18sp" />
                 <Spinner
-                    android:id="@+id/period_AdCreation_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_weight="0"
-                    android:entries="@array/periodList" />
+                  android:id="@+id/period_AdCreation_spinner"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:layout_weight="0"
+                  android:layout_marginTop="0dp"
+                  android:layout_marginEnd="0dp"
+                  android:entries="@array/periodList" />
             </LinearLayout>
 
             <TextView
@@ -263,36 +258,40 @@
                 android:scrollbars="vertical" />
 
             <HorizontalScrollView
-                android:id="@+id/picturesScroll_AdCreation_ScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp">
+              android:id="@+id/picturesScroll_AdCreation_ScrollView"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp">
 
                 <LinearLayout
-                    android:id="@+id/pictures_AdCreation_linearLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal" />
+                  android:id="@+id/pictures_AdCreation_linearLayout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal" />
             </HorizontalScrollView>
 
             <Button
-                android:id="@+id/addPhoto_AdCreation_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="024dp"
-                android:text="@string/cameraButtonAdCreation" />
+              android:id="@+id/addPhoto_AdCreation_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp"
+              android:paddingStart="40dp"
+              android:paddingEnd="16dp"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:background="@drawable/style_secondary"
+              android:drawableEnd="@drawable/ic_add_photo"
+              android:gravity="center"
+              android:text="@string/cameraButtonAdCreation"
+              android:textAllCaps="false"
+              android:textColor="@color/primaryStart"
+              android:textSize="16sp" />
 
             <HorizontalScrollView
                 android:id="@+id/panoramaScroll_AdCreation_ScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp">
+                android:layout_marginTop="16dp">
 
                 <LinearLayout
                     android:id="@+id/panorama_AdCreation_linearLayout"
@@ -302,23 +301,33 @@
             </HorizontalScrollView>
 
             <Button
-                android:id="@+id/createVirtualTour_AdCreation_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="024dp"
-                android:text="@string/createPanoramaTourButton" />
-
+              android:id="@+id/createVirtualTour_AdCreation_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="0dp"
+              android:paddingStart="40dp"
+              android:paddingEnd="16dp"
+              android:background="@drawable/style_secondary"
+              android:drawableEnd="@drawable/ic_vrpano"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:text="@string/createPanoramaTourButton"
+              android:textAllCaps="false"
+              android:textColor="@color/primaryStart"
+              android:textSize="16sp" />
             <Button
-                android:id="@+id/confirm_AdCreation_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/confirmButtonAdCreation" />
+              android:id="@+id/confirm_AdCreation_button"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp"
+              android:layout_marginBottom="16dp"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:background="@drawable/style_primary"
+              android:text="@string/confirmButtonAdCreation"
+              android:textAllCaps="false"
+              android:textColor=" #FFFFFF "
+              android:textSize="16sp" />
 
         </LinearLayout>
     </ScrollView>

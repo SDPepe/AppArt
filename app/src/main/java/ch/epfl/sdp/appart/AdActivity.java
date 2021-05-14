@@ -107,14 +107,7 @@ public class AdActivity extends ToolbarActivity {
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             database.accept(new GlideImageViewLoader(this, photo, fullRef));
             horizontalLayout.addView(myView);
-            if (i != 4) {
-                Space hspacer = new Space(this);
-                hspacer.setLayoutParams(new ViewGroup.LayoutParams(
-                        8,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                ));
-                horizontalLayout.addView(hspacer);
-            }
+
             // open image fullscreen on tap
             myView.setOnClickListener(e -> openImageFullscreen(fullRef));
         }

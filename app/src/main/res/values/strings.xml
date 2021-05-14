@@ -14,14 +14,14 @@
 
     <!-- AdActivity stuff -->
     <string name="backbutton_desc">Close ad</string>
-    <string name="vtourbutton_text">take a virtual tour</string>
+    <string name="vtourbutton_text">Virtual Tour</string>
     <string name="address">Address:</string>
     <string name="default_loading">loading…</string>
     <string name="price">Price:</string>
     <string name="description">Description:</string>
     <string name="user">Advertiser:</string>
-    <string name="contactbutton_text">show contact info</string>
-    <string name="seeLocationText">See location</string>
+    <string name="contactbutton_text">Contact</string>
+    <string name="seeLocationText">Location</string>
     <string name="intentLocationForMap">LOCATION</string>
     <string name="loadFail_Ad">Failed to load the ad, please retry later</string>
     <string name="favFail_Ad">Failed to add to favorites, please retry later</string>
@@ -48,8 +48,8 @@
     <!-- Strings for User Profile UI -->
     <string name="uniAccountClaimer">  UNI account  </string>
     <string name="backButtonText"> BACK </string>
-    <string name="editProfileButtonText"> EDIT PROFILE </string>
-    <string name="doneButtonText"> DONE </string>
+    <string name="editProfileButtonText"> Edit profile </string>
+    <string name="doneButtonText"> Confirm </string>
     <string name="ageText"> Age </string>
     <string name="phoneNumberText"> Phone </string>
     <string name="nameText"> Name </string>
@@ -70,15 +70,15 @@
 
     <!--  -->
     <string name="cameraAdButtonDesc">Add Picture</string>
-    <string name="createPanoramaTourButton">Create Panorama tour</string>
+    <string name="createPanoramaTourButton">Panorama Tour</string>
     <string name="cameraButtonText">Camera</string>
     <string name="galleryButtonText">Gallery</string>
     <string name="createAccountPasswordFieldHint">Enter a password</string>
-    <string name="createAccountButtonText">Create account</string>
+    <string name="createAccountButtonText">Create Account</string>
     <string name="backToLoginFromCreateButtonText">Back to login</string>
     <string name="createAccountEmailFieldHint">Enter an email</string>
-    <string name="loginButtonText">Login</string>
-    <string name="resetPasswordButtonText">Password forgotten</string>
+    <string name="loginButtonText">Log In!</string>
+    <string name="resetPasswordButtonText">Password Forgotten</string>
     <string name="createAccountFromLoginButtonText">Create account</string>
     <string name="resetConfirmationViewText">If this address is valid, you will receive a link to change your password</string>
     <string name="goToLoginFromResetButtonText">Log In Menu</string>
@@ -100,8 +100,8 @@
     <string name="francsAdCreation">Fr.</string>
     <string name="descriptionAdCreation">Description:</string>
     <string name="editDescriptionAdCreation">A cool description</string>
-    <string name="cameraButtonAdCreation">Add Photos</string>
-    <string name="confirmButtonAdCreation">Post Ad</string>
+    <string name="cameraButtonAdCreation">Photos</string>
+    <string name="confirmButtonAdCreation">Post</string>
     <string name="toolbarTitle_AdCreation">Create an ad</string>
     <string name="snackbarFailed_AdCreation">There was an error while posting your ad, please try again later</string>
     <string name="snackbarNotFilled_AdCreation">Some fields haven\'t been filled!</string>
