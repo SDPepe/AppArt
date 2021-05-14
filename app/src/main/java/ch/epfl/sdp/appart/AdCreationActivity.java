@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.ad.PricePeriod;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -93,8 +94,8 @@ public class AdCreationActivity extends AppCompatActivity {
             picturesUris = new ArrayList<>();
             Resources resources = getApplicationContext().getResources();
             picturesUris.add(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                    resources.getResourcePackageName(R.drawable.blank_ad) + "/" +
-                    resources.getResourceTypeName(R.drawable.blank_ad) + "/" +
+                    resources.getResourcePackageName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR +
+                    resources.getResourceTypeName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR  +   
                     resources.getResourceEntryName(R.drawable.blank_ad)));
         }
 
