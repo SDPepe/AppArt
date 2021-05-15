@@ -1,10 +1,13 @@
 package ch.epfl.sdp.appart.database.local;
 
+import android.graphics.Bitmap;
+
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.concurrent.CompletionException;
 
+import ch.epfl.sdp.appart.database.exceptions.LocalDatabaseException;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.FileIO;
@@ -16,7 +19,8 @@ public class LocalUserWriter {
      * This method writes a user on disk. If the folder isn't created it
      * makes sure to create one.
      *
-     * @param localUser the local user
+     * @param localUser     the local user
+     * @param currentUserID the current user id
      * @return a boolean that indicates if the operation succeeded or not
      */
     static boolean writeUser(User localUser, String currentUserID) {
@@ -32,7 +36,8 @@ public class LocalUserWriter {
      * picture. The local user refers to a file on disk rather than a
      * reference to online storage.
      *
-     * @param user the original "online" user
+     * @param user          the original "online" user
+     * @param currentUserID the current user id
      * @return the new local user
      */
     static User buildLocalUser(User user, String currentUserID) {
@@ -60,25 +65,27 @@ public class LocalUserWriter {
      * given to this function. We opted to do this, this way because we do
      * not want the local database to be aware if Firebase.
      *
-     * @param loadProfilePic the function that performs the write on disk of
-     *                       the profile picture of the user
-     * @param futureSuccess  a completable future that indicates if the
-     *                       operation succeeded or not.
+     * @param profilePic    the function that performs the write on disk of
+     *                      the profile picture of the user
+     * @param currentUserID the current user id
+     * @param userID        the user id associated to the profile picture
      */
-    static void writeProfilePic(Function<String,
-            CompletableFuture<Void>> loadProfilePic,
-                                CompletableFuture<Void> futureSuccess,
-                                String currentUserID) {
+    static CompletableFuture<Void> writeProfilePic(Bitmap profilePic,
+                                                   String currentUserID,
+                                                   String userID) {
+        if (profilePic == null) return CompletableFuture.completedFuture(null);
+        String path = LocalDatabasePaths.userProfilePic(currentUserID, userID);
+        return writeProfilePic(profilePic, path);
+    }
 
-        CompletableFuture<Void> futureProfilePic =
-                loadProfilePic.apply(LocalDatabasePaths.userProfilePic(currentUserID));
-        futureProfilePic.thenAccept(arg -> futureSuccess.complete(null));
-        futureProfilePic.exceptionally(e -> {
-            futureSuccess.completeExceptionally(e);
-            return null;
+    static CompletableFuture<Void> writeProfilePic(Bitmap profilePic,
+                                                   String path) {
+
+        return CompletableFuture.runAsync(() -> {
+            if (!FileIO.saveBitmap(profilePic, path))
+                throw new CompletionException(new LocalDatabaseException(
+                        "Could not save the user profile picture !"));
         });
-
-        futureSuccess.complete(null);
     }
 
     /**

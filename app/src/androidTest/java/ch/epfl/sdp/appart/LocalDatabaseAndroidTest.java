@@ -141,8 +141,7 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.cleanFavorites();
 
-        localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+        localDatabase.setCurrentUser(currentUser, null).join();
         Ad.AdBuilder[] adBuilders = getAdBuilders();
 
         Ad ad1 = adBuilders[0].build();
@@ -154,7 +153,7 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0),
                 Collections.singletonList(fakeBitmap), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
 
         File original = new File(appFolder + "/favorites/currentUser/card1" +
                 "/Photo0.jpeg");
@@ -193,8 +192,7 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.cleanFavorites();
 
-        localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+        localDatabase.setCurrentUser(currentUser, null).join();
         Ad.AdBuilder[] adBuilders = getAdBuilders();
 
         Ad ad1 = adBuilders[0].build();
@@ -205,7 +203,7 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0),
                 new ArrayList<>(), Collections.singletonList(fakeBitmap),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
 
         File original = new File(appFolder + "/favorites/currentUser/card1" +
                 "/Panorama0.jpeg");
@@ -244,7 +242,7 @@ public class LocalDatabaseAndroidTest {
         localDatabase.cleanFavorites();
 
         localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+                null).join();
         Ad.AdBuilder[] adBuilders = getAdBuilders();
 
         List<Bitmap> photos = new ArrayList<>();
@@ -266,15 +264,15 @@ public class LocalDatabaseAndroidTest {
         Ad ad5 = adBuilders[4].build();
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0), photos,
-                panoramas, str -> CompletableFuture.completedFuture(null));
+                panoramas, null).join();
         localDatabase.writeCompleteAd("ad2", "card2", ad2, users.get(1), photos,
-                panoramas, str -> CompletableFuture.completedFuture(null));
+                panoramas, null).join();
         localDatabase.writeCompleteAd("ad3", "card3", ad3, users.get(2), photos,
-                panoramas, str -> CompletableFuture.completedFuture(null));
+                panoramas, null).join();
         localDatabase.writeCompleteAd("ad4", "card4", ad4, users.get(3), photos,
-                panoramas, str -> CompletableFuture.completedFuture(null));
+                panoramas, null).join();
         localDatabase.writeCompleteAd("ad5", "card5", ad5, users.get(4), photos,
-                panoramas, str -> CompletableFuture.completedFuture(null));
+                panoramas, null).join();
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; ++j) {
@@ -305,8 +303,7 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.cleanFavorites();
 
-        localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+        localDatabase.setCurrentUser(currentUser, null).join();
         Ad.AdBuilder[] adBuilders = getAdBuilders();
 
         List<Bitmap> photos = new ArrayList<>();
@@ -323,9 +320,10 @@ public class LocalDatabaseAndroidTest {
 
         Ad ad1 = adBuilders[0].build();
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0), photos,
-                panoramas, str -> CompletableFuture.completedFuture(null));
+                panoramas, null).join();
 
-        List<String> panoramasPaths = localDatabase.getPanoramasPaths("ad1");
+        List<String> panoramasPaths =
+                localDatabase.getPanoramasPaths("ad1").join();
         assertThat(panoramasPaths.size(), is(panoramas.size()));
 
         for (int i = 0; i < 5; i++) {
@@ -355,7 +353,7 @@ public class LocalDatabaseAndroidTest {
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0),
                 Collections.singletonList(photos.get(0)),
                 Collections.singletonList(panoramas.get(0))
-                , str -> CompletableFuture.completedFuture(null));
+                , null).join();
 
         for (int i = 0; i < 5; i++) {
 
@@ -396,11 +394,10 @@ public class LocalDatabaseAndroidTest {
         localDatabase.cleanFavorites();
 
         localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+                null).join();
         Ad.AdBuilder[] adBuilders = getAdBuilders();
 
         Ad ad1 = adBuilders[0].build();
-        AtomicReference<String> strRetrieved = new AtomicReference<>();
         Bitmap fakeBitmap = Bitmap.createBitmap(100, 100,
                 Bitmap.Config.ARGB_8888);
         fakeBitmap.eraseColor(Color.rgb(getRandomColor(),
@@ -411,21 +408,7 @@ public class LocalDatabaseAndroidTest {
         userWithProfilePic.setProfileImagePathAndName("test.jpeg");
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, userWithProfilePic
-                , new ArrayList<>(), new ArrayList<>(), str -> {
-                    File testFile = new File(str);
-                    strRetrieved.set(str);
-
-                    FileOutputStream fos;
-                    try {
-                        fos = new FileOutputStream(testFile);
-                        fakeBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
-                                fos);
-                        fos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return CompletableFuture.completedFuture(null);
-                });
+                , new ArrayList<>(), new ArrayList<>(), fakeBitmap).join();
 
         File originalFile = new File(appFolder + "/favorites/profile_pic.jpeg");
         FileOutputStream fosOut;
@@ -437,7 +420,8 @@ public class LocalDatabaseAndroidTest {
             e.printStackTrace();
         }
 
-        File retrievedBitmapFile = new File(strRetrieved.get());
+        File retrievedBitmapFile = new File(appFolder + "/favorites" +
+                "/currentUser/users/user1/profileImage.jpeg");
 
         byte[] bytesOriginal = Files.readAllBytes(originalFile.toPath());
         byte[] bytesRetrieved =
@@ -459,8 +443,7 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.cleanFavorites();
 
-        localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+        localDatabase.setCurrentUser(currentUser, null).join();
 
         AppUser currentUserRetrieved =
                 (AppUser) localDatabase.loadCurrentUser();
@@ -479,8 +462,7 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.cleanFavorites();
 
-        localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+        localDatabase.setCurrentUser(currentUser, null);
         User retrievedCurrentUser = localDatabase.getCurrentUser();
         assertNotNull(retrievedCurrentUser);
         assertEquals(retrievedCurrentUser, currentUser);
@@ -494,20 +476,15 @@ public class LocalDatabaseAndroidTest {
         Ad ad5 = adBuilders[4].build();
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0),
-                new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                new ArrayList<>(), new ArrayList<>(), null).join();
         localDatabase.writeCompleteAd("ad2", "card2", ad2, users.get(1),
-                new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                new ArrayList<>(), new ArrayList<>(), null).join();
         localDatabase.writeCompleteAd("ad3", "card3", ad3, users.get(2),
-                new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                new ArrayList<>(), new ArrayList<>(), null).join();
         localDatabase.writeCompleteAd("ad4", "card4", ad4, users.get(3),
-                new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                new ArrayList<>(), new ArrayList<>(), null).join();
         localDatabase.writeCompleteAd("ad5", "card5", ad5, users.get(4),
-                new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                new ArrayList<>(), new ArrayList<>(), null).join();
 
         Ad[] ads = {ad1, ad2, ad3, ad4, ad5};
 
@@ -518,11 +495,12 @@ public class LocalDatabaseAndroidTest {
 
     private void checkRetrievedData(LocalDatabase localDatabase, Ad[] ads,
                                     List<Card> cards, int nbValidUsers) throws IOException, ClassNotFoundException {
-        List<Card> cardsRetrieved = localDatabase.getCards();
+        List<Card> cardsRetrieved = localDatabase.getCards().join();
         assertEquals(cards, cardsRetrieved);
 
         for (int i = 0; i < users.size(); ++i) {
-            AppUser userRetrieved = (AppUser) localDatabase.getUser( "user" + (i + 1));
+            AppUser userRetrieved =
+                    (AppUser) localDatabase.getUser("user" + (i + 1)).join();
             if (i >= nbValidUsers) {
                 assertNull(userRetrieved);
             } else {
@@ -531,7 +509,7 @@ public class LocalDatabaseAndroidTest {
         }
 
         for (int i = 0; i < ads.length; ++i) {
-            Ad adRetrieved = localDatabase.getAd("ad" + (i + 1));
+            Ad adRetrieved = localDatabase.getAd("ad" + (i + 1)).join();
             assertThat(adRetrieved.equals(ads[i]), is(true));
         }
     }
@@ -545,8 +523,7 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.cleanFavorites();
 
-        localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+        localDatabase.setCurrentUser(currentUser, null).join();
         Ad.AdBuilder[] adBuilders = getAdBuilders();
 
         for (Ad.AdBuilder adBuilder : adBuilders) {
@@ -573,20 +550,18 @@ public class LocalDatabaseAndroidTest {
                         ".jpeg"));
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0),
-                new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                new ArrayList<>(), new ArrayList<>(), null).join();
         localDatabase.writeCompleteAd("ad2", "card2", ad2, users.get(0),
-                new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                new ArrayList<>(), new ArrayList<>(), null).join();
         localDatabase.writeCompleteAd("ad3", "card3", ad3, users.get(0),
                 new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
         localDatabase.writeCompleteAd("ad4", "card4", ad4, users.get(0),
                 new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
         localDatabase.writeCompleteAd("ad5", "card5", ad5, users.get(0),
                 new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
 
 
         checkRetrievedData(localDatabase, ads, cards, 1);
@@ -606,7 +581,7 @@ public class LocalDatabaseAndroidTest {
         localDatabase.cleanFavorites();
 
         localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+                null).join();
         Ad.AdBuilder[] adBuilders = getAdBuilders();
 
         Ad ad1 = adBuilders[0].build();
@@ -619,19 +594,19 @@ public class LocalDatabaseAndroidTest {
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0),
                 new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
         localDatabase.writeCompleteAd("ad2", "card2", ad2, users.get(1),
                 new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
         localDatabase.writeCompleteAd("ad3", "card3", ad3, users.get(2),
                 new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
         localDatabase.writeCompleteAd("ad4", "card4", ad4, users.get(3),
                 new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
         localDatabase.writeCompleteAd("ad5", "card5", ad5, users.get(4),
                 new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                null).join();
 
         checkRetrievedData(localDatabase, ads, this.cards, 5);
 
@@ -640,7 +615,7 @@ public class LocalDatabaseAndroidTest {
         for (int i = 0; i < size; ++i) {
             localDatabase.removeCard("card" + (i + 1));
 
-            List<Card> retrievedCards = localDatabase.getCards();
+            List<Card> retrievedCards = localDatabase.getCards().join();
 
             assertThat(retrievedCards.size(), is(size - 1 - i));
 
@@ -648,10 +623,10 @@ public class LocalDatabaseAndroidTest {
                 assertNotEquals(card, users.get(i));
             }
 
-            Ad retrievedAd = localDatabase.getAd("ad" + (i + 1));
+            Ad retrievedAd = localDatabase.getAd("ad" + (i + 1)).join();
             assertNull(retrievedAd);
 
-            User retrievedUser = localDatabase.getUser("user" + (i + 1));
+            User retrievedUser = localDatabase.getUser("user" + (i + 1)).join();
             assertNull(retrievedUser);
         }
 
@@ -660,8 +635,7 @@ public class LocalDatabaseAndroidTest {
     }
 
     @Test
-    public void profilePictureIsRemovedTest() throws IOException,
-            ClassNotFoundException {
+    public void profilePictureIsRemovedTest() {
 
         String appFolder =
                 InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
@@ -670,7 +644,7 @@ public class LocalDatabaseAndroidTest {
         localDatabase.cleanFavorites();
 
         localDatabase.setCurrentUser(currentUser,
-                adFolderPath -> CompletableFuture.completedFuture(null));
+                null).join();
         Ad.AdBuilder[] adBuilders = getAdBuilders();
 
         Ad ad1 = adBuilders[0].build();
@@ -679,27 +653,21 @@ public class LocalDatabaseAndroidTest {
                 "@testappart.ch");
         userWithProfilePic.setProfileImagePathAndName("test.jpeg");
 
-        AtomicReference<String> strRetrieved = new AtomicReference<>();
+        Bitmap fakeBitmap = Bitmap.createBitmap(100, 100,
+                Bitmap.Config.ARGB_8888);
+        fakeBitmap.eraseColor(Color.rgb(getRandomColor(),
+                getRandomColor(), getRandomColor()));
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, userWithProfilePic
-                , new ArrayList<>(), new ArrayList<>(), str -> {
-                    File testFile = new File(str);
-                    strRetrieved.set(str);
-                    try {
-                        testFile.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return CompletableFuture.completedFuture(null);
-                });
+                , new ArrayList<>(), new ArrayList<>(), fakeBitmap).join();
 
 
-        File profilePicFile = new File(strRetrieved.get());
+        File profilePicFile = new File(appFolder + "/favorites" +
+                "/currentUser/users/user1/profileImage.jpeg");
         assertTrue(profilePicFile.exists());
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0),
-                new ArrayList<>(), new ArrayList<>(),
-                str -> CompletableFuture.completedFuture(null));
+                new ArrayList<>(), new ArrayList<>(), null).join();
         assertFalse(profilePicFile.exists());
 
         localDatabase.cleanFavorites();
@@ -707,5 +675,45 @@ public class LocalDatabaseAndroidTest {
 
     public int getRandomColor() {
         return (int) (Math.random() * 255);
+    }
+
+    @Test
+    public void currentUserProfilePicTest() throws IOException {
+        String appFolder =
+                InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
+
+        LocalDatabase localDatabase = new LocalDatabase(appFolder);
+
+        localDatabase.cleanFavorites();
+
+        Bitmap fakeBitmap = Bitmap.createBitmap(100, 100,
+                Bitmap.Config.ARGB_8888);
+        fakeBitmap.eraseColor(Color.rgb(getRandomColor(),
+                getRandomColor(), getRandomColor()));
+
+        currentUser.setProfileImagePathAndName("fake.jpeg");
+        localDatabase.setCurrentUser(currentUser,
+                fakeBitmap).join();
+
+        File originalFile = new File(appFolder + "/favorites/test/profileImage.jpeg");
+        new File(appFolder + "/favorites/test").mkdirs();
+        FileOutputStream fosOut;
+        try {
+            fosOut = new FileOutputStream(originalFile);
+            fakeBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fosOut);
+            fosOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File retrievedBitmapFile = new File(appFolder + "/favorites/profileImage.jpeg");
+
+        byte[] bytesOriginal = Files.readAllBytes(originalFile.toPath());
+        byte[] bytesRetrieved =
+                Files.readAllBytes(retrievedBitmapFile.toPath());
+
+        assertArrayEquals(bytesOriginal, bytesRetrieved);
+
+        localDatabase.cleanFavorites();
     }
 }

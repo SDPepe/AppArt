@@ -4,15 +4,21 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Predicate;
 
 import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.database.exceptions.LocalDatabaseException;
 import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.FileIO;
 import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import ch.epfl.sdp.appart.utils.serializers.AdSerializer;
 
+/**
+ * This class manages everything that is related to writing an ad on disk.
+ */
 public class LocalAdReader {
 
     /**
@@ -41,21 +47,29 @@ public class LocalAdReader {
     /**
      * This reads a folder containing an ad. It reads the file representing
      * the ad on disk and fill the appropriate data structures of this class.
+     * Upon reading data this method updates the relevant data structures.
      *
-     * @param folder the folder that contains the file that represents the ad
-     * @return a boolean that indicates if the operation succeeded or not
+     * @param folder           the folder containing the ad data
+     * @param cards            the arrays of cards that will be updated
+     * @param idsToAd          the map mapping adIds to ad
+     * @param adIdsToPanoramas the map mapping ad ids to panoramas
+     * @throws LocalDatabaseException in case the reading of the map on disk
+     *                                fails
      */
-    @SuppressWarnings("unchecked")
-    private static boolean readAdFolder(File folder, List<Card> cards,
-                                        Map<String,
-            Ad> idsToAd, Map<String, List<String>> adIdsToPanoramas) {
+    private static void readAdFolder(File folder, List<Card> cards,
+                                     Map<String,
+                                             Ad> idsToAd, Map<String,
+            List<String>> adIdsToPanoramas) throws LocalDatabaseException {
 
 
         String dataPath =
                 new StoragePathBuilder().toDirectory(folder.getPath()).withFile(LocalDatabasePaths.dataFileName);
 
         Map<String, Object> adMap = FileIO.readMapObject(dataPath);
-        if (adMap == null) return false;
+        if (adMap == null) {
+            throw new LocalDatabaseException("Could not read the ad data file" +
+                    " located at : " + dataPath);
+        }
 
 
         Ad ad = AdSerializer.deserializeLocal(adMap);
@@ -70,21 +84,27 @@ public class LocalAdReader {
 
         //Maybe use a set instead, but then need to implement equals
         cards.add(card);
-
-        return true;
     }
 
     /**
      * This reads the whole ad data stored for the current user. It traverses
      * all the folder with a card id as their name. Beware the way this
      * function prevents having a card with id "users", but this is hardly
-     * possible.
+     * possible. Also, the reading happens asynchronously. Upon reading data
+     * the relevant data structures are updated.
      *
-     * @return a boolean that indicates if the operation succeeded or not
+     * @param currentUserID    the current user ID
+     * @param cards            an list containing cards
+     * @param idsToAd          a map mapping ad ids to Ad
+     * @param adIdsToPanoramas a map mapping ad ids to panoramas
+     * @return a completable future that indicates if the operation succeeded
+     * or not
      */
-    static boolean readAdDataForAUser(String currentUserID, List<Card> cards
+    static CompletableFuture<Void> readAdDataForAUser(String currentUserID,
+                                                      List<Card> cards
             , Map<String, Ad> idsToAd,
-                                      Map<String, List<String>> adIdsToPanoramas, Runnable onSuccess) {
+                                                      Map<String,
+                                                              List<String>> adIdsToPanoramas) {
         String currentUserFolderPath =
                 LocalDatabasePaths.currentUserFolder(currentUserID);
 
@@ -97,16 +117,23 @@ public class LocalAdReader {
         FileFilter fileFilter =
                 isDirectoryPredicate.and(isNotUsersFolder)::test;
 
-        File[] folders = favFolder.listFiles(fileFilter);
-        if (folders == null) return false;
-        boolean success = true;
-        for (File folder : folders) {
-            success &= readAdFolder(folder, cards, idsToAd, adIdsToPanoramas);
-        }
-        if (success) {
-            //this.firstLoad = true;
-            onSuccess.run();
-        }
-        return success;
+
+        return CompletableFuture.runAsync(() -> {
+
+            File[] folders = favFolder.listFiles(fileFilter);
+            if (folders == null)
+                throw new CompletionException(new LocalDatabaseException("The" +
+                        " ad folder : " + favFolder.getPath() + " doesn't " +
+                        "contain any folders !"));
+            for (File folder : folders) {
+                try {
+                    readAdFolder(folder, cards, idsToAd,
+                            adIdsToPanoramas);
+                } catch (LocalDatabaseException e) {
+                    e.printStackTrace();
+                    throw new CompletionException(e);
+                }
+            }
+        });
     }
 }

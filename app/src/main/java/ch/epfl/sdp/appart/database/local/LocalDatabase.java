@@ -11,17 +11,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.exceptions.LocalDatabaseException;
-import ch.epfl.sdp.appart.database.firebaselayout.UserLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.FileIO;
-import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 // @formatter:off
@@ -53,7 +50,6 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  */
 // @formatter:on
 
-@SuppressWarnings("unchecked")
 public class LocalDatabase {
 
     /*
@@ -164,20 +160,17 @@ public class LocalDatabase {
      * already exists (in which case it is updated). It will do the same for
      * the ad. It also performs the writing of all the images. The photos of
      * ad, the panoramas of the ad and the profile picture of the user (if he
-     * doesn't uses the default one).
+     * doesn't uses the default one). The writing of images happens
+     * asynchronously.
      *
-     * @param adId           the id of the ad
-     * @param cardId         the id of the card
-     * @param ad             the ad
-     * @param user           the user who posted the ad
-     * @param adPhotos       list of bitmaps representing the photos of the ad
-     * @param panoramas      list of panoramas representing the panoramas of
-     *                       the ad
-     * @param loadProfilePic the function that will perform the writing on
-     *                       disk of the user's profile picture. It receives
-     *                       the path representing the location of the
-     *                       profile picture and returns a completable future
-     *                       to indicate if the operation succeeded or not.
+     * @param adId       the id of the ad
+     * @param cardId     the id of the card
+     * @param ad         the ad
+     * @param user       the user who posted the ad
+     * @param adPhotos   list of bitmaps representing the photos of the ad
+     * @param panoramas  list of panoramas representing the panoramas of
+     *                   the ad
+     * @param profilePic bitmap for the profile picture of the user
      * @return a completable future that indicates if the operation succeeded
      * or not
      */
@@ -186,8 +179,7 @@ public class LocalDatabase {
                                                    User user,
                                                    List<Bitmap> adPhotos,
                                                    List<Bitmap> panoramas,
-                                                   Function<String,
-                                                           CompletableFuture<Void>> loadProfilePic) {
+                                                   Bitmap profilePic) {
 
         if (adId == null || cardId == null || ad == null || user == null || adPhotos == null || panoramas == null)
             throw new IllegalArgumentException();
@@ -245,25 +237,24 @@ public class LocalDatabase {
             return futureSuccess;
         }
 
-        if (!LocalAdWriter.writeAdPhotos(adPhotos,
-                getCurrentUser().getUserId())) {
-            futureSuccess.completeExceptionally(new LocalDatabaseException(
-                    "Error while writing the ad photos !"));
-            return futureSuccess;
-        }
-
-        if (!LocalAdWriter.writePanoramas(panoramas,
-                getCurrentUser().getUserId())) {
-            futureSuccess.completeExceptionally(new LocalDatabaseException(
-                    "Error while writing the ad photos !"));
-            return futureSuccess;
-        }
-        if (loadProfilePic != null && !localUser.hasDefaultProfileImage()) {
-            LocalUserWriter.writeProfilePic(loadProfilePic, futureSuccess,
-                    getCurrentUser().getUserId());
-        } else {
-            futureSuccess.complete(null);
-        }
+        CompletableFuture<Void> futureWriteAdPhotos =
+                LocalAdWriter.writeAdPhotos(adPhotos,
+                        getCurrentUser().getUserId(), cardId);
+        CompletableFuture<Void> futureWritePanoramasPhotos =
+                LocalAdWriter.writePanoramas(panoramas,
+                        getCurrentUser().getUserId(), cardId);
+        CompletableFuture<Void> futureWriteProfilePic =
+                LocalUserWriter.writeProfilePic(profilePic,
+                        getCurrentUser().getUserId(), localUser.getUserId());
+        CompletableFuture<Void> combinedFuture =
+                CompletableFuture.allOf(futureWriteAdPhotos,
+                        futureWritePanoramasPhotos, futureWriteProfilePic);
+        combinedFuture.thenAccept(arg -> futureSuccess.complete(null));
+        combinedFuture.exceptionally(e -> {
+            e.printStackTrace();
+            futureSuccess.completeExceptionally(e);
+            return null;
+        });
         return futureSuccess;
     }
 
@@ -271,9 +262,9 @@ public class LocalDatabase {
      * Returns the list of cards, if it manages to find it either on memory
      * or on disk.
      *
-     * @return the list of cards, or null if it doesn't find it
+     * @return a completable future containing the list of cards
      */
-    public List<Card> getCards() {
+    public CompletableFuture<List<Card>> getCards() {
         return getFromMemory(() -> cards);
     }
 
@@ -281,9 +272,9 @@ public class LocalDatabase {
      * Returns an ad with ad id.
      *
      * @param adId the id of the ad
-     * @return the ad if it finds it, null otherwise
+     * @return a completable future containing the ad
      */
-    public Ad getAd(String adId) {
+    public CompletableFuture<Ad> getAd(String adId) {
         return getFromMemory(() -> idsToAd.get(adId));
     }
 
@@ -291,36 +282,47 @@ public class LocalDatabase {
      * Returns a user with the user id as its id.
      *
      * @param wantedUserID the user id
-     * @return the user if it finds it, null otherwise
+     * @return a completable future containing the user
      */
-    public User getUser(String wantedUserID) {
+    public CompletableFuture<User> getUser(String wantedUserID) {
         return getFromMemory(() -> idsToUser.get(wantedUserID));
     }
 
     /**
      * This function is called every time we want to get something from the
      * local db. It checks if the data we have in memory is valid, if it is
-     * it directly returns it. Otherwise, it loads everything on disk, and if
-     * the operation succeeded, returns the wanted data.
+     * it directly returns it. Otherwise, it loads everything on disk, which
+     * happens asynchronously.
      *
      * @param returnFunc the function that performs the actual retrieving of
      *                   data from one of the data structures of the class.
-     * @return the data the user wants, or null if it doesn't find it
+     * @return a completable future containing the data the user wants
      */
-    private <T> T getFromMemory(Supplier<T> returnFunc) {
+    private <T> CompletableFuture<T> getFromMemory(Supplier<T> returnFunc) {
         if (this.firstLoad) {
-            return returnFunc.get();
+            return CompletableFuture.completedFuture(returnFunc.get());
         }
-        boolean success =
+        CompletableFuture<Void> futureReadAd =
                 LocalAdReader.readAdDataForAUser(getCurrentUser().getUserId()
-                        , this.cards, this.idsToAd, this.adIdsToPanoramas,
-                        () -> this.firstLoad = true);
-        success &= LocalUserReader.readUsers(getCurrentUser().getUserId(), this.idsToUser, this.userIds, () -> this.firstLoad = true);
+                        , this.cards, this.idsToAd, this.adIdsToPanoramas);
+        CompletableFuture<Void> futureReadUser =
+                LocalUserReader.readUsers(getCurrentUser().getUserId(),
+                        this.idsToUser, this.userIds);
 
-        if (success) {
-            return returnFunc.get();
-        }
-        return null;
+        CompletableFuture<Void> combinedFuture =
+                CompletableFuture.allOf(futureReadAd, futureReadUser);
+
+        CompletableFuture<T> futureData = new CompletableFuture<>();
+        combinedFuture.thenAccept(arg -> {
+            futureData.complete(returnFunc.get());
+            this.firstLoad = true;
+        });
+        combinedFuture.exceptionally(e -> {
+            e.printStackTrace();
+            futureData.completeExceptionally(e);
+            return null;
+        });
+        return futureData;
     }
 
     /**
@@ -417,16 +419,15 @@ public class LocalDatabase {
      * thus retrieve the correct favorite data.
      * <p>
      * This method should only be called when the app is online.
+     * Note that the writing of the profile picture happens asynchronously
      *
-     * @param currentUser    the current user
-     * @param profilePicLoad the function that will perform the writing of
-     *                       the profile picture of the user on disk
+     * @param currentUser the current user
+     * @param profilePic  the bitmap for the profile picture of the user.
      * @return a completable future that indicates if the operation succeeded
      * or not.
      */
     public CompletableFuture<Void> setCurrentUser(User currentUser,
-                                                  Function<String,
-                                                          CompletableFuture<Void>> profilePicLoad) {
+                                                  Bitmap profilePic) {
         this.currentUser = currentUser;
 
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
@@ -446,18 +447,10 @@ public class LocalDatabase {
             currentLocalUser.setGender(currentUser.getGender());
         }
 
-        if (!currentLocalUser.hasDefaultProfileImage()) {
-            String profilePicPath =
-                    LocalDatabasePaths.currentUserProfilePicture();
-            currentLocalUser.setProfileImagePathAndName(profilePicPath);
-            CompletableFuture<Void> futureProfilePic =
-                    profilePicLoad.apply(profilePicPath);
-            futureProfilePic.thenAccept(arg -> futureSuccess.complete(null));
-            futureProfilePic.exceptionally(e -> {
-                futureSuccess.completeExceptionally(e);
-                return null;
-            });
-        }
+        //Just to make sure we don't keep invalid data
+        File oldProfilePic =
+                new File(LocalDatabasePaths.currentUserProfilePicture());
+        oldProfilePic.delete();
 
         File favoritesFolder = new File(LocalDatabasePaths.favoritesFolder());
         if (!favoritesFolder.exists()) {
@@ -468,16 +461,31 @@ public class LocalDatabase {
             }
         }
 
+        //We check for the old the user as the local one is the new one and
+        // uses the default profile picture at this point
+        if (!currentUser.hasDefaultProfileImage()) {
+            String profilePicPath =
+                    LocalDatabasePaths.currentUserProfilePicture();
+            currentLocalUser.setProfileImagePathAndName(profilePicPath);
+
+
+            CompletableFuture<Void> futureProfilePic =
+                    LocalUserWriter.writeProfilePic(profilePic, profilePicPath);
+            futureProfilePic.thenAccept(arg -> futureSuccess.complete(null));
+            futureProfilePic.exceptionally(e -> {
+                futureSuccess.completeExceptionally(e);
+                return null;
+            });
+        }
+
 
         Map<String, Object> userMap =
-                UserSerializer.serialize(currentLocalUser);
+                UserSerializer.serializeLocal(currentLocalUser);
         if (userMap == null) {
             futureSuccess.completeExceptionally(new LocalDatabaseException(
                     "Error while reading the user map !"));
             return futureSuccess;
         }
-        //We ad the id because it is not serialized
-        userMap.put(UserLayout.ID, currentLocalUser.getUserId());
         if (!FileIO.writeMapObject(LocalDatabasePaths.currentUserData(),
                 userMap)) {
             futureSuccess.completeExceptionally(new LocalDatabaseException(
@@ -527,7 +535,7 @@ public class LocalDatabase {
      * @return the list of paths for the panoramas, or null if the operation
      * fails.
      */
-    public List<String> getPanoramasPaths(String adID) {
+    public CompletableFuture<List<String>> getPanoramasPaths(String adID) {
         return getFromMemory(() -> this.adIdsToPanoramas.get(adID));
     }
 }
