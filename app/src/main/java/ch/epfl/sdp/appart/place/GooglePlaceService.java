@@ -33,6 +33,7 @@ import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
 import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.address.Address;
 import dagger.hilt.android.scopes.ActivityScoped;
+import kotlin.ranges.IntRange;
 
 @ActivityScoped
 public class GooglePlaceService {
@@ -61,7 +62,15 @@ public class GooglePlaceService {
                 return geocoder.getDistance(location, place.getLocation());
             }).collect(Collectors.toList());
 
-            
+            CompletableFuture.allOf(locationsFutures.toArray(new CompletableFuture[locationsFutures.size()])).thenAccept(aVoid -> {
+                List<Pair<PlaceOfInterest, Float>> placesWithDistances = IntStream.range(0, placesWithLocation.size()).mapToObj(value -> {
+                    return new Pair<>(placesWithLocation.get(value), locationsFutures.get(value).join());
+                }).collect(Collectors.toList());
+                result.complete(placesWithDistances);
+            }).exceptionally(throwable -> {
+                result.completeExceptionally(throwable);
+                return null;
+            });
 
         });
 
