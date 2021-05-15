@@ -37,4 +37,6 @@ public final class CardLayout {
      * @apiNote : String on Firestore
      */
     public final static String IMAGE = "picture_id"; //imageUrl
+
+    public static final String ID = "ID";
 }
