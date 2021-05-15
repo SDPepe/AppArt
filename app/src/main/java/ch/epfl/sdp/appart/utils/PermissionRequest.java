@@ -17,7 +17,7 @@ public class PermissionRequest {
         ActivityResultLauncher<String[]> requestPermissionLauncher =
                 ((ComponentActivity) activity).registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
                     if (isGranted.get(Manifest.permission.ACCESS_COARSE_LOCATION) && isGranted.get(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        //Continue app workfwlo
+                        //Continue app workflow
                         permissionGranted.run();
                     } else {
                         //Tell the user the feature can't be used
@@ -72,9 +72,9 @@ public class PermissionRequest {
         String[] permissions;
 
         if (Build.VERSION.SDK_INT < 29) {
-            permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.ACTIVITY_RECOGNITION};
+            permissions = new String[]{Manifest.permission.ACTIVITY_RECOGNITION,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE};
         } else {
             permissions = new String[]{
                     Manifest.permission.ACTIVITY_RECOGNITION};

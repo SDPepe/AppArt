@@ -18,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.hamcrest.Condition;
+
 import static android.widget.Toast.makeText;
 
 public class StepCounterActivity extends AppCompatActivity implements SensorEventListener  {
@@ -25,17 +27,20 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     private TextView textViewStepCounter;
     private TextView textViewStepDetector;
     private Button startButton;
+    private Button stopButton;
     private ProgressBar progressBar;
 
     private SensorManager sensorManager;
     private Sensor mStepCounter;
     private Sensor mStepDetector;
-    private boolean counterSensorIsPresent;
-    private boolean detectorSensorIsPresent;
 
     private int stepCount = 0;
-    private int stepDetect = 0;
+    private boolean stopWasPressed = false;
+    private boolean stepsHaveToBeRestored = false;
 
+    private static boolean nothingWasPressedOnBackButton = false;
+    private static int stepDetect = 0;
+    private static int stepCountBeforeUnwantedPause = 0;
     private final static int STEP_COUNTER_PERMISSION_CODE = 110;
 
     @Override
@@ -43,69 +48,86 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_counter);
 
+        textViewStepCounter = findViewById(R.id.totalNumberOfSteps_StepCounter_TextView);
+        textViewStepDetector = findViewById(R.id.numberOfSteps_StepCounter_TextView);
+        startButton = findViewById(R.id.startStepCount_StepCounter_Button);
+        stopButton = findViewById(R.id.stopStepCount_StepCounter_Button);
+        progressBar = findViewById(R.id.progress_StepCounter_ProgressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         PermissionRequest.askForActivityRecognitionPermission(this, () -> {
             Log.d("PERMISSION", "Pedometer permission granted");
-            initActivity();
         }, () -> {
             Log.d("PERMISSION", "Pedometer permission refused");
             finish();
         });
     }
 
-    private void initActivity() {
-        textViewStepCounter = findViewById(R.id.totalNumberOfSteps_StepCounter_TextView);
-        textViewStepDetector = findViewById(R.id.numberOfSteps_StepCounter_TextView);
-        startButton = findViewById(R.id.startStepCount_StepCounter_Button);
-        progressBar = findViewById(R.id.progress_StepCounter_ProgressBar);
-
-        textViewStepDetector.setText("0");
-        textViewStepCounter.setText("0");
-        progressBar.setVisibility(View.INVISIBLE);
-
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
-
-    /**
-     * closes activity when back button pressed on phone
-     */
     @Override
     public void onBackPressed() {
-       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-       finish();
+        if (stopWasPressed) {
+            StepCounterActivity.stepDetect = 0;
+            StepCounterActivity.stepCountBeforeUnwantedPause = 0;
+            StepCounterActivity.nothingWasPressedOnBackButton = false;
+        } else {
+            StepCounterActivity.nothingWasPressedOnBackButton = true;
+        }
+
+        finish();
     }
 
     public void onStartButton(View view) {
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
         startButton.setVisibility(View.GONE);
-
-        setStepCounter();
-        setStepDetector();
         progressBar.setVisibility(View.VISIBLE);
+        stopButton.setVisibility(View.VISIBLE);
 
-        this.textViewStepDetector.setText("1");
-        this.textViewStepCounter.setText("1");
+        stopWasPressed = false;
+
+        if (StepCounterActivity.stepDetect > 0) {
+            textViewStepCounter.setText(String.valueOf(stepCount));
+            textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
+        }
     }
 
-    public void setStepCounter() {
+    public void onStopButton(View view) {
+        startButton.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        stopButton.setVisibility(View.GONE);
+        stopWasPressed = true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
             mStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            counterSensorIsPresent = true;
+            sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
         } else {
-            // show snake
-            counterSensorIsPresent = false;
+            makeText(this, "Sensor error: this device does not support activity recognition!", Toast.LENGTH_SHORT).show();
         }
-    }
 
-    public void setStepDetector() {
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-            detectorSensorIsPresent = true;
+            sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
         } else {
-            // show snake
-            detectorSensorIsPresent = false;
+            makeText(this, "Sensor error: this device does not support activity recognition!", Toast.LENGTH_SHORT).show();
         }
 
+        textViewStepCounter.setText(String.valueOf(stepCount));
+        textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
+
+        if (StepCounterActivity.nothingWasPressedOnBackButton) {
+            onStartButton(this.findViewById(R.id.startStepCount_StepCounter_Button));
+            StepCounterActivity.nothingWasPressedOnBackButton = false;
+        }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -119,8 +141,6 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
 
     private void checkPermission(@NonNull int[] grantResults) {
         if ((grantResults.length > 0) & (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-            setStepCounter();
-            setStepDetector();
             progressBar.setVisibility(View.VISIBLE);
         } else {
             makeText(this, "Permission is required to use feature!", Toast.LENGTH_SHORT).show();
@@ -129,23 +149,27 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor == mStepCounter) {
+        if (sensorEvent.sensor.equals(mStepCounter)) {
             stepCount = (int) sensorEvent.values[0];
             textViewStepCounter.setText(String.valueOf(stepCount));
         } else if (sensorEvent.sensor.equals(mStepDetector)) {
-            stepDetect = (int) (stepDetect+sensorEvent.values[0]);
-            textViewStepDetector.setText(String.valueOf(stepDetect));
+            StepCounterActivity.stepDetect = (int) (StepCounterActivity.stepDetect+sensorEvent.values[0]);
+            textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
+        textViewStepCounter.setText(String.valueOf(stepCount));
+        textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        textViewStepCounter.setText(String.valueOf(stepCount));
+        textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -156,6 +180,12 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
 
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+
+        if (stepsHaveToBeRestored) {
+            StepCounterActivity.stepDetect += stepCount - StepCounterActivity.stepCountBeforeUnwantedPause;
+            textViewStepCounter.setText(String.valueOf(stepCount));
+            textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
         }
     }
 
@@ -169,5 +199,10 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             sensorManager.unregisterListener(this, mStepDetector);
         }
+
+        if (!stopWasPressed) {
+            stepsHaveToBeRestored = true;
+        }
+        StepCounterActivity.stepCountBeforeUnwantedPause = stepCount;
     }
 }
