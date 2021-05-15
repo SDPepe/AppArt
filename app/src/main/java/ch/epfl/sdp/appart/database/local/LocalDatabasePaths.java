@@ -18,9 +18,14 @@ public class LocalDatabasePaths {
     public static final String favoritesFolder = "favorites";
     public static final String profilePicName =
             FirebaseLayout.PROFILE_IMAGE_NAME + ".jpeg";
+    //data file storing the actual ad information
     public static final String dataFileName = "data.fav";
+    //folder containing every users needed for the local ads, i.e the ad owner
     public static final String usersFolder = "users";
+    //data file containing the data for the user
     public static final String userData = "user.data";
+    //data file containing the data for the current user, i.e the last logged
+    // in user (when the app was online)s
     public static final String currentUserData = "currentUser.data";
 
     public static String favoritesFolder() {

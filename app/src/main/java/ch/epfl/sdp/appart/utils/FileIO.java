@@ -51,19 +51,19 @@ public class FileIO {
      * already exists in case the directory already exists.
      *
      * @param path          the path to the directory we want to create
-     * @param alreadyExists function that will be performed in case the
+     * @param orElse function that will be performed in case the
      *                      directory already exists
      * @return a boolean that indicates if the operation succeeded or not
      */
-    public static boolean createFolder(String path,
-                                       Supplier<Boolean> alreadyExists) {
+    public static boolean createFolderOrElse(String path,
+                                       Supplier<Boolean> orElse) {
         File file = new File(path);
         if (!file.exists()) {
             return file.mkdirs();
         } else {
             //We can just remove the extra photos because FileOutputStream
             // overwrites the whole file
-            return alreadyExists.get();
+            return orElse.get();
         }
     }
 
@@ -97,11 +97,11 @@ public class FileIO {
      *
      * @param dir the file representing the directory we want to delete
      */
-    public static void deleteDir(File dir) {
+    public static void deleteDirectory(File dir) {
         File[] files = dir.listFiles();
         if (files != null) {
             for (final File file : files) {
-                deleteDir(file);
+                deleteDirectory(file);
             }
         }
         dir.delete();

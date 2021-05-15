@@ -49,7 +49,7 @@ public class LocalAdWriter {
     static boolean createAdFolder(int futureNumberOfPhotos,
                                   int futureNumberOfPanoramas,
                                   String currentUserID) {
-        return FileIO.createFolder(LocalDatabasePaths.cardFolder(currentUserID),
+        return FileIO.createFolderOrElse(LocalDatabasePaths.cardFolder(currentUserID),
                 () -> removeExtraPhotos(futureNumberOfPhotos, currentUserID) &&
                         removeExtraPanoramas(futureNumberOfPanoramas,
                                 currentUserID));
@@ -177,36 +177,6 @@ public class LocalAdWriter {
     }
 
     /**
-     * This builds the local refs for the photos of an ad. Since the photos
-     * are now stored on disk, we replace the references to the online
-     * database by "real" references to "on disk" files. It calls
-     * buildLocalRefs that does the actual operation.
-     *
-     * @param size          the number of refs of the ad
-     * @param currentUserID the current user ID
-     * @return the new list of local refs
-     */
-    private static List<String> buildPhotoRefs(int size, String currentUserID) {
-        return buildLocalRefs(size, ImageType.PHOTO, currentUserID);
-    }
-
-    /**
-     * This builds the local refs for the panoramas of an ad. Since the
-     * panoramas
-     * are now stored on disk, we replace the references to the online
-     * database by "real" references to "on disk" files. It calls
-     * buildLocalRefs that does the actual operation.
-     *
-     * @param size          the number of refs of the ad
-     * @param currentUserID the current user ID
-     * @return the new list of local refs
-     */
-    private static List<String> buildPanoramaRefs(int size,
-                                                  String currentUserID) {
-        return buildLocalRefs(size, ImageType.PANORAMA, currentUserID);
-    }
-
-    /**
      * This builds the local refs for the pictures of an ad. Since the pictures
      * are now stored on disk, we replace the references to the online
      * database by "real" references to "on disk" files. It handles panoramas
@@ -219,22 +189,30 @@ public class LocalAdWriter {
      * @param currentUserID the current user ids
      * @return the new list of local refs
      */
-    private static List<String> buildLocalRefs(int size, ImageType type,
-                                               String currentUserID) {
-        List<String> localRefs = new ArrayList<>();
-        for (int i = 0; i < size; ++i) {
-
-            String localRef;
-            if (type == ImageType.PHOTO) {
-                localRef =
-                        LocalDatabasePaths.photoFile(currentUserID, i);
-            } else {
-                localRef =
-                        LocalDatabasePaths.panoramaFile(currentUserID, i);
-            }
-            localRefs.add(localRef);
+    /**
+     * This builds the local refs for the pictures of an ad. Since the pictures
+     * are now stored on disk, we replace the references to the online
+     * database by "real" references to "on disk" files. It handles panoramas
+     * and photos.
+     *
+     * @param sizePhotos         the number of photos in the ad
+     * @param sizePanoramas      the number of panoramas in the ad
+     * @param currentUserID      the current user id
+     * @param photoReferences    a list that will be filled with the local
+     *                           photo references
+     * @param panoramaReferences a list that will be filled with the local
+     *                           panorama references
+     */
+    private static void buildLocalReferences(int sizePhotos, int sizePanoramas,
+                                             String currentUserID,
+                                             List<String> photoReferences,
+                                             List<String> panoramaReferences) {
+        for (int i = 0; i < sizePhotos; ++i) {
+            photoReferences.add(LocalDatabasePaths.photoFile(currentUserID, i));
         }
-        return localRefs;
+        for (int i = 0; i < sizePanoramas; ++i) {
+            panoramaReferences.add(LocalDatabasePaths.panoramaFile(currentUserID, i));
+        }
     }
 
     /**
@@ -247,10 +225,11 @@ public class LocalAdWriter {
      * @return a local ad, that is to say, an ad with updated local references.
      */
     static Ad buildLocalAd(Ad ad, String currentUserID) {
-        List<String> localPhotoRefs =
-                buildPhotoRefs(ad.getPhotosRefs().size(), currentUserID);
-        List<String> localPanoramaRefs =
-                buildPanoramaRefs(ad.getPhotosRefs().size(), currentUserID);
+        List<String> localPhotoRefs = new ArrayList<>();
+        List<String> localPanoramaRefs = new ArrayList<>();
+        buildLocalReferences(ad.getPhotosRefs().size(),
+                ad.getPanoramaReferences().size(), currentUserID,
+                localPhotoRefs, localPanoramaRefs);
 
         return new Ad(ad.getTitle(), ad.getPrice(), ad.getPricePeriod()
                 , ad.getStreet(), ad.getCity(), ad.getAdvertiserName(),
@@ -293,7 +272,7 @@ public class LocalAdWriter {
     static CompletableFuture<Void> writeAdPhotos(List<Bitmap> adPhotos,
                                                  String currentUserID,
                                                  String cardID) {
-        return writeImage(adPhotos, ImageType.PHOTO, currentUserID, cardID);
+        return writeImages(adPhotos, ImageType.PHOTO, currentUserID, cardID);
     }
 
     /**
@@ -309,10 +288,10 @@ public class LocalAdWriter {
      * @return a completable future that indicates if the operation succeeded
      * or not.
      */
-    private static CompletableFuture<Void> writeImage(List<Bitmap> bitmaps,
-                                                      ImageType type,
-                                                      String currentUserID,
-                                                      String cardID) {
+    private static CompletableFuture<Void> writeImages(List<Bitmap> bitmaps,
+                                                       ImageType type,
+                                                       String currentUserID,
+                                                       String cardID) {
 
 
         return CompletableFuture.runAsync(() -> {
@@ -353,7 +332,7 @@ public class LocalAdWriter {
     static CompletableFuture<Void> writePanoramas(List<Bitmap> panoramas,
                                                   String currentUserID,
                                                   String cardID) {
-        return writeImage(panoramas,
+        return writeImages(panoramas,
                 ImageType.PANORAMA, currentUserID, cardID);
     }
 }

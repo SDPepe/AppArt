@@ -154,6 +154,11 @@ public class LocalDatabase {
         }
     }
 
+    private static void checkInfo(String adId, String cardId, Ad ad, User user, List<Bitmap> adPhotos, List<Bitmap> panoramas) {
+        if (adId == null || cardId == null || ad == null || user == null || adPhotos == null || panoramas == null)
+            throw new IllegalArgumentException();
+    }
+
     /**
      * This function performs the writing of a complete ad into local storage
      * . It will create a folder for the added user only if it doesn't
@@ -181,8 +186,7 @@ public class LocalDatabase {
                                                    List<Bitmap> panoramas,
                                                    Bitmap profilePic) {
 
-        if (adId == null || cardId == null || ad == null || user == null || adPhotos == null || panoramas == null)
-            throw new IllegalArgumentException();
+        checkInfo(adId, cardId, ad, user, adPhotos, panoramas);
 
         LocalDatabasePaths.cardID = cardId;
         LocalDatabasePaths.userID = user.getUserId();
@@ -344,7 +348,7 @@ public class LocalDatabase {
     public void cleanFavorites() {
         File favoritesDir =
                 new File(LocalDatabasePaths.favoritesFolder());
-        FileIO.deleteDir(favoritesDir);
+        FileIO.deleteDirectory(favoritesDir);
         clearMemory();
     }
 
@@ -376,7 +380,7 @@ public class LocalDatabase {
         String pathToCard =
                 LocalDatabasePaths.cardFolder(getCurrentUser().getUserId(),
                         cardId);
-        FileIO.deleteDir(new File(pathToCard));
+        FileIO.deleteDirectory(new File(pathToCard));
 
         int cardIdx = findCardById(cardId);
 
@@ -405,7 +409,7 @@ public class LocalDatabase {
             this.idsToUser.remove(userId);
             String userPath =
                     LocalDatabasePaths.userFolder(getCurrentUser().getUserId(), userId);
-            FileIO.deleteDir(new File(userPath));
+            FileIO.deleteDirectory(new File(userPath));
         }
     }
 

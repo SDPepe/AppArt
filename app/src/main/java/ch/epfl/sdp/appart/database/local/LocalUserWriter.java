@@ -97,7 +97,7 @@ public class LocalUserWriter {
 
         String userPath =
                 LocalDatabasePaths.userFolder(currentUserID);
-        return FileIO.createFolder(userPath, () -> {
+        return FileIO.createFolderOrElse(userPath, () -> {
             String profilePicPath =
                     LocalDatabasePaths.userProfilePic(currentUserID);
             File profilePic = new File(profilePicPath);
