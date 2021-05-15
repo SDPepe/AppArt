@@ -1,27 +1,9 @@
 package ch.epfl.sdp.appart.place;
 
-import android.app.Activity;
 import android.content.Context;
-import android.location.Geocoder;
-import android.net.Uri;
-import android.os.StrictMode;
+import android.util.Pair;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AddressComponents;
-import com.google.android.libraries.places.api.model.OpeningHours;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlusCode;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,26 +14,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.stream.IntStream;
 
 import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 
 import ch.epfl.sdp.appart.R;
-import ch.epfl.sdp.appart.location.GoogleGeocodingService;
+import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
 import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.address.Address;
 import dagger.hilt.android.scopes.ActivityScoped;
@@ -61,7 +39,6 @@ public class GooglePlaceService {
 
     private String apiKey;
     private final GoogleGeocodingService geocoder;
-    //private PlacesClient client;
 
     @Inject
     public GooglePlaceService(GoogleGeocodingService geocoder) {
@@ -71,16 +48,33 @@ public class GooglePlaceService {
     public void initialize(Context context) {
         apiKey = context.getResources().getString(R.string.maps_api_key);
         Places.initialize(context.getApplicationContext(), apiKey);
-        //client = Places.createClient(context.getApplicationContext());
+    }
+
+    public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
+        getNearbyPlacesWithDistances(Location location, int radius, String type) {
+
+        CompletableFuture<List<Pair<PlaceOfInterest, Float>>> result = new CompletableFuture<>();
+        CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type);
+        placesFuture.thenAccept(placesOfInterests -> {
+            List<PlaceOfInterest> placesWithLocation = placesOfInterests.stream().filter(place -> place.hasLocation()).collect(Collectors.toList());
+            List<CompletableFuture<Float>> locationsFutures = placesWithLocation.stream().map(place -> {
+                return geocoder.getDistance(location, place.getLocation());
+            }).collect(Collectors.toList());
+
+            
+
+        });
+
+        return result;
     }
 
     /**
-     *
-     * @param address
-     * @param radius
-     * @param type
-     * @param top
-     * @return
+     * Retrieve the topmost placesOfInterests around the radius from the given address
+     * @param address the Address from which we will find nearby places
+     * @param radius the int radius from which we will find the places
+     * @param type the type of place we want to find
+     * @param top the amount of places we want, can be less than top if not found
+     * @return CompletableFuture<List<PlaceOfInterest>> containing the places of interests.
      */
     public CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Address address, int radius, String type, int top) {
         CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
@@ -96,18 +90,20 @@ public class GooglePlaceService {
     }
 
     /**
-     *
-     * @param address
-     * @param radius
-     * @param type
-     * @return
+     * Retrieve the placesOfInterests around the radius from the given address (with 20 max)
+     * @param address the Address from which we will find nearby places
+     * @param radius the int radius from which we will find the places
+     * @param type the type of place we want to find
+     * @return CompletableFuture<List<PlaceOfInterest>> containing the places of interests.
      */
     public CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Address address, int radius, String type) {
 
+        //we first reverse the address to a location.
         CompletableFuture<Location> locationFuture = geocoder.getLocation(address);
         CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
 
         locationFuture.thenAccept(location -> {
+            //if parsing the location failed with an invalid address, we return exceptionally
             if (location == null) {
                 result.completeExceptionally(new IllegalStateException("could not retrieve the location"));
                 return;
@@ -141,7 +137,7 @@ public class GooglePlaceService {
         CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type);
         CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
         placesFuture.thenAccept(places -> {
-           result.complete(places.subList(0, top));
+            result.complete(places.subList(0, top));
         });
         placesFuture.exceptionally(e -> {
             result.completeExceptionally(e);
@@ -160,7 +156,9 @@ public class GooglePlaceService {
     public CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, int radius, String type) {
         CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
 
+        //retrieve the raw results from the query as a Json string
         CompletableFuture<String> rawResult = getRawPlaceSearch(location, radius, type);
+        //parse the Json String to a JSONArray to work with
         CompletableFuture<JSONArray> queriesResults = parseNearbySearch(rawResult);
 
         queriesResults.thenAccept(queriesJson -> {
@@ -264,6 +262,11 @@ public class GooglePlaceService {
         return result;
     }
 
+    /**
+     * Parse the JSON string given in argument to a JSON Array
+     * @param rawSearch the Json String
+     * @return CompletableFuture<JSONArray> the parsed data
+     */
     private CompletableFuture<JSONArray> parseNearbySearch(CompletableFuture<String> rawSearch) {
         CompletableFuture<JSONArray> result = new CompletableFuture<>();
         rawSearch.thenAccept(raw -> {
@@ -294,15 +297,25 @@ public class GooglePlaceService {
         return result;
     }
 
+    /**
+     * Builder that encapsulate the creation of the query URL
+     */
     private static class NearbySearchPlaceURLBuilder {
 
         private final static String TEXT_SEARCH_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
         private URL url = null;
 
+        /**
+         * Constructs the URL with a StringBuilder. The fields are hardcoded because it would make
+         * the code very unreadable with constants.
+         * @param apiKey
+         * @param location
+         * @param radius
+         * @param type
+         */
         public NearbySearchPlaceURLBuilder(String apiKey, Location location, int radius, String type) {
             StringBuilder sb = new StringBuilder();
             sb.append(TEXT_SEARCH_BASE_URL).append("json?");
-            //sb.append("query=").append(convertSpacesToPlus(text)).append("&");
             sb.append("location=").append(location.latitude).append(",").append(location.longitude).append("&");
             sb.append("radius=").append(radius).append("&");
             sb.append("type=").append(type.trim()).append("&");
@@ -314,6 +327,10 @@ public class GooglePlaceService {
             }
         }
 
+        /**
+         * Get the URL of love.
+         * @return URL of love.
+         */
         public URL getUrl() {
             return url;
         }

@@ -2,8 +2,7 @@ package ch.epfl.sdp.appart.hilt;
 
 import android.content.Context;
 
-import ch.epfl.sdp.appart.location.GoogleGeocodingService;
-import ch.epfl.sdp.appart.place.GooglePlaceService;
+import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;

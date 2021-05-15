@@ -37,7 +37,6 @@ public class PlaceOfInterest {
         else {
             location = null;
         }
-
     }
 
     public void setTypes(Set<String> types) {
@@ -53,4 +52,19 @@ public class PlaceOfInterest {
         this.rating = rating;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public boolean hasLocation() {
+        return location == null;
+    }
+
+    public boolean hasAddress() {
+        return address == null;
+    }
 }
