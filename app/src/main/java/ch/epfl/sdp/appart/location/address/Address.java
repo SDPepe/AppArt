@@ -9,7 +9,7 @@ public class Address {
     private final String locality;
     private final String postalCode;
 
-    protected Address(String street, String locality, String postalCode) {
+    protected Address(String street, String postalCode, String locality) {
         this.street = street;
         this.locality = locality;
         this.postalCode = postalCode;
@@ -19,7 +19,7 @@ public class Address {
                 .append(", ")
                 .append(postalCode)
                 .append(" ")
-                .append(postalCode).toString();
+                .append(locality).toString();
     }
 
     protected Address(String street, String locality) {

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
@@ -13,6 +14,7 @@ import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.address.Address;
 import ch.epfl.sdp.appart.location.address.AddressFactory;
 import ch.epfl.sdp.appart.place.GooglePlaceService;
+import ch.epfl.sdp.appart.place.PlaceOfInterest;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -41,7 +43,7 @@ public class PlaceActivity extends AppCompatActivity {
            return null;
         });
 
-        CompletableFuture<Address> addressFuture = geocodingService.getAddress(new Location(6.639180, 46.779770));
+        CompletableFuture<Address> addressFuture = geocodingService.getAddress(new Location(6.534650, 46.765120));
 
         addressFuture.thenAccept(a -> {
             int i = 0;
@@ -49,7 +51,7 @@ public class PlaceActivity extends AppCompatActivity {
         addressFuture.exceptionally(e -> {
             return null;
         });
-        /*
+
         CompletableFuture<List<PlaceOfInterest>> places
                 = placeService.getNearbyPlaces(new Location(6.639180, 46.779770), 1000, "shop", 10);
 
@@ -60,6 +62,6 @@ public class PlaceActivity extends AppCompatActivity {
             return null;
         });
 
-         */
+
     }
 }

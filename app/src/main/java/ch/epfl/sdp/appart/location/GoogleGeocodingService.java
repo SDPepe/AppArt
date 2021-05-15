@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.location.address.Address;
+import ch.epfl.sdp.appart.location.address.AddressAdapter;
 import dagger.hilt.android.scopes.ActivityScoped;
 
 @ActivityScoped
@@ -29,17 +31,17 @@ public class GoogleGeocodingService implements GeocodingService {
         CompletableFuture<Address> result = new CompletableFuture<>();
         CompletableFuture.supplyAsync(() -> {
 
-            android.location.Address address = null;
+            List<android.location.Address> addresses = null;
             try {
-                List<android.location.Address> addresses = this.geocoder.getFromLocation(location.latitude, location.longitude, 1);
-                int i = 0;
+                addresses = this.geocoder.getFromLocation(location.latitude, location.longitude, 5);
             } catch (IOException e) {
                 e.printStackTrace();
+                result.completeExceptionally(e);
             }
-            List<String> addressLines = new ArrayList<>();
-            for (int i = 0; i <= address.getMaxAddressLineIndex(); ++i)
-                addressLines.add(address.getAddressLine(i));
-
+            Address a = addresses.stream()
+                    .map(AddressAdapter::fromAndroidToAppartAddress)
+                    .filter(Objects::nonNull).findFirst().orElseGet(null);
+            result.complete(a);
             return null;
         });
         return result;

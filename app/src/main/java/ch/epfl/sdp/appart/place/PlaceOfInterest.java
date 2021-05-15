@@ -23,7 +23,7 @@ public class PlaceOfInterest {
     }
 
     public void setAddress(String address) {
-        this.address = AddressFactory.makeAddress(address);
+        this.address = AddressFactory.makeAddressOrElse(address, () -> { return null; });
     }
 
     public void setName(String name) {
@@ -31,7 +31,13 @@ public class PlaceOfInterest {
     }
 
     public void setLocation(double longitude, double latitude) {
-        location = new Location(longitude, latitude);
+        if (!(Double.isNaN(longitude) || Double.isNaN(latitude))) {
+            location = new Location(longitude, latitude);
+        }
+        else {
+            location = null;
+        }
+
     }
 
     public void setTypes(Set<String> types) {

@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.place;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.StrictMode;
 
@@ -50,22 +51,82 @@ import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.location.GoogleGeocodingService;
 import ch.epfl.sdp.appart.location.Location;
+import ch.epfl.sdp.appart.location.address.Address;
 import dagger.hilt.android.scopes.ActivityScoped;
 
 @ActivityScoped
 public class GooglePlaceService {
 
     private String apiKey;
+    private final GoogleGeocodingService geocoder;
     //private PlacesClient client;
 
     @Inject
-    public GooglePlaceService() {}
+    public GooglePlaceService(GoogleGeocodingService geocoder) {
+        this.geocoder = geocoder;
+    }
 
     public void initialize(Context context) {
         apiKey = context.getResources().getString(R.string.maps_api_key);
         Places.initialize(context.getApplicationContext(), apiKey);
         //client = Places.createClient(context.getApplicationContext());
+    }
+
+    /**
+     *
+     * @param address
+     * @param radius
+     * @param type
+     * @param top
+     * @return
+     */
+    public CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Address address, int radius, String type, int top) {
+        CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
+        CompletableFuture<List<PlaceOfInterest>> places = getNearbyPlaces(address, radius, type);
+        places.thenAccept(placesOfInterests -> {
+           result.thenAccept(p -> p.subList(0, top));
+        });
+        places.exceptionally(throwable -> {
+            result.completeExceptionally(throwable);
+            return null;
+        });
+        return result;
+    }
+
+    /**
+     *
+     * @param address
+     * @param radius
+     * @param type
+     * @return
+     */
+    public CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Address address, int radius, String type) {
+
+        CompletableFuture<Location> locationFuture = geocoder.getLocation(address);
+        CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
+
+        locationFuture.thenAccept(location -> {
+            if (location == null) {
+                result.completeExceptionally(new IllegalStateException("could not retrieve the location"));
+                return;
+            }
+            CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type);
+            placesFuture.thenAccept(result::complete);
+            placesFuture.exceptionally(throwable -> {
+                result.completeExceptionally(throwable);
+                return null;
+            });
+
+        });
+
+        locationFuture.exceptionally(throwable -> {
+            result.completeExceptionally(throwable);
+            return null;
+        });
+
+        return result;
     }
 
     /**
@@ -236,8 +297,7 @@ public class GooglePlaceService {
     private static class NearbySearchPlaceURLBuilder {
 
         private final static String TEXT_SEARCH_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
-        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
-        private URL url;
+        private URL url = null;
 
         public NearbySearchPlaceURLBuilder(String apiKey, Location location, int radius, String type) {
             StringBuilder sb = new StringBuilder();
