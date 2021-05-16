@@ -154,7 +154,9 @@ public class LocalDatabase {
         }
     }
 
-    private static void checkInfo(String adId, String cardId, Ad ad, User user, List<Bitmap> adPhotos, List<Bitmap> panoramas) {
+    private static void checkInfo(String adId, String cardId, Ad ad,
+                                  User user, List<Bitmap> adPhotos,
+                                  List<Bitmap> panoramas) {
         if (adId == null || cardId == null || ad == null || user == null || adPhotos == null || panoramas == null)
             throw new IllegalArgumentException();
     }
@@ -467,19 +469,18 @@ public class LocalDatabase {
 
         //We check for the old the user as the local one is the new one and
         // uses the default profile picture at this point
+        CompletableFuture<Void> futureProfilePic;
         if (!currentUser.hasDefaultProfileImage()) {
             String profilePicPath =
                     LocalDatabasePaths.currentUserProfilePicture();
             currentLocalUser.setProfileImagePathAndName(profilePicPath);
 
 
-            CompletableFuture<Void> futureProfilePic =
+            futureProfilePic =
                     LocalUserWriter.writeProfilePic(profilePic, profilePicPath);
-            futureProfilePic.thenAccept(arg -> futureSuccess.complete(null));
-            futureProfilePic.exceptionally(e -> {
-                futureSuccess.completeExceptionally(e);
-                return null;
-            });
+
+        } else {
+            futureProfilePic = CompletableFuture.completedFuture(null);
         }
 
 
@@ -497,7 +498,12 @@ public class LocalDatabase {
             return futureSuccess;
         }
 
-        futureSuccess.complete(null);
+        //This is the last thing we need to check for the future
+        futureProfilePic.thenAccept(arg -> futureSuccess.complete(null));
+        futureProfilePic.exceptionally(e -> {
+            futureSuccess.completeExceptionally(e);
+            return null;
+        });
 
         return futureSuccess;
     }

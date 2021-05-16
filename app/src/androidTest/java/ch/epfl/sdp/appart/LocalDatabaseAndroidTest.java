@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
@@ -695,7 +693,8 @@ public class LocalDatabaseAndroidTest {
         localDatabase.setCurrentUser(currentUser,
                 fakeBitmap).join();
 
-        File originalFile = new File(appFolder + "/favorites/test/profileImage.jpeg");
+        File originalFile = new File(appFolder + "/favorites/test" +
+                "/profileImage.jpeg");
         new File(appFolder + "/favorites/test").mkdirs();
         FileOutputStream fosOut;
         try {
@@ -706,14 +705,16 @@ public class LocalDatabaseAndroidTest {
             e.printStackTrace();
         }
 
-        File retrievedBitmapFile = new File(appFolder + "/favorites/profileImage.jpeg");
-
+        File retrievedBitmapFile = new File(appFolder + "/favorites" +
+                "/profileImage.jpeg");
         byte[] bytesOriginal = Files.readAllBytes(originalFile.toPath());
         byte[] bytesRetrieved =
                 Files.readAllBytes(retrievedBitmapFile.toPath());
 
         assertArrayEquals(bytesOriginal, bytesRetrieved);
 
+
         localDatabase.cleanFavorites();
+
     }
 }
