@@ -3,6 +3,7 @@
 ## Quentin
 
 ## Carlo
+This week I started the sensor implementation. This implementation enables the user to use a step counter activity on the app which can be started when the user press start. The activity will count the steps the user has been doing since the start button was pressed (and also shows the number of total steps done from the last boot of the phone). Unfortunately I encountered a non quickly solvable problem: the **android emulator does not have the activity recognition sensors**. This activity has thus to be tested/verified on a real android phone which slowed down the process a lot. Once I managed to find an available android phone for testing I ran into a bug in our permission request protocol which caused our app to crash on API versions < 29. @rovati then solved this bug in a fix-PR. Next week I will keep working on the sensor usage and hopefully have it done.
 
 ## Antoine
 
