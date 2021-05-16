@@ -313,6 +313,10 @@ public class LocalDatabase {
         if (this.firstLoad) {
             return CompletableFuture.completedFuture(returnFunc.get());
         }
+        //TODO: I don't know why I have a threading issue here, this needs to be investigated
+        //Basically we reach this point even though firstLoad is true
+        clearMemory();
+
         CompletableFuture<Void> futureReadAd =
                 LocalAdReader.readAdDataForAUser(getCurrentUser().getUserId()
                         , this.cards, this.idsToAd, this.adIdsToPanoramas);
