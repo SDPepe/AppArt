@@ -61,10 +61,10 @@ public class PlaceOfInterest {
     }
 
     public boolean hasLocation() {
-        return location == null;
+        return location != null;
     }
 
     public boolean hasAddress() {
-        return address == null;
+        return address != null;
     }
 }

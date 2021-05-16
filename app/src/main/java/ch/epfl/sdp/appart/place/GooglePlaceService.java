@@ -56,17 +56,30 @@ public class GooglePlaceService {
 
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> result = new CompletableFuture<>();
         CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type);
+
         placesFuture.thenAccept(placesOfInterests -> {
-            List<PlaceOfInterest> placesWithLocation = placesOfInterests.stream().filter(place -> place.hasLocation()).collect(Collectors.toList());
-            List<CompletableFuture<Float>> locationsFutures = placesWithLocation.stream().map(place -> {
-                return geocoder.getDistance(location, place.getLocation());
-            }).collect(Collectors.toList());
+
+            List<PlaceOfInterest> placesWithLocation = placesOfInterests.stream()
+                    .filter(PlaceOfInterest::hasLocation)
+                    .collect(Collectors.toList());
+
+            List<CompletableFuture<Float>> locationsFutures = placesWithLocation.stream()
+                    .map(place -> {
+                        return geocoder.getDistance(location, place.getLocation());
+                    })
+                    .collect(Collectors.toList());
 
             CompletableFuture.allOf(locationsFutures.toArray(new CompletableFuture[locationsFutures.size()])).thenAccept(aVoid -> {
-                List<Pair<PlaceOfInterest, Float>> placesWithDistances = IntStream.range(0, placesWithLocation.size()).mapToObj(value -> {
-                    return new Pair<>(placesWithLocation.get(value), locationsFutures.get(value).join());
+
+                List<Pair<PlaceOfInterest, Float>> placesWithDistances =
+                        IntStream.range(0, placesWithLocation.size()).mapToObj(value -> {
+                    return new Pair<>(
+                            placesWithLocation.get(value),
+                            locationsFutures.get(value).join()
+                    );
                 }).collect(Collectors.toList());
                 result.complete(placesWithDistances);
+
             }).exceptionally(throwable -> {
                 result.completeExceptionally(throwable);
                 return null;

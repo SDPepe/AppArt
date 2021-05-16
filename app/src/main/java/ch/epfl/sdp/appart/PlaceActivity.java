@@ -64,13 +64,12 @@ public class PlaceActivity extends AppCompatActivity {
 
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> places
                 = placeService.getNearbyPlacesWithDistances(new Location(6.639180, 46.779770), 1000, "shop");
-        
+
         places.thenAccept(p -> {
             int i = 0;
         }).exceptionally(e -> {
             return null;
         });
-
 
     }
 }
