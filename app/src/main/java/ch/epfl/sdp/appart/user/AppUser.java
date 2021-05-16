@@ -10,6 +10,7 @@ import java.util.Set;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 
 /**
  * This class represents a generic user of our application - it is used to manage
@@ -28,6 +29,7 @@ public class AppUser implements User {
     private String profileImagePathAndName;
     private List<String> adsIds;
     private Set<String> favoritesIds;
+    private boolean hasDefaultProfileImage = true;
 
 /* default values */
     private static final String DEFAULT_IMAGE_NAME_NO_GENDER = "user_example_no_gender";
@@ -150,6 +152,7 @@ public class AppUser implements User {
             throw new IllegalArgumentException("ERROR - image parameter was null");
         }
         this.profileImagePathAndName = img;
+        this.hasDefaultProfileImage = false;
     }
 
     /**
@@ -268,6 +271,7 @@ public class AppUser implements User {
                 .append(findDrawableIdByGender());
 
         this.profileImagePathAndName = defaultImagePathInDb.toString();
+        this.hasDefaultProfileImage = true;
     }
 
     /**
@@ -276,7 +280,15 @@ public class AppUser implements User {
      * user previously uploaded a profile image
      */
     public Boolean hasDefaultProfileImage() {
-        return !this.profileImagePathAndName.contains(this.userId);
+        return this.hasDefaultProfileImage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.userId == null) return false;
+        if (!(o instanceof AppUser)) return false;
+        AppUser other = (AppUser) o;
+        return this.userId.equals(other.userId);
     }
 
 }

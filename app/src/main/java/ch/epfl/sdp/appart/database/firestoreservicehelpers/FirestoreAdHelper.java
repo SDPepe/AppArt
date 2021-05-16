@@ -43,8 +43,6 @@ public class FirestoreAdHelper {
     private final FirestoreImageHelper imageHelper;
     private final FirestoreCardHelper cardHelper;
     private final String adsPath;
-    private final AdSerializer serializer;
-    private final UserSerializer userSerializer;
 
     public FirestoreAdHelper() {
         db = FirebaseFirestore.getInstance();
@@ -52,8 +50,6 @@ public class FirestoreAdHelper {
         imageHelper = new FirestoreImageHelper();
         cardHelper = new FirestoreCardHelper();
         adsPath = FirebaseLayout.ADS_DIRECTORY;
-        serializer = new AdSerializer();
-        userSerializer = new UserSerializer();
     }
 
     @NotNull
@@ -288,9 +284,9 @@ public class FirestoreAdHelper {
                                List<String> picturesReferences, List<String> panoramasReferences) {
         CompletableFuture<Void> result = new CompletableFuture<>();
         CompletableFuture<Void> infoUpload = new CompletableFuture<>();
-
+        CompletableFuture<Void> idsUpload = new CompletableFuture<>();
         //we first set the ad in the database by serializing it and if it fail we squash everything
-        adRef.set(serializer.serialize(ad)).addOnCompleteListener(
+        adRef.set(AdSerializer.serialize(ad)).addOnCompleteListener(
                 task -> {
                     cleanUpIfFailed(task.isSuccessful(), result, adRef, cardRef, imagesRef);
                     infoUpload.complete(null);
