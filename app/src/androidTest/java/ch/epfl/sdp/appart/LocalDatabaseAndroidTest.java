@@ -6,6 +6,8 @@ import android.graphics.Color;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,9 +22,14 @@ import java.util.List;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
+import dagger.hilt.android.testing.BindValue;
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -34,6 +41,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+@UninstallModules(LocalDatabaseModule.class)
+@HiltAndroidTest
 public class LocalDatabaseAndroidTest {
     final List<User> users = Arrays.asList(new AppUser("user1", "test0@appart" +
                     ".ch"),
@@ -129,13 +138,23 @@ public class LocalDatabaseAndroidTest {
                 adBuilder4, adBuilder5};
     }
 
+    @Rule(order = 0)
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+
+    @BindValue
+    LocalDatabase localDatabase =
+            new LocalDatabase(InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath());
+
+    @Before
+    public void init() {
+        hiltRule.inject();
+    }
+
     @Test
-    public void addAdWithPictureSimpleTest() throws IOException,
-            ClassNotFoundException {
+    public void addAdWithPictureSimpleTest() throws IOException {
 
         String appFolder =
                 InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
 
         localDatabase.cleanFavorites();
 
@@ -182,11 +201,9 @@ public class LocalDatabaseAndroidTest {
     }
 
     @Test
-    public void addAdWithPanoramaSimpleTest() throws IOException,
-            ClassNotFoundException {
+    public void addAdWithPanoramaSimpleTest() throws IOException {
         String appFolder =
                 InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
 
         localDatabase.cleanFavorites();
 
@@ -231,11 +248,9 @@ public class LocalDatabaseAndroidTest {
 
 
     @Test
-    public void addAdWithPicturesAndPanoramas() throws IOException,
-            ClassNotFoundException {
+    public void addAdWithPicturesAndPanoramas() {
         String appFolder =
                 InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
 
         localDatabase.cleanFavorites();
 
@@ -293,11 +308,9 @@ public class LocalDatabaseAndroidTest {
     }
 
     @Test
-    public void replaceAdWithDifferentNumbersOfPictures() throws IOException,
-            ClassNotFoundException {
+    public void replaceAdWithDifferentNumbersOfPictures() {
         String appFolder =
                 InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
 
         localDatabase.cleanFavorites();
 
@@ -382,12 +395,9 @@ public class LocalDatabaseAndroidTest {
     }
 
     @Test
-    public void profilePictureTest() throws IOException,
-            ClassNotFoundException {
+    public void profilePictureTest() throws IOException {
         String appFolder =
                 InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
 
         localDatabase.cleanFavorites();
 
@@ -432,12 +442,7 @@ public class LocalDatabaseAndroidTest {
     }
 
     @Test
-    public void setCurrentUserTest() throws IOException,
-            ClassNotFoundException {
-
-        String appFolder =
-                InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
+    public void setCurrentUserTest() {
 
         localDatabase.cleanFavorites();
 
@@ -452,11 +457,7 @@ public class LocalDatabaseAndroidTest {
     }
 
     @Test
-    public void addAdsWithoutPictureTest() throws IOException,
-            ClassNotFoundException {
-        String appFolder =
-                InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
+    public void addAdsWithoutPictureTest() {
 
         localDatabase.cleanFavorites();
 
@@ -492,7 +493,7 @@ public class LocalDatabaseAndroidTest {
     }
 
     private void checkRetrievedData(LocalDatabase localDatabase, Ad[] ads,
-                                    List<Card> cards, int nbValidUsers) throws IOException, ClassNotFoundException {
+                                    List<Card> cards, int nbValidUsers) {
         List<Card> cardsRetrieved = localDatabase.getCards().join();
         assertEquals(cards, cardsRetrieved);
 
@@ -513,11 +514,7 @@ public class LocalDatabaseAndroidTest {
     }
 
     @Test
-    public void addAdsWithOneUserOnly() throws IOException,
-            ClassNotFoundException {
-        String appFolder =
-                InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
+    public void addAdsWithOneUserOnly() {
 
         localDatabase.cleanFavorites();
 
@@ -569,12 +566,7 @@ public class LocalDatabaseAndroidTest {
     }
 
     @Test
-    public void removingCardRemovesUserTest() throws IOException,
-            ClassNotFoundException {
-
-        String appFolder =
-                InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
+    public void removingCardRemovesUserTest() {
 
         localDatabase.cleanFavorites();
 
@@ -637,7 +629,6 @@ public class LocalDatabaseAndroidTest {
 
         String appFolder =
                 InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
 
         localDatabase.cleanFavorites();
 
@@ -679,8 +670,6 @@ public class LocalDatabaseAndroidTest {
     public void currentUserProfilePicTest() throws IOException {
         String appFolder =
                 InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath();
-
-        LocalDatabase localDatabase = new LocalDatabase(appFolder);
 
         localDatabase.cleanFavorites();
 

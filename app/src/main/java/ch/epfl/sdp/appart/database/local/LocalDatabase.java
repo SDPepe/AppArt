@@ -13,6 +13,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.exceptions.LocalDatabaseException;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -50,6 +53,7 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  */
 // @formatter:on
 
+@Singleton
 public class LocalDatabase {
 
     /*
@@ -75,6 +79,7 @@ public class LocalDatabase {
      *
      * @param appPath the path to the app folder on the phone.
      */
+    @Inject
     public LocalDatabase(String appPath) {
         if (appPath == null) throw new IllegalArgumentException();
         this.cards = new ArrayList<>();
