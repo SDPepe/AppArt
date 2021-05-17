@@ -7,7 +7,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.Rule;
 import org.junit.Test;
-
 import java.util.ArrayList;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
@@ -51,6 +50,4 @@ public class PanoramaUIImageLoadFailedTest {
             activity.hasCurrentImageLoadingFailed().thenAccept(s -> assertThat(s, is(false)));
         });
     }
-
-
 }

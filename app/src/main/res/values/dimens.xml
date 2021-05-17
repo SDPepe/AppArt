@@ -5,6 +5,25 @@
     to square screens.
     -->
 
+
+    <!-- vertical guideline !-->
+    <dimen name="vertical_1">0.05</dimen>
+    <dimen name="vertical_2">0.95</dimen>
+
+    <!-- horizontal guideline !-->
+    <dimen name="horizontal_1">0.25</dimen>
+    <dimen name="horizontal_2">0.35</dimen>
+    <dimen name="horizontal_3">0.45</dimen>
+    <dimen name="horizontal_4">0.55</dimen>
+    <dimen name="horizontal_5">0.65</dimen>
+
+    <!-- TextField !-->
+    <dimen name="ic_padding">8dp</dimen>
+
+    <!-- Button !-->
+    <dimen name="margin_button">5dp</dimen>
+
+
     <!--
     This padding applies to both square and round screens. The total padding between the buttons
     and the window insets is box_inset_layout_padding (above variable) on square screens and

@@ -1,14 +1,12 @@
 package ch.epfl.sdp.appart;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 

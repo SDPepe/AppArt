@@ -1,7 +1,7 @@
 package ch.epfl.sdp.appart;
 
-import android.Manifest;
-import android.Manifest.permission;
+import static android.widget.Toast.makeText;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,22 +21,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
-import static android.widget.Toast.makeText;
 
 /**
  * This class manages the UI of the Camera.
@@ -54,13 +49,24 @@ public class CameraActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
-    
+
 
     @Override
     @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        PermissionRequest.askForCameraPermission(this, () -> {
+            Log.d("PERMISSION", "Camera permission granted");
+            initActivity();
+        }, () -> {
+            Log.d("PERMISSION", "Camera permission refused");
+            finish();
+        });
+    }
+
+    private void initActivity() {
         listImageUri = new ArrayList<>();
         Intent intent = getIntent();
         activity = intent.getStringExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
@@ -69,7 +75,7 @@ public class CameraActivity extends AppCompatActivity {
         Button galleryBtn = findViewById(R.id.gallery_Camera_button);
         Button confirmBtn = findViewById(R.id.confirm_Camera_button);
 
-        cameraBtn.setOnClickListener(w -> askCamPermission());
+        cameraBtn.setOnClickListener(w -> startCamera());
         galleryBtn.setOnClickListener((v) -> {
             Intent gallery = new Intent(Intent.ACTION_OPEN_DOCUMENT, Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(gallery, GALLERY_REQUEST_CODE);
@@ -77,12 +83,12 @@ public class CameraActivity extends AppCompatActivity {
         confirmBtn.setOnClickListener(v -> confirm());
     }
 
-    private void confirm(){
+    private void confirm() {
         if (imageUri == null) {
             Intent resultIntent = new Intent();
             setResult(RESULT_CANCELED, resultIntent);
             finish();
-            Toast.makeText(getApplicationContext(),R.string.canceledNoImage ,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.canceledNoImage, Toast.LENGTH_SHORT).show();
         } else {
             if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
                 Intent resultIntent = new Intent();
@@ -100,17 +106,6 @@ public class CameraActivity extends AppCompatActivity {
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
-        }
-    }
-
-    private void askCamPermission() {
-        if (ContextCompat.checkSelfPermission(this, permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            //show popup to request permission
-            ActivityCompat
-                    .requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
-        } else {
-            startCamera();
         }
     }
 
@@ -163,47 +158,51 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    private void setDisplayAction(){
-        if(activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
+    private void setDisplayAction() {
+        if (activity.equals(ActivityCommunicationLayout.AD_CREATION_ACTIVITY)) {
             displayListImage();
         } else if (activity.equals(ActivityCommunicationLayout.USER_PROFILE_ACTIVITY)) {
             displayImage();
         }
     }
 
-    private void displayImage(){
+    private void displayImage() {
         LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
         horizontalLayout.removeAllViews();
         horizontalLayout.addView(uploadImage(imageUri));
     }
-    private void displayListImage(){
+
+    private void displayListImage() {
         listImageUri.add(imageUri);
         LinearLayout horizontalLayout = findViewById(R.id.image_Camera_linearLayout);
         horizontalLayout.removeAllViews();
-        for (Uri i: listImageUri) {
+        for (Uri i : listImageUri) {
             horizontalLayout.addView(uploadImage(i));
+
         }
     }
-    private View uploadImage(Uri uri){
+
+    private View uploadImage(Uri uri) {
         LayoutInflater inflater =
-            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
         ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
         photo.setImageURI(uri);
-        photo.setPadding(16,0,16,0);
+        photo.setPadding(16, 0, 16, 0);
         return myView;
     }
-    
+
     public void goBack(View view) {
         finish();
     }
+
 
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
-    
+
 }
 
 

@@ -70,4 +70,14 @@ public final class AdLayout {
      */
     public final static String PRICE_PERIOD = "price_period"; //price_period
 
+    /*
+        The following Strings are not stored as such on Firestore but helps with the local databse
+     */
+
+    public static final String ID = "ID";
+    public static final String PHOTO_REFS = "PHOTO_REFS";
+    public static final String CARD_ID = "CARD_ID";
+    public static final String USER_ID = "USER_ID";
+    public static final String PANORAMA_REFS = "PANORAMA_REFS";
+
 }

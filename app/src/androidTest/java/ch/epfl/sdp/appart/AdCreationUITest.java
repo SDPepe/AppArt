@@ -87,35 +87,6 @@ public class AdCreationUITest {
     }
 
     @Test
-    public void viewsAreDisplayedTest() {
-        //edit text
-        onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.number_AdCreation_ediText)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.street_AdCreation_editText)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.city_AdCreation_editText)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.npa_AdCreation_editText)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.description_AdCreation_editText)).perform(scrollTo()).check(matches(isDisplayed()));
-
-        //text view
-        onView(withId(R.id.street_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.number_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.street_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.city_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.npa_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.price_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.description_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.francs_AdCreation_textView)).perform(scrollTo()).check(matches(isDisplayed()));
-
-        //buttons
-        onView(withId(R.id.addPhoto_AdCreation_button)).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo()).check(matches(isDisplayed()));
-
-        //sbinner
-        onView(withId(R.id.period_AdCreation_spinner)).perform(scrollTo()).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void photoButtonStartsCameraActivityTest() {
         onView(withId(R.id.addPhoto_AdCreation_button)).perform(scrollTo(), click());
         intended(hasComponent(CameraActivity.class.getName()));
@@ -171,12 +142,6 @@ public class AdCreationUITest {
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
-                        childAtPosition(
-                                allOf(withId(R.id.camera_layout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                4),
                         isDisplayed()));
         appCompatButton4.perform(click());
 
