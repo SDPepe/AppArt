@@ -2,6 +2,14 @@ package ch.epfl.sdp.appart.place.helper;
 
 import android.content.Context;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -14,10 +22,50 @@ import ch.epfl.sdp.appart.location.address.Address;
  */
 public class MockGooglePlaceServiceHelper implements GooglePlaceHelper {
 
-    private final String dummyOutput;
+    private final String dummyValidOutput;
+    private final String dummyInvalidOutput;
+    private final String dummyEmptyOutput;
+    private String resultPointer = null;
+
+    public enum MockMode {VALID, EMPTY, INVALID }
 
     public MockGooglePlaceServiceHelper(Context context) {
-        this.dummyOutput = context.getResources().getString(R.string.mock_google_place_output);
+        this.dummyValidOutput = loadRawJson(context, R.raw.mocked_google_place_output);
+        this.dummyInvalidOutput = loadRawJson(context, R.raw.mocked_google_place_output_failure);
+        this.dummyEmptyOutput = loadRawJson(context, R.raw.mocked_google_place_output_no_results);
+        resultPointer = this.dummyValidOutput;
+    }
+
+    private String loadRawJson(Context context, int id) {
+        InputStream is = context.getResources().openRawResource(id);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[50000];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return writer.toString();
+    }
+
+    public void setMockMode(MockMode mode) {
+        if (mode == MockMode.VALID) {
+            resultPointer = dummyValidOutput;
+        } else if (mode == MockMode.EMPTY) {
+            resultPointer = dummyEmptyOutput;
+        } else if (mode == MockMode.INVALID) {
+            resultPointer = dummyInvalidOutput;
+        }
     }
 
     @Override
@@ -25,7 +73,7 @@ public class MockGooglePlaceServiceHelper implements GooglePlaceHelper {
         return CompletableFuture.supplyAsync(new Supplier<String>() {
             @Override
             public String get() {
-                return dummyOutput;
+                return resultPointer;
             }
         });
     }

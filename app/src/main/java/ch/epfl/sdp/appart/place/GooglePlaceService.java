@@ -109,11 +109,13 @@ public class GooglePlaceService {
                 }).collect(Collectors.toList());
                 result.complete(placesWithDistances);
 
-            }).exceptionally(throwable -> {
-                result.completeExceptionally(throwable);
-                return null;
             });
 
+        });
+
+        placesFuture.exceptionally(throwable -> {
+             result.completeExceptionally(throwable);
+             return null;
         });
 
         return result;
@@ -210,7 +212,7 @@ public class GooglePlaceService {
             try {
                 json = (JSONObject) new JSONTokener(raw).nextValue();
                 String status = (String) json.get("status");
-                if (!(status.equals("OK") || status.equals("ZERO_RESULTS"))) {
+                if (!status.equals("OK") && !status.equals("ZERO_RESULTS")) {
                     result.completeExceptionally(new IllegalStateException("failed to get the query"));
                 }
                 JSONArray resultsJson = json.getJSONArray("results");
