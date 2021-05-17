@@ -110,6 +110,7 @@ public class PermissionRequest {
                 permissions);
     }
 
+
     public static void askForStoragePermission(Activity activity,
                                                Runnable permissionGranted,
                                                Runnable permissionRefused,
