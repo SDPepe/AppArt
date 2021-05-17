@@ -25,6 +25,7 @@
     <string name="intentLocationForMap">LOCATION</string>
     <string name="loadFail_Ad">Failed to load the ad, please retry later</string>
     <string name="favFail_Ad">Failed to add to favorites, please retry later</string>
+    <string name="localFavFail_Ad">Failed to save the new favorite locally</string>
     <string name="favSuccess_Ad">Added to favorites!</string>
     <string name="userNotLoggedIn_Ad">You cannot add to favorites if you are not logged in</string>
 

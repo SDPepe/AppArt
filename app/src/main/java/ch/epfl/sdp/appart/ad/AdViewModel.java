@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.ad;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -30,6 +31,7 @@ public class AdViewModel extends ViewModel {
 
     final DatabaseService db;
     final LocalDatabase localdb;
+    private Ad ad;
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
@@ -85,6 +87,9 @@ public class AdViewModel extends ViewModel {
 
     public LiveData<String> getAdvertiserId() { return adAdvertiserId; }
 
+    @Nullable
+    public Ad getAd(){ return ad; }
+
     /**
      * Loads data from the local DB
      */
@@ -95,6 +100,7 @@ public class AdViewModel extends ViewModel {
                     return null;
                 })
                 .thenAccept( ad -> {
+                    this.ad = ad;
                     setAdValues(ad);
                     result.complete(null);
                 });

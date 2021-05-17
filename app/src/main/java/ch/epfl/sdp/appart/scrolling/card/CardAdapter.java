@@ -82,6 +82,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             String activityName = ((Activity) context).getLocalClassName();
             Intent intent = new Intent(context, AdActivity.class);
             intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, activityName);
+            intent.putExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID, card.getId());
             intent.putExtra(ActivityCommunicationLayout.PROVIDING_AD_ID, card.getAdId());
             context.startActivity(intent);
         });

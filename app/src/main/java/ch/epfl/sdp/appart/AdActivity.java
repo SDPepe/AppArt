@@ -2,8 +2,9 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -31,12 +31,13 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.AndroidEntryPoint;
-import kotlin.NotImplementedError;
 
 /**
  * This class manages the UI of the ad.
@@ -60,6 +61,7 @@ public class AdActivity extends ToolbarActivity {
 
     private String advertiserId;
     private ArrayList<String> panoramasReferences = new ArrayList<>();
+    private AdViewModel mViewModel;
 
     private String adId;
 
@@ -67,7 +69,7 @@ public class AdActivity extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
-        AdViewModel mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
 
         Toolbar toolbar = findViewById(R.id.account_Ad_toolbar);
@@ -86,7 +88,8 @@ public class AdActivity extends ToolbarActivity {
         String openingActivity = getIntent().getStringExtra(
                 ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
         // init content, show a toast if load failed
-        mViewModel.initAd(adId, openingActivity.equals(ActivityCommunicationLayout.FAVORITES_ACTIVITY))
+        mViewModel.initAd(adId,
+                openingActivity.equals(ActivityCommunicationLayout.FAVORITES_ACTIVITY))
                 .exceptionally(e -> {
                     Toast.makeText(this, R.string.loadFail_Ad, Toast.LENGTH_SHORT).show();
                     return null;
@@ -253,16 +256,70 @@ public class AdActivity extends ToolbarActivity {
                 })
                 // if update successful, save ad locally
                 .thenAccept(res -> {
-                    // TODO get bitmaps from list of images -> findViewById(R.id.horizontal_children_Ad_linearLayout)
-                    // TODO get panorama images
-                    // TODO get user image with glide bitmaploader
-                    // TODO use antoine API to save ad locally, complete result accordingly
+                    List<Bitmap> images = getImages();
+                    List<Bitmap> panoramas = new ArrayList<>();
+                    List<CompletableFuture<Bitmap>> panoramasRes = getPanoramasFutures();
+                    User currentUser = login.getCurrentUser();
+                    getProfilePic(currentUser).
+                            exceptionally(e -> {
+                                Toast.makeText(this, R.string.localFavFail_Ad, Toast.LENGTH_SHORT);
+                                return null;
+                            })
+                            .thenAccept(pfp -> {
+                                CompletableFuture.allOf(panoramasRes.toArray(
+                                        new CompletableFuture[panoramasReferences.size()]))
+                                        .exceptionally(e -> {
+                                            Toast.makeText(this, R.string.localFavFail_Ad,
+                                                    Toast.LENGTH_SHORT);
+                                            return null;
+                                        })
+                                        .thenAccept(ignoredRes -> {
+                                            panoramas.addAll(panoramasRes.stream().map(fut -> fut.join())
+                                                    .collect(Collectors.toList()));
+                                            localdb.writeCompleteAd(adId,
+                                                    getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID),
+                                                    mViewModel.getAd(), user,
+                                                    images, panoramas, pfp);
+                                        });
+                            });
+
                     /*
                     .exceptionally(e -> {
-                        result.completeExceptionally(new DatabaseServiceException(getString(R.string.favFail_Ad)));
+                        result.completeExceptionally(new DatabaseServiceException(getString(R
+                        .string.favFail_Ad)));
                         return null; });
                     .thenAccept(res -> result.complete(null));
                      */
                 });
+    }
+
+    private List<Bitmap> getImages() {
+        LinearLayout imagesLayout = findViewById(R.id.horizontal_children_Ad_linearLayout);
+        List<Bitmap> images = new ArrayList<>();
+        for (int i = 0; i < imagesLayout.getChildCount(); i++) {
+            ImageView view = (ImageView) imagesLayout.getChildAt(i);
+            images.add(((BitmapDrawable) view.getDrawable()).getBitmap());
+        }
+        return images;
+    }
+
+    private List<CompletableFuture<Bitmap>> getPanoramasFutures() {
+        List<CompletableFuture<Bitmap>> panoramasFutures = new ArrayList<>();
+        for (int i = 0; i < panoramasReferences.size(); i++) {
+            CompletableFuture<Bitmap> bitmapRes = new CompletableFuture<>();
+            String imagePath = new StoragePathBuilder()
+                    .toAdsStorageDirectory()
+                    .toDirectory(adId)
+                    .withFile(panoramasReferences.get(i));
+            database.accept(new GlideBitmapLoader(this, bitmapRes, imagePath));
+            panoramasFutures.add(bitmapRes);
+        }
+        return panoramasFutures;
+    }
+
+    private CompletableFuture<Bitmap> getProfilePic(User user) {
+        CompletableFuture<Bitmap> bitmapRes = new CompletableFuture<>();
+        database.accept(new GlideBitmapLoader(this, bitmapRes, user.getProfileImagePathAndName()));
+        return bitmapRes;
     }
 }
