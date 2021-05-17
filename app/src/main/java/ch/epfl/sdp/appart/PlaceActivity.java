@@ -20,16 +20,17 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class PlaceActivity extends AppCompatActivity {
-
+    /*
     @Inject
     public GooglePlaceService placeService;
 
     @Inject
     public GoogleGeocodingService geocodingService;
-
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
         setContentView(R.layout.activity_place);
         //placeService.initialize(this);
         Address address = AddressFactory.makeAddress("Rue du Lac 34, 1400 Yverdon-les-Bains"); //new Address("Rue du Lac 34, 1400 Yverdon-les-Bains");
@@ -70,6 +71,6 @@ public class PlaceActivity extends AppCompatActivity {
         }).exceptionally(e -> {
             return null;
         });
-
+        */
     }
 }
