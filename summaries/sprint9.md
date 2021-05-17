@@ -12,6 +12,8 @@ This week I worked on the local database. First, I started to think about the ar
 In my opinion, Lorenzo and I managed to communicate very well on the local database issues to build something that would be actually usable not only by me but by the others member of the team, especially Lorenzo.
 
 ## Filippo
+This week I finally finish the design refactor. Now the app have a nice and coherent design, the activity has now the same button style, margine, etc. so we can easily change the style of all button or easily change the percentage of the margin size. There are still some little minor changes to be made due to new feature implemented, but we will adapt in the coming weeks. Before merging the design refactor I also adapted the various tests that failed due to the layout change. As last week the work of change the design took me longer than expected due to all the activities that I had to change.
+
 
 ## Lorenzo
 I kept on working on the logic for linking server and local database. I finished laying down the code, now I only need the localDB api code from Antoine and the tests on the PR, and my task will be then finished.
