@@ -94,7 +94,7 @@
             android:id="@+id/stopStepCount_StepCounter_Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/style_secondary"
+            android:background="@drawable/style_primary"
             android:gravity="center"
             android:textSize="16sp"
             android:textAllCaps="false"
