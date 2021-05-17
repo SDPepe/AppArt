@@ -15,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import kotlin.NotImplementedError;
 
@@ -28,6 +29,7 @@ import kotlin.NotImplementedError;
 public class AdViewModel extends ViewModel {
 
     final DatabaseService db;
+    final LocalDatabase localdb;
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
@@ -38,8 +40,9 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
 
     @Inject
-    public AdViewModel(DatabaseService db) {
+    public AdViewModel(DatabaseService db, LocalDatabase localdb) {
         this.db = db;
+        this.localdb = localdb;
     }
 
     /**
@@ -86,8 +89,15 @@ public class AdViewModel extends ViewModel {
      * Loads data from the local DB
      */
     private void localLoad(CompletableFuture<Void> result, String adId){
-        // TODO use antoine API to get ad from local DB
-        // TODO set values
+        localdb.getAd(adId)
+                .exceptionally( e -> {
+                    result.completeExceptionally(e);
+                    return null;
+                })
+                .thenAccept( ad -> {
+                    setAdValues(ad);
+                    result.complete(null);
+                });
         throw new NotImplementedError();
     }
 
