@@ -46,5 +46,9 @@ public class StoragePathBuilder {
         stringBuilder.append(fileName);
         return stringBuilder.toString();
     }
+
+    public String build() {
+        return stringBuilder.toString();
+    }
     
 }

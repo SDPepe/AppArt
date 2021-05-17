@@ -14,7 +14,6 @@ import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
 public class CardSerializerTest {
-    public CardSerializer serializer = new CardSerializer();
 
     @Test
     public void serializeTest() {
@@ -23,7 +22,7 @@ public class CardSerializerTest {
             Card card = new Card(generateRandomString(10, random), generateRandomString(10, random),
                     generateRandomString(10, random), generateRandomString(10, random), random.nextInt(1000),
                     generateRandomString(10, random), random.nextBoolean());
-            Map<String, Object> serializedCard = serializer.serialize(card);
+            Map<String, Object> serializedCard = CardSerializer.serialize(card);
             Assert.assertEquals(serializedCard.get(CardLayout.AD_ID), card.getAdId());
             Assert.assertEquals(serializedCard.get(CardLayout.CITY), card.getCity());
             Assert.assertEquals(serializedCard.get(CardLayout.IMAGE), card.getImageUrl());
@@ -43,7 +42,7 @@ public class CardSerializerTest {
             serializedCard.put(CardLayout.PRICE, (long) random.nextInt(1000));
             serializedCard.put(CardLayout.USER_ID, generateRandomString(10, random));
 
-            Card card = serializer.deserialize("", serializedCard);
+            Card card = CardSerializer.deserialize("", serializedCard);
 
             Assert.assertEquals(serializedCard.get(CardLayout.AD_ID), card.getAdId());
             Assert.assertEquals(serializedCard.get(CardLayout.CITY), card.getCity());
@@ -60,8 +59,8 @@ public class CardSerializerTest {
             Card card = new Card(generateRandomString(10, random), generateRandomString(10, random),
                     generateRandomString(10, random), generateRandomString(10, random), random.nextInt(1000),
                     generateRandomString(10, random), random.nextBoolean());
-            Map<String, Object> serializedCard = serializer.serialize(card);
-            Card deserializedCard = serializer.deserialize("", serializedCard);
+            Map<String, Object> serializedCard = CardSerializer.serialize(card);
+            Card deserializedCard = CardSerializer.deserialize("", serializedCard);
             Assert.assertEquals(deserializedCard.getAdId(), card.getAdId());
             Assert.assertEquals(deserializedCard.getCity(), card.getCity());
             Assert.assertEquals(deserializedCard.getImageUrl(), card.getImageUrl());
