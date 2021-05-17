@@ -44,15 +44,15 @@ public class AddressFactory {
 
         String filteredAddress = address.trim();
         String[] split = filteredAddress.split(",");
-        Matcher streetMatcher = streetPattern.matcher(split[0]);
+        Matcher streetMatcher = streetPattern.matcher(split[0].trim());
         Matcher localityMatcher = null;
         if (split.length > 1) {
-            localityMatcher = localityPattern.matcher(split[1]);
+            localityMatcher = localityPattern.matcher(split[1].trim());
         }
 
         if (addressWithPostalCodePattern.matcher(filteredAddress).matches()) {
 
-            Matcher postalCodeMatcher = postalCodePattern.matcher(split[1]);
+            Matcher postalCodeMatcher = postalCodePattern.matcher(split[1].trim());
             //we can find and match safely
             streetMatcher.find();
             postalCodeMatcher.find();

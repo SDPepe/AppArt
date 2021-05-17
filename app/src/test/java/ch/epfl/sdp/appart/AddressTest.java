@@ -6,8 +6,12 @@ import ch.epfl.sdp.appart.location.address.Address;
 import ch.epfl.sdp.appart.location.address.AddressFactory;
 import ch.epfl.sdp.appart.location.address.MalformedAddressException;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AddressTest {
 
@@ -23,6 +27,11 @@ public class AddressTest {
         Address b = AddressFactory.makeAddress("Quai de Nogent 1a, 1400 Yverdon-les-Bains");
         Address c = AddressFactory.makeAddress("Avenue Haldimand 103, Yverdon-les-Bains");
         Address d = AddressFactory.makeAddress("Rue de la Roselière 3, Yverdon-les-Bains");
+        assertFalse(a.hashCode() == c.hashCode());
+        assertTrue(a.hashCode() == b.hashCode());
+        assertEquals("Quai de Nogent 1a, 1400 Yverdon-les-Bains", a.getAddress());
+        assertEquals("1400", a.getPostalCode());
+        assertEquals("Yverdon-les-Bains", a.getLocality());
     }
 
     @Test
@@ -62,6 +71,14 @@ public class AddressTest {
         assertThrows(MalformedAddressException.class, () -> {
             Address a = AddressFactory.makeAddress("street 1", "140a", "Yverdon-les-Bains");
         });
+    }
+
+    @Test
+    public void invalidAddressPostalCodeCreationWithSupplier() {
+        Address a = AddressFactory.makeAddressOrElse("street 1", "140a", "Yverdon-les-Bains", () -> null);
+        assertNull(a);
+        Address b = AddressFactory.makeAddressOrElse("Quai de Nogent 1a, 1400 Yverdon-les-Bains", () -> null);
+        assertNotNull(b);
     }
 
     @Test

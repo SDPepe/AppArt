@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.place;
 
+import com.google.common.collect.Sets;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +18,39 @@ public class PlaceOfInterest {
     private Set<String> types;
     private double rating;
 
-    PlaceOfInterest() {}
+    public PlaceOfInterest() {}
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public Set<String> getTypes() {
+        return Sets.newHashSet(types);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public boolean hasLocation() {
+        return location != null;
+    }
+
+    public boolean hasAddress() {
+        return address != null;
+    }
 
     public void setId(String id) {
         this.placeId = id;
@@ -52,19 +86,5 @@ public class PlaceOfInterest {
         this.rating = rating;
     }
 
-    public Location getLocation() {
-        return location;
-    }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public boolean hasLocation() {
-        return location != null;
-    }
-
-    public boolean hasAddress() {
-        return address != null;
-    }
 }
