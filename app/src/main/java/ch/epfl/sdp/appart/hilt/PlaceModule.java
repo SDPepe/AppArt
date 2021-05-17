@@ -4,6 +4,7 @@ import android.content.Context;
 
 import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
 import ch.epfl.sdp.appart.place.GooglePlaceService;
+import ch.epfl.sdp.appart.place.helper.HttpGooglePlaceHelper;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
@@ -18,7 +19,7 @@ public class PlaceModule {
     @ActivityScoped
     @Provides
     public GooglePlaceService providePlaceService(@ApplicationContext Context context) {
-        return new GooglePlaceService(new GoogleGeocodingService(context));
+        return new GooglePlaceService(new HttpGooglePlaceHelper(context), new GoogleGeocodingService(context));
     }
 
 }

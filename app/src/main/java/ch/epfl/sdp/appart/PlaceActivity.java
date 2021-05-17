@@ -31,7 +31,7 @@ public class PlaceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
-        placeService.initialize(this);
+        //placeService.initialize(this);
         Address address = AddressFactory.makeAddress("Rue du Lac 34, 1400 Yverdon-les-Bains"); //new Address("Rue du Lac 34, 1400 Yverdon-les-Bains");
 
         CompletableFuture<Location> locationFuture = geocodingService.getLocation(address);
@@ -63,7 +63,7 @@ public class PlaceActivity extends AppCompatActivity {
         });
 
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> places
-                = placeService.getNearbyPlacesWithDistances(new Location(6.639180, 46.779770), 1000, "shop");
+                = placeService.getNearbyPlacesWithDistances(new Location(6.639180, 46.779770), 1000, "shop", 5);
 
         places.thenAccept(p -> {
             int i = 0;

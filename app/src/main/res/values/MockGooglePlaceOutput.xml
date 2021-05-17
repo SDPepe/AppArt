@@ -1,4 +1,6 @@
-{
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mock_google_place_output">{
   "html_attributions" : [],
   "next_page_token" : "ATtYBwIcfCry8BjKat8M60CVqSboO35RPcjmXOCLwbsIZU2JuUL1pcoPehVQg7v_ziL2gbpS2uKHAVanR8l6Dd5Z2FqkFbu6PS4ku0p3GXFmP1AKmon3qka3AHiatSfknpXF1_PFShruUuNpWKr2D03VR9rg3cLyUgJh8swekVvO0oAf__Ek8bxgQiAvg73v0MZ_JoAxc32RPJvBCNy0jRR_TSICsf2otKeVtvwd5CtEWxcPlD-O0bSDnNOiaskA5m9yMuZPTlxQf3pHCBuDALYYGM9aWeeM4b8h5ORif4ajAuro8foA_Hw94H8lmpe7dJ6a0FURY6i1QcqiOn313NJaRm8-lTQ3ZpnNvCUUjxcFUO_EwPgFuc5P1wEXHR39lYgLpGmqtcsI-Y8Nt2NAXF071MiCxYys9DzWyTblapxunSCniaABSs-2ETH8Rmcn",
   "results" : [
@@ -918,4 +920,5 @@
     }
   ],
   "status" : "OK"
-}
+}</string>
+</resources>
