@@ -45,16 +45,26 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/totalNumberOfSteps_StepCounter_TextView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.7"
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/stepsFromLastBootSentence_StepCounter_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/stepsFromLastBootSentence"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="italic" />
 
         <ProgressBar
             android:id="@+id/progress_StepCounter_ProgressBar"
@@ -77,7 +87,6 @@
             android:onClick="onStartButton"
             android:textSize="16sp"
             android:textAllCaps="false"
-            android:textColor="@color/secondaryStart"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="@string/startButtonText" />
 
@@ -87,6 +96,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/style_secondary"
             android:gravity="center"
+            android:textSize="16sp"
+            android:textAllCaps="false"
             android:onClick="onStopButton"
             android:text="@string/stopButtonText"
             android:visibility="gone" />
@@ -95,6 +106,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="top" />
 
     </LinearLayout>
 

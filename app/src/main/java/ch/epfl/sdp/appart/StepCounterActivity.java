@@ -18,8 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.hamcrest.Condition;
-
 import static android.widget.Toast.makeText;
 
 public class StepCounterActivity extends AppCompatActivity implements SensorEventListener  {
@@ -34,14 +32,24 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     private Sensor mStepCounter;
     private Sensor mStepDetector;
 
-    private int stepCount = 0;
-    private boolean stopWasPressed = false;
-    private boolean stepsHaveToBeRestored = false;
-
-    private static boolean nothingWasPressedOnBackButton = false;
-    private static int stepDetect = 0;
-    private static int stepCountBeforeUnwantedPause = 0;
     private final static int STEP_COUNTER_PERMISSION_CODE = 110;
+
+    /* in case this is not available (depends on the device running the app) the steps will be
+     * computed as a subtraction of current total STEP_COUNT with the previous total STEP_COUNT */
+    private static boolean stepDetectorSensorIsAvailable = false;
+
+    /* boolean values which determine the state of the StepCounter activity */
+    private static boolean startWasPressed = false;
+    private static boolean stopWasPressed = false;
+
+    /* this value is updated with the STEP_COUNTER sensor */
+    private static int totalStepCountFromBoot = 0;
+    /* this value is updated with the STEP_DETECTOR sensor */
+    private static int detectedStepsCount = 0;
+
+    /* number of steps registered by STEP_COUNT on start button pressed */
+    private static int initialTotalStepCountFromBoot = 0;
+    private static boolean initialTotalStepCountWasSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,78 +61,87 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         startButton = findViewById(R.id.startStepCount_StepCounter_Button);
         stopButton = findViewById(R.id.stopStepCount_StepCounter_Button);
         progressBar = findViewById(R.id.progress_StepCounter_ProgressBar);
-        progressBar.setVisibility(View.INVISIBLE);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        progressBar.setVisibility(View.GONE);
+        startButton.setVisibility(View.VISIBLE);
 
         PermissionRequest.askForActivityRecognitionPermission(this, () -> {
-            Log.d("PERMISSION", "Pedometer permission granted");
+            Log.d("PERMISSION", "Activity recognition permission granted");
         }, () -> {
-            Log.d("PERMISSION", "Pedometer permission refused");
+            Log.d("PERMISSION", "Activity recognition permission refused");
             finish();
         });
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     }
 
     @Override
     public void onBackPressed() {
-        if (stopWasPressed) {
-            StepCounterActivity.stepDetect = 0;
-            StepCounterActivity.stepCountBeforeUnwantedPause = 0;
-            StepCounterActivity.nothingWasPressedOnBackButton = false;
-        } else {
-            StepCounterActivity.nothingWasPressedOnBackButton = true;
-        }
-
         finish();
     }
 
     public void onStartButton(View view) {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+        getSensorsAndAddListeners();
         startButton.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         stopButton.setVisibility(View.VISIBLE);
 
-        stopWasPressed = false;
+        startWasPressed = true;
 
-        if (StepCounterActivity.stepDetect > 0) {
-            textViewStepCounter.setText(String.valueOf(stepCount));
-            textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
+        if (stopWasPressed) {
+            textViewStepDetector.setText("0");
+            stopWasPressed = false;
         }
+
+        setTextViewStepCounter();
+        textViewStepDetector.setText(String.valueOf(detectedStepsCount));
+
     }
 
     public void onStopButton(View view) {
         startButton.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
+
         stopWasPressed = true;
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+            sensorManager.unregisterListener(this, mStepCounter);
+        }
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+            sensorManager.unregisterListener(this, mStepDetector);
+        }
+
+        /* reset activity attributes */
+        startWasPressed = false;
+        initialTotalStepCountWasSet = false;
+        totalStepCountFromBoot = 0;
+        detectedStepsCount = 0;
+        initialTotalStepCountFromBoot = 0;
+
+        /* reset step counter to 0 if its state is loading... */
+        if (textViewStepCounter.getText().toString().contains("loading")) {
+            textViewStepCounter.setText("0");
+        }
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
-            mStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-        } else {
-            makeText(this, "Sensor error: this device does not support activity recognition!", Toast.LENGTH_SHORT).show();
-        }
+        getSensorsAndAddListeners();
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-            mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-            sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
-        } else {
-            makeText(this, "Sensor error: this device does not support activity recognition!", Toast.LENGTH_SHORT).show();
-        }
+        setTextViewStepCounter();
+        textViewStepDetector.setText(String.valueOf(detectedStepsCount));
 
-        textViewStepCounter.setText(String.valueOf(stepCount));
-        textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
-
-        if (StepCounterActivity.nothingWasPressedOnBackButton) {
+        if (startWasPressed) {
             onStartButton(this.findViewById(R.id.startStepCount_StepCounter_Button));
-            StepCounterActivity.nothingWasPressedOnBackButton = false;
         }
     }
 
@@ -147,62 +164,76 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         }
     }
 
+    /**
+     * A sensor of this type returns the number of steps taken by the user since the
+     * last reboot while activated. The value is returned as a float (with the
+     * fractional part set to zero) and is reset to zero only on a system reboot.
+     * @param sensorEvent
+     */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor.equals(mStepCounter)) {
-            stepCount = (int) sensorEvent.values[0];
-            textViewStepCounter.setText(String.valueOf(stepCount));
-        } else if (sensorEvent.sensor.equals(mStepDetector)) {
-            StepCounterActivity.stepDetect = (int) (StepCounterActivity.stepDetect+sensorEvent.values[0]);
-            textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
+        if (!stopWasPressed) {
+            if (sensorEvent.sensor.equals(mStepCounter)) {
+                totalStepCountFromBoot = (int) sensorEvent.values[0];
+                setTextViewStepCounter();
+
+                if (!stepDetectorSensorIsAvailable) {
+                    if (!initialTotalStepCountWasSet) {
+                        initialTotalStepCountFromBoot = (int) sensorEvent.values[0];
+                        initialTotalStepCountWasSet = true;
+                    }
+                    detectedStepsCount = ((int)sensorEvent.values[0] - initialTotalStepCountFromBoot);
+                    textViewStepDetector.setText(String.valueOf(detectedStepsCount));
+                }
+
+            } else if (sensorEvent.sensor.equals(mStepDetector)) {
+                if (stepDetectorSensorIsAvailable) {
+                    detectedStepsCount += 1;
+                    textViewStepDetector.setText(String.valueOf(detectedStepsCount));
+                }
+            }
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-        textViewStepCounter.setText(String.valueOf(stepCount));
-        textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
+        setTextViewStepCounter();
+        textViewStepDetector.setText(String.valueOf(detectedStepsCount));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        textViewStepCounter.setText(String.valueOf(stepCount));
-        textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
-
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+    private void getSensorsAndAddListeners() {
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+            mStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-        }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-            sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
-        }
+            if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+                mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+                sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+                stepDetectorSensorIsAvailable = true;
+            } else {
+                makeText(this, "Attention: this device has no step detector sensor. This causes higher latency and less accurate step count!", Toast.LENGTH_LONG).show();
+                stepDetectorSensorIsAvailable = false;
+            }
 
-        if (stepsHaveToBeRestored) {
-            StepCounterActivity.stepDetect += stepCount - StepCounterActivity.stepCountBeforeUnwantedPause;
-            textViewStepCounter.setText(String.valueOf(stepCount));
-            textViewStepDetector.setText(String.valueOf(StepCounterActivity.stepDetect));
+        } else {
+            makeText(this, "Attention: this device does not support the step counter sensor!", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
-            sensorManager.unregisterListener(this, mStepCounter);
+    private void setTextViewStepCounter() {
+        if (detectedStepsCount > 0) {
+            textViewStepCounter.setText(String.valueOf(totalStepCountFromBoot));
+        } else {
+            if (startWasPressed) {
+                textViewStepCounter.setText("loading...");
+            } else {
+                textViewStepCounter.setText("0");
+            }
         }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-            sensorManager.unregisterListener(this, mStepDetector);
-        }
-
-        if (!stopWasPressed) {
-            stepsHaveToBeRestored = true;
-        }
-        StepCounterActivity.stepCountBeforeUnwantedPause = stepCount;
     }
+
 }
+
+
