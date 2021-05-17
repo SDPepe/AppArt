@@ -65,7 +65,8 @@ public class GooglePlaceService {
 
         return CompletableFuture.supplyAsync(() -> {
            try {
-                return getNearbyPlacesWithDistances(geocoder.getLocation(address).join(), radius, type, top).join();
+               Location location = geocoder.getLocation(address).get();
+               return getNearbyPlacesWithDistances(location, radius, type, top).get();
            } catch (Exception e) {
                throw new CompletionException(e);
            }
@@ -133,7 +134,8 @@ public class GooglePlaceService {
         CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type);
         CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
         placesFuture.thenAccept(places -> {
-            result.complete(places.subList(0, top));
+            int topAdjusted = Math.min(top, places.size());
+            result.complete(places.subList(0, topAdjusted));
         });
         placesFuture.exceptionally(e -> {
             result.completeExceptionally(e);
@@ -213,12 +215,12 @@ public class GooglePlaceService {
                 json = (JSONObject) new JSONTokener(raw).nextValue();
                 String status = (String) json.get("status");
                 if (!status.equals("OK") && !status.equals("ZERO_RESULTS")) {
-                    result.completeExceptionally(new IllegalStateException("failed to get the query"));
+                    result.completeExceptionally(new PlaceServiceException("failed to get the query"));
                 }
                 JSONArray resultsJson = json.getJSONArray("results");
 
                 if (resultsJson == null) {
-                    result.completeExceptionally(new IllegalStateException("failed to convert candidates to json object"));
+                    result.completeExceptionally(new PlaceServiceException("failed to convert candidates to json object"));
                 } else {
                     result.complete(resultsJson);
                 }
