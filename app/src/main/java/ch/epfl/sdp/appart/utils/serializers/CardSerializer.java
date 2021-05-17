@@ -3,16 +3,16 @@ package ch.epfl.sdp.appart.utils.serializers;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 
-public class CardSerializer implements Serializer<Card> {
+public class CardSerializer {
 
-    @Override
-    public Map<String, Object> serialize(Card data) {
+    //To prevent construction
+    private CardSerializer() {
+    }
+
+    public static Map<String, Object> serialize(Card data) {
         Map<String, Object> docData = new HashMap<>();
         docData.put(CardLayout.USER_ID, data.getUserId());
         docData.put(CardLayout.CITY, data.getCity());
@@ -22,11 +22,13 @@ public class CardSerializer implements Serializer<Card> {
         return docData;
     }
 
-    @Override
-    public Card deserialize(String id, Map<String, Object> serializedData) {
-        return new Card(id, (String) serializedData.get(CardLayout.AD_ID), (String) serializedData.get(CardLayout.USER_ID),
-            (String) serializedData.get(CardLayout.CITY),
-            (long) serializedData.get(CardLayout.PRICE),
-            (String) serializedData.get(CardLayout.IMAGE));
+
+    public static Card deserialize(String id,
+                                   Map<String, Object> serializedData) {
+        return new Card(id, (String) serializedData.get(CardLayout.AD_ID),
+                (String) serializedData.get(CardLayout.USER_ID),
+                (String) serializedData.get(CardLayout.CITY),
+                (long) serializedData.get(CardLayout.PRICE),
+                (String) serializedData.get(CardLayout.IMAGE));
     }
 }

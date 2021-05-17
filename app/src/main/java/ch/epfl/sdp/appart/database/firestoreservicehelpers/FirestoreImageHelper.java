@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 
-
 public class FirestoreImageHelper {
 
     private final FirebaseStorage storage;
@@ -33,6 +32,7 @@ public class FirestoreImageHelper {
         StorageReference fileReference = storage.getReference(imagePathAndName);
         fileReference.putFile(uri).addOnCompleteListener(
                 task -> isFinishedFuture.complete(task.isSuccessful()));
+
         return isFinishedFuture;
     }
 
