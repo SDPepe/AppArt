@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 
+import android.widget.Button;
 import android.widget.EditText;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -65,20 +66,19 @@ public class ScrollingActivity extends ToolbarActivity {
 
         //search bar
         mViewModel.getCardsFilter().observe(this, this::updateList);
-
         EditText searchText = (EditText) findViewById(R.id.search_bar_Scrolling_editText);
-
         searchText.addTextChangedListener(new TextWatcher() {
-
             public void afterTextChanged(Editable s) {
                 mViewModel.filter(
                     ((EditText) findViewById(R.id.search_bar_Scrolling_editText)).getText().toString());
             }
-
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
+
+        //filter
+        Button filterBtn = findViewById(R.id.filter_Scrolling_button);
+        filterBtn.setOnClickListener(v -> onFilterButtonAction());
 
     }
 
@@ -103,6 +103,14 @@ public class ScrollingActivity extends ToolbarActivity {
     private void onFloatingButtonAction() {
         //AdCreationActivity.class
         Intent intent = new Intent(this, configuration.demoModeSelector(AdCreationActivity.class, AdCreationActivityDemo.class));
+        startActivity(intent);
+    }
+
+    /**
+     * Opens the Filter activity.
+     */
+    private void onFilterButtonAction() {
+        Intent intent = new Intent(this, FilterActivity.class);
         startActivity(intent);
     }
 
