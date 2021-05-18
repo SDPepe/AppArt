@@ -548,6 +548,17 @@ public class LocalDatabase {
     }
 
     /**
+     * Clears data relative to the current user.
+     * <p>
+     * Used at logout.
+     */
+    public void clearCurrentUser() {
+        FileIO.deleteDirectory(new File(LocalDatabasePaths.currentUserFolder(
+                currentUser.getUserId())));
+        this.currentUser = null;
+    }
+
+    /**
      * This returns the list of panoramas paths for a specific ad.
      *
      * @param adID the id of the ad

@@ -13,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -28,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Inject
     LoginService loginService;
+    @Inject
+    LocalDatabase localdb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +43,9 @@ public class LoginActivity extends AppCompatActivity {
          * with the local currentUser.
          * If no currentUser is stored locally, ask for login credentials as we did before.
          */
-        // TODO get current user from local db
-        User user = /*localDB.getCurrentUser()*/new AppUser("replace", "this");
+        User user = localdb.getCurrentUser();
 
         if (user != null){
-            // TODO try to fetch from db and update current user if successful
             startScrollingActivity();
         } else {
             Bundle extras = this.getIntent().getExtras();
