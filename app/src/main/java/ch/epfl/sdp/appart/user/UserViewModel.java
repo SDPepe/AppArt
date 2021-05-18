@@ -147,14 +147,20 @@ public class UserViewModel extends ViewModel {
      */
     public CompletableFuture<Void> getCurrentUser() {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        User user = localdb.getCurrentUser();
+        User user;
+        try {
+            user = localdb.getCurrentUser();
+        } catch (IllegalStateException e) {
+            user = null;
+        }
         if (user != null) mUser.setValue(user);
 
+        User finalUser = user;
         db.getUser(ls.getCurrentUser().getUserId())
                 .exceptionally(e -> {
                     Log.d("GET USER", "DATABASE FAIL");
                     // if no currentUser in localDB and server fetch failed, set value to null
-                    if (user == null) mUser.setValue(null);
+                    if (finalUser == null) mUser.setValue(null);
                     result.completeExceptionally(e);
                     return null;
                 })

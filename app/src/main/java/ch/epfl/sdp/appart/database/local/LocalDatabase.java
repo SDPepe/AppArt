@@ -317,11 +317,24 @@ public class LocalDatabase implements LocalDatabaseService {
         //Basically we reach this point even though firstLoad is true
         clearMemory();
 
+        String currentUserId;
+
+        try {
+            currentUserId  = getCurrentUser().getUserId();
+        } catch (IllegalStateException e) {
+            currentUserId = null;
+        }
+        if (currentUser == null) {
+            CompletableFuture<T> res = new CompletableFuture<>();
+            res.complete(null);
+            return res;
+        }
+
         CompletableFuture<Void> futureReadAd =
-                LocalAdReader.readAdDataForAUser(getCurrentUser().getUserId()
+                LocalAdReader.readAdDataForAUser(currentUserId
                         , this.cards, this.idsToAd, this.adIdsToPanoramas);
         CompletableFuture<Void> futureReadUser =
-                LocalUserReader.readUsers(getCurrentUser().getUserId(),
+                LocalUserReader.readUsers(currentUserId,
                         this.idsToUser, this.userIds);
 
         CompletableFuture<Void> combinedFuture =

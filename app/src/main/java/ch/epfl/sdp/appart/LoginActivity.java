@@ -1,20 +1,27 @@
 package ch.epfl.sdp.appart;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -32,6 +39,10 @@ public class LoginActivity extends AppCompatActivity {
     LoginService loginService;
     @Inject
     LocalDatabaseService localdb;
+    @Inject
+    DatabaseService database;
+
+    private View progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +55,44 @@ public class LoginActivity extends AppCompatActivity {
          * with the local currentUser.
          * If no currentUser is stored locally, ask for login credentials as we did before.
          */
-        User user = localdb.getCurrentUser();
-
-        if (user != null){
-            startScrollingActivity();
+        progressBar = findViewById(R.id.progress_Login_ProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        String email = SharedPreferencesHelper.getSavedEmail(this);
+        if (!email.equals("")) {
+            String password = SharedPreferencesHelper.getSavedPassword(this);
+            loginService.loginWithEmail(email, password)
+                    .exceptionally(e -> {
+                        progressBar.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        startScrollingActivity();
+                        return null;
+                    })
+                    .thenAccept(user -> {
+                        saveLoggedUser(user);
+                        progressBar.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        startScrollingActivity();
+                    });
         } else {
+            progressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             Bundle extras = this.getIntent().getExtras();
-            if(extras != null && extras.containsKey(ActivityCommunicationLayout.PROVIDING_EMAIL)  && extras.containsKey(ActivityCommunicationLayout.PROVIDING_PASSWORD)){
-                ((EditText)findViewById(R.id.email_Login_editText)).setText(extras.getString(ActivityCommunicationLayout.PROVIDING_EMAIL));
-                ((EditText)findViewById(R.id.password_Login_editText)).setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
+            if (extras != null && extras.containsKey(ActivityCommunicationLayout.PROVIDING_EMAIL) &&
+                    extras.containsKey(ActivityCommunicationLayout.PROVIDING_PASSWORD)) {
+                ((EditText) findViewById(R.id.email_Login_editText))
+                        .setText(extras.getString(ActivityCommunicationLayout.PROVIDING_EMAIL));
+                ((EditText) findViewById(R.id.password_Login_editText))
+                        .setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
             }
         }
     }
 
     /**
      * Method called when the login button is pushed
-     * Given the email and the password in the corresponding views, login with firebase, or show a popup if it failed to connect
+     * Given the email and the password in the corresponding views, login with firebase, or show
+     * a popup if it failed to connect
      *
      * @param view
      */
@@ -70,27 +103,33 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
-        ProgressBar progressBar = findViewById(R.id.progress_Login_ProgressBar);
         progressBar.setVisibility(View.VISIBLE);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
 
-        CompletableFuture<User> loginFuture = loginService.loginWithEmail(email, password);
-        loginFuture.exceptionally(e -> {
-            UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
-            progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-
-            return null;
-        });
-        loginFuture.thenAccept(user ->  {
-            progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            startScrollingActivity();
-        });
+        loginService.loginWithEmail(email, password)
+                .exceptionally(e -> {
+                    UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
+                    progressBar.setVisibility(View.GONE);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    return null;
+                })
+                .thenAccept(user -> {
+                    SharedPreferencesHelper.saveUserForAutoLogin(this, email, password);
+                    saveLoggedUser(user)
+                            .exceptionally(e -> {
+                                progressBar.setVisibility(View.GONE);
+                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                Toast.makeText(this, R.string.saveUserFail_Login,
+                                        Toast.LENGTH_SHORT).show();
+                                return null;
+                            })
+                            .thenAccept(res -> {
+                                startScrollingActivity();
+                            });
+                });
 
     }
 
@@ -107,7 +146,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Method called when the forgotten password button is pushed
-     * Takes the user to the reset password page, where he can put his address mail and change his password
+     * Takes the user to the reset password page, where he can put his address mail and change
+     * his password
      *
      * @param view
      */
@@ -116,8 +156,38 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startScrollingActivity(){
+    private void startScrollingActivity() {
         Intent intent = new Intent(this, ScrollingActivity.class);
         startActivity(intent);
+    }
+
+    private CompletableFuture<Void> saveLoggedUser(User user) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<Bitmap> pfpRes = new CompletableFuture<>();
+        database.getUser(user.getUserId())
+                .exceptionally(e -> {
+                    result.completeExceptionally(e);
+                    return null;
+                })
+                .thenAccept(u -> {
+                    database.accept(new GlideBitmapLoader(
+                            this, pfpRes, u.getProfileImagePathAndName()));
+                    pfpRes
+                            .exceptionally(e -> {
+                                result.completeExceptionally(e);
+                                return null;
+                            })
+                            .thenAccept(bitmap -> {
+                                localdb.setCurrentUser(u, bitmap)
+                                        .exceptionally(e -> {
+                                            result.completeExceptionally(e);
+                                            return null;
+                                        })
+                                        .thenAccept(res -> {
+                                            result.complete(null);
+                                        });
+                            });
+                });
+        return result;
     }
 }

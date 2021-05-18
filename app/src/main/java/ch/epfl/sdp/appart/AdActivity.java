@@ -220,12 +220,12 @@ public class AdActivity extends ToolbarActivity {
             addNewFavorite()
                     .exceptionally(e -> {
                         Toast.makeText(this, e.getMessage(),
-                                Toast.LENGTH_SHORT);
+                                Toast.LENGTH_SHORT).show();
                         return null;
                     })
                     .thenAccept(res ->
                             Toast.makeText(this, R.string.favSuccess_Ad,
-                                    Toast.LENGTH_SHORT)
+                                    Toast.LENGTH_SHORT).show()
                     );
             return true;
         }
