@@ -24,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.Gender;
@@ -51,7 +52,7 @@ public class UserProfileActivity extends AppCompatActivity {
     DatabaseService database;
 
     @Inject
-    LocalDatabase localdb;
+    LocalDatabaseService localdb;
 
     /* UI components */
     private Button modifyButton;

@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.User;
@@ -37,10 +38,10 @@ public class FavoriteViewModel extends ViewModel {
     private final MutableLiveData<List<Card>> lFavorites = new MutableLiveData<>();
     final DatabaseService database;
     final LoginService loginService;
-    final LocalDatabase localdb;
+    final LocalDatabaseService localdb;
 
     @Inject
-    public FavoriteViewModel(DatabaseService database, LoginService loginService, LocalDatabase localdb) {
+    public FavoriteViewModel(DatabaseService database, LoginService loginService, LocalDatabaseService localdb) {
         this.database = database;
         this.loginService = loginService;
         this.localdb = localdb;

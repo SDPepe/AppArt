@@ -8,6 +8,7 @@ import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import ch.epfl.sdp.appart.login.LoginService;
@@ -37,7 +38,7 @@ public class FavoriteActivity extends ToolbarActivity {
     @Inject
     LoginService login;
     @Inject
-    LocalDatabase localdb;
+    LocalDatabaseService localdb;
     private RecyclerView recyclerView;
     private FavoriteViewModel mViewModel;
 

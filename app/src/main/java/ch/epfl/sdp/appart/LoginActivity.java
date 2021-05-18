@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -30,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     @Inject
     LoginService loginService;
     @Inject
-    LocalDatabase localdb;
+    LocalDatabaseService localdb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

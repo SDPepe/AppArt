@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import kotlin.NotImplementedError;
 
@@ -30,7 +31,7 @@ import kotlin.NotImplementedError;
 public class AdViewModel extends ViewModel {
 
     final DatabaseService db;
-    final LocalDatabase localdb;
+    final LocalDatabaseService localdb;
     private Ad ad;
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
@@ -42,7 +43,7 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
 
     @Inject
-    public AdViewModel(DatabaseService db, LocalDatabase localdb) {
+    public AdViewModel(DatabaseService db, LocalDatabaseService localdb) {
         this.db = db;
         this.localdb = localdb;
     }

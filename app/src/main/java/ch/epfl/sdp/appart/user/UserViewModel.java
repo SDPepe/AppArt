@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -31,11 +32,11 @@ public class UserViewModel extends ViewModel {
 
     final DatabaseService db;
     final LoginService ls;
-    final LocalDatabase localdb;
+    final LocalDatabaseService localdb;
 
     @Inject
     public UserViewModel(DatabaseService database, LoginService loginService,
-                         LocalDatabase localdb) {
+                         LocalDatabaseService localdb) {
 
         this.db = database;
         this.ls = loginService;

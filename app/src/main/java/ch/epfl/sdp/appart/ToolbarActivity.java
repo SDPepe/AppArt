@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.Lazy;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -26,7 +27,7 @@ public abstract class ToolbarActivity extends AppCompatActivity {
     @Inject
     LoginService loginService;
     @Inject
-    LocalDatabase localdb;
+    LocalDatabaseService localdb;
 
     /**
      * Sets the toolbar as the main menu

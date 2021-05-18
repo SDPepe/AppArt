@@ -5,8 +5,7 @@ import android.content.Context;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
-import ch.epfl.sdp.appart.login.FirebaseLoginService;
-import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -20,7 +19,7 @@ public abstract class LocalDatabaseModule {
 
     @Singleton
     @Binds
-    public abstract LocalDatabase bindLocalDatabaseService(LocalDatabase localDatabase);
+    public abstract LocalDatabaseService bindLocalDatabaseService(LocalDatabase localDatabase);
 
     @Singleton
     @Provides

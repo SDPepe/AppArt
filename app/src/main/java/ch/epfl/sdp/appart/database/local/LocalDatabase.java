@@ -54,7 +54,7 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 // @formatter:on
 
 @Singleton
-public class LocalDatabase {
+public class LocalDatabase implements LocalDatabaseService {
 
     /*
         Keys for the different maps.
