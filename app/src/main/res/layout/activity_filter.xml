@@ -68,10 +68,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-          android:id="@+id/value_min_price__Filter_TextView"
+          android:id="@+id/value_min_price__Filter_editText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:hint="0000" />
+          android:hint="0000"
+          android:inputType="number"/>
         <TextView
           android:id="@+id/chf_min_Filter_TextView"
           android:layout_width="match_parent"
@@ -95,10 +96,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-          android:id="@+id/value_max_price_Filter_TextView"
+          android:id="@+id/value_max_price_Filter_editText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:hint="0000" />
+          android:hint="0000"
+          android:inputType="number"/>
         <TextView
           android:id="@+id/chf_max_Filter_TextView"
           android:layout_width="match_parent"
@@ -131,7 +133,7 @@
     app:layout_constraintTop_toBottomOf="@+id/location_title_Filter_textView">
 
     <EditText
-      android:id="@+id/location_Filter_TextView"
+      android:id="@+id/location_Filter_editText"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
       android:layout_weight="1"
@@ -153,10 +155,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-          android:id="@+id/value_range_Filter_TextView"
+          android:id="@+id/value_range_Filter_editText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:hint="0000" />
+          android:hint="0000"
+          android:inputType="number"
+          />
         <TextView
           android:id="@+id/km_Filter_TextView"
           android:layout_width="match_parent"

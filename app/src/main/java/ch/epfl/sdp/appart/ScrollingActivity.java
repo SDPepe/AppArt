@@ -1,6 +1,9 @@
 package ch.epfl.sdp.appart;
 
+import static android.widget.Toast.makeText;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,15 +14,20 @@ import android.view.View;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
@@ -34,6 +42,8 @@ import dagger.hilt.android.AndroidEntryPoint;
  */
 @AndroidEntryPoint
 public class ScrollingActivity extends ToolbarActivity {
+
+    ScrollingViewModel mViewModel;
 
     @Inject
     DatabaseService database;
@@ -51,7 +61,7 @@ public class ScrollingActivity extends ToolbarActivity {
         Toolbar toolbar = findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
 
-        ScrollingViewModel mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
 
         mViewModel.initHome();
 
@@ -109,9 +119,37 @@ public class ScrollingActivity extends ToolbarActivity {
     /**
      * Opens the Filter activity.
      */
+    @SuppressWarnings("deprecation")
     private void onFilterButtonAction() {
         Intent intent = new Intent(this, FilterActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1){
+            if (resultCode == RESULT_OK) {
+                int size = data.getIntExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
+                if(size >0) {
+                    List<String> filterCardsId = new ArrayList<>();
+                    for (int i = 0; i < size; i++) {
+                        filterCardsId.add(data.getStringExtra(
+                            ActivityCommunicationLayout.PROVIDING_CARD_ID + i));
+                    }
+                    CompletableFuture<List<Card>> allCards = database.getCardsById(filterCardsId);
+                    allCards.thenAccept(this::updateList
+                    ).exceptionally(e -> {
+                        makeText(this, "Error in loading the image, try again!", Toast.LENGTH_SHORT)
+                            .show();
+                        return null;
+                    });
+                }
+                else {
+                    mViewModel.initHome();
+                }
+            }
+        }
     }
 
 }

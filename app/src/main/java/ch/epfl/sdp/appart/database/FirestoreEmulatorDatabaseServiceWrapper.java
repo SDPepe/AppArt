@@ -46,6 +46,18 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
        return this.db.getCardsFilter(location);
     }
 
+    @NonNull
+    @Override
+    public CompletableFuture<List<Card>> getCardsFilterPrice(int min, int max) {
+        return this.db.getCardsFilterPrice(min, max);
+    }
+
+    @NonNull
+    @Override
+    public CompletableFuture<List<Card>> getCardsById(@NonNull List<String> ids) {
+        return this.db.getCardsById(ids);
+    }
+
     @NotNull
     @NonNull
     @Override
