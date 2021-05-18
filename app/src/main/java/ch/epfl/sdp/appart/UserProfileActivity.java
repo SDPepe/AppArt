@@ -50,7 +50,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
-
     @Inject
     LocalDatabaseService localdb;
 
