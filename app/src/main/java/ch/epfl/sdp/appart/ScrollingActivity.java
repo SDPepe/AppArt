@@ -130,25 +130,28 @@ public class ScrollingActivity extends ToolbarActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
-                int size = data.getIntExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
-                if(size >0) {
-                    List<String> filterCardsId = new ArrayList<>();
-                    for (int i = 0; i < size; i++) {
-                        filterCardsId.add(data.getStringExtra(
-                            ActivityCommunicationLayout.PROVIDING_CARD_ID + i));
-                    }
-                    CompletableFuture<List<Card>> allCards = database.getCardsById(filterCardsId);
-                    allCards.thenAccept(this::updateList
-                    ).exceptionally(e -> {
-                        makeText(this, "Error in loading the image, try again!", Toast.LENGTH_SHORT)
-                            .show();
-                        return null;
-                    });
-                }
-                else {
-                    mViewModel.initHome();
-                }
+                handeleResult(data);
+
             }
+        }
+    }
+    private void handeleResult(Intent data){
+        int size = data.getIntExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
+        if(size > 0) {
+            List<String> filterCardsId = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                filterCardsId.add(data.getStringExtra(
+                    ActivityCommunicationLayout.PROVIDING_CARD_ID + i));
+            }
+            CompletableFuture<List<Card>> allCards = database.getCardsById(filterCardsId);
+            allCards.thenAccept(this::updateList
+            ).exceptionally(e -> {
+                makeText(this, "Error in loading the image, try again!", Toast.LENGTH_SHORT)
+                    .show();
+                return null;
+            });
+        } else {
+            mViewModel.initHome();
         }
     }
 
