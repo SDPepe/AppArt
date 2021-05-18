@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModel;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.User;
@@ -36,11 +37,13 @@ public class FavoriteViewModel extends ViewModel {
     private final MutableLiveData<List<Card>> lFavorites = new MutableLiveData<>();
     final DatabaseService database;
     final LoginService loginService;
+    final LocalDatabase localdb;
 
     @Inject
-    public FavoriteViewModel(DatabaseService database, LoginService loginService) {
+    public FavoriteViewModel(DatabaseService database, LoginService loginService, LocalDatabase localdb) {
         this.database = database;
         this.loginService = loginService;
+        this.localdb = localdb;
     }
 
     /**
@@ -62,7 +65,7 @@ public class FavoriteViewModel extends ViewModel {
                 // after local load fetch from databaseservice and update content
                 // try to fetch even if local load fails
                 .whenComplete((e, res) ->
-                        fetchAndUpdate()
+                        fetch()
                                 .exceptionally(e1 -> {
                                     result.completeExceptionally(e1);
                                     return null;
@@ -87,14 +90,23 @@ public class FavoriteViewModel extends ViewModel {
      * Loads content from local database
      */
     private CompletableFuture<Void> localLoad() {
-        // TODO use antoine API to load cards from local db
-        throw new NotImplementedError();
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        localdb.getCards()
+                .exceptionally(e -> {
+                    result.completeExceptionally(e);
+                    return null;
+                })
+                .thenAccept(cards -> {
+                    lFavorites.setValue(cards);
+                    result.complete(null);
+                });
+        return result;
     }
 
     /**
      * Fetches info from the DatabaseService and if successful updates the local database
      */
-    private CompletableFuture<Void> fetchAndUpdate() {
+    private CompletableFuture<Void> fetch() {
         CompletableFuture<Void> result = new CompletableFuture<>();
 
         // if any exception, complete exceptionally.
@@ -114,7 +126,8 @@ public class FavoriteViewModel extends ViewModel {
                                 return null;
                             })
                             .thenAccept(cs -> {
-                                filterAndUpdate(result, u, cs);
+                                filter(u, cs);
+                                result.complete(null);
                             });
                 });
 
@@ -124,7 +137,7 @@ public class FavoriteViewModel extends ViewModel {
     /**
      * Filters cards with user favorites, then sets values and updates the local database
      */
-    private void filterAndUpdate(CompletableFuture<Void> result, User user, List<Card> cards) {
+    private void filter(User user, List<Card> cards) {
         Set<String> favoritesIds = user.getFavoritesIds();
         List<Card> filteredCards = new LinkedList<>();
         for (Card c : cards) {
@@ -132,22 +145,6 @@ public class FavoriteViewModel extends ViewModel {
                 filteredCards.add(c);
         }
         lFavorites.setValue(filteredCards);
-        updateLocalDB(filteredCards)
-                .exceptionally(e -> {
-                    result.completeExceptionally(e);
-                    return null;
-                })
-                .thenAccept(res -> {
-                    result.complete(null);
-                });
     }
 
-    /**
-     * Retrieves the complete ads from the favorite cards, then updates the local database
-     */
-    private CompletableFuture<Void> updateLocalDB(List<Card> cards) {
-        // TODO get ads from cards
-        // TODO use antoine API to write ads
-        throw new NotImplementedError();
-    }
 }

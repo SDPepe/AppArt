@@ -274,7 +274,7 @@ public class AdActivity extends ToolbarActivity {
                                             return null;
                                         })
                                         .thenAccept(ignoredRes -> {
-                                            panoramas.addAll(panoramasRes.stream().map(fut -> fut.join())
+                                            panoramas.addAll(panoramasRes.stream().map(CompletableFuture::join)
                                                     .collect(Collectors.toList()));
                                             localdb.writeCompleteAd(adId,
                                                     getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID),

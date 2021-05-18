@@ -146,4 +146,7 @@
 
     <!-- FullScreenImageActivity stuff -->
     <string name="contentDescFullScreenImage">Photo</string>
+
+    <!-- FullScreenImageActivity stuff -->
+    <string name="localSaved_Favorite">Failed to save locally the new favorites</string>
 </resources>
