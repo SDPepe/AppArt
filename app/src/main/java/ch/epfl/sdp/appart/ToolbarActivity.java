@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.login.LoginService;
+import dagger.Lazy;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**

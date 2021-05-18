@@ -37,6 +37,7 @@ import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.StoragePathBuilder;
+import dagger.Lazy;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -51,8 +52,8 @@ public class AdActivity extends ToolbarActivity {
     @Inject
     LoginService login;
 
-    @Inject
-    LocalDatabase localdb;
+    //@Inject
+    //LocalDatabase localdb;
 
     public static class Intents {
         public static final String INTENT_PANORAMA_PICTURES = "panoramas_pictures_references";
