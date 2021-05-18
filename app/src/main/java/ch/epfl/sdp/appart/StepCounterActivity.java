@@ -51,7 +51,6 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     private static int totalStepCountFromBoot = 0;
     /* these values are updated with the STEP_DETECTOR sensor */
     private static int detectedStepsCount = 0;
-    private static double detectedStepsInMeters = 0.0;
 
     /* number of steps registered by STEP_COUNT on start button pressed */
     private static int initialTotalStepCountFromBoot = 0;
