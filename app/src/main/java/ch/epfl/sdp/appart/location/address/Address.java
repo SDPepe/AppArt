@@ -4,6 +4,10 @@ import java.util.Objects;
 
 import ch.epfl.sdp.appart.location.Location;
 
+/**
+ * Represent an address. This class is only a container and does not contains any logic.
+ * Checking format is deferred to the Factory.
+ */
 public class Address {
 
     private final String formattedAddress;
@@ -12,9 +16,9 @@ public class Address {
     private final String postalCode;
 
     protected Address(String street, String postalCode, String locality) {
-        this.street = street.trim();
-        this.locality = locality.trim();
-        this.postalCode = postalCode.trim();
+        this.street = street;
+        this.locality = locality;
+        this.postalCode = postalCode;
 
         StringBuilder sb = new StringBuilder();
         formattedAddress  = sb.append(this.street)
@@ -25,14 +29,14 @@ public class Address {
     }
 
     protected Address(String street, String locality) {
-        this.street = street.trim();
-        this.locality = locality.trim();
+        this.street = street;
+        this.locality = locality;
         this.postalCode = null;
 
         StringBuilder sb = new StringBuilder();
-        formattedAddress  = sb.append(street.trim())
+        formattedAddress  = sb.append(street)
                 .append(", ")
-                .append(locality.trim()).toString();
+                .append(locality).toString();
     }
 
     public String getAddress() {

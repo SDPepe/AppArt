@@ -1,52 +1,37 @@
 package ch.epfl.sdp.appart.place;
 
-import android.content.Context;
 import android.util.Pair;
-
-import com.google.android.libraries.places.api.Places;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.inject.Inject;
-import javax.net.ssl.HttpsURLConnection;
 
-import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
-import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
 import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.address.Address;
-import ch.epfl.sdp.appart.place.helper.GooglePlaceHelper;
+import ch.epfl.sdp.appart.place.helper.PlaceHelper;
 import dagger.hilt.android.scopes.ActivityScoped;
-import kotlin.ranges.IntRange;
 
 @ActivityScoped
-public class GooglePlaceService {
+public class PlaceService {
 
     private final GeocodingService geocoder;
-    private final GooglePlaceHelper helper;
+    private final PlaceHelper helper;
 
     @Inject
-    public GooglePlaceService(GooglePlaceHelper helper, GeocodingService geocoder) {
+    public PlaceService(PlaceHelper helper, GeocodingService geocoder) {
         this.helper = helper;
         this.geocoder = geocoder;
     }

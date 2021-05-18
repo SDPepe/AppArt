@@ -21,7 +21,7 @@ import ch.epfl.sdp.appart.location.Location;
 /**
  * Allows to make a query to Google API by using an http request and returns a Json string.
  */
-public class HttpGooglePlaceHelper implements GooglePlaceHelper {
+public class HttpGooglePlaceHelper implements PlaceHelper {
 
     private final String apiKey;
 

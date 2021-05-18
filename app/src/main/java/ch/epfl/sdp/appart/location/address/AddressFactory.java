@@ -3,6 +3,19 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A factory to instantiate the Addresses. It also checks for a correct address format with regex.
+ * Some valid address examples :
+ * - Rue du chat 1c, 1324 Renens
+ * - Place du chat 1, Lausanne
+ * - Rue du Chat 2ABC, Zürich
+ *
+ * Regex form for a complete address with postal code :
+ * ^[a-zA-ZÀ-ÿ '-]+\d+[a-zA-Z]?, ?\d{4} [a-zA-ZÀ-ÿ '-]+$
+ *
+ * Regex form for a complete address without postal code :
+ * ^[a-zA-ZÀ-ÿ '-]+\d+[a-zA-Z]?, ?[a-zA-ZÀ-ÿ '-]+$
+ */
 public class AddressFactory {
 
     private static final String LOCALITY_PATTERN = "[a-zA-ZÀ-ÿ '-]+";
@@ -19,6 +32,13 @@ public class AddressFactory {
 
     private AddressFactory() {}
 
+    /**
+     * Make and check an address with the given field.
+     * @param street
+     * @param postalCode
+     * @param locality
+     * @return
+     */
     public static Address makeAddress(String street, String postalCode, String locality) {
 
         String streetFiltered = street.trim();
@@ -40,6 +60,11 @@ public class AddressFactory {
         return new Address(streetFiltered, localityFiltered, postalCodeFiltered);
     }
 
+    /**
+     * Make and check the address format
+     * @param address
+     * @return
+     */
     public static Address makeAddress(String address) {
 
         String filteredAddress = address.trim();
@@ -57,9 +82,9 @@ public class AddressFactory {
             streetMatcher.find();
             postalCodeMatcher.find();
             localityMatcher.find();
-            String street = streetMatcher.group();
-            String postalCode = postalCodeMatcher.group();
-            String locality = localityMatcher.group();
+            String street = streetMatcher.group().trim();
+            String postalCode = postalCodeMatcher.group().trim();
+            String locality = localityMatcher.group().trim();
 
             return new Address(street, postalCode, locality);
 
@@ -70,8 +95,8 @@ public class AddressFactory {
             //we can find and match safely
             streetMatcher.find();
             localityMatcher.find();
-            String street = streetMatcher.group();
-            String locality = localityMatcher.group();
+            String street = streetMatcher.group().trim();
+            String locality = localityMatcher.group().trim();
             return new Address(street, locality);
 
         }
@@ -81,6 +106,12 @@ public class AddressFactory {
 
     }
 
+    /**
+     * Make an address and returns the result of the supplier if the address format was not correct.
+     * @param address
+     * @param orElse
+     * @return
+     */
     public static Address makeAddressOrElse(String address, Supplier<Address> orElse) {
         try {
             return makeAddress(address);
@@ -89,6 +120,14 @@ public class AddressFactory {
         }
     }
 
+    /**
+     * Make an address and returns the result of the supplier if the address format was not correct.
+     * @param street
+     * @param postalCode
+     * @param locality
+     * @param orElse
+     * @return
+     */
     public static Address makeAddressOrElse(String street, String postalCode, String locality, Supplier<Address> orElse) {
         try {
             return makeAddress(street, postalCode, locality);

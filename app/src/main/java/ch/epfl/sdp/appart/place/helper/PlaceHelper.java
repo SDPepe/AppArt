@@ -5,10 +5,10 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.location.Location;
 
-public interface GooglePlaceHelper {
+public interface PlaceHelper {
 
     /**
-     * Based on the sdp project. Make a query to google place service to retrieve the place.
+     * Based on the sdp project. Make a query to the in place service to retrieve the place.
      * @return an Json String containing the data.
      * @throws IOException
      */

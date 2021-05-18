@@ -3,8 +3,6 @@ package ch.epfl.sdp.appart;
 import android.content.Context;
 import android.util.Pair;
 
-import androidx.test.espresso.intent.Intents;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Before;
@@ -19,20 +17,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import ch.epfl.sdp.appart.AdCreationActivity;
-import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import ch.epfl.sdp.appart.hilt.LoginModule;
-import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.address.Address;
 import ch.epfl.sdp.appart.location.address.AddressFactory;
 import ch.epfl.sdp.appart.location.geocoding.MockGeocodingService;
-import ch.epfl.sdp.appart.place.GooglePlaceService;
+import ch.epfl.sdp.appart.place.PlaceService;
 import ch.epfl.sdp.appart.place.PlaceOfInterest;
 import ch.epfl.sdp.appart.place.PlaceServiceException;
-import ch.epfl.sdp.appart.place.helper.MockGooglePlaceServiceHelper;
+import ch.epfl.sdp.appart.place.helper.MockPlaceServiceHelper;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
-import dagger.hilt.android.testing.UninstallModules;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -47,21 +41,21 @@ public class PlaceServiceTest {
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
-    private GooglePlaceService placeService;
-    private MockGooglePlaceServiceHelper helper;
+    private PlaceService placeService;
+    private MockPlaceServiceHelper helper;
     private final Address a = AddressFactory.makeAddress("rue du chat 19, 1328 Renens");
 
     @Before
     public void init() {
         hiltRule.inject();
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        helper = new MockGooglePlaceServiceHelper(context);
-        placeService = new GooglePlaceService(helper, new MockGeocodingService());
+        helper = new MockPlaceServiceHelper(context);
+        placeService = new PlaceService(helper, new MockGeocodingService());
     }
 
     @Test
     public void retrieveMockedPlaces() {
-        helper.setMockMode(MockGooglePlaceServiceHelper.MockMode.VALID);
+        helper.setMockMode(MockPlaceServiceHelper.MockMode.VALID);
         try {
 
             List<Pair<PlaceOfInterest, Float>> places =
@@ -82,7 +76,7 @@ public class PlaceServiceTest {
 
     @Test
     public void retrieveMockedPlacesFails() {
-        helper.setMockMode(MockGooglePlaceServiceHelper.MockMode.INVALID);
+        helper.setMockMode(MockPlaceServiceHelper.MockMode.INVALID);
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> future = null;
         try {
             future = placeService.getNearbyPlacesWithDistances(a, 100, "restaurant", 20);
@@ -103,7 +97,7 @@ public class PlaceServiceTest {
 
     @Test
     public void retrieveMockedPlacesEmpty() {
-        helper.setMockMode(MockGooglePlaceServiceHelper.MockMode.EMPTY);
+        helper.setMockMode(MockPlaceServiceHelper.MockMode.EMPTY);
         boolean hasFailed = false;
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> future = null;
         List<Pair<PlaceOfInterest, Float>> result = null;

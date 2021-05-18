@@ -8,19 +8,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.address.Address;
 
 /**
  * Mock of the google place helper. Allows to return the same dummy json string while testing.
  */
-public class MockGooglePlaceServiceHelper implements GooglePlaceHelper {
+public class MockPlaceServiceHelper implements PlaceHelper {
 
     private final String dummyValidOutput;
     private final String dummyInvalidOutput;
@@ -29,13 +27,14 @@ public class MockGooglePlaceServiceHelper implements GooglePlaceHelper {
 
     public enum MockMode {VALID, EMPTY, INVALID }
 
-    public MockGooglePlaceServiceHelper(Context context) {
+    public MockPlaceServiceHelper(Context context) {
         this.dummyValidOutput = loadRawJson(context, R.raw.mocked_google_place_output);
         this.dummyInvalidOutput = loadRawJson(context, R.raw.mocked_google_place_output_failure);
         this.dummyEmptyOutput = loadRawJson(context, R.raw.mocked_google_place_output_no_results);
         resultPointer = this.dummyValidOutput;
     }
 
+    //from https://stackoverflow.com/questions/6349759/using-json-file-in-android-app-resources
     private String loadRawJson(Context context, int id) {
         InputStream is = context.getResources().openRawResource(id);
         Writer writer = new StringWriter();
@@ -58,6 +57,10 @@ public class MockGooglePlaceServiceHelper implements GooglePlaceHelper {
         return writer.toString();
     }
 
+    /**
+     * Allows to select which type of json output will be sent on any subsequent request.
+     * @param mode
+     */
     public void setMockMode(MockMode mode) {
         if (mode == MockMode.VALID) {
             resultPointer = dummyValidOutput;
