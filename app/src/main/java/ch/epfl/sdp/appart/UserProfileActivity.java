@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import javax.inject.Inject;
@@ -16,8 +18,13 @@ import javax.inject.Inject;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.concurrent.CompletableFuture;
+
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
@@ -42,6 +49,9 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
+
+    @Inject
+    LocalDatabase localdb;
 
     /* UI components */
     private Button modifyButton;
@@ -129,7 +139,8 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     public void changeProfileImage(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME,
+                ActivityCommunicationLayout.USER_PROFILE_ACTIVITY);
         startActivityForResult(intent, 1);
     }
 
@@ -144,7 +155,8 @@ public class UserProfileActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 this.doneButton.setEnabled(false);
-                Uri profileUri = data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI);
+                Uri profileUri =
+                        data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI);
                 mViewModel.setUri(profileUri);
                 imageView.setImageURI(profileUri);
                 mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
@@ -158,7 +170,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .append(FirebaseLayout.PROFILE_IMAGE_NAME)
                         .append(System.currentTimeMillis())
                         .append(FirebaseLayout.JPEG);
-                        // TODO: support more image formats
+                // TODO: support more image formats
 
                 this.sessionUser.setProfileImagePathAndName(imagePathInDb.toString());
                 mViewModel.updateImage(this.sessionUser.getUserId());
@@ -177,8 +189,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         /* disable editing text in all UI components*/
         enableDisableEntries();
-
         setSessionUserToDatabase(view);
+        saveUserLocally();
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
@@ -187,13 +199,11 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param user sets the value of the current user to the session user object
      */
-    private void setSessionUserToLocal(User user){
+    private void setSessionUserToLocal(User user) {
         this.sessionUser = user;
 
-        // TODO if user null show toast -> means no user in localDB and server fetch failed
         /* set attributes of session user to the UI components */
         getAndSetCurrentAttributes();
     }
@@ -208,7 +218,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void imageUpdateResult(Boolean updateResult) {
         if (!updateResult) {
-            UIUtils.makeSnakeForUserUpdateFailed(this.doneButton, R.string.updateUserImageFailedInDB);
+            UIUtils.makeSnakeForUserUpdateFailed(this.doneButton,
+                    R.string.updateUserImageFailedInDB);
         }
         this.doneButton.setEnabled(true);
     }
@@ -237,7 +248,8 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the new attributes to the session User (local)
      */
     private void setNewAttributes() {
-        String ageString = ((EditText) findViewById(R.id.age_UserProfile_editText)).getText().toString().trim();
+        String ageString =
+                ((EditText) findViewById(R.id.age_UserProfile_editText)).getText().toString().trim();
         if (!ageString.equals("")) {
             this.sessionUser.setAge(Integer.parseInt(ageString));
         } else {
@@ -263,7 +275,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private void getAndSetCurrentAttributes() {
         this.nameEditText.setText(this.sessionUser.getName());
         this.emailTextView.setText(this.sessionUser.getUserEmail());
-        this.uniAccountClaimer.setText((this.sessionUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
+        this.uniAccountClaimer.setText((this.sessionUser.hasUniversityEmail() ?
+                getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
         if (this.sessionUser.getAge() != 0) {
             this.ageEditText.setText(String.valueOf(this.sessionUser.getAge()));
         }
@@ -282,5 +295,27 @@ public class UserProfileActivity extends AppCompatActivity {
     private void setPictureToImageComponent() {
         database.accept(new GlideImageViewLoader(this, imageView,
                 this.sessionUser.getProfileImagePathAndName()));
+    }
+
+    private void saveUserLocally() {
+        CompletableFuture<Bitmap> profileImgResult = new CompletableFuture<>();
+        mViewModel.getCurrentUser()
+                .exceptionally(e -> {
+                    Toast.makeText(this, R.string.localSaveFailed_User, Toast.LENGTH_SHORT).show();
+                    return null;
+                })
+                .thenAccept(res -> {
+                    database.accept(new GlideBitmapLoader(this, profileImgResult,
+                            mViewModel.getUser().getValue().getProfileImagePathAndName()));
+                    profileImgResult
+                            .exceptionally(e -> {
+                                Toast.makeText(this, R.string.localSaveFailed_User,
+                                        Toast.LENGTH_SHORT).show();
+                                return null;
+                            })
+                            .thenAccept(img -> {
+                                localdb.setCurrentUser(mViewModel.getUser().getValue(), img);
+                            });
+                });
     }
 }

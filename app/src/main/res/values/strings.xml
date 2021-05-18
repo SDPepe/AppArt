@@ -68,6 +68,8 @@
         <item>Other</item>
     </string-array>
     <string name="contactAdUser"> CONTACT ANNOUNCER </string>
+    <string name="localSaveFailed_User">Failed to save updates locally!</string>
+    <string name="loadFailed_User">Failed to load user information</string>
 
     <!--  -->
     <string name="cameraAdButtonDesc">Add Picture</string>

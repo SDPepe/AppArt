@@ -12,10 +12,10 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.grpc.Context;
 
 
 @HiltViewModel
@@ -31,15 +31,19 @@ public class UserViewModel extends ViewModel {
 
     final DatabaseService db;
     final LoginService ls;
+    final LocalDatabase localdb;
 
     @Inject
-    public UserViewModel(DatabaseService database, LoginService loginService) {
+    public UserViewModel(DatabaseService database, LoginService loginService,
+                         LocalDatabase localdb) {
 
         this.db = database;
         this.ls = loginService;
+        this.localdb = localdb;
     }
 
     // TODO is this needed?
+
     /**
      * Puts the user in the database and updates the LiveData
      *
@@ -67,7 +71,7 @@ public class UserViewModel extends ViewModel {
         });
         updateUser.thenAccept(b -> {
             CompletableFuture<Void> localSaveResult = new CompletableFuture<>();
-            // TODO call localDB API to save new user info, setValue according to result
+
             mUpdateUserConfirmed.setValue(b);
         });
     }
@@ -92,7 +96,6 @@ public class UserViewModel extends ViewModel {
             return null;
         });
         updateImage.thenAccept(b -> {
-            // TODO use localDB API to save image locally, then setValue according to result
             mUpdateImageConfirmed.setValue(b);
         });
     }
@@ -110,53 +113,56 @@ public class UserViewModel extends ViewModel {
             return null;
         });
         deleteImage.thenAccept(b -> {
-            // TODO use localDB API to delete local image, then setValue according to result
             mDeleteImageConfirmed.setValue(b);
         });
     }
 
     /**
-     * Get the user from the database and updates the LiveData
+     * Get the user from the database and updates the LiveData.
      *
      * @param userId the unique Id of the user to retrieve from database
      */
     public void getUser(String userId) {
-        User user = /*localDB.getUser(userId)*/ new AppUser("replace", "this");
-        if (user != null) mUser.setValue(user);
+        localdb.getUser(userId)
+                .whenComplete((localUser, e) -> {
+                    if (localUser != null) mUser.setValue(localUser);
+                    CompletableFuture<User> getUser = db.getUser(userId);
+                    getUser.exceptionally(e1 -> {
+                        Log.d("GET USER", "DATABASE FAIL");
+                        return null;
+                    });
+                    // if server fetch worked, update user in localDB
+                    getUser.thenAccept(u -> {
+                        mUser.setValue(u);
+                    });
 
-        CompletableFuture<User> getUser = db.getUser(userId);
-        getUser.exceptionally(e -> {
-            Log.d("GET USER", "DATABASE FAIL");
-            // if no user in localDB and server fetch failed, set value to null
-            if (user == null) mUser.setValue(null);
-            return null;
-        });
-        // if server fetch worked, update user in localDB
-        getUser.thenAccept( u -> {
-            // TODO use localDB API to update user stored locally
-            mUser.setValue(u);
-        });
+                });
     }
 
     /**
      * Get the current user from the database and updates the LiveData
+     *
+     * @return a completable future telling if the server fetch was successful
      */
-    public void getCurrentUser() {
-        User user = /*localDB.getCurrentUser()*/ new AppUser("replace", "this");
+    public CompletableFuture<Void> getCurrentUser() {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        User user = localdb.getCurrentUser();
         if (user != null) mUser.setValue(user);
 
-        CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
-        getCurrentUser.exceptionally(e -> {
-            Log.d("GET USER", "DATABASE FAIL");
-            // if no currentUser in localDB and server fetch failed, set value to null
-            if (user == null) mUser.setValue(null);
-            return null;
-        });
-        // if server fetch worked, update user in localDB
-        getCurrentUser.thenAccept( cu -> {
-            // TODO use localDB API to update current user stored locally
-            mUser.setValue(cu);
-        });
+        db.getUser(ls.getCurrentUser().getUserId())
+                .exceptionally(e -> {
+                    Log.d("GET USER", "DATABASE FAIL");
+                    // if no currentUser in localDB and server fetch failed, set value to null
+                    if (user == null) mUser.setValue(null);
+                    result.completeExceptionally(e);
+                    return null;
+                })
+                // if server fetch worked, update user in localDB
+                .thenAccept(cu -> {
+                    result.complete(null);
+                    mUser.setValue(cu);
+                });
+        return result;
     }
 
     /*
@@ -195,6 +201,5 @@ public class UserViewModel extends ViewModel {
     public Uri getUri() {
         return profileImageUri;
     }
-
 
 }
