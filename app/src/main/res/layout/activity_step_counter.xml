@@ -42,6 +42,13 @@
             android:textSize="100sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/km_StepCounter_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"

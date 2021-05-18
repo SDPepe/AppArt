@@ -106,7 +106,7 @@ public class PermissionRequest {
         }
 
         askForPermission(activity, permissionGranted, permissionRefused,
-                () -> Log.d("PERMISSION", "Educational popup for Camera !"),
+                () -> Log.d("PERMISSION", "Educational popup for activity recognition !"),
                 permissions);
     }
 
