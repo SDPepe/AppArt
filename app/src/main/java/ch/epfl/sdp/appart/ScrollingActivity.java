@@ -3,13 +3,10 @@ package ch.epfl.sdp.appart;
 import static android.widget.Toast.makeText;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 
 import android.widget.Button;
@@ -23,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,12 +126,12 @@ public class ScrollingActivity extends ToolbarActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
-                handeleResult(data);
+                handleResult(data);
 
             }
         }
     }
-    private void handeleResult(Intent data){
+    private void handleResult(Intent data){
         int size = data.getIntExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
         if(size > 0) {
             List<String> filterCardsId = new ArrayList<>();
