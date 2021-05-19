@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -8,6 +9,8 @@ import org.junit.Test;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
 import ch.epfl.sdp.appart.user.AppUser;
@@ -24,12 +27,13 @@ public class UserVMTest {
 
     DatabaseService db = new MockDatabaseService();
     LoginService ls = new MockLoginService();
+    LocalDatabaseService localDatabaseService = new LocalDatabase(InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath());
 
     private UserViewModel vm;
 
     @Before
     public void init() {
-        vm = new UserViewModel(db, ls);
+        vm = new UserViewModel(db, ls, localDatabaseService);
     }
 
     @Test
