@@ -24,3 +24,4 @@ THere has been really good communication between Antoined and I for the structur
 This week I worked on multiple things. First, I finished merging the favorites feature. It is now fully tested and implemented. Then, I worked on a new feature: an activity where the user can see the ads they have posted. This has been done and now needs just a bit more of testing. Finally, I also worked on an issue with the ad creation, as they were crashes happening when trying to create an ad without any picture. This too has been fully done and now just needs to be merged.
 
 # Overall team
+Overall the team communicated quite well this week, planning ahead and not doing last minute changes. Pretty much every merge was already done the day before, and the work advanced pretty well, despite the issues with Cirrus we still had at the beginning of the week. 
