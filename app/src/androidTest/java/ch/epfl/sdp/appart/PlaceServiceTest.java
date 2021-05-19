@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import ch.epfl.sdp.appart.location.address.Address;
-import ch.epfl.sdp.appart.location.address.AddressFactory;
+import ch.epfl.sdp.appart.location.place.address.Address;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import ch.epfl.sdp.appart.location.geocoding.MockGeocodingService;
 import ch.epfl.sdp.appart.place.PlaceService;
 import ch.epfl.sdp.appart.place.PlaceOfInterest;

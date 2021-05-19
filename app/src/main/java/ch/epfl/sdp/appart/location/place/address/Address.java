@@ -1,14 +1,14 @@
-package ch.epfl.sdp.appart.location.address;
+package ch.epfl.sdp.appart.location.place.address;
 
 import java.util.Objects;
 
-import ch.epfl.sdp.appart.location.Location;
+import ch.epfl.sdp.appart.location.place.Place;
 
 /**
  * Represent an address. This class is only a container and does not contains any logic.
  * Checking format is deferred to the Factory.
  */
-public class Address {
+public class Address implements Place {
 
     private final String formattedAddress;
     private final String street;
@@ -39,6 +39,14 @@ public class Address {
                 .append(locality).toString();
     }
 
+    protected Address(String locality) {
+        this.street = null;
+        this.locality = locality;
+        this.postalCode = null;
+
+       formattedAddress = locality;
+    }
+
     public String getAddress() {
         return formattedAddress;
     }
@@ -65,5 +73,10 @@ public class Address {
     @Override
     public int hashCode() {
         return Objects.hash(formattedAddress, street, locality, postalCode);
+    }
+
+    @Override
+    public String getName() {
+        return formattedAddress;
     }
 }

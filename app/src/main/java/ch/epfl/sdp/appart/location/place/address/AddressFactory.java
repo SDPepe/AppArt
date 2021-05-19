@@ -1,7 +1,10 @@
-package ch.epfl.sdp.appart.location.address;
+package ch.epfl.sdp.appart.location.place.address;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import ch.epfl.sdp.appart.location.place.locality.Locality;
+import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 
 /**
  * A factory to instantiate the Addresses. It also checks for a correct address format with regex.
@@ -18,13 +21,13 @@ import java.util.regex.Pattern;
  */
 public class AddressFactory {
 
-    private static final String LOCALITY_PATTERN = "[a-zA-ZÀ-ÿ '-]+";
+
     private static final String STREET_PATTERN = "[a-zA-ZÀ-ÿ '-]+\\d+[a-zA-Z]?";
     private static final String POSTAL_CODE_PATTERN = "\\d{4}";
     private static final String ADDRESS_WITH_POSTAL_CODE_PATTERN = "[a-zA-ZÀ-ÿ '-]+\\d+[a-zA-Z]?, ?\\d{4} [a-zA-ZÀ-ÿ '-]+";
     private static final String ADDRESS_WITHOUT_POSTAL_CODE_PATTERN = "[a-zA-ZÀ-ÿ '-]+\\d+[a-zA-Z]?, ?[a-zA-ZÀ-ÿ '-]+";
 
-    private static final Pattern localityPattern = Pattern.compile(LOCALITY_PATTERN);
+
     private static final Pattern streetPattern = Pattern.compile(STREET_PATTERN);
     private static final Pattern postalCodePattern = Pattern.compile(POSTAL_CODE_PATTERN);
     private static final Pattern addressWithPostalCodePattern = Pattern.compile(ADDRESS_WITH_POSTAL_CODE_PATTERN);
@@ -49,42 +52,15 @@ public class AddressFactory {
             throw new MalformedAddressException("malformed street string, expected format : " + STREET_PATTERN + "  but was " + streetFiltered);
         }
 
-        if (!localityPattern.matcher(localityFiltered).matches()) {
-            throw new MalformedAddressException("malformed locality string, expected format : " + LOCALITY_PATTERN + "but was :" + localityFiltered);
-        }
+       Locality finalLocality = LocalityFactory.makeLocality(locality);
 
         if (!postalCodePattern.matcher(postalCodeFiltered).matches()) {
             throw new MalformedAddressException("malformed postal code string, expected format : " + POSTAL_CODE_PATTERN + "but was :" + postalCode);
         }
 
-        return new Address(streetFiltered, localityFiltered, postalCodeFiltered);
+        return new Address(streetFiltered, localityFiltered, finalLocality.getName());
     }
 
-    /**
-     * Make and check an address with the given field.
-     * @param street
-     * @param locality
-     * @return
-     */
-    public static Address makeAddress(String street, String locality) {
-
-        String streetFiltered = street.trim();
-        String localityFiltered = locality.trim();
-
-        if (!streetPattern.matcher(streetFiltered).matches()) {
-            throw new MalformedAddressException("malformed street string, expected format : " + STREET_PATTERN + "  but was " + streetFiltered);
-        }
-
-        //If we give 1000 Lausanne as locality, this will give Lausanne as a result
-        localityFiltered = localityFiltered.replaceFirst("\\d+", "");
-        localityFiltered = localityFiltered.trim();
-
-        if (!localityPattern.matcher(localityFiltered).matches()) {
-            throw new MalformedAddressException("malformed locality string, expected format : " + LOCALITY_PATTERN + "but was :" + localityFiltered);
-        }
-
-        return new Address(streetFiltered, localityFiltered);
-    }
 
     /**
      * Make and check the address format
@@ -98,7 +74,7 @@ public class AddressFactory {
         Matcher streetMatcher = streetPattern.matcher(split[0].trim());
         Matcher localityMatcher = null;
         if (split.length > 1) {
-            localityMatcher = localityPattern.matcher(split[1].trim());
+            localityMatcher = LocalityFactory.localityPattern.matcher(split[1].trim());
         }
 
         if (addressWithPostalCodePattern.matcher(filteredAddress).matches()) {

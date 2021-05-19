@@ -15,8 +15,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.address.Address;
-import ch.epfl.sdp.appart.location.address.AddressAdapter;
+import ch.epfl.sdp.appart.location.place.Place;
+import ch.epfl.sdp.appart.location.place.address.Address;
+import ch.epfl.sdp.appart.location.place.address.AddressAdapter;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 
 @Singleton
@@ -50,13 +51,13 @@ public class GoogleGeocodingService implements GeocodingService {
     }
 
     @Override
-    public CompletableFuture<Location> getLocation(Address address) {
+    public CompletableFuture<Location> getLocation(Place place) {
 
         return CompletableFuture.supplyAsync(() -> {
             List<android.location.Address> androidAddresses;
             try {
                 androidAddresses =
-                        geocoder.getFromLocationName(address.getAddress(), 5);
+                        geocoder.getFromLocationName(place.getName(), 5);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new CompletionException(e);
@@ -90,7 +91,7 @@ public class GoogleGeocodingService implements GeocodingService {
     }
 
     @Override
-    public CompletableFuture<Float> getDistance(Address a, Address b) {
+    public CompletableFuture<Float> getDistance(Place a, Place b) {
 
         CompletableFuture<Location> l1 = getLocation(a);
         CompletableFuture<Location> l2 = getLocation(b);

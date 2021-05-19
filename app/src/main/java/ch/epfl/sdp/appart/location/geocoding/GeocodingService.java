@@ -4,7 +4,8 @@ package ch.epfl.sdp.appart.location.geocoding;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.address.Address;
+import ch.epfl.sdp.appart.location.place.Place;
+import ch.epfl.sdp.appart.location.place.address.Address;
 
 public interface GeocodingService {
 
@@ -21,7 +22,7 @@ public interface GeocodingService {
      * @param address the Address for which we want to find the location
      * @return CompletableFuture<Location> containing the location
      */
-    CompletableFuture<Location> getLocation(Address address);
+    CompletableFuture<Location> getLocation(Place address);
 
     /**
      * Retrieve the distance between two locations in meters
@@ -37,5 +38,5 @@ public interface GeocodingService {
      * @param b the target location
      * @return CompletableFuture<Float> containing the distance in meters
      */
-    CompletableFuture<Float> getDistance(Address a, Address b);
+    CompletableFuture<Float> getDistance(Place a, Place b);
 }

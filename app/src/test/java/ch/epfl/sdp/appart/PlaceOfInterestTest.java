@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.address.AddressFactory;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import ch.epfl.sdp.appart.place.PlaceOfInterest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

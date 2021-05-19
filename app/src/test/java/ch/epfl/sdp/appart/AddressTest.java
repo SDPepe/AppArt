@@ -2,9 +2,10 @@ package ch.epfl.sdp.appart;
 
 import org.junit.Test;
 
-import ch.epfl.sdp.appart.location.address.Address;
-import ch.epfl.sdp.appart.location.address.AddressFactory;
-import ch.epfl.sdp.appart.location.address.MalformedAddressException;
+import ch.epfl.sdp.appart.location.place.address.Address;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
+import ch.epfl.sdp.appart.location.place.address.MalformedAddressException;
+import ch.epfl.sdp.appart.location.place.locality.MalformedLocalityException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -83,7 +84,7 @@ public class AddressTest {
 
     @Test
     public void invalidAddressLocalityCreation() {
-        assertThrows(MalformedAddressException.class, () -> {
+        assertThrows(MalformedLocalityException.class, () -> {
             Address a = AddressFactory.makeAddress("abcd 1", "1400", "1Yverdon-les-Bains");
         });
     }

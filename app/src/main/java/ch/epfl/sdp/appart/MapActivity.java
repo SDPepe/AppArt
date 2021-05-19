@@ -11,13 +11,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.location.LocationService;
-import ch.epfl.sdp.appart.location.address.AddressFactory;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
+import ch.epfl.sdp.appart.location.place.Place;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
+import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 import ch.epfl.sdp.appart.map.ApartmentInfoWindow;
 import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -91,7 +95,7 @@ public class MapActivity extends AppCompatActivity {
         if (address != null) {
             mapService.setMapFragment(mapFragment);
             onMapReadyCallback =
-                    () -> geocodingService.getLocation(AddressFactory.makeAddress(address)).
+                    () -> geocodingService.getLocation(LocalityFactory.makeLocality(address)).
                             thenAcceptAsync(location -> mapService.addMarker(location, null, true, null), ContextCompat.getMainExecutor(this))
                             .exceptionally(e -> {
                                 e.printStackTrace();
@@ -109,7 +113,6 @@ public class MapActivity extends AppCompatActivity {
                 startActivity(intent);
 
             });
-
             mapService.setMapFragment(mapFragment);
             onMapReadyCallback = () -> {
                 CompletableFuture<List<Card>> futureCards = databaseService
@@ -122,14 +125,26 @@ public class MapActivity extends AppCompatActivity {
                 futureCards.thenAccept(cards -> {
                     for (Card card : cards) {
                         //First filter on location of the card
-                        databaseService.getAd(card.getAdId()).thenCompose(ad ->
-                                geocodingService.getLocation(AddressFactory.
-                                        makeAddress(ad.getStreet(),
-                                                ad.getCity())))
+                        databaseService.getAd(card.getAdId()).thenCompose(ad -> {
+                                    String city = ad.getCity();
+                                    Matcher extractPostalCodeMatcher = Pattern.compile("\\d+").matcher(city);
+                                    Place place;
+                                    if(extractPostalCodeMatcher.find()) {
+                                        String postalCode = extractPostalCodeMatcher.group();
+                                        String locality =
+                                                ad.getCity().replaceAll("\\d+", "");
+                                        place = AddressFactory.makeAddress(ad.getStreet(), postalCode, locality);
+
+                                    } else {
+                                        place = LocalityFactory.makeLocality(city);
+                                    }
+                                    return geocodingService.getLocation(place);
+                                }
+                        )
                                 .thenAcceptAsync(location ->
-                                        mapService.addMarker(location
-                                                , card,
-                                                false, card.getCity()),
+                                                mapService.addMarker(location
+                                                        , card,
+                                                        false, card.getCity()),
                                         ContextCompat.getMainExecutor(this));
                     }
                 });

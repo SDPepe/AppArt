@@ -20,7 +20,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.address.Address;
+import ch.epfl.sdp.appart.location.place.address.Address;
 import ch.epfl.sdp.appart.place.helper.PlaceHelper;
 import dagger.hilt.android.scopes.ActivityScoped;
 

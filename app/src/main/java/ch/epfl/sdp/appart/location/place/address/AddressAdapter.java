@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.location.address;
+package ch.epfl.sdp.appart.location.place.address;
 
 public class AddressAdapter {
 

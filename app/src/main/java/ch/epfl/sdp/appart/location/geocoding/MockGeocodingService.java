@@ -4,8 +4,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.address.Address;
-import ch.epfl.sdp.appart.location.address.AddressFactory;
+import ch.epfl.sdp.appart.location.place.Place;
+import ch.epfl.sdp.appart.location.place.address.Address;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 
 /**
  * Mock of the geocoding service. This allows testing over some classes that are using it.
@@ -28,7 +29,7 @@ public class MockGeocodingService implements GeocodingService {
     }
 
     @Override
-    public CompletableFuture<Location> getLocation(Address address) {
+    public CompletableFuture<Location> getLocation(Place place) {
         return CompletableFuture.supplyAsync(new Supplier<Location>() {
             @Override
             public Location get() {
@@ -48,7 +49,7 @@ public class MockGeocodingService implements GeocodingService {
     }
 
     @Override
-    public CompletableFuture<Float> getDistance(Address a, Address b) {
+    public CompletableFuture<Float> getDistance(Place a, Place b) {
         return CompletableFuture.supplyAsync(new Supplier<Float>() {
             @Override
             public Float get() {

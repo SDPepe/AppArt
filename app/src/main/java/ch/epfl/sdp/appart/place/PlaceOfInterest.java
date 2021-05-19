@@ -5,9 +5,9 @@ import com.google.common.collect.Sets;
 import java.util.HashSet;
 import java.util.Set;
 
-import ch.epfl.sdp.appart.location.address.Address;
+import ch.epfl.sdp.appart.location.place.address.Address;
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.address.AddressFactory;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 
 public class PlaceOfInterest {
 

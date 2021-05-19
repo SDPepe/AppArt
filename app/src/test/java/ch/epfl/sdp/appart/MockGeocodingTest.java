@@ -3,7 +3,7 @@ package ch.epfl.sdp.appart;
 import org.junit.Test;
 
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.address.AddressFactory;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import ch.epfl.sdp.appart.location.geocoding.MockGeocodingService;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
