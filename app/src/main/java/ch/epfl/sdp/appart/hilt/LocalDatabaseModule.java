@@ -12,6 +12,7 @@ import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
+import kotlin.jvm.JvmSuppressWildcards;
 
 @Module
 @InstallIn(SingletonComponent.class)
@@ -19,6 +20,7 @@ public abstract class LocalDatabaseModule {
 
     @Singleton
     @Binds
+    @JvmSuppressWildcards
     public abstract LocalDatabaseService bindLocalDatabaseService(LocalDatabase localDatabase);
 
     @Singleton
