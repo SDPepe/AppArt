@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -15,6 +16,8 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.location.LocationService;
+import ch.epfl.sdp.appart.location.address.AddressFactory;
+import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.map.ApartmentInfoWindow;
 import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -29,6 +32,9 @@ public class MapActivity extends AppCompatActivity {
 
     @Inject
     LocationService locationService;
+
+    @Inject
+    GeocodingService geocodingService;
 
     @Inject
     MapService mapService;
@@ -77,14 +83,20 @@ public class MapActivity extends AppCompatActivity {
         String address =
                 getIntent().getStringExtra(getString(R.string.intentLocationForMap));
 
+        /*
+            We need to execute addMarker on the main UI thread, that's why
+            the Async version of thenAccept is used with the main thread as
+            an Executor.
+         */
         if (address != null) {
             mapService.setMapFragment(mapFragment);
-            onMapReadyCallback = () -> locationService.getLocationFromName(address).thenAccept(location -> {
-                mapService.addMarker(location, null, true, null);
-            }).exceptionally(e -> {
-                e.printStackTrace();
-                return null;
-            });
+            onMapReadyCallback =
+                    () -> geocodingService.getLocation(AddressFactory.makeAddress(address)).
+                            thenAcceptAsync(location -> mapService.addMarker(location, null, true, null), ContextCompat.getMainExecutor(this))
+                            .exceptionally(e -> {
+                                e.printStackTrace();
+                                return null;
+                            });
         } else {
 
             mapService.setInfoWindow(new ApartmentInfoWindow(this,
@@ -109,12 +121,16 @@ public class MapActivity extends AppCompatActivity {
 
                 futureCards.thenAccept(cards -> {
                     for (Card card : cards) {
-                        locationService.getLocationFromName(card.getCity()).thenAccept(location -> mapService.addMarker(location, card, false,
-                                card.getCity())).exceptionally(e -> {
-                            e.printStackTrace();
-                            return null;
-                        });
-
+                        //First filter on location of the card
+                        databaseService.getAd(card.getAdId()).thenCompose(ad ->
+                                geocodingService.getLocation(AddressFactory.
+                                        makeAddress(ad.getStreet(),
+                                                ad.getCity())))
+                                .thenAcceptAsync(location ->
+                                        mapService.addMarker(location
+                                                , card,
+                                                false, card.getCity()),
+                                        ContextCompat.getMainExecutor(this));
                     }
                 });
             };

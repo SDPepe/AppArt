@@ -61,6 +61,32 @@ public class AddressFactory {
     }
 
     /**
+     * Make and check an address with the given field.
+     * @param street
+     * @param locality
+     * @return
+     */
+    public static Address makeAddress(String street, String locality) {
+
+        String streetFiltered = street.trim();
+        String localityFiltered = locality.trim();
+
+        if (!streetPattern.matcher(streetFiltered).matches()) {
+            throw new MalformedAddressException("malformed street string, expected format : " + STREET_PATTERN + "  but was " + streetFiltered);
+        }
+
+        //If we give 1000 Lausanne as locality, this will give Lausanne as a result
+        localityFiltered = localityFiltered.replaceFirst("\\d+", "");
+        localityFiltered = localityFiltered.trim();
+
+        if (!localityPattern.matcher(localityFiltered).matches()) {
+            throw new MalformedAddressException("malformed locality string, expected format : " + LOCALITY_PATTERN + "but was :" + localityFiltered);
+        }
+
+        return new Address(streetFiltered, localityFiltered);
+    }
+
+    /**
      * Make and check the address format
      * @param address
      * @return
