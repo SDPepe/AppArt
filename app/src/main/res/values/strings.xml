@@ -62,7 +62,7 @@
         <item>Male</item>
         <item>Other</item>
     </string-array>
-    <string name="contactAdUser"> CONTACT ANNOUNCER </string>
+    <string name="contactAdUser">Contact</string>
 
     <!--  -->
     <string name="cameraAdButtonDesc">Add Picture</string>
