@@ -58,7 +58,6 @@ public class ScrollingActivity extends ToolbarActivity {
         setSupportActionBar(toolbar);
 
         mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
-
         mViewModel.initHome();
 
         recyclerView = findViewById(R.id.recycler_Scrolling_recyclerView);
