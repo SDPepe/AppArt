@@ -28,15 +28,9 @@ import ch.epfl.sdp.appart.utils.serializers.CardSerializer;
 public class FirestoreCardHelper {
 
     private final FirebaseFirestore db;
-    private final FirebaseStorage storage;
-    private final String cardsPath;
-    private final CardSerializer serializer;
 
     public FirestoreCardHelper() {
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
-        cardsPath = FirebaseLayout.CARDS_DIRECTORY + FirebaseLayout.SEPARATOR;
-        serializer = new CardSerializer();
     }
 
     @NotNull
@@ -81,7 +75,7 @@ public class FirestoreCardHelper {
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(FirebaseLayout.CARDS_DIRECTORY)
                 .document(card.getId())
-                .set(serializer.serialize(card))
+                .set(CardSerializer.serialize(card))
                 .addOnCompleteListener(task -> isFinishedFuture.complete(task.isSuccessful()));
         return isFinishedFuture;
     }
@@ -90,7 +84,7 @@ public class FirestoreCardHelper {
     @NonNull
     public CompletableFuture<Boolean> putCard(Card card, DocumentReference path) {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
-        path.set(serializer.serialize(card)).addOnCompleteListener(task -> {
+        path.set(CardSerializer.serialize(card)).addOnCompleteListener(task -> {
             result.complete(task.isSuccessful());
         });
         return result;
@@ -106,7 +100,7 @@ public class FirestoreCardHelper {
         if (task.isSuccessful()) {
             for (QueryDocumentSnapshot document : (Iterable<? extends QueryDocumentSnapshot>) task.getResult()) {
                 Map<String, Object> data = document.getData();
-                queriedCards.add(serializer.deserialize(document.getId(), data));
+                queriedCards.add(CardSerializer.deserialize(document.getId(), data));
             }
             result.complete(queriedCards);
         } else {

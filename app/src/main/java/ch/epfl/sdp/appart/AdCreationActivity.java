@@ -1,7 +1,9 @@
 package ch.epfl.sdp.appart;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.ad.AdCreationViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.ad.PricePeriod;
+import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -86,15 +89,15 @@ public class AdCreationActivity extends AppCompatActivity {
                     Snackbar.LENGTH_SHORT).show();
             return;
         }
-        // TODO add back when new loading image system is finished
-        /**
+
         if (picturesUris == null || picturesUris.size() == 0) {
-            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
-                    getResources().getText(R.string.snackbarNoPhotos_AdCreation),
-                    Snackbar.LENGTH_SHORT).show();
-            return;
+            picturesUris = new ArrayList<>();
+            Resources resources = getApplicationContext().getResources();
+            picturesUris.add(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                    resources.getResourcePackageName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR +
+                    resources.getResourceTypeName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR  +   
+                    resources.getResourceEntryName(R.drawable.blank_ad)));
         }
-         */
 
         // set values to viewmodel
         setVMValues();

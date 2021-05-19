@@ -48,4 +48,6 @@ public final class UserLayout {
      */
     public final static String FAVORITE_IDS = "favorite_ids";
 
+    public final static String ID = "ID";
+
 }
