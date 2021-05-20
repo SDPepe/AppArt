@@ -149,25 +149,9 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         stopWasPressed = true;
 
         /* unregister listeners for step sensor signals */
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
-            sensorManager.unregisterListener(this, mStepCounter);
-        }
+        unregisterListeners();
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-            sensorManager.unregisterListener(this, mStepDetector);
-        }
-
-        /* reset activity attributes */
-        startWasPressed = false;
-        initialTotalStepCountWasSet = false;
-        totalStepCountFromBoot = 0;
-        detectedStepsCount = 0;
-        initialTotalStepCountFromBoot = 0;
-
-        /* reset step counter to 0 if its state is loading... */
-        if (textViewStepCounter.getText().toString().contains("loading")) {
-            textViewStepCounter.setText("0");
-        }
+        resetDefaultActivityValues();
 
         /* clear the screen flag */
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -216,12 +200,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
 
                 /* this is used to compute the steps on devices with no STEP_DETECTOR sensor */
                 if (!stepDetectorSensorIsAvailable) {
-                    if (!initialTotalStepCountWasSet) {
-                        initialTotalStepCountFromBoot = (int) sensorEvent.values[0];
-                        initialTotalStepCountWasSet = true;
-                    }
-                    detectedStepsCount = ((int)sensorEvent.values[0] - initialTotalStepCountFromBoot);
-                    setTextViewStepDetector();
+                    computeStepsWithMissingStepDetector(sensorEvent);
                 }
 
             } else if (sensorEvent.sensor.equals(mStepDetector)) {
@@ -277,6 +256,40 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         metersInString = metersInString.concat(String.valueOf(meters).concat(METERS_UNIT));
 
         textViewKm.setText(metersInString);
+    }
+
+    private void computeStepsWithMissingStepDetector(SensorEvent sensorEvent){
+        if (!initialTotalStepCountWasSet) {
+            initialTotalStepCountFromBoot = (int) sensorEvent.values[0];
+            initialTotalStepCountWasSet = true;
+        }
+        detectedStepsCount = ((int)sensorEvent.values[0] - initialTotalStepCountFromBoot);
+        setTextViewStepDetector();
+    }
+
+    private void unregisterListeners() {
+        /* unregister listeners for step sensor signals */
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+            sensorManager.unregisterListener(this, mStepCounter);
+        }
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+            sensorManager.unregisterListener(this, mStepDetector);
+        }
+    }
+
+    private void resetDefaultActivityValues(){
+        /* reset activity attributes */
+        startWasPressed = false;
+        initialTotalStepCountWasSet = false;
+        totalStepCountFromBoot = 0;
+        detectedStepsCount = 0;
+        initialTotalStepCountFromBoot = 0;
+
+        /* reset step counter to 0 if its state is loading... */
+        if (textViewStepCounter.getText().toString().contains("loading")) {
+            textViewStepCounter.setText("0");
+        }
     }
 
 }
