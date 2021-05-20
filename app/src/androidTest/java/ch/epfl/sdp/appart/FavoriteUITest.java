@@ -301,6 +301,8 @@ public class FavoriteUITest {
     @After
     public void release() {
         Intents.release();
+        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        login.signOut();
     }
     
 }

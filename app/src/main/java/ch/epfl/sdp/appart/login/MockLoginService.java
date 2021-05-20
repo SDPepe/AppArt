@@ -123,7 +123,7 @@ public class MockLoginService implements LoginService {
         CompletableFuture<User> result = new CompletableFuture<>();
         byte[] temporary = new byte[5]; //one more than the other to avoid collision
         new Random().nextBytes(temporary);
-        String id = new String(temporary, StandardCharsets.UTF_8);
+        String id = "1234";
 
         User newUser = new AppUser(id, email);
         users.put(new Pair<>(email, password), newUser);

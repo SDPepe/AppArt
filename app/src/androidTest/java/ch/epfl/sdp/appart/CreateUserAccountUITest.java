@@ -110,6 +110,7 @@ public class CreateUserAccountUITest {
     @After
     public void release() {
         createUserActivityActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        loginService.signOut();
         Intents.release();
     }
 }

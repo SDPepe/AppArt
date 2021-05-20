@@ -80,6 +80,7 @@ public class MockDatabaseService implements DatabaseService {
         users.put("vetterli-id", vetterli);
         users.put("3333", new AppUser("3333", "carlo@epfl.ch"));
         users.put("5555", new AppUser("5555", "emilien@epfl.ch"));
+        users.put("1234", new AppUser("1234", "test@testappart.ch"));
     }
 
     @NotNull

@@ -58,10 +58,10 @@ public class LoginUITest {
     @Before
     public void init() {
         hiltRule.inject();
-        Intents.init();
         // clear shared preferences to avoid auto-login
         loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
         loginService.signOut();
+        Intents.init();
     }
 
     @Test

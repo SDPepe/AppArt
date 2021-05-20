@@ -56,25 +56,23 @@ public class LoginActivity extends AppCompatActivity {
          * If no currentUser is stored locally, ask for login credentials as we did before.
          */
         progressBar = findViewById(R.id.progress_Login_ProgressBar);
-        progressBar.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
         String email = SharedPreferencesHelper.getSavedEmail(this);
         if (!email.equals("")) {
             String password = SharedPreferencesHelper.getSavedPassword(this);
-            loginService.loginWithEmail(email, password)
-                    .exceptionally(e -> {
-                        progressBar.setVisibility(View.GONE);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        startScrollingActivity();
-                        return null;
-                    })
-                    .thenAccept(user -> {
-                        saveLoggedUser(user);
-                        progressBar.setVisibility(View.GONE);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        startScrollingActivity();
-                    });
+            CompletableFuture<User> loginResult = loginService.loginWithEmail(email, password);
+            loginResult.exceptionally(e -> {
+                progressBar.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                startScrollingActivity();
+                return null;
+            });
+            loginResult.thenAccept(user -> {
+                saveLoggedUser(user);
+                progressBar.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                startScrollingActivity();
+            });
         } else {
             progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -118,19 +116,20 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .thenAccept(user -> {
                     SharedPreferencesHelper.saveUserForAutoLogin(this, email, password);
-                    saveLoggedUser(user)
-                            .exceptionally(e -> {
-                                progressBar.setVisibility(View.GONE);
-                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                Toast.makeText(this, R.string.saveUserFail_Login,
-                                        Toast.LENGTH_SHORT).show();
-                                return null;
-                            })
-                            .thenAccept(res -> {
-                                startScrollingActivity();
-                            });
+                    CompletableFuture<Void> saveRes = saveLoggedUser(user);
+                    saveRes.exceptionally(e -> {
+                        Log.d("LOGIN", "failed to save user");
+                        progressBar.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        Toast.makeText(this, R.string.saveUserFail_Login,
+                                Toast.LENGTH_SHORT).show();
+                        return null;
+                    });
+                    saveRes.thenAccept(res -> {
+                        Log.d("LOGIN", "user has been saved, starting scrolling ...");
+                        startScrollingActivity();
+                    });
                 });
-
     }
 
     /**
@@ -164,30 +163,30 @@ public class LoginActivity extends AppCompatActivity {
     private CompletableFuture<Void> saveLoggedUser(User user) {
         CompletableFuture<Void> result = new CompletableFuture<>();
         CompletableFuture<Bitmap> pfpRes = new CompletableFuture<>();
-        database.getUser(user.getUserId())
-                .exceptionally(e -> {
+        CompletableFuture<User> userRes = database.getUser(user.getUserId());
+        userRes.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+        userRes.thenAccept(u -> {
+            database.accept(new GlideBitmapLoader(
+                    this, pfpRes, u.getProfileImagePathAndName()));
+            pfpRes
+                    .exceptionally(e -> {
+                        result.completeExceptionally(e);
+                        return null;
+                    });
+            pfpRes.thenAccept(bitmap -> {
+                CompletableFuture<Void> setUserRes = localdb.setCurrentUser(u, bitmap);
+                setUserRes.exceptionally(e -> {
                     result.completeExceptionally(e);
                     return null;
-                })
-                .thenAccept(u -> {
-                    database.accept(new GlideBitmapLoader(
-                            this, pfpRes, u.getProfileImagePathAndName()));
-                    pfpRes
-                            .exceptionally(e -> {
-                                result.completeExceptionally(e);
-                                return null;
-                            })
-                            .thenAccept(bitmap -> {
-                                localdb.setCurrentUser(u, bitmap)
-                                        .exceptionally(e -> {
-                                            result.completeExceptionally(e);
-                                            return null;
-                                        })
-                                        .thenAccept(res -> {
-                                            result.complete(null);
-                                        });
-                            });
                 });
+                setUserRes.thenAccept(res -> {
+                    result.complete(null);
+                });
+            });
+        });
         return result;
     }
 }
