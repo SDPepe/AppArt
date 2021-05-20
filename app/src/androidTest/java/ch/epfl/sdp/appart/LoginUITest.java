@@ -123,6 +123,7 @@ public class LoginUITest {
         loginService.deleteUser().get();
 
         assertNull(loginService.getCurrentUser());
+        loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
     }
 
     @After

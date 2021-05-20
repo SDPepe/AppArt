@@ -10,6 +10,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.uiautomator.UiDevice;
 
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -18,6 +19,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
@@ -25,6 +28,7 @@ import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -37,8 +41,12 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest
@@ -64,12 +72,11 @@ public class AdUITest {
     @Rule(order = 1)
     public ActivityScenarioRule<AdActivity> adActivityRule = new ActivityScenarioRule<>(intent);
 
-    UiDevice mDevice;
-
     @Before
     public void init() {
         Intents.init();
         hiltRule.inject();
+        login.loginWithEmail("test@testappart.ch", "password").join();
     }
 
     @Test
@@ -91,6 +98,14 @@ public class AdUITest {
     }
 
     @Test
+    public void clickOnFavoriteAddsToFavorites() {
+        onView(withId(R.id.action_add_favorite)).perform(click());
+        User currentUser = login.getCurrentUser();
+        assertNotNull(currentUser);
+        assertTrue(currentUser.getFavoritesIds().stream().anyMatch(e -> e.equals(testId)));
+    }
+
+    @Test
     public void displayAdInfoTest() {
         Ad testAd = database.getAd(testId).join();
 
@@ -105,6 +120,7 @@ public class AdUITest {
     @After
     public void release() {
         Intents.release();
+        login.signOut();
     }
 
     private static Matcher<View> childAtPosition(

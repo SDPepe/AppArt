@@ -80,7 +80,6 @@ public class FavoriteActivity extends ToolbarActivity {
 
     private void saveLocally() {
         localdb.cleanFavorites();
-        List<String> adIds = new ArrayList<>();
         List<Card> cards = mViewModel.getFavorites().getValue();
         for (Card c : cards) {
             saveAd(c.getAdId(), c.getId());

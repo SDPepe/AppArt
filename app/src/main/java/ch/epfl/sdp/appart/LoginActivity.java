@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_Login_ProgressBar);
 
         String email = SharedPreferencesHelper.getSavedEmail(this);
-        if (!email.equals("") && !(email == null)) {
+        if (!email.equals("")) {
             String password = SharedPreferencesHelper.getSavedPassword(this);
             CompletableFuture<User> loginResult = loginService.loginWithEmail(email, password);
             loginResult.exceptionally(e -> {
