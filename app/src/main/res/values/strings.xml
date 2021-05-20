@@ -139,4 +139,18 @@
 
     <!-- FullScreenImageActivity stuff -->
     <string name="contentDescFullScreenImage">Photo</string>
+
+    <!-- FilterActivity stuff -->
+    <string name="filterTitle">Filter</string>
+    <string name="filterPrice">Price range:</string>
+    <string name="minPrice">min price</string>
+    <string name="maxPrice">max price</string>
+    <string name="chf">CHF/ month</string>
+    <string name="filterLocation">Location:</string>
+    <string name="locationRange">location range :</string>
+    <string name="km">kilometres</string>
+    <string name="confirmFilter">Save</string>
+    <string name="resetFilter">Remove all</string>
+
+
 </resources>

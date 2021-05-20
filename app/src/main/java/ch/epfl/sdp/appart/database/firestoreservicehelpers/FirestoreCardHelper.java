@@ -64,6 +64,45 @@ public class FirestoreCardHelper {
 
         return result;
     }
+    @NotNull
+    @NonNull
+    public CompletableFuture<List<Card>> getCardsFilterPrice(int min, int max){
+        CompletableFuture<List<Card>> result = new CompletableFuture<>();
+        db.collection(FirebaseLayout.CARDS_DIRECTORY)
+            .whereGreaterThanOrEqualTo(CardLayout.PRICE,  min)
+            .whereLessThanOrEqualTo(CardLayout.PRICE, max).get().addOnCompleteListener(
+            task -> {
+                getAndCheckCards(task,  result);
+            }
+        );
+        return result;
+    }
+
+    @NotNull
+    @NonNull
+    public CompletableFuture<List<Card>> getCardsById(@NonNull List<String> ids){
+        CompletableFuture<List<Card>> result = new CompletableFuture<>();
+            db.collection(FirebaseLayout.CARDS_DIRECTORY)
+                .get().addOnCompleteListener(
+                task -> {
+                    List<Card> queriedCards = new ArrayList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : (Iterable<? extends QueryDocumentSnapshot>) task.getResult()) {
+                            Map<String, Object> data = document.getData();
+                            Card card = CardSerializer.deserialize(document.getId(), data);
+                            if (ids.contains(card.getAdId())){
+                                queriedCards.add(card);
+                            }
+                        }
+                        result.complete(queriedCards);
+                    } else {
+                        result.completeExceptionally(
+                            new DatabaseServiceException(task.getException().getMessage()));
+                    }
+                }
+            );
+        return result;
+    }
 
     @NotNull
     @NonNull
@@ -71,7 +110,6 @@ public class FirestoreCardHelper {
         if (card == null) {
             throw new IllegalArgumentException("card cannot bu null");
         }
-
         CompletableFuture<Boolean> isFinishedFuture = new CompletableFuture<>();
         db.collection(FirebaseLayout.CARDS_DIRECTORY)
                 .document(card.getId())
