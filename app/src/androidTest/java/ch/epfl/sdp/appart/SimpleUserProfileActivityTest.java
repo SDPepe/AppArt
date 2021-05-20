@@ -94,12 +94,7 @@ public class SimpleUserProfileActivityTest {
         appCompatImageView.perform(forceClick());
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.contact_info_Ad_button), withText("Contact"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                16)));
+                allOf(withId(R.id.contact_info_Ad_button), withText("Contact")));
         appCompatButton.perform(scrollTo(), click());
 
         ViewInteraction textView = onView(

@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart;
 
 import android.net.Uri;
 import java.net.URI;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,6 +48,24 @@ public class MockDatabaseTest {
     public void getCardsFilterNotEmpty() {
         try {
             List<Card> cards = dataBase.getCardsFilter("1000").get();
+            assertTrue(cards.size() > 0);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void getCardsFilterPriceNotEmpty() {
+        try {
+            List<Card> cards = dataBase.getCardsFilterPrice(0, 1000).get();
+            assertTrue(cards.size() > 0);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void getCardsByIdNotEmpty() {
+        try {
+            List<Card> cards = dataBase.getCardsById(Arrays.asList("1111", "2222")).get();
             assertTrue(cards.size() > 0);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();

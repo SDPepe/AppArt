@@ -81,6 +81,19 @@ public class FirestoreDatabaseService implements DatabaseService {
     public CompletableFuture<List<Card>> getCardsFilter(String location) {
         return cardHelper.getCardsFilter(location);
     }
+    @NotNull
+    @Override
+    @NonNull
+    public CompletableFuture<List<Card>> getCardsFilterPrice(int min, int max) {
+        return cardHelper.getCardsFilterPrice(min, max);
+    }
+    @NotNull
+    @Override
+    @NonNull
+    public CompletableFuture<List<Card>> getCardsById(List<String> ids) {
+        return cardHelper.getCardsById(ids);
+    }
+
 
     @NotNull
     @Override
