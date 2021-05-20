@@ -303,13 +303,6 @@ public class SimpleUserProfileActivityTest {
         imageView2.check(matches(isDisplayed()));
     }
 
-    @Test
-    public void backButtonPressedTest(){
-        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        mDevice.pressBack();
-        assertEquals(mActivityTestRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
-    }
-
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
