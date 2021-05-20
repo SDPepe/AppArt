@@ -156,32 +156,14 @@ public class ScrollingUITest {
     public void searchBarTest(){
         ViewInteraction appCompatEditText = onView(
             allOf(withId(R.id.search_bar_Scrolling_editText),
-                childAtPosition(
-                    allOf(withId(R.id.columnLayout_Scrolling_LinearLayout),
-                        childAtPosition(
-                            withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                            0)),
-                    0),
                 isDisplayed()));
         appCompatEditText.perform(replaceText("1000"), closeSoftKeyboard());
 
         ViewInteraction editText = onView(allOf(withId(R.id.search_bar_Scrolling_editText),
-            childAtPosition(
-                allOf(withId(R.id.columnLayout_Scrolling_LinearLayout),
-                    childAtPosition(
-                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                        0)),
-                0),
             isDisplayed()));
         editText.check(matches(isDisplayed()));
 
         ViewInteraction editText2 = onView(allOf(withId(R.id.search_bar_Scrolling_editText),
-            childAtPosition(
-                allOf(withId(R.id.columnLayout_Scrolling_LinearLayout),
-                    childAtPosition(
-                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                        0)),
-                0),
             isDisplayed()));
         editText2.check(matches(withText("1000")));
     }
