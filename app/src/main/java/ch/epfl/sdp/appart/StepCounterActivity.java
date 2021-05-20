@@ -258,7 +258,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         textViewKm.setText(metersInString);
     }
 
-    private void computeStepsWithMissingStepDetector(SensorEvent sensorEvent){
+    private void computeStepsWithMissingStepDetector(SensorEvent sensorEvent) {
         if (!initialTotalStepCountWasSet) {
             initialTotalStepCountFromBoot = (int) sensorEvent.values[0];
             initialTotalStepCountWasSet = true;
@@ -278,7 +278,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         }
     }
 
-    private void resetDefaultActivityValues(){
+    private void resetDefaultActivityValues() {
         /* reset activity attributes */
         startWasPressed = false;
         initialTotalStepCountWasSet = false;
