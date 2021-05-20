@@ -8,7 +8,7 @@ This week I started the sensor implementation. This implementation enables the u
 
 ## Antoine
 
-This week I worked on the local database. First, I started to think about the archtiecture and discussed it a lot with Lorenzo. He helped me design the API. Then, I worked on the implementation which took me quite a lot of time. I didn't plan on the local database being so large and complex to write. I managed to get it to a ready for review state Thursday. Then, Lorenzo and Quentin reviewed it very well. For next week, I will work on the suggestions they left and their requests. The whole local database and online/offline synchronization (Lorenzo's part) should be done by the end of the next sprint.
+This week I worked on the local database. First, I started to think about the archtiecture and discussed it a lot with Lorenzo. He helped me design the API. Then, I worked on the implementation which took me quite a lot of time. I didn't plan on the local database being so large and complex to write. I managed to get it to a ready for review state Thursday. Then, Lorenzo and Quentin reviewed it very well. For next week, I will work on the suggestions they left and their requests.
 
 In my opinion, Lorenzo and I managed to communicate very well on the local database issues to build something that would be actually usable not only by me but by the others member of the team, especially Lorenzo.
 
