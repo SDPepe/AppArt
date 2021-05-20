@@ -55,16 +55,15 @@ public class LoginActivity extends AppCompatActivity {
             String password = SharedPreferencesHelper.getSavedPassword(this);
             CompletableFuture<User> loginResult = loginService.loginWithEmail(email, password);
             loginResult.exceptionally(e -> {
-                Toast.makeText(this, "Auto-login failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Offline login", Toast.LENGTH_SHORT).show();
+                startScrollingActivity();
                 return null;
             });
             loginResult.thenAccept(user -> {
                 saveLoggedUser(user);
-                hideProgressBar();
                 startScrollingActivity();
             });
         } else {
-            hideProgressBar();
             setBundleInfo(this.getIntent().getExtras());
         }
     }
