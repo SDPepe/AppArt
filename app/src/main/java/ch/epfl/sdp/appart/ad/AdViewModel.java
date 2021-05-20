@@ -1,7 +1,5 @@
 package ch.epfl.sdp.appart.ad;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
@@ -16,11 +14,8 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.NotImplementedError;
-
 
 /**
  * ViewModel for the AdActivity.
@@ -53,7 +48,7 @@ public class AdViewModel extends ViewModel {
      * activity was opened from the favorites page, load the data from the local db first and then
      * fetch from server to ensure latest data is shown.
      *
-     * @param id the unique ID of the ad in the database
+     * @param id            the unique ID of the ad in the database
      * @param fromFavorites
      * @return a completable future to let the activity know if the action was successful
      */
@@ -66,76 +61,83 @@ public class AdViewModel extends ViewModel {
             loadResult.complete(null);
 
         // even if local load fails, try to load from server
-        loadResult.whenComplete((e,res) -> fetchAndSet(result, id));
+        loadResult.whenComplete((e, res) -> fetchAndSet(result, id));
         return result;
     }
 
-    public <T> void observePanoramasReferences(LifecycleOwner owner, @NonNull Observer<? super List<String>> observer) {
+    public <T> void observePanoramasReferences(LifecycleOwner owner, @NonNull Observer<?
+            super List<String>> observer) {
         panoramasReferences.observe(owner, observer);
     }
+
     // Getters
-    public LiveData<String> getTitle() { return adTitle; }
+    public LiveData<String> getTitle() {
+        return adTitle;
+    }
 
-    public LiveData<List<String>> getPhotosRefs() { return adPhotosReferences; }
+    public LiveData<List<String>> getPhotosRefs() {
+        return adPhotosReferences;
+    }
 
-    public LiveData<String> getAddress() { return adAddress; }
+    public LiveData<String> getAddress() {
+        return adAddress;
+    }
 
-    public LiveData<String> getPrice() { return adPrice; }
+    public LiveData<String> getPrice() {
+        return adPrice;
+    }
 
-    public LiveData<String> getDescription() { return adDescription; }
+    public LiveData<String> getDescription() {
+        return adDescription;
+    }
 
-    public LiveData<String> getAdAdvertiserName() { return adAdvertiserName; }
+    public LiveData<String> getAdAdvertiserName() {
+        return adAdvertiserName;
+    }
 
-    public LiveData<String> getAdvertiserId() { return adAdvertiserId; }
+    public LiveData<String> getAdvertiserId() {
+        return adAdvertiserId;
+    }
 
     @Nullable
-    public Ad getAd(){ return ad; }
+    public Ad getAd() {
+        return ad;
+    }
 
     /**
      * Loads data from the local DB
      */
-    private void localLoad(CompletableFuture<Void> result, String adId){
-        localdb.getAd(adId)
-                .exceptionally( e -> {
-                    result.completeExceptionally(e);
-                    return null;
-                })
-                .thenAccept( ad -> {
-                    this.ad = ad;
-                    setAdValues(ad);
-                    result.complete(null);
-                });
-        throw new NotImplementedError();
+    private void localLoad(CompletableFuture<Void> result, String adId) {
+        setAdValues(result, localdb.getAd(adId));
     }
 
     /**
      * Fetches ad data from the server
      */
     private void fetchAndSet(CompletableFuture<Void> result, String adId) {
-        db.getAd(adId)
-                .exceptionally(e -> {
-                    Log.d("ANNOUNCE", "DATABASE FAIL");
-                    result.completeExceptionally(e);
-                    return null;
-                })
-                .thenAccept(ad -> {
-                    setAdValues(ad);
-                    result.complete(null);
-                });
+        setAdValues(result, db.getAd(adId));
     }
 
     /**
      * Helper to set values from an ad
      */
-    private void setAdValues(Ad ad){
-        this.adAddress.setValue(addressFrom(ad.getStreet(), ad.getCity()));
-        this.adTitle.setValue(ad.getTitle());
-        this.adPrice.setValue(priceFrom(ad.getPrice(), ad.getPricePeriod()));
-        this.adDescription.setValue(ad.getDescription());
-        this.adAdvertiserName.setValue(ad.getAdvertiserName());
-        this.adAdvertiserId.setValue(ad.getAdvertiserId());
-        this.adPhotosReferences.setValue(ad.getPhotosRefs());
-        this.panoramasReferences.setValue(ad.getPanoramaReferences());
+    private void setAdValues(CompletableFuture<Void> result, CompletableFuture<Ad> adRes) {
+        adRes.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+        adRes.thenAccept(ad -> {
+            this.ad = ad;
+            this.adAddress.setValue(addressFrom(ad.getStreet(), ad.getCity()));
+            this.adTitle.setValue(ad.getTitle());
+            this.adPrice.setValue(priceFrom(ad.getPrice(), ad.getPricePeriod()));
+            this.adDescription.setValue(ad.getDescription());
+            this.adAdvertiserName.setValue(ad.getAdvertiserName());
+            this.adAdvertiserId.setValue(ad.getAdvertiserId());
+            this.adPhotosReferences.setValue(ad.getPhotosRefs());
+            this.panoramasReferences.setValue(ad.getPanoramaReferences());
+            result.complete(null);
+        });
     }
 
     /**

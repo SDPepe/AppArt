@@ -217,16 +217,16 @@ public class AdActivity extends ToolbarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_favorite) {
-            addNewFavorite()
-                    .exceptionally(e -> {
-                        Toast.makeText(this, e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                        return null;
-                    })
-                    .thenAccept(res ->
-                            Toast.makeText(this, R.string.favSuccess_Ad,
-                                    Toast.LENGTH_SHORT).show()
-                    );
+            CompletableFuture<Void> addRes = addNewFavorite();
+            addRes.exceptionally(e -> {
+                Toast.makeText(this, e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                return null;
+            });
+            addRes.thenAccept(res ->
+                    Toast.makeText(this, R.string.favSuccess_Ad,
+                            Toast.LENGTH_SHORT).show()
+            );
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -245,13 +245,13 @@ public class AdActivity extends ToolbarActivity {
             );
             return result;
         }
-        database.getUser(user.getUserId())
-                .exceptionally(e -> {
-                    result.completeExceptionally(
-                            new DatabaseServiceException(getString(R.string.favFail_Ad)));
-                    return null;
-                })
-                .thenAccept(u -> saveFavorite(result, u));
+        CompletableFuture<User> userRes = database.getUser(user.getUserId());
+        userRes.exceptionally(e -> {
+            result.completeExceptionally(
+                    new DatabaseServiceException(getString(R.string.favFail_Ad)));
+            return null;
+        });
+        userRes.thenAccept(u -> saveFavorite(result, u));
         return result;
     }
 
@@ -260,54 +260,45 @@ public class AdActivity extends ToolbarActivity {
      */
     private void saveFavorite(CompletableFuture<Void> result, User user) {
         user.addFavorite(adId);
-        database.updateUser(user)
-                .exceptionally(e -> {
-                    result.completeExceptionally(
-                            new DatabaseServiceException(
-                                    getString(R.string.favFail_Ad)));
+        CompletableFuture<Boolean> updateRes = database.updateUser(user);
+        updateRes.exceptionally(e -> {
+            result.completeExceptionally(
+                    new DatabaseServiceException(
+                            getString(R.string.favFail_Ad)));
+            return null;
+        });
+        // if update successful, save ad locally
+        updateRes.thenAccept(res -> {
+            List<Bitmap> images = getImages();
+            List<Bitmap> panoramas = new ArrayList<>();
+            List<CompletableFuture<Bitmap>> panoramasRes =
+                    getPanoramasFutures();
+            User currentUser = login.getCurrentUser();
+            CompletableFuture<Bitmap> pfpRes = getProfilePic(currentUser);
+            pfpRes.exceptionally(e -> {
+                Toast.makeText(this, R.string.localFavFail_Ad
+                        , Toast.LENGTH_SHORT).show();
+                return null;
+            });
+            pfpRes.thenAccept(pfp -> {
+                CompletableFuture<Void> allOf = CompletableFuture.allOf(panoramasRes.toArray(
+                        new CompletableFuture[panoramasReferences.size()]));
+                allOf.exceptionally(e -> {
+                    Toast.makeText(this,
+                            R.string.localFavFail_Ad,
+                            Toast.LENGTH_SHORT).show();
                     return null;
-                })
-                // if update successful, save ad locally
-                .thenAccept(res -> {
-                    List<Bitmap> images = getImages();
-                    List<Bitmap> panoramas = new ArrayList<>();
-                    List<CompletableFuture<Bitmap>> panoramasRes =
-                            getPanoramasFutures();
-                    User currentUser = login.getCurrentUser();
-                    getProfilePic(currentUser).
-                            exceptionally(e -> {
-                                Toast.makeText(this, R.string.localFavFail_Ad
-                                        , Toast.LENGTH_SHORT);
-                                return null;
-                            })
-                            .thenAccept(pfp -> {
-                                CompletableFuture.allOf(panoramasRes.toArray(
-                                        new CompletableFuture[panoramasReferences.size()]))
-                                        .exceptionally(e -> {
-                                            Toast.makeText(this,
-                                                    R.string.localFavFail_Ad,
-                                                    Toast.LENGTH_SHORT);
-                                            return null;
-                                        })
-                                        .thenAccept(ignoredRes -> {
-                                            panoramas.addAll(panoramasRes.stream().map(CompletableFuture::join)
-                                                    .collect(Collectors.toList()));
-                                            localdb.writeCompleteAd(adId,
-                                                    getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID),
-                                                    mViewModel.getAd(), user,
-                                                    images, panoramas, pfp);
-                                        });
-                            });
-
-                    /*
-                    .exceptionally(e -> {
-                        result.completeExceptionally(new
-                        DatabaseServiceException(getString(R
-                        .string.favFail_Ad)));
-                        return null; });
-                    .thenAccept(res -> result.complete(null));
-                     */
                 });
+                allOf.thenAccept(ignoredRes -> {
+                    panoramas.addAll(panoramasRes.stream().map(CompletableFuture::join)
+                            .collect(Collectors.toList()));
+                    localdb.writeCompleteAd(adId,
+                            getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID),
+                            mViewModel.getAd(), user,
+                            images, panoramas, pfp);
+                });
+            });
+        });
     }
 
     private List<Bitmap> getImages() {

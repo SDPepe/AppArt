@@ -299,23 +299,23 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void saveUserLocally() {
         CompletableFuture<Bitmap> profileImgResult = new CompletableFuture<>();
-        mViewModel.getCurrentUser()
-                .exceptionally(e -> {
-                    Toast.makeText(this, R.string.localSaveFailed_User, Toast.LENGTH_SHORT).show();
-                    return null;
-                })
-                .thenAccept(res -> {
-                    database.accept(new GlideBitmapLoader(this, profileImgResult,
-                            mViewModel.getUser().getValue().getProfileImagePathAndName()));
-                    profileImgResult
-                            .exceptionally(e -> {
-                                Toast.makeText(this, R.string.localSaveFailed_User,
-                                        Toast.LENGTH_SHORT).show();
-                                return null;
-                            })
-                            .thenAccept(img -> {
-                                localdb.setCurrentUser(mViewModel.getUser().getValue(), img);
-                            });
-                });
+        CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
+        userRes.exceptionally(e -> {
+            Toast.makeText(this, R.string.localSaveFailed_User, Toast.LENGTH_SHORT).show();
+            return null;
+        });
+        userRes.thenAccept(res -> {
+            database.accept(new GlideBitmapLoader(this, profileImgResult,
+                    mViewModel.getUser().getValue().getProfileImagePathAndName()));
+            profileImgResult
+                    .exceptionally(e -> {
+                        Toast.makeText(this, R.string.localSaveFailed_User,
+                                Toast.LENGTH_SHORT).show();
+                        return null;
+                    })
+                    .thenAccept(img -> {
+                        localdb.setCurrentUser(mViewModel.getUser().getValue(), img);
+                    });
+        });
     }
 }

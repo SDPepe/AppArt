@@ -52,21 +52,21 @@ public class FavoriteActivity extends ToolbarActivity {
 
         mViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
 
-        mViewModel.initHome()
-                .exceptionally(e -> {
-                    // when initHome completes exceptionally, the exception message is the string to
-                    // show to user (see favoriteVM)
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return null;
-                })
-                .thenAccept(res -> {
-                    recyclerView = findViewById(R.id.recycler_favorites);
-                    recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
-                    recyclerView.setHasFixedSize(true); //use for performance if card dims does
-                    // not change
-                    mViewModel.getFavorites().observe(this, this::updateList);
-                    saveLocally();
-                });
+        CompletableFuture<Void> initRes = mViewModel.initHome();
+        initRes.exceptionally(e -> {
+            // when initHome completes exceptionally, the exception message is the string to
+            // show to user (see favoriteVM)
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return null;
+        });
+        initRes.thenAccept(res -> {
+            recyclerView = findViewById(R.id.recycler_favorites);
+            recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
+            recyclerView.setHasFixedSize(true); //use for performance if card dims does
+            // not change
+            mViewModel.getFavorites().observe(this, this::updateList);
+            saveLocally();
+        });
     }
 
     /**
@@ -102,15 +102,14 @@ public class FavoriteActivity extends ToolbarActivity {
                     database.accept(new GlideBitmapLoader(this, pfp,
                             user.getProfileImagePathAndName()));
                     images.thenAcceptBoth(panoramas, (imgs, panms) -> {
-                        pfp
-                                .exceptionally(e -> {
-                                    showFailToast();
-                                    return null;
-                                })
-                                .thenAccept(pfpBitmap -> {
-                                    localdb.writeCompleteAd(adId, cardId, ad, user, imgs, panms,
-                                            pfpBitmap);
-                                });
+                        pfp.exceptionally(e -> {
+                            showFailToast();
+                            return null;
+                        });
+                        pfp.thenAccept(pfpBitmap -> {
+                            localdb.writeCompleteAd(adId, cardId, ad, user, imgs, panms,
+                                    pfpBitmap);
+                        });
                     }).exceptionally(e -> {
                         showFailToast();
                         return null;
@@ -130,16 +129,16 @@ public class FavoriteActivity extends ToolbarActivity {
             imageBitmaps.add(bitmapRes);
         }
         CompletableFuture<List<Bitmap>> res = new CompletableFuture<>();
-        CompletableFuture.allOf(imageBitmaps.toArray(
-                new CompletableFuture[imageIds.size()]))
-                .exceptionally(e -> {
-                    res.completeExceptionally(e);
-                    return null;
-                })
-                .thenAccept(ignoreRes -> {
-                    res.complete(imageBitmaps.stream().map(CompletableFuture::join)
-                            .collect(Collectors.toList()));
-                });
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(imageBitmaps.toArray(
+                new CompletableFuture[imageIds.size()]));
+        allOf.exceptionally(e -> {
+            res.completeExceptionally(e);
+            return null;
+        });
+        allOf.thenAccept(ignoreRes -> {
+            res.complete(imageBitmaps.stream().map(CompletableFuture::join)
+                    .collect(Collectors.toList()));
+        });
         return res;
     }
 

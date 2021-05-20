@@ -107,29 +107,29 @@ public class LoginActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
 
-        loginService.loginWithEmail(email, password)
-                .exceptionally(e -> {
-                    UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
-                    progressBar.setVisibility(View.GONE);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    return null;
-                })
-                .thenAccept(user -> {
-                    SharedPreferencesHelper.saveUserForAutoLogin(this, email, password);
-                    CompletableFuture<Void> saveRes = saveLoggedUser(user);
-                    saveRes.exceptionally(e -> {
-                        Log.d("LOGIN", "failed to save user");
-                        progressBar.setVisibility(View.GONE);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        Toast.makeText(this, R.string.saveUserFail_Login,
-                                Toast.LENGTH_SHORT).show();
-                        return null;
-                    });
-                    saveRes.thenAccept(res -> {
-                        Log.d("LOGIN", "user has been saved, starting scrolling ...");
-                        startScrollingActivity();
-                    });
-                });
+        CompletableFuture<User> loginRes = loginService.loginWithEmail(email, password);
+        loginRes.exceptionally(e -> {
+            UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
+            progressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            return null;
+        });
+        loginRes.thenAccept(user -> {
+            SharedPreferencesHelper.saveUserForAutoLogin(this, email, password);
+            CompletableFuture<Void> saveRes = saveLoggedUser(user);
+            saveRes.exceptionally(e -> {
+                Log.d("LOGIN", "failed to save user");
+                progressBar.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                Toast.makeText(this, R.string.saveUserFail_Login,
+                        Toast.LENGTH_SHORT).show();
+                return null;
+            });
+            saveRes.thenAccept(res -> {
+                Log.d("LOGIN", "user has been saved, starting scrolling ...");
+                startScrollingActivity();
+            });
+        });
     }
 
     /**
