@@ -14,27 +14,19 @@
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:paddingTop="70dp"
-      android:paddingBottom="10dp"
       android:gravity="fill"
       android:orientation="vertical"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="@+id/guideline26"
       app:layout_constraintStart_toStartOf="@+id/guideline25"
       app:layout_constraintTop_toTopOf="parent"
-      android:clipToPadding="false"
-      android:padding="2dp"
       >
 
 
         <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_gravity="fill"
-          android:clipToPadding="false"
-          android:orientation="horizontal"
-          android:paddingStart="16dp"
-          android:paddingTop="44dp"
-          >
+          android:orientation="horizontal">
 
             <LinearLayout
               android:layout_width="wrap_content"
@@ -162,23 +154,20 @@
         <Space
           android:layout_width="match_parent"
           android:layout_height="0dp"
-          android:layout_weight="1" />
+          android:layout_weight="0.75" />
 
         <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_gravity="bottom"
-          android:foregroundGravity="bottom"
-          android:gravity="bottom"
-          android:orientation="vertical"
-          android:paddingBottom="16dp">
+          android:gravity="bottom|center"
+          android:orientation="vertical">
 
             <LinearLayout
               android:id="@+id/attributes_UserProfile_layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:paddingBottom="53dp">
+              android:gravity="bottom|center"
+              android:orientation="vertical">
 
                 <LinearLayout
                   android:id="@+id/name_UserProfile_layout"
@@ -350,40 +339,46 @@
               android:layout_height="wrap_content"
               android:layout_gravity="bottom|center"
               android:paddingBottom="20dp"
-              android:paddingTop="20dp"
-              android:clipToPadding="false"
-              android:padding="3dp">
+              android:paddingTop="20dp">
 
                 <Button
                   android:id="@+id/doneEditing_UserProfile_button"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
+                  android:layout_marginTop="40dp"
+                  android:layout_marginBottom="40dp"
+                  android:layout_marginStart="@dimen/margin_button"
+                  android:layout_marginEnd="@dimen/margin_button"
+                  android:text="@string/doneButtonText"
                   android:background="@drawable/style_primary"
                   android:textColor="#FFFFFF"
-                  android:gravity="center"
-                  android:onClick="doneEditing"
-                  android:text="@string/doneButtonText"
-                  android:textAlignment="center"
-                  android:visibility="gone"
-                  android:textAllCaps="false"
                   android:textSize="16sp"
-                  app:layout_constraintBottom_toBottomOf="parent" />
+                  android:textAllCaps="false"
+                  android:onClick="doneEditing"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintTop_toTopOf="parent"
+
+                  />
 
                 <Button
                   android:id="@+id/editProfile_UserProfile_button"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
+                  android:layout_marginTop="40dp"
+                  android:layout_marginBottom="40dp"
+                  android:layout_marginStart="@dimen/margin_button"
+                  android:layout_marginEnd="@dimen/margin_button"
+                  android:text="@string/editProfileButtonText"
                   android:paddingStart="40dp"
                   android:paddingEnd="16dp"
                   android:background="@drawable/style_secondary"
                   android:drawableEnd="@drawable/ic_edit_user"
-                  android:gravity="center"
-                  android:onClick="editProfile"
-                  android:text="@string/editProfileButtonText"
-                  android:textAllCaps="false"
                   android:textColor="@color/primaryStart"
+                  android:textSize="16sp"
+                  android:onClick="editProfile"
+                  android:textAllCaps="false"
                   app:layout_constraintBottom_toBottomOf="parent"
-                  android:textSize="16sp"/>
+                  app:layout_constraintTop_toTopOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
