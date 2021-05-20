@@ -13,6 +13,10 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -35,7 +39,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-@UninstallModules(LoginModule.class)
+@UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
 public class LoginUITest {
 
@@ -48,11 +52,16 @@ public class LoginUITest {
     @BindValue
     final
     LoginService loginService = new MockLoginService();
+    @BindValue
+    final DatabaseService databaseService = new MockDatabaseService();
 
     @Before
     public void init() {
         hiltRule.inject();
         Intents.init();
+        // clear shared preferences to avoid auto-login
+        loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        loginService.signOut();
     }
 
     @Test
@@ -70,27 +79,40 @@ public class LoginUITest {
 
     @Test
     public void goToCreateAccountTest() {
+        // clear shared preferences to avoid auto-login
+        loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        loginService.signOut();
         onView(withId(R.id.create_account_Login_button)).perform(click());
         intended(hasComponent(CreateUserActivity.class.getName()));
     }
 
     @Test
     public void goToPasswordResetTest() {
+        // clear shared preferences to avoid auto-login
+        loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
         onView(withId(R.id.reset_password_Login_button)).perform(click());
         intended(hasComponent(ResetActivity.class.getName()));
     }
 
     @Test
     public void successfulLoginTest() throws ExecutionException, InterruptedException {
+        // clear shared preferences to avoid auto-login
+        loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        loginService.signOut();
+
         String email = "test@testappart.ch";
         String password = "password";
         loginService.createUser(email, password).get();
+
+        assertNotNull(loginService.getCurrentUser().getProfileImagePathAndName());
 
         onView(withId(R.id.email_Login_editText)).perform(typeText(email));
         onView(withId(R.id.password_Login_editText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
         onView(withId(R.id.login_Login_button)).perform(click());
 
+        // wait for user to be saved locally
+        Thread.sleep(3000);
         intended(hasComponent(ScrollingActivity.class.getName()));
 
         User user = loginService.getCurrentUser();
@@ -106,5 +128,7 @@ public class LoginUITest {
     @After
     public void release() {
         Intents.release();
+        loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        loginService.signOut();
     }
 }
