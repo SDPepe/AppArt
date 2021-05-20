@@ -44,11 +44,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @HiltAndroidTest
 public class AdUITest {
 
-    static final String testId = "1PoUWbeNHvMNotxwAui5";
+    static final String testId = "unknown";
     static final Intent intent;
 
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(), AdActivity.class);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_AD_ID, testId);
         intent.putExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID, testId);
     }
 
