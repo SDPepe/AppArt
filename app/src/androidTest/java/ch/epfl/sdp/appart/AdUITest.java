@@ -76,7 +76,6 @@ public class AdUITest {
     public void init() {
         Intents.init();
         hiltRule.inject();
-        login.loginWithEmail("test@testappart.ch", "password").join();
     }
 
     @Test
@@ -99,10 +98,13 @@ public class AdUITest {
 
     @Test
     public void clickOnFavoriteAddsToFavorites() {
+        login.loginWithEmail("test@testappart.ch", "password").join();
+
         onView(withId(R.id.action_add_favorite)).perform(click());
         User currentUser = login.getCurrentUser();
         assertNotNull(currentUser);
         assertTrue(currentUser.getFavoritesIds().stream().anyMatch(e -> e.equals(testId)));
+        login.signOut();
     }
 
     @Test
