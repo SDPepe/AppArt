@@ -20,6 +20,11 @@ import android.widget.Toast;
 
 import static android.widget.Toast.makeText;
 
+/**
+ * This activity counts the steps of the user once the start button is pressed.
+ * It also shows the total number of steps done from last boot. It works
+ * with the STEP_COUNTER and the STEP_DETECTOR sensor.
+ */
 public class StepCounterActivity extends AppCompatActivity implements SensorEventListener  {
 
     /* UI components */
