@@ -19,7 +19,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PlaceActivity" />
         <activity android:name=".AdCreationActivityDemo" />
         <activity android:name=".UserAdsActivity"></activity>
         <activity android:name=".FavoriteActivity" />

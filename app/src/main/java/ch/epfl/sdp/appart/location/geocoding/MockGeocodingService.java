@@ -20,41 +20,21 @@ public class MockGeocodingService implements GeocodingService {
 
     @Override
     public CompletableFuture<Address> getAddress(Location location) {
-        return CompletableFuture.supplyAsync(new Supplier<Address>() {
-            @Override
-            public Address get() {
-                return dummyAddress;
-            }
-        });
+        return CompletableFuture.supplyAsync(() -> dummyAddress);
     }
 
     @Override
     public CompletableFuture<Location> getLocation(Place place) {
-        return CompletableFuture.supplyAsync(new Supplier<Location>() {
-            @Override
-            public Location get() {
-                return dummyLocation;
-            }
-        });
+        return CompletableFuture.supplyAsync(() -> dummyLocation);
     }
 
     @Override
     public CompletableFuture<Float> getDistance(Location a, Location b) {
-        return CompletableFuture.supplyAsync(new Supplier<Float>() {
-            @Override
-            public Float get() {
-                return 0.0f;
-            }
-        });
+        return CompletableFuture.supplyAsync(() -> 0.0f);
     }
 
     @Override
     public CompletableFuture<Float> getDistance(Place a, Place b) {
-        return CompletableFuture.supplyAsync(new Supplier<Float>() {
-            @Override
-            public Float get() {
-                return 0.0f;
-            }
-        });
+        return CompletableFuture.supplyAsync(() -> 0.0f);
     }
 }
