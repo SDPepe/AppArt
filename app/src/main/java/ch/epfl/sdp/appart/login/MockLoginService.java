@@ -52,9 +52,9 @@ public class MockLoginService implements LoginService {
                 quentin.getUserId());
         users.put(quentinEmailPassword, quentin);
         AppUser testUser = new AppUser("password", "test@testappart.ch");
-        Pair<String, String> testUserEmailPassword = new Pair<>(antoine.getUserEmail(),
-                antoine.getUserId());
-        users.put(testUserEmailPassword, antoine);
+        Pair<String, String> testUserEmailPassword = new Pair<>(testUser.getUserEmail(),
+                testUser.getUserId());
+        users.put(testUserEmailPassword, testUser);
         lorenzo.setName("Lorenzo");
         lorenzo.setPhoneNumber("000");
         lorenzo.addAdId("id0");
