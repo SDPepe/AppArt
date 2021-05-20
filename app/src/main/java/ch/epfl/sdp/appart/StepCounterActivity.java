@@ -22,6 +22,7 @@ import static android.widget.Toast.makeText;
 
 public class StepCounterActivity extends AppCompatActivity implements SensorEventListener  {
 
+    /* UI components */
     private TextView textViewStepCounter;
     private TextView textViewStepDetector;
     private TextView textViewKm;
@@ -29,6 +30,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     private Button stopButton;
     private ProgressBar progressBar;
 
+    /* sensors */
     private SensorManager sensorManager;
     private Sensor mStepCounter;
     private Sensor mStepDetector;
@@ -167,25 +169,27 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     }
 
     private void getSensorsAndAddListeners() {
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+            mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+            sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+            stepDetectorSensorIsAvailable = true;
+        } else {
+            /* if only the STEP_DETECTOR sensor is missing this activity will still work
+             * but with less accuracy */
+            makeText(this, "Attention: this device has no step detector sensor. This causes higher latency and less accurate step count!", Toast.LENGTH_LONG).show();
+            stepDetectorSensorIsAvailable = false;
+        }
+
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
             mStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-
-            if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-                mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-                sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
-                stepDetectorSensorIsAvailable = true;
-            } else {
-                /* if only the STEP_DETECTOR sensor is missing this activity will still work
-                 * but with less accuracy */
-                makeText(this, "Attention: this device has no step detector sensor. This causes higher latency and less accurate step count!", Toast.LENGTH_LONG).show();
-                stepDetectorSensorIsAvailable = false;
-            }
-
         } else {
-            /* if the STEP_COUNTER sensor is missing on device this activity cannot work */
             makeText(this, "Attention: this device does not support the step counter sensor!", Toast.LENGTH_LONG).show();
-            finish();
+            /* if the STEP_COUNTER and STEP_DETECTOR sensor is missing on device this activity cannot work */
+            if (!stepDetectorSensorIsAvailable) {
+                finish();
+            }
         }
     }
 
