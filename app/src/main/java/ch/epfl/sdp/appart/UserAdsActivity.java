@@ -1,19 +1,15 @@
 package ch.epfl.sdp.appart;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
-import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
-import ch.epfl.sdp.appart.scrolling.ScrollingViewModel;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
+import ch.epfl.sdp.appart.ad.UserAdsViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +17,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 @AndroidEntryPoint
-public class FavoriteActivity extends ToolbarActivity {
+public class UserAdsActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
@@ -30,19 +26,19 @@ public class FavoriteActivity extends ToolbarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite);
+        setContentView(R.layout.activity_user_ads);
 
-        Toolbar toolbar = findViewById(R.id.Favorites_toolbar);
+        Toolbar toolbar = findViewById(R.id.UserAds_toolbar);
         setSupportActionBar(toolbar);
 
-        FavoriteViewModel mViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        UserAdsViewModel mViewModel = new ViewModelProvider(this).get(UserAdsViewModel.class);
 
         mViewModel.initHome();
 
-        recyclerView = findViewById(R.id.recycler_favorites);
+        recyclerView = findViewById(R.id.recycler_userAds);
         recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
         recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
-        mViewModel.getFavorites().observe(this, this::updateList);
+        mViewModel.getUserAds().observe(this, this::updateList);
     }
 
     /**

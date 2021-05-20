@@ -349,12 +349,15 @@ public class FirestoreAdHelper {
             Log.d("Ad creation", "ad upload failed");
             adRef.delete();
             cardRef.delete();
-            imagesRef.listAll().addOnSuccessListener(listResult -> {
-                List<StorageReference> items = listResult.getItems();
-                for (StorageReference item : items) {
-                    item.delete();
-                }
-            }).addOnFailureListener(e -> Log.d("Ad upload", "Failed to cleanup after failed upload"));
+            // imagesRef might be null if no image was given
+            if (imagesRef != null) {
+                imagesRef.listAll().addOnSuccessListener(listResult -> {
+                    List<StorageReference> items = listResult.getItems();
+                    for (StorageReference item : items) {
+                        item.delete();
+                    }
+                }).addOnFailureListener(e -> Log.d("Ad upload", "Failed to cleanup after failed upload"));
+            }
 
             // TODO create exception
             result.completeExceptionally(

@@ -56,16 +56,11 @@
     <string name="changeProfilePicture"> CHANGE </string>
     <string name="updateUserFailedInDB">  Information update failed, try again </string>
     <string name="updateUserImageFailedInDB">  Image update failed, try again </string>
-    <string-array name="genderList">
-        <item> </item>
-        <item>Female</item>
-        <item>Male</item>
-        <item>Other</item>
-    </string-array>
     <string name="contactAdUser"> CONTACT ANNOUNCER </string>
+    <string name="cameraAdButtonDesc">Add Picture</string>
 
     <!--  -->
-    <string name="cameraAdButtonDesc">Add Picture</string>
+
     <string name="createPanoramaTourButton">Panorama Tour</string>
     <string name="cameraButtonText">Camera</string>
     <string name="galleryButtonText">Gallery</string>
@@ -80,9 +75,9 @@
     <string name="goToLoginFromResetButtonText">Log In Menu</string>
     <string name="loadingTextAdActivity">Loading…</string>
     <string name="editTitleAdCreation">Title</string>
+    <string name="streetAdCreation">Street:</string>
 
     <!-- AdCreationActivity stuff -->
-    <string name="streetAdCreation">Street:</string>
     <string name="numberAdCreation">Number:</string>
     <string name="editStreetAdCreation">Street address</string>
     <string name="editNumberAdCreation">0A</string>
@@ -102,25 +97,28 @@
     <string name="snackbarFailed_AdCreation">There was an error while posting your ad, please try again later</string>
     <string name="snackbarNotFilled_AdCreation">Some fields haven\'t been filled!</string>
     <string name="snackbarNoPhotos_AdCreation">Please add at least one image!</string>
+    <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
 
     <!-- ScrollingActivity stuff -->
-    <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
     <string name="searchDescription_Scrolling">Which city?</string>
+    <string name="confirmCameraButtonText">Confirm</string>
 
     <!-- CameraActivity stuff -->
-    <string name="confirmCameraButtonText">Confirm</string>
     <string name="canceledNoImage"> "Canceled: you did not upload any image " </string>
+    <string name="leftButtonDescription_Panorama">Load previous image</string>
 
     <!-- PanoramaActivity stuff -->
-    <string name="leftButtonDescription_Panorama">Load previous image</string>
     <string name="rightButtonDescription_Panorama">Load next image</string>
     <string name="snackbarError_Panorama">There was an error loading the image, please try again later.</string>
+
 
     <!-- LocationActivity stuff -->
     <string name="permissionGranted">Permission granted</string>
 
-    <!-- ScrollingActivity stuff -->
+    <!-- LocationActivity stuff -->
     <string name="permissionRefused">Permission refused</string>
+
+    <!-- ScrollingActivity stuff -->
     <string name="educationalPopup">Educational popup</string>
     <string name="setCallbackTextView">set</string>
     <string name="notSetCallbackTextView">not set</string>
@@ -131,12 +129,34 @@
     <string name="locationDefault">0.0</string>
     <string name="add_to_favorites">Add to Favorites</string>
     <string name="favorites">Favorites</string>
+    <string name="userAds">Your Ads</string>
+    <string-array name="genderList">
+        <item> </item>
+        <item>Female</item>
+        <item>Male</item>
+        <item>Other</item>
+    </string-array>
+
+    <!-- FullScreenImageActivity stuff -->
     <string-array name="periodList">
         <item>Month</item>
         <item>Week</item>
         <item>Day</item>
     </string-array>
-
     <!-- FullScreenImageActivity stuff -->
     <string name="contentDescFullScreenImage">Photo</string>
+
+    <!-- FilterActivity stuff -->
+    <string name="filterTitle">Filter</string>
+    <string name="filterPrice">Price range:</string>
+    <string name="minPrice">min price</string>
+    <string name="maxPrice">max price</string>
+    <string name="chf">CHF/ month</string>
+    <string name="filterLocation">Location:</string>
+    <string name="locationRange">location range :</string>
+    <string name="km">kilometres</string>
+    <string name="confirmFilter">Save</string>
+    <string name="resetFilter">Remove all</string>
+
+
 </resources>
