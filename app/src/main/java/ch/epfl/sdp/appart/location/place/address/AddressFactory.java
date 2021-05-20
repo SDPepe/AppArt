@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import ch.epfl.sdp.appart.location.place.locality.Locality;
 import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
+import ch.epfl.sdp.appart.location.place.locality.MalformedLocalityException;
 
 /**
  * A factory to instantiate the Addresses. It also checks for a correct address format with regex.
@@ -52,13 +53,13 @@ public class AddressFactory {
             throw new MalformedAddressException("malformed street string, expected format : " + STREET_PATTERN + "  but was " + streetFiltered);
         }
 
-       Locality finalLocality = LocalityFactory.makeLocality(locality);
+       Locality finalLocality = LocalityFactory.makeLocality(localityFiltered);
 
         if (!postalCodePattern.matcher(postalCodeFiltered).matches()) {
             throw new MalformedAddressException("malformed postal code string, expected format : " + POSTAL_CODE_PATTERN + "but was :" + postalCode);
         }
 
-        return new Address(streetFiltered, localityFiltered, finalLocality.getName());
+        return new Address(streetFiltered, postalCodeFiltered, finalLocality.getName());
     }
 
 
@@ -117,7 +118,7 @@ public class AddressFactory {
     public static Address makeAddressOrElse(String address, Supplier<Address> orElse) {
         try {
             return makeAddress(address);
-        } catch (MalformedAddressException e) {
+        } catch (MalformedAddressException | MalformedLocalityException e) {
             return orElse.get();
         }
     }
@@ -133,7 +134,7 @@ public class AddressFactory {
     public static Address makeAddressOrElse(String street, String postalCode, String locality, Supplier<Address> orElse) {
         try {
             return makeAddress(street, postalCode, locality);
-        } catch (MalformedAddressException e) {
+        } catch (MalformedAddressException | MalformedLocalityException e) {
             return orElse.get();
         }
     }
