@@ -37,6 +37,7 @@
         <activity android:name=".PanoramaActivity" />
         <activity android:name=".AdActivity" />
         <activity android:name=".ScrollingActivity" />
+        <activity android:name=".FilterActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -94,6 +94,18 @@ public class MockDatabaseService implements DatabaseService {
         return getCards();
     }
 
+    @NonNull
+    @Override
+    public CompletableFuture<List<Card>> getCardsFilterPrice(int min, int max) {
+        return getCards();
+    }
+
+    @NonNull
+    @Override
+    public CompletableFuture<List<Card>> getCardsById(@NonNull List<String> ids) {
+        return getCards();
+    }
+
     @NotNull
     @Override
     public CompletableFuture<Boolean> updateCard(@NotNull Card card) {
