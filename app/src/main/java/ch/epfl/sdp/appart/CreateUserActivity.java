@@ -61,11 +61,4 @@ public class CreateUserActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-    /**
-     * Closes the activity.
-     */
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
 }

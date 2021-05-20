@@ -51,11 +51,4 @@ public class ResetActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-    /**
-     * Closes the activity.
-     */
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
 }
