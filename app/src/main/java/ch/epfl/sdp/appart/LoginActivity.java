@@ -48,13 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        /*
-         * If a currentUser is stored locally, auto-login with it and then try to fetch
-         * it from the server. If the fetch is successful, update local currentUser and
-         * start the activity. Otherwise, act as the app is offline and start the activity
-         * with the local currentUser.
-         * If no currentUser is stored locally, ask for login credentials as we did before.
-         */
+
         progressBar = findViewById(R.id.progress_Login_ProgressBar);
 
         String email = SharedPreferencesHelper.getSavedEmail(this);
@@ -62,8 +56,6 @@ public class LoginActivity extends AppCompatActivity {
             String password = SharedPreferencesHelper.getSavedPassword(this);
             CompletableFuture<User> loginResult = loginService.loginWithEmail(email, password);
             loginResult.exceptionally(e -> {
-                progressBar.setVisibility(View.GONE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 startScrollingActivity();
                 return null;
             });
@@ -97,36 +89,26 @@ public class LoginActivity extends AppCompatActivity {
     public void logIn(View view) {
         EditText emailView = findViewById(R.id.email_Login_editText);
         EditText passwordView = findViewById(R.id.password_Login_editText);
-
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
-        progressBar.setVisibility(View.VISIBLE);
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-
+        showProgressBar();
         CompletableFuture<User> loginRes = loginService.loginWithEmail(email, password);
         loginRes.exceptionally(e -> {
             UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
-            progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            hideProgressBar();
             return null;
         });
         loginRes.thenAccept(user -> {
             SharedPreferencesHelper.saveUserForAutoLogin(this, email, password);
             CompletableFuture<Void> saveRes = saveLoggedUser(user);
             saveRes.exceptionally(e -> {
-                Log.d("LOGIN", "failed to save user");
-                progressBar.setVisibility(View.GONE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                hideProgressBar();
                 Toast.makeText(this, R.string.saveUserFail_Login,
                         Toast.LENGTH_SHORT).show();
                 return null;
             });
             saveRes.thenAccept(res -> {
-                Log.d("LOGIN", "user has been saved, starting scrolling ...");
                 startScrollingActivity();
             });
         });
@@ -171,8 +153,7 @@ public class LoginActivity extends AppCompatActivity {
         userRes.thenAccept(u -> {
             database.accept(new GlideBitmapLoader(
                     this, pfpRes, u.getProfileImagePathAndName()));
-            pfpRes
-                    .exceptionally(e -> {
+            pfpRes.exceptionally(e -> {
                         result.completeExceptionally(e);
                         return null;
                     });
@@ -188,5 +169,16 @@ public class LoginActivity extends AppCompatActivity {
             });
         });
         return result;
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 }
