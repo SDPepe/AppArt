@@ -75,12 +75,6 @@ public class CreateUserAccountUITest {
     }
 
     @Test
-    public void backToLoginTest() {
-        onView(withId(R.id.create_account_login_CreateUser_button)).perform(click());
-        intended(hasComponent(LoginActivity.class.getName()));
-    }
-
-    @Test
     public void successfulCreateAccountTest() throws ExecutionException, InterruptedException {
         String email = "test@testappart.ch";
         String password = "password";

@@ -50,12 +50,6 @@ public class ResetPasswordTest {
     }
 
     @Test
-    public void goBackToLoginTest() {
-        onView(withId(R.id.log_in_Reset_button)).perform(click());
-        intended(hasComponent(LoginActivity.class.getName()));
-    }
-
-    @Test
     public void resetPasswordOnNonExistingUserTest() {
         String email = "fakeuser@testappart.ch";
         onView(withId(R.id.email_Reset_editText)).perform(typeText(email));
