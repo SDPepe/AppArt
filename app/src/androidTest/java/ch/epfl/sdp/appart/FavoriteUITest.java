@@ -1,6 +1,10 @@
 package ch.epfl.sdp.appart;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -15,6 +19,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
@@ -24,6 +29,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
@@ -53,6 +59,8 @@ import static org.hamcrest.Matchers.allOf;
 @HiltAndroidTest
 public class FavoriteUITest {
 
+    static final String KEY_SP_PACKAGE = "PrivateStorageUtilsTest";
+
     @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
@@ -69,6 +77,8 @@ public class FavoriteUITest {
     public void init() {
         Intents.init();
         hiltRule.inject();
+        // clear shared preferences to avoid auto-login
+        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
     }
     
     /**
@@ -100,6 +110,9 @@ public class FavoriteUITest {
 
     @Test
     public void favoriteUITest() {
+        // clear shared preferences to avoid auto-login
+        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.email_Login_editText),
                         childAtPosition(

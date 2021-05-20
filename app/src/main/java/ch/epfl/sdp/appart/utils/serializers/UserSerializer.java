@@ -1,6 +1,8 @@
 package ch.epfl.sdp.appart.utils.serializers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.appart.database.firebaselayout.AdLayout;
@@ -24,6 +26,7 @@ public class UserSerializer {
         docData.put(UserLayout.NAME, data.getName());
         docData.put(UserLayout.PHONE, data.getPhoneNumber());
         docData.put(UserLayout.PICTURE, data.getProfileImagePathAndName());
+        docData.put(UserLayout.FAVORITE_IDS, new ArrayList<String>(data.getFavoritesIds()));
         return docData;
     }
 
@@ -55,6 +58,13 @@ public class UserSerializer {
             user.setProfileImagePathAndName((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
         }
 
+        Object rawFavorites = data.get(UserLayout.FAVORITE_IDS);
+        if (rawFavorites != null) {
+            for (String fav : (List<String>) rawFavorites) {
+                user.addFavorite(fav);
+            }
+        }
+
         return user;
     }
 
@@ -67,6 +77,7 @@ public class UserSerializer {
         docData.put(UserLayout.PHONE, data.getPhoneNumber());
         docData.put(UserLayout.PICTURE, data.getProfileImagePathAndName());
         docData.put(UserLayout.ID, data.getUserId());
+        docData.put(UserLayout.FAVORITE_IDS, new ArrayList<String>(data.getFavoritesIds()));
         return docData;
     }
 
@@ -97,6 +108,13 @@ public class UserSerializer {
         Object rawPfpRef = data.get(UserLayout.PICTURE);
         if (rawPfpRef != null) {
             user.setProfileImagePathAndName((String) rawPfpRef); //WARNING WAS "profilePicture" before not matching our actual
+        }
+
+        Object rawFavorites = data.get(UserLayout.FAVORITE_IDS);
+        if (rawFavorites != null) {
+            for (String fav : (List<String>) rawFavorites) {
+                user.addFavorite(fav);
+            }
         }
 
         return user;

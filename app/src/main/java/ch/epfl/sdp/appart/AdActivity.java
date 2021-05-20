@@ -92,7 +92,7 @@ public class AdActivity extends ToolbarActivity {
                 ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
         // init content, show a toast if load failed
         mViewModel.initAd(adId,
-                openingActivity.equals(ActivityCommunicationLayout.FAVORITES_ACTIVITY))
+                ActivityCommunicationLayout.FAVORITES_ACTIVITY.equals(openingActivity))
                 .exceptionally(e -> {
                     Toast.makeText(this, R.string.loadFail_Ad,
                             Toast.LENGTH_SHORT).show();
