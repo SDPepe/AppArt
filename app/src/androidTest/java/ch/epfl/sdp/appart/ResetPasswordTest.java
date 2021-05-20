@@ -66,6 +66,8 @@ public class ResetPasswordTest {
 
     @Test
     public void resetPasswordSuccessfulTest() throws ExecutionException, InterruptedException {
+        loginService.signOut();
+
         String email = "test@testappart.ch";
         String password = "password";
         loginService.createUser(email, password).get();

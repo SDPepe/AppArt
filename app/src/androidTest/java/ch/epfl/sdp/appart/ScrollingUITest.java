@@ -19,8 +19,11 @@ import org.junit.Test;
 import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.hilt.AppConfigurationModule;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -43,12 +46,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 
 //@RunWith(AndroidJUnit4.class)
-@UninstallModules({DatabaseModule.class, AppConfigurationModule.class})
+@UninstallModules({DatabaseModule.class, AppConfigurationModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class ScrollingUITest {
 
@@ -60,6 +66,8 @@ public class ScrollingUITest {
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
+    @BindValue
+    LocalDatabaseService localdb = new MockLocalDatabase();
 
     //just to reset demo mode
     @BindValue

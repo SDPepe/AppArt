@@ -1,6 +1,8 @@
 package ch.epfl.sdp.appart.database;
 
 import android.net.Uri;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
@@ -195,6 +197,7 @@ public class MockDatabaseService implements DatabaseService {
     }
 
     public void accept(GlideLoaderVisitor visitor) {
+        Log.d("MOCK", "accepting visitor");
         visitor.visit(this);
     }
 
