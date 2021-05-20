@@ -2,41 +2,50 @@ package ch.epfl.sdp.appart.place.helper;
 
 import android.content.Context;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.libraries.places.api.Places;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-import javax.net.ssl.HttpsURLConnection;
 
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.location.Location;
 
 /**
- * Allows to make a query to Google API by using an http request and returns a Json string.
+ * Allows to make a query to Google API by using an http request and returns
+ * a Json string.
  */
 public class HttpGooglePlaceHelper implements PlaceHelper {
 
     private final String apiKey;
+    private final Context context;
 
     public HttpGooglePlaceHelper(Context context) {
         this.apiKey = context.getResources().getString(R.string.maps_api_key);
         Places.initialize(context.getApplicationContext(), apiKey);
+        this.context = context;
     }
 
     @Override
-    public CompletableFuture<String> query(Location location, int radius, String type) {
-
-        URL url = new HttpGooglePlaceHelper.NearbySearchPlaceURLBuilder(apiKey, location, radius, type).getUrl();
-
+    public CompletableFuture<String> query(Location location, int radius,
+                                           String type) {
         CompletableFuture<String> result = new CompletableFuture<>();
-        CompletableFuture.supplyAsync(() -> {
+        URL url =
+                new HttpGooglePlaceHelper.NearbySearchPlaceURLBuilder(apiKey,
+                        location, radius, type).getUrl();
+        StringRequest nearbyPlacesRequest =
+                new StringRequest(Request.Method.GET, url.toString(),
+                        result::complete,
+                        error -> result.completeExceptionally(error.getCause()));
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(nearbyPlacesRequest);
+        return result;
+
+        /*CompletableFuture.supplyAsync(() -> {
             InputStream stream = null;
             HttpsURLConnection connection = null;
             String potentialResult = null;
@@ -46,7 +55,8 @@ public class HttpGooglePlaceHelper implements PlaceHelper {
                 connection.setConnectTimeout(3000);
                 connection.setRequestMethod("GET");
 
-                // Already true by default but setting just in case; needs to be true since this request
+                // Already true by default but setting just in case; needs to
+                 be true since this request
                 // is carrying an input (response) body.
                 connection.setDoInput(true);
                 // Open communications link (network traffic occurs here).
@@ -60,8 +70,10 @@ public class HttpGooglePlaceHelper implements PlaceHelper {
                 // Retrieve the response body as an InputStream.
                 stream = connection.getInputStream();
                 if (stream != null) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-                    potentialResult = reader.lines().collect(Collectors.joining("\n"));
+                    BufferedReader reader = new BufferedReader(new
+                    InputStreamReader(stream, StandardCharsets.UTF_8));
+                    potentialResult = reader.lines().collect(Collectors
+                    .joining("\n"));
                 }
             } catch (IOException e) {
                 result.completeExceptionally(e);
@@ -82,7 +94,7 @@ public class HttpGooglePlaceHelper implements PlaceHelper {
             result.complete(potentialResult);
             return null;
         });
-        return result;
+        return result;*/
     }
 
     /**
@@ -90,18 +102,22 @@ public class HttpGooglePlaceHelper implements PlaceHelper {
      */
     private static class NearbySearchPlaceURLBuilder {
 
-        private final static String TEXT_SEARCH_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
+        private final static String TEXT_SEARCH_BASE_URL = "https://maps" +
+                ".googleapis.com/maps/api/place/nearbysearch/";
         private URL url = null;
 
         /**
-         * Constructs the URL with a StringBuilder. The fields are hardcoded because it would make
+         * Constructs the URL with a StringBuilder. The fields are hardcoded
+         * because it would make
          * the code very unreadable with constants.
+         *
          * @param apiKey
          * @param location
          * @param radius
          * @param type
          */
-        public NearbySearchPlaceURLBuilder(String apiKey, Location location, int radius, String type) {
+        public NearbySearchPlaceURLBuilder(String apiKey, Location location,
+                                           int radius, String type) {
             StringBuilder sb = new StringBuilder();
             sb.append(TEXT_SEARCH_BASE_URL).append("json?");
             sb.append("location=").append(location.latitude).append(",").append(location.longitude).append("&");
@@ -117,6 +133,7 @@ public class HttpGooglePlaceHelper implements PlaceHelper {
 
         /**
          * Get the URL of love.
+         *
          * @return URL of love.
          */
         public URL getUrl() {
