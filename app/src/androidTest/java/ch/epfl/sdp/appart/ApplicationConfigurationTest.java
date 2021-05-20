@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 @HiltAndroidTest
 public class ApplicationConfigurationTest {
 
-    /*@Rule(order = 0)
+    @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
@@ -53,5 +53,5 @@ public class ApplicationConfigurationTest {
     @After
     public void release() {
         Intents.release();
-    }*/
+    }
 }
