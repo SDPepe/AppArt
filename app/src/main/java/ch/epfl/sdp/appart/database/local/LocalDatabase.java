@@ -566,6 +566,7 @@ public class LocalDatabase implements LocalDatabaseService {
      * Used at logout.
      */
     public void clearCurrentUser() {
+
         FileIO.deleteDirectory(new File(LocalDatabasePaths.currentUserFolder(
                 currentUser.getUserId())));
         this.currentUser = null;

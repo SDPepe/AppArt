@@ -48,34 +48,24 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         progressBar = findViewById(R.id.progress_Login_ProgressBar);
 
         String email = SharedPreferencesHelper.getSavedEmail(this);
-        if (!email.equals("")) {
+        if (!email.equals("") && !(email == null)) {
             String password = SharedPreferencesHelper.getSavedPassword(this);
             CompletableFuture<User> loginResult = loginService.loginWithEmail(email, password);
             loginResult.exceptionally(e -> {
-                startScrollingActivity();
+                Toast.makeText(this, "Auto-login failed", Toast.LENGTH_SHORT).show();
                 return null;
             });
             loginResult.thenAccept(user -> {
                 saveLoggedUser(user);
-                progressBar.setVisibility(View.GONE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                hideProgressBar();
                 startScrollingActivity();
             });
         } else {
-            progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            Bundle extras = this.getIntent().getExtras();
-            if (extras != null && extras.containsKey(ActivityCommunicationLayout.PROVIDING_EMAIL) &&
-                    extras.containsKey(ActivityCommunicationLayout.PROVIDING_PASSWORD)) {
-                ((EditText) findViewById(R.id.email_Login_editText))
-                        .setText(extras.getString(ActivityCommunicationLayout.PROVIDING_EMAIL));
-                ((EditText) findViewById(R.id.password_Login_editText))
-                        .setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
-            }
+            hideProgressBar();
+            setBundleInfo(this.getIntent().getExtras());
         }
     }
 
@@ -180,5 +170,15 @@ public class LoginActivity extends AppCompatActivity {
     private void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void setBundleInfo(Bundle extras) {
+        if (extras != null && extras.containsKey(ActivityCommunicationLayout.PROVIDING_EMAIL) &&
+                extras.containsKey(ActivityCommunicationLayout.PROVIDING_PASSWORD)) {
+            ((EditText) findViewById(R.id.email_Login_editText))
+                    .setText(extras.getString(ActivityCommunicationLayout.PROVIDING_EMAIL));
+            ((EditText) findViewById(R.id.password_Login_editText))
+                    .setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
+        }
     }
 }
