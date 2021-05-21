@@ -165,7 +165,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
             stepDetectorSensorIsAvailable = false;
         }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) == null) {
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
             mStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
         } else {
