@@ -13,11 +13,13 @@
         android:theme="@style/AppTheme">
         <activity android:name=".StepCounterActivity"/>
         <activity android:name=".AdCreationActivityDemo" />
+        <activity android:name=".UserAdsActivity"></activity>
         <activity android:name=".FavoriteActivity" />
         <activity android:name=".PicturesImportActivity" />
         <activity
             android:name=".MapActivity"
-            android:exported="true" />
+            android:exported="true"></activity>
+        <activity android:name=".AdCreationActivityDemo"></activity>
         <activity android:name=".FullScreenImageActivity" />
         <activity android:name=".SimpleUserProfileActivity" />
         <activity android:name=".CameraActivity" />
@@ -29,6 +31,7 @@
         <activity android:name=".PanoramaActivity" />
         <activity android:name=".AdActivity" />
         <activity android:name=".ScrollingActivity" />
+        <activity android:name=".FilterActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

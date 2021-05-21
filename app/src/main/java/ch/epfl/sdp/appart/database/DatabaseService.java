@@ -33,6 +33,12 @@ public interface DatabaseService extends DatabaseHostVisitor {
     @NonNull
     CompletableFuture<List<Card>> getCardsFilter(@NonNull String location);
 
+    @NonNull
+    CompletableFuture<List<Card>> getCardsFilterPrice(int min, int max);
+
+    @NonNull
+    CompletableFuture<List<Card>> getCardsById(@NonNull List<String> ids);
+
     /**
      * Update the card given as argument in the database.
      *

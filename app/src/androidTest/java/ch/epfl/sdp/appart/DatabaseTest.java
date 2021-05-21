@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -176,8 +177,18 @@ public class DatabaseTest {
         List<Card> retrievedCards = this.db.getCards().join();
         assertThat(retrievedCards.size(), is(1));
         Card card = retrievedCards.get(0);
-
         verifyCard(card, city, price, globalUser.getUserId());
+
+        List<Card> retrievedCardsFilterPrice = this.db.getCardsFilterPrice(0,1000).join();
+        assertThat(retrievedCardsFilterPrice.size(), is(1));
+        Card cardFilterPrice = retrievedCardsFilterPrice.get(0);
+        verifyCard(cardFilterPrice, city, price, globalUser.getUserId());
+
+        List<Card> retrievedCardsFilterId = this.db.getCardsById(Arrays.asList(adId)).join();
+        assertThat(retrievedCardsFilterId.size(), is(1));
+        Card cardFilterId = retrievedCardsFilterId.get(0);
+        verifyCard(cardFilterId, city, price, globalUser.getUserId());
+
 
         Ad retrievedAd = db.getAd(card.getAdId()).join();
         verifyAd(retrievedAd, title, street, city, desc, price, globalUser.getUserId(), contactInfo, pricePeriod, hasVRTour);
