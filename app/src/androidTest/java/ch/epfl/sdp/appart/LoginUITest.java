@@ -1,6 +1,11 @@
 package ch.epfl.sdp.appart;
 
 
+import android.os.Bundle;
+import android.util.Log;
+
+import androidx.lifecycle.Lifecycle;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -34,6 +39,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -105,7 +111,6 @@ public class LoginUITest {
 
         String email = "test@testappart.ch";
         String password = "password";
-        //loginService.createUser(email, password).get();
 
         onView(withId(R.id.email_Login_editText)).perform(typeText(email));
         onView(withId(R.id.password_Login_editText)).perform(typeText(password));
@@ -122,6 +127,21 @@ public class LoginUITest {
         loginService.deleteUser().get();
 
         assertNull(loginService.getCurrentUser());
+        loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+    }
+
+    @Test
+    public void successfulAutoLoginTest() {
+        String email = "test@testappart.ch";
+        String password = "password";
+        // set login info and recreate the app, so that onCreate is called
+        loginActivityRule.getScenario().onActivity(ac -> {
+            SharedPreferencesHelper.clearSavedUserForAutoLogin(ac);
+            SharedPreferencesHelper.saveUserForAutoLogin(ac, email, password);
+            ac.recreate();
+        });
+
+        intended(hasComponent(ScrollingActivity.class.getName()));
         loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
     }
 
