@@ -15,5 +15,7 @@ This activity introduces **sensor usage** in AppArt by counting the number of st
 
 
 ## Lorenzo (scrum master)
+This week I've been working a lot but with few results. The task ended up being way bigger than what I was imagining, and I also had several problems with hilt and adapting tests, Antoine and Quentin were very kind to help me out on that. To try and organize myself better for next week, I decided to split the task into smaller PRs so that it is easier to check that the various parts of the new feature work and the local database is updated and queried correctly. The task required so much time that I didn't even have time to be a good scrum master for the team. I hope next week I can manage to deliver great code for the task.
 
 ## Overall team
+This week there hasn't been much communication between the members of the team. The tasks were usually independent from each other so there was no need for discussions. Still, members helped each other and the stand up meetings were good.
