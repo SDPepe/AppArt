@@ -103,7 +103,7 @@ public class AdUITest {
         onView(withId(R.id.action_add_favorite)).perform(click());
         User currentUser = login.getCurrentUser();
         assertNotNull(currentUser);
-        assertTrue(currentUser.getFavoritesIds().stream().anyMatch(e -> e.equals(testId)));
+        assertTrue(database.getUser(currentUser.getUserId()).join().getFavoritesIds().contains(testId));
         login.signOut();
     }
 
