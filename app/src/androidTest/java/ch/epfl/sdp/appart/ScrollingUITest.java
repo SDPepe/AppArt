@@ -102,6 +102,7 @@ public class ScrollingUITest {
 
     @Test
     public void toolbarTest() {
+
         ViewInteraction overflowMenuButton = onView(
                 allOf(withContentDescription("More options"),
                         ViewUtils.childAtPosition(
