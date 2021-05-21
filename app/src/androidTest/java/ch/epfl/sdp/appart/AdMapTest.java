@@ -20,11 +20,13 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import ch.epfl.sdp.appart.hilt.LocationModule;
+import ch.epfl.sdp.appart.hilt.GeocoderModule;
 import ch.epfl.sdp.appart.hilt.MapModule;
-import ch.epfl.sdp.appart.location.AndroidLocationService;
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.LocationService;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
+import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
+import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
+import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 import ch.epfl.sdp.appart.map.GoogleMapService;
 import ch.epfl.sdp.appart.map.MapService;
 import dagger.hilt.android.testing.BindValue;
@@ -37,7 +39,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
-@UninstallModules({DatabaseModule.class, MapModule.class, LocationModule.class})
+@UninstallModules({DatabaseModule.class, MapModule.class, GeocoderModule.class})
 @HiltAndroidTest
 public class AdMapTest {
 
@@ -72,8 +74,8 @@ public class AdMapTest {
     final MapService mapService = new GoogleMapService();
 
     @BindValue
-    final LocationService locationService =
-            new AndroidLocationService(InstrumentationRegistry.getInstrumentation().getTargetContext());
+    final GeocodingService geocodingService =
+            new GoogleGeocodingService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
 
     @Test
@@ -86,10 +88,9 @@ public class AdMapTest {
                 10000);
         assertThat(foundMap, is(true));
 
-        Location markerLocation = locationService.getLocationFromName(
-                testCity).join();
-        assertThat(markerLocation.longitude, greaterThan(6.0));
-        assertThat(markerLocation.latitude, greaterThan(46.0));
+        Location markerLocation = geocodingService.getLocation(LocalityFactory.makeLocality(testCity)).join();
+        assertThat(Math.abs(markerLocation.latitude - 46.51), lessThanOrEqualTo(0.05));
+        assertThat(Math.abs(markerLocation.longitude - 6.63), lessThanOrEqualTo(0.05));
 
         CompletableFuture<Location> futureCameraLoc =
                 mapService.getCameraPosition();
