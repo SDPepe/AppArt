@@ -10,8 +10,10 @@ This activity introduces **sensor usage** in AppArt by counting the number of st
 
 ## Filippo
 
-## Lorenzo
+## Antoine
 
-## Antoine (scrum master)
+
+
+## Lorenzo (scrum master)
 
 ## Overall team
