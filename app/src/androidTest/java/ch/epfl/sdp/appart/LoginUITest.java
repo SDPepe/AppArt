@@ -66,8 +66,11 @@ public class LoginUITest {
 
     @Test
     public void failedLoginTest() {
+        loginService.signOut();
+        loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+
         String email = "test@testappart.ch";
-        String password = "password";
+        String password = "wrongpassword";
 
         onView(withId(R.id.email_Login_editText)).perform(typeText(email));
         onView(withId(R.id.password_Login_editText)).perform(typeText(password));
@@ -102,17 +105,13 @@ public class LoginUITest {
 
         String email = "test@testappart.ch";
         String password = "password";
-        loginService.createUser(email, password).get();
-
-        assertNotNull(loginService.getCurrentUser().getProfileImagePathAndName());
+        //loginService.createUser(email, password).get();
 
         onView(withId(R.id.email_Login_editText)).perform(typeText(email));
         onView(withId(R.id.password_Login_editText)).perform(typeText(password));
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
         onView(withId(R.id.login_Login_button)).perform(click());
 
-        // wait for user to be saved locally
-        Thread.sleep(3000);
         intended(hasComponent(ScrollingActivity.class.getName()));
 
         User user = loginService.getCurrentUser();

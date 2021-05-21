@@ -286,5 +286,5 @@ public class UserProfileActivity extends AppCompatActivity {
         database.accept(new GlideImageViewLoader(this, imageView,
                 this.sessionUser.getProfileImagePathAndName()));
     }
-    
+
 }
