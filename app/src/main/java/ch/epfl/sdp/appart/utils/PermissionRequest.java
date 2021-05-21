@@ -95,15 +95,7 @@ public class PermissionRequest {
                                                            Runnable permissionRefused)  {
         String[] permissions;
 
-        if (Build.VERSION.SDK_INT < 29) {
-            permissions = new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.ACTIVITY_RECOGNITION};
-        } else {
-            permissions = new String[]{
-                    Manifest.permission.ACTIVITY_RECOGNITION};
-        }
+        permissions = new String[]{Manifest.permission.ACTIVITY_RECOGNITION};
 
         askForPermission(activity, permissionGranted, permissionRefused,
                 () -> Log.d("PERMISSION", "Educational popup for activity recognition !"),

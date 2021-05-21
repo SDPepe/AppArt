@@ -89,11 +89,6 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     }
 
     @Override
-    public void onBackPressed() {
-        finish();
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
 
@@ -166,15 +161,15 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         } else {
             /* if only the STEP_DETECTOR sensor is missing this activity will still work
              * but with less accuracy */
-            makeText(this, "Attention: this device has no step detector sensor. This causes higher latency and less accurate step count!", Toast.LENGTH_LONG).show();
+            makeText(this, R.string.noStepDetectorSensorErrorMessage, Toast.LENGTH_LONG).show();
             stepDetectorSensorIsAvailable = false;
         }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) == null) {
             mStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
         } else {
-            makeText(this, "Attention: this device does not support the step counter sensor!", Toast.LENGTH_LONG).show();
+            makeText(this, R.string.noStepCounterSensorErrorMessage, Toast.LENGTH_LONG).show();
             /* if the STEP_COUNTER and STEP_DETECTOR sensor is missing on device this activity cannot work */
             if (!stepDetectorSensorIsAvailable) {
                 finish();
@@ -241,7 +236,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
             textViewStepCounter.setText(String.valueOf(totalStepCountFromBoot));
         } else {
             if (startWasPressed) {
-                textViewStepCounter.setText("loading...");
+                textViewStepCounter.setText(getResources().getString(R.string.loadingMessage));
             } else {
                 textViewStepCounter.setText("0");
             }
@@ -287,7 +282,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         initialTotalStepCountFromBoot = 0;
 
         /* reset step counter to 0 if its state is loading... */
-        if (textViewStepCounter.getText().toString().contains("loading")) {
+        if (textViewStepCounter.getText().toString().contains(getResources().getString(R.string.loadingMessage))) {
             textViewStepCounter.setText("0");
         }
     }
