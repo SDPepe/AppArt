@@ -88,11 +88,8 @@ public class AdActivity extends ToolbarActivity {
                 this::updatePanoramasReferences);
 
         adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
-        String openingActivity = getIntent().getStringExtra(
-                ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME);
         // init content, show a toast if load failed
-        mViewModel.initAd(adId,
-                ActivityCommunicationLayout.FAVORITES_ACTIVITY.equals(openingActivity))
+        mViewModel.initAd(adId)
                 .exceptionally(e -> {
                     Toast.makeText(this, R.string.loadFail_Ad,
                             Toast.LENGTH_SHORT).show();
@@ -180,7 +177,7 @@ public class AdActivity extends ToolbarActivity {
     /**
      * Method called when you want open the virtual tour.
      *
-     * @param view
+     * @param view the view that we never use in this calls
      */
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
@@ -190,6 +187,11 @@ public class AdActivity extends ToolbarActivity {
         startActivity(intent);
     }
 
+    /**
+     * Opens the location activity showing the position of this ad
+     *
+     * @param view the view that we never use in this calls
+     */
     public void onSeeLocationClick(View view) {
         Intent intent = new Intent(this, MapActivity.class);
         TextView addressView = findViewById(R.id.address_field_Ad_textView);
@@ -256,7 +258,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Save new ad id in database and if successful save ad locally
+     * Adds the ad id to the list of favorites of the user and update the user in the server.
      */
     private void saveFavorite(CompletableFuture<Void> result, User user) {
         user.addFavorite(adId);
@@ -267,69 +269,7 @@ public class AdActivity extends ToolbarActivity {
                             getString(R.string.favFail_Ad)));
             return null;
         });
-        // if update successful, save ad locally
-        updateRes.thenAccept(res -> {
-            List<Bitmap> images = getImages();
-            List<Bitmap> panoramas = new ArrayList<>();
-            List<CompletableFuture<Bitmap>> panoramasRes =
-                    getPanoramasFutures();
-            User currentUser = login.getCurrentUser();
-            CompletableFuture<Bitmap> pfpRes = getProfilePic(currentUser);
-            pfpRes.exceptionally(e -> {
-                Toast.makeText(this, R.string.localFavFail_Ad
-                        , Toast.LENGTH_SHORT).show();
-                return null;
-            });
-            pfpRes.thenAccept(pfp -> {
-                CompletableFuture<Void> allOf = CompletableFuture.allOf(panoramasRes.toArray(
-                        new CompletableFuture[panoramasReferences.size()]));
-                allOf.exceptionally(e -> {
-                    Toast.makeText(this,
-                            R.string.localFavFail_Ad,
-                            Toast.LENGTH_SHORT).show();
-                    return null;
-                });
-                allOf.thenAccept(ignoredRes -> {
-                    panoramas.addAll(panoramasRes.stream().map(CompletableFuture::join)
-                            .collect(Collectors.toList()));
-                    localdb.writeCompleteAd(adId,
-                            getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID),
-                            mViewModel.getAd(), user,
-                            images, panoramas, pfp);
-                });
-            });
-        });
+        updateRes.thenAccept(res -> result.complete(null));
     }
 
-    private List<Bitmap> getImages() {
-        LinearLayout imagesLayout =
-                findViewById(R.id.horizontal_children_Ad_linearLayout);
-        List<Bitmap> images = new ArrayList<>();
-        for (int i = 0; i < imagesLayout.getChildCount(); i++) {
-            ImageView view = (ImageView) imagesLayout.getChildAt(i);
-            images.add(((BitmapDrawable) view.getDrawable()).getBitmap());
-        }
-        return images;
-    }
-
-    private List<CompletableFuture<Bitmap>> getPanoramasFutures() {
-        List<CompletableFuture<Bitmap>> panoramasFutures = new ArrayList<>();
-        for (int i = 0; i < panoramasReferences.size(); i++) {
-            CompletableFuture<Bitmap> bitmapRes = new CompletableFuture<>();
-            String imagePath = new StoragePathBuilder()
-                    .toAdsStorageDirectory()
-                    .toDirectory(adId)
-                    .withFile(panoramasReferences.get(i));
-            database.accept(new GlideBitmapLoader(this, bitmapRes, imagePath));
-            panoramasFutures.add(bitmapRes);
-        }
-        return panoramasFutures;
-    }
-
-    private CompletableFuture<Bitmap> getProfilePic(User user) {
-        CompletableFuture<Bitmap> bitmapRes = new CompletableFuture<>();
-        database.accept(new GlideBitmapLoader(this, bitmapRes,
-                user.getProfileImagePathAndName()));
-        return bitmapRes;
-    }
 }

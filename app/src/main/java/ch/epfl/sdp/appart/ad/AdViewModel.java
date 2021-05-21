@@ -44,24 +44,14 @@ public class AdViewModel extends ViewModel {
     }
 
     /**
-     * Fetches the ad info from the database and sets the information to the LiveData fields. If the
-     * activity was opened from the favorites page, load the data from the local db first and then
-     * fetch from server to ensure latest data is shown.
+     * Fetches the ad info from the database and sets the information to the LiveData fields.
      *
-     * @param id            the unique ID of the ad in the database
-     * @param fromFavorites
+     * @param id the unique ID of the ad in the database
      * @return a completable future to let the activity know if the action was successful
      */
-    public CompletableFuture<Void> initAd(String id, Boolean fromFavorites) {
+    public CompletableFuture<Void> initAd(String id) {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        CompletableFuture<Void> loadResult = new CompletableFuture<>();
-        if (fromFavorites)
-            localLoad(loadResult, id);
-        else
-            loadResult.complete(null);
-
-        // even if local load fails, try to load from server
-        loadResult.whenComplete((e, res) -> fetchAndSet(result, id));
+        fetchAndSet(result, id);
         return result;
     }
 
@@ -102,13 +92,6 @@ public class AdViewModel extends ViewModel {
     @Nullable
     public Ad getAd() {
         return ad;
-    }
-
-    /**
-     * Loads data from the local DB
-     */
-    private void localLoad(CompletableFuture<Void> result, String adId) {
-        setAdValues(result, localdb.getAd(adId));
     }
 
     /**
