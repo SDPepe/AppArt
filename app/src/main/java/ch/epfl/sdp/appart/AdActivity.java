@@ -2,8 +2,6 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -31,12 +28,10 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
-import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
-import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -61,8 +56,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private String advertiserId;
-    private ArrayList<String> panoramasReferences = new ArrayList<>();
-    private AdViewModel mViewModel;
+    private ArrayList<String> panoramasReferences;
 
     private String adId;
 
@@ -70,7 +64,8 @@ public class AdActivity extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
-        mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
+        panoramasReferences = new ArrayList<>();
+        AdViewModel mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
 
         Toolbar toolbar = findViewById(R.id.account_Ad_toolbar);

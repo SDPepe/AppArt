@@ -45,7 +45,7 @@ import static org.hamcrest.Matchers.allOf;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 
-@UninstallModules({DatabaseModule.class, AppConfigurationModule.class, LocalDatabaseModule.class})
+@UninstallModules({DatabaseModule.class, AppConfigurationModule.class})
 @HiltAndroidTest
 public class ScrollingUITest {
 
