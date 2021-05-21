@@ -53,15 +53,11 @@ public class LoginActivity extends AppCompatActivity {
         String email = SharedPreferencesHelper.getSavedEmail(this);
         if (!email.equals("")) {
             String password = SharedPreferencesHelper.getSavedPassword(this);
-            CompletableFuture<User> loginResult = loginService.loginWithEmail(email, password);
-            loginResult.exceptionally(e -> {
-                startScrollingActivity();
-                return null;
-            });
-            loginResult.thenAccept(user -> {
-                saveLoggedUser(user);
-                startScrollingActivity();
-            });
+            loginService.loginWithEmail(email, password);
+            // if loginWithEmail fails, we are offline. Continue to ScrollingActivity. The calls to
+            // currentUser in the app will be safely checked when the full PR is implemented (there
+            // will be a call to local currentUser first)
+            startScrollingActivity();
         } else {
             setBundleInfo(this.getIntent().getExtras());
         }
