@@ -1,7 +1,7 @@
 package ch.epfl.sdp.appart.location.place;
 
 /**
- * This interface is used to represent any location.
+ * This interface is used to represent any location. Its good.
  */
 public interface Place {
 
