@@ -23,7 +23,6 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
-import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
@@ -95,14 +94,6 @@ public class UserProfileActivity extends AppCompatActivity {
         /* get user from database from user ID */
         mViewModel.getCurrentUser();
         mViewModel.getUser().observe(this, this::setSessionUserToLocal);
-    }
-
-    /**
-     * closes activity when back button pressed on phone
-     */
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     /**
@@ -190,7 +181,6 @@ public class UserProfileActivity extends AppCompatActivity {
         /* disable editing text in all UI components*/
         enableDisableEntries();
         setSessionUserToDatabase(view);
-        saveUserLocally();
 
         this.modifyButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
@@ -296,26 +286,5 @@ public class UserProfileActivity extends AppCompatActivity {
         database.accept(new GlideImageViewLoader(this, imageView,
                 this.sessionUser.getProfileImagePathAndName()));
     }
-
-    private void saveUserLocally() {
-        CompletableFuture<Bitmap> profileImgResult = new CompletableFuture<>();
-        CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
-        userRes.exceptionally(e -> {
-            Toast.makeText(this, R.string.localSaveFailed_User, Toast.LENGTH_SHORT).show();
-            return null;
-        });
-        userRes.thenAccept(res -> {
-            database.accept(new GlideBitmapLoader(this, profileImgResult,
-                    mViewModel.getUser().getValue().getProfileImagePathAndName()));
-            profileImgResult
-                    .exceptionally(e -> {
-                        Toast.makeText(this, R.string.localSaveFailed_User,
-                                Toast.LENGTH_SHORT).show();
-                        return null;
-                    })
-                    .thenAccept(img -> {
-                        localdb.setCurrentUser(mViewModel.getUser().getValue(), img);
-                    });
-        });
-    }
+    
 }

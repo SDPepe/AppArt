@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
-import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.utils.StoragePathBuilder;
@@ -43,8 +42,6 @@ public class UserViewModel extends ViewModel {
         this.localdb = localdb;
     }
 
-    // TODO is this needed?
-
     /**
      * Puts the user in the database and updates the LiveData
      *
@@ -70,11 +67,7 @@ public class UserViewModel extends ViewModel {
             Log.d("UPDATE USER", "DATABASE FAIL");
             return null;
         });
-        updateUser.thenAccept(b -> {
-            CompletableFuture<Void> localSaveResult = new CompletableFuture<>();
-
-            mUpdateUserConfirmed.setValue(b);
-        });
+        updateUser.thenAccept(mUpdateUserConfirmed::setValue);
     }
 
     /**
@@ -96,9 +89,7 @@ public class UserViewModel extends ViewModel {
             Log.d("UPDATE IMAGE", "DATABASE FAIL");
             return null;
         });
-        updateImage.thenAccept(b -> {
-            mUpdateImageConfirmed.setValue(b);
-        });
+        updateImage.thenAccept(mUpdateImageConfirmed::setValue);
     }
 
     /**
@@ -113,9 +104,7 @@ public class UserViewModel extends ViewModel {
             Log.d("DELETE IMAGE", "DATABASE FAIL");
             return null;
         });
-        deleteImage.thenAccept(b -> {
-            mDeleteImageConfirmed.setValue(b);
-        });
+        deleteImage.thenAccept(mDeleteImageConfirmed::setValue);
     }
 
     /**
@@ -124,20 +113,13 @@ public class UserViewModel extends ViewModel {
      * @param userId the unique Id of the user to retrieve from database
      */
     public void getUser(String userId) {
-        localdb.getUser(userId)
-                .whenComplete((localUser, e) -> {
-                    if (localUser != null) mUser.setValue(localUser);
-                    CompletableFuture<User> getUser = db.getUser(userId);
-                    getUser.exceptionally(e1 -> {
-                        Log.d("GET USER", "DATABASE FAIL");
-                        return null;
-                    });
-                    // if server fetch worked, update user in localDB
-                    getUser.thenAccept(u -> {
-                        mUser.setValue(u);
-                    });
-
-                });
+        CompletableFuture<User> getUser = db.getUser(userId);
+        getUser.exceptionally(e1 -> {
+            Log.d("GET USER", "DATABASE FAIL");
+            return null;
+        });
+        // if server fetch worked, update user in localDB
+        getUser.thenAccept(mUser::setValue);
     }
 
     /**
@@ -147,28 +129,16 @@ public class UserViewModel extends ViewModel {
      */
     public CompletableFuture<Void> getCurrentUser() {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        User user;
-        try {
-            user = localdb.getCurrentUser();
-        } catch (IllegalStateException e) {
-            user = null;
-        }
-        if (user != null) mUser.setValue(user);
-
-        User finalUser = user;
-        db.getUser(ls.getCurrentUser().getUserId())
-                .exceptionally(e -> {
-                    Log.d("GET USER", "DATABASE FAIL");
-                    // if no currentUser in localDB and server fetch failed, set value to null
-                    if (finalUser == null) mUser.setValue(null);
-                    result.completeExceptionally(e);
-                    return null;
-                })
-                // if server fetch worked, update user in localDB
-                .thenAccept(cu -> {
-                    result.complete(null);
-                    mUser.setValue(cu);
-                });
+        CompletableFuture<User> userRes = db.getUser(ls.getCurrentUser().getUserId());
+        userRes.exceptionally(e -> {
+            Log.d("GET USER", "DATABASE FAIL");
+            result.completeExceptionally(e);
+            return null;
+        });
+        userRes.thenAccept(cu -> {
+            mUser.setValue(cu);
+            result.complete(null);
+        });
         return result;
     }
 
