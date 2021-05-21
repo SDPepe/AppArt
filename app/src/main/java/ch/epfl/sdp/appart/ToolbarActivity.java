@@ -75,6 +75,11 @@ public abstract class ToolbarActivity extends AppCompatActivity {
                 startActivity(intentMap);
                 return true;
 
+            case R.id.action_step_counter:
+                Intent intentStepCounter = new Intent(this, StepCounterActivity.class);
+                startActivity(intentStepCounter);
+                return true;
+
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
             default:

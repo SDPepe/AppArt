@@ -67,6 +67,16 @@
     <string name="loadFailed_User">Failed to load user information</string>
     <string name="cameraAdButtonDesc">Add Picture</string>
 
+    <!-- Strings for Step Counter UI -->
+    <string name="stepsToHomeSentence">How many steps till home? </string>
+    <string name="stepsFromLastBootSentence"> steps done from last boot </string>
+    <string name="startButtonText"> Start </string>
+    <string name="stopButtonText"> Stop </string>
+    <string name="stepCounterInToolbar"> Step Counter </string>
+    <string name="noStepDetectorSensorErrorMessage"> Attention: this device has no step detector sensor. This causes higher latency and less accurate step count! </string>
+    <string name="noStepCounterSensorErrorMessage"> Attention: this device does not support the step counter sensor! </string>
+    <string name="loadingMessage"> loading… </string>
+
     <!--  -->
 
     <string name="createPanoramaTourButton">Panorama Tour</string>

@@ -25,6 +25,10 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_step_counter"
+        android:title="@string/stepCounterInToolbar"/>
+  
+    <item
         android:id="@+id/action_userAds"
         android:title="@string/userAds"
         app:showAsAction="never" />
