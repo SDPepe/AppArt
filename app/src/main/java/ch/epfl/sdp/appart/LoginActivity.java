@@ -117,35 +117,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private CompletableFuture<Void> saveLoggedUser(User user) {
-        CompletableFuture<Void> result = new CompletableFuture<>();
-        CompletableFuture<Bitmap> pfpRes = new CompletableFuture<>();
-        CompletableFuture<User> userRes = database.getUser(user.getUserId());
-        userRes.exceptionally(e -> {
-            result.completeExceptionally(e);
-            return null;
-        });
-        userRes.thenAccept(u -> {
-            database.accept(new GlideBitmapLoader(
-                    this, pfpRes, u.getProfileImagePathAndName()));
-            pfpRes.exceptionally(e -> {
-                        result.completeExceptionally(e);
-                        return null;
-                    });
-            pfpRes.thenAccept(bitmap -> {
-                CompletableFuture<Void> setUserRes = localdb.setCurrentUser(u, bitmap);
-                setUserRes.exceptionally(e -> {
-                    result.completeExceptionally(e);
-                    return null;
-                });
-                setUserRes.thenAccept(res -> {
-                    result.complete(null);
-                });
-            });
-        });
-        return result;
-    }
-
     private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
