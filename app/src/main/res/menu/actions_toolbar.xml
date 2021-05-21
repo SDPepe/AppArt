@@ -19,15 +19,20 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_step_counter"
+        android:title="@string/stepCounterInToolbar"/>
+          
+    <item
         android:id="@+id/action_userAds"
         android:title="@string/userAds"
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/map_Toolbar_item"
+        android:title="@string/action_map" />
+
+    <item
         android:id="@+id/action_logout"
         android:title="@string/action_logout"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/map_Toolbar_item"
-        android:title="@string/action_map" />
 </menu>
