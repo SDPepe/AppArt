@@ -12,6 +12,10 @@ This activity introduces **sensor usage** in AppArt by counting the number of st
 
 ## Antoine
 
+This week I improved my local database PR by implementing the suggestions of Lorenzo and Quentin. This consisted in splitting the LocalDatabse class into several modules. I created one file IO class, one class for everything related to paths and then classes for every element that can be read or written. Also, I transformed several syncrhonous operations into asynchronous ones. When writing, the writing of images "on disk" happens asynchronously, and the whole reading part happens asynchronously too. Once this was done, the PR was merged. Then, I helped Lorenzo a little bit on his PR because I realized that the Hilt module was not correctly implemented. I did not discover this before merging because I didn't make use of it. Once I fixed the compilation issues I worked a bit on Quentin's PR.
+
+Next week, I plan to improve the map functionality, and design the UI for the nearby places feature. If have time, I would also to implement the translation of a location into an address when creating an ad.
+
 
 
 ## Lorenzo (scrum master)
