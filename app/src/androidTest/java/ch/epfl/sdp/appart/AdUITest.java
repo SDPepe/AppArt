@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -41,10 +42,13 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -72,10 +76,18 @@ public class AdUITest {
     @Rule(order = 1)
     public ActivityScenarioRule<AdActivity> adActivityRule = new ActivityScenarioRule<>(intent);
 
+    private View decorView;
+
     @Before
     public void init() {
         Intents.init();
         hiltRule.inject();
+        adActivityRule.getScenario().onActivity(new ActivityScenario.ActivityAction<AdActivity>() {
+            @Override
+            public void perform(AdActivity ac) {
+                decorView = ac.getWindow().getDecorView();
+            }
+        });
     }
 
     @Test
@@ -101,6 +113,11 @@ public class AdUITest {
         login.loginWithEmail("test@testappart.ch", "password").join();
 
         onView(withId(R.id.action_add_favorite)).perform(click());
+        // test the toast is shown
+        onView(withText(R.string.favSuccess_Ad))
+                .inRoot(withDecorView(not(decorView)))// Here we use decorView
+                .check(matches(isDisplayed()));
+
         User currentUser = login.getCurrentUser();
         assertNotNull(currentUser);
         assertTrue(database.getUser(currentUser.getUserId()).join().getFavoritesIds().contains(testId));
