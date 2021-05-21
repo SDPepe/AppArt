@@ -92,17 +92,18 @@ public class GoogleMapService implements MapService {
         if (location == null) {
             throw new IllegalArgumentException();
         }
-        Marker cardMarker = map.addMarker(new MarkerOptions()
-                .position(new LatLng(location.latitude, location
-                        .longitude)));
+        LatLng pos = new LatLng(location.latitude, location.longitude);
+        MarkerOptions options = new MarkerOptions().position(pos);
+        Marker cardMarker = map.addMarker(options);
         if (title != null) {
             cardMarker.setTitle(title);
         }
         cardMarker.setTag(tag);
-
         if (centerOnMarker) {
             this.centerOnLocation(location, true);
         }
+
+
     }
 
 

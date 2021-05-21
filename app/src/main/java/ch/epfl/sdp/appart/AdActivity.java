@@ -59,6 +59,7 @@ public class AdActivity extends ToolbarActivity {
     private ArrayList<String> panoramasReferences;
 
     private String adId;
+    private AdViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,9 +190,7 @@ public class AdActivity extends ToolbarActivity {
      */
     public void onSeeLocationClick(View view) {
         Intent intent = new Intent(this, MapActivity.class);
-        TextView addressView = findViewById(R.id.address_field_Ad_textView);
-        intent.putExtra(getString(R.string.intentLocationForMap),
-                addressView.getText().toString());
+        intent.putExtra(getString(R.string.intentLocationForMap), mViewModel.getAddress().getValue());
         startActivity(intent);
     }
 
