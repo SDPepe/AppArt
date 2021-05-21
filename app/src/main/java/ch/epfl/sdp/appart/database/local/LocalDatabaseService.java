@@ -117,13 +117,6 @@ public interface LocalDatabaseService {
     User loadCurrentUser();
 
     /**
-     * Clears data relative to the current user.
-     * <p>
-     * Used at logout.
-     */
-    void clearCurrentUser();
-
-    /**
      * This returns the list of panoramas paths for a specific ad.
      *
      * @param adID the id of the ad

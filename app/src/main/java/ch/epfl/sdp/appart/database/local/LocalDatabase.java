@@ -25,6 +25,7 @@ import ch.epfl.sdp.appart.utils.FileIO;
 import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 // @formatter:off
+
 /**
  * This class represents the local database. It will perform the storing of
  * data "on disk", and the reading of data "from disk". It is unaware of the
@@ -35,21 +36,21 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  * disk and we can read it, or the caller must set it. One thing that is not
  * handled for now is the privacy of the users, maybe we don't want to store
  * everything "on disk".
- *
+ * <p>
  * Here is the file structure of the favorites folder :
  * favorites
- *          /currentUser
- *          profile_picture.jpeg
- *          currentUser.data
- *                      users/
- *                      users/
- *                                  {$user_id}/
- *                                              profile_picture.jpeg
- *                                              user.data
- *                      ${card_id}/
- *                                  data.fav
- *                                  Photo${number}.jpeg
- *                                  Panorama${number}.jpeg
+ * /currentUser
+ * profile_picture.jpeg
+ * currentUser.data
+ * users/
+ * users/
+ * {$user_id}/
+ * profile_picture.jpeg
+ * user.data
+ * ${card_id}/
+ * data.fav
+ * Photo${number}.jpeg
+ * Panorama${number}.jpeg
  */
 // @formatter:on
 
@@ -317,24 +318,11 @@ public class LocalDatabase implements LocalDatabaseService {
         //Basically we reach this point even though firstLoad is true
         clearMemory();
 
-        String currentUserId;
-
-        try {
-            currentUserId  = getCurrentUser().getUserId();
-        } catch (IllegalStateException e) {
-            currentUserId = null;
-        }
-        if (currentUser == null) {
-            CompletableFuture<T> res = new CompletableFuture<>();
-            res.complete(null);
-            return res;
-        }
-
         CompletableFuture<Void> futureReadAd =
-                LocalAdReader.readAdDataForAUser(currentUserId
-                        , this.cards, this.idsToAd, this.adIdsToPanoramas);
+                LocalAdReader.readAdDataForAUser(getCurrentUser().getUserId(),
+                        this.cards, this.idsToAd, this.adIdsToPanoramas);
         CompletableFuture<Void> futureReadUser =
-                LocalUserReader.readUsers(currentUserId,
+                LocalUserReader.readUsers(getCurrentUser().getUserId(),
                         this.idsToUser, this.userIds);
 
         CompletableFuture<Void> combinedFuture =
@@ -484,7 +472,8 @@ public class LocalDatabase implements LocalDatabaseService {
         if (!favoritesFolder.exists()) {
             boolean success = favoritesFolder.mkdirs();
             if (!success) {
-                futureSuccess.completeExceptionally(new LocalDatabaseException("Error while creating favorites folder !"));
+                futureSuccess.completeExceptionally(new LocalDatabaseException("Error while " +
+                        "creating favorites folder !"));
                 return futureSuccess;
             }
         }
@@ -558,18 +547,6 @@ public class LocalDatabase implements LocalDatabaseService {
     public User loadCurrentUser() {
         if (this.currentUser != null) return this.currentUser;
         return loadCurrentUserOnDisk();
-    }
-
-    /**
-     * Clears data relative to the current user.
-     * <p>
-     * Used at logout.
-     */
-    public void clearCurrentUser() {
-
-        FileIO.deleteDirectory(new File(LocalDatabasePaths.currentUserFolder(
-                currentUser.getUserId())));
-        this.currentUser = null;
     }
 
     /**
