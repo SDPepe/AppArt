@@ -88,7 +88,7 @@ public class FavoriteInitTest {
 
     }
 
-    @Before
+    @After
     public void release() {
         Intents.release();
     }
