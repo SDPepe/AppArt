@@ -13,16 +13,16 @@ public interface GeocodingService {
      * Retrieve the Address if it exists at the given location.
      * @param location the Address for which we want to find the location.
      *                 if the Address is not found it will be null.
-     * @return CompletableFuture<Location> containing the location
+     * @return CompletableFuture<Address> containing the location
      */
     CompletableFuture<Address> getAddress(Location location);
 
     /**
      * Retrieve the location of the given address.
-     * @param address the Address for which we want to find the location
+     * @param place the Place for which we want to find the location
      * @return CompletableFuture<Location> containing the location
      */
-    CompletableFuture<Location> getLocation(Place address);
+    CompletableFuture<Location> getLocation(Place place);
 
     /**
      * Retrieve the distance between two locations in meters
