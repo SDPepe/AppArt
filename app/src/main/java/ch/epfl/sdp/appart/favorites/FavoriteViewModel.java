@@ -1,10 +1,8 @@
 package ch.epfl.sdp.appart.favorites;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -15,15 +13,12 @@ import javax.inject.Inject;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.NotImplementedError;
 
 /**
  * ViewModel for the Favorites activity.
@@ -41,7 +36,8 @@ public class FavoriteViewModel extends ViewModel {
     final LocalDatabaseService localdb;
 
     @Inject
-    public FavoriteViewModel(DatabaseService database, LoginService loginService, LocalDatabaseService localdb) {
+    public FavoriteViewModel(DatabaseService database, LoginService loginService,
+                             LocalDatabaseService localdb) {
         this.database = database;
         this.loginService = loginService;
         this.localdb = localdb;
@@ -50,33 +46,10 @@ public class FavoriteViewModel extends ViewModel {
     /**
      * Initializes the list of favorites.
      * <p>
-     * It follows the android app architecture guidelines on exposing network status:
-     * https://developer.android.com/jetpack/guide#addendum
-     * It first loads from the local db, then fetches from the server (skipping the check whether
-     * the fetch is necessary) and if the fetch is successful it updates the content with the
-     * fetched info and updates the local db.
-     * If any task fails, it returns a future completed exceptionally where the exception message is
-     * the string to show to the user.
+     * Fetches the favorites cards from the server.
      */
     public CompletableFuture<Void> initHome() {
-        CompletableFuture<Void> result = new CompletableFuture<>();
-
-        // load from local db
-        localLoad()
-                // after local load fetch from databaseservice and update content
-                // try to fetch even if local load fails
-                .whenComplete((e, res) ->
-                        fetch()
-                                .exceptionally(e1 -> {
-                                    result.completeExceptionally(e1);
-                                    return null;
-                                })
-                                .thenAccept(res1 -> {
-                                    result.complete(null);
-                                })
-                );
-
-        return result;
+        return fetch();
     }
 
 
@@ -85,23 +58,6 @@ public class FavoriteViewModel extends ViewModel {
      */
     public MutableLiveData<List<Card>> getFavorites() {
         return lFavorites;
-    }
-
-    /**
-     * Loads content from local database
-     */
-    private CompletableFuture<Void> localLoad() {
-        CompletableFuture<Void> result = new CompletableFuture<>();
-        localdb.getCards()
-                .exceptionally(e -> {
-                    result.completeExceptionally(e);
-                    return null;
-                })
-                .thenAccept(cards -> {
-                    lFavorites.setValue(cards);
-                    result.complete(null);
-                });
-        return result;
     }
 
     /**
@@ -117,19 +73,20 @@ public class FavoriteViewModel extends ViewModel {
                 .exceptionally(e -> {
                     Log.d("EXCEPTION_DB", e.getMessage());
                     result.completeExceptionally(e);
+                    lFavorites.setValue(new ArrayList<>());
                     return null;
                 })
                 .thenAccept(u -> {
-                    database.getCards()
-                            .exceptionally(e -> {
-                                Log.d("EXCEPTION_DB", e.getMessage());
-                                result.completeExceptionally(e);
-                                return null;
-                            })
-                            .thenAccept(cs -> {
-                                filter(u, cs);
-                                result.complete(null);
-                            });
+                    CompletableFuture<List<Card>> cardsRes = database.getCards();
+                    cardsRes.exceptionally(e -> {
+                        Log.d("EXCEPTION_DB", e.getMessage());
+                        result.completeExceptionally(e);
+                        return null;
+                    });
+                    cardsRes.thenAccept(cs -> {
+                        filter(u, cs);
+                        result.complete(null);
+                    });
                 });
 
         return result;
