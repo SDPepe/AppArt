@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart;
+package ch.epfl.sdp.appart.favoritesui;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -6,6 +6,7 @@ import android.view.ViewParent;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
@@ -18,9 +19,13 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
+
+import ch.epfl.sdp.appart.MainActivity;
+import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
@@ -52,8 +57,6 @@ import static org.hamcrest.Matchers.allOf;
 @UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
 public class FavoriteUITest {
-
-    static final String KEY_SP_PACKAGE = "PrivateStorageUtilsTest";
 
     @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
@@ -108,7 +111,7 @@ public class FavoriteUITest {
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
 
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.email_Login_editText),
+                Matchers.allOf(ViewMatchers.withId(R.id.email_Login_editText),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),

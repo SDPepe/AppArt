@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart;
+package ch.epfl.sdp.appart.adui;
 
 import android.content.Intent;
 import android.view.View;
@@ -8,10 +8,9 @@ import android.view.ViewParent;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.uiautomator.UiDevice;
 
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -20,8 +19,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
+import ch.epfl.sdp.appart.AdActivity;
+import ch.epfl.sdp.appart.FullScreenImageActivity;
+import ch.epfl.sdp.appart.PanoramaActivity;
+import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.SimpleUserProfileActivity;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
@@ -44,10 +46,8 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -71,6 +71,7 @@ public class AdUITest {
     @BindValue
     final
     LoginService login = new MockLoginService();
+
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
     @Rule(order = 1)
@@ -92,7 +93,7 @@ public class AdUITest {
 
     @Test
     public void clickOnVTourOpensVTourActivity() {
-        onView(withId(R.id.vtour_Ad_button)).perform(scrollTo(), click());
+        onView(ViewMatchers.withId(R.id.vtour_Ad_button)).perform(scrollTo(), click());
         intended(hasComponent(PanoramaActivity.class.getName()));
     }
 

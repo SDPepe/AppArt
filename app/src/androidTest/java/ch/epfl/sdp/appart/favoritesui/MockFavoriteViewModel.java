@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.mockvm;
+package ch.epfl.sdp.appart.favoritesui;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -19,8 +19,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class MockFavoriteViewModel extends FavoriteViewModel {
 
     @Inject
-    public MockFavoriteViewModel(DatabaseService database, LoginService loginService, LocalDatabaseService localdb) {
-        super(database, loginService, localdb);
+    public MockFavoriteViewModel(DatabaseService database, LoginService loginService) {
+        super(database, loginService);
     }
 
     @Override

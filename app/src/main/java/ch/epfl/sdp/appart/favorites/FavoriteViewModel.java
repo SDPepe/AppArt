@@ -33,14 +33,11 @@ public class FavoriteViewModel extends ViewModel {
     private final MutableLiveData<List<Card>> lFavorites = new MutableLiveData<>();
     final DatabaseService database;
     final LoginService loginService;
-    final LocalDatabaseService localdb;
 
     @Inject
-    public FavoriteViewModel(DatabaseService database, LoginService loginService,
-                             LocalDatabaseService localdb) {
+    public FavoriteViewModel(DatabaseService database, LoginService loginService) {
         this.database = database;
         this.loginService = loginService;
-        this.localdb = localdb;
     }
 
     /**

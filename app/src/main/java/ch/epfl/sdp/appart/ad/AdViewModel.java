@@ -26,7 +26,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class AdViewModel extends ViewModel {
 
     final DatabaseService db;
-    final LocalDatabaseService localdb;
     private Ad ad;
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
@@ -38,9 +37,8 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
 
     @Inject
-    public AdViewModel(DatabaseService db, LocalDatabaseService localdb) {
+    public AdViewModel(DatabaseService db) {
         this.db = db;
-        this.localdb = localdb;
     }
 
     /**

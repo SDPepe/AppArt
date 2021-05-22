@@ -1,8 +1,10 @@
-package ch.epfl.sdp.appart;
+package ch.epfl.sdp.appart.adui;
 
+import android.content.Intent;
 import android.view.View;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -11,17 +13,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.sdp.appart.AdActivity;
+import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
-import ch.epfl.sdp.appart.database.local.LocalDatabase;
-import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
-import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
-import ch.epfl.sdp.appart.mockvm.MockFavoriteViewModel;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -35,33 +37,32 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 
 /**
- * Test class for FavoriteActivtiy where the viewmodel returns exceptionally from init().
+ * Test class for AdActivity where init of the ViewModel fails.
  */
-@UninstallModules({LoginModule.class, DatabaseModule.class})
+@UninstallModules({DatabaseModule.class, LoginModule.class})
 @HiltAndroidTest
-public class FavoriteInitTest {
+public class AdFailedInitTest {
+
+    static final String testId = "unknown";
+    static final Intent intent;
+
+    static {
+        intent = new Intent(ApplicationProvider.getApplicationContext(), AdActivity.class);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_AD_ID, testId);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID, testId);
+    }
+
+    @BindValue
+    final DatabaseService database = new MockDatabaseService();
+    @BindValue
+    final LoginService login = new MockLoginService();
+    @BindValue
+    AdViewModel mViewModel = new MockInitAdViewModel(database);
 
     @Rule(order = 0)
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
-
+    public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
     @Rule(order = 1)
-    public ActivityScenarioRule<FavoriteActivity> mActivityScenarioRule =
-            new ActivityScenarioRule<>(FavoriteActivity.class);
-
-    @BindValue
-    LoginService login = new MockLoginService();
-
-    @BindValue
-    DatabaseService database = new MockDatabaseService();
-
-    // just for viewmodel creation, the app path is not important
-    LocalDatabaseService localdb = new LocalDatabase("");
-
-    /*
-        Inject the mock viewmodel so that init always returns an exceptionally completed future
-     */
-    @BindValue
-    FavoriteViewModel mViewModel = new MockFavoriteViewModel(database, login, localdb);
+    public ActivityScenarioRule<AdActivity> mScenarioRule = new ActivityScenarioRule<>(intent);
 
     private View decorView;
 
@@ -69,28 +70,28 @@ public class FavoriteInitTest {
     public void init() {
         Intents.init();
         hiltRule.inject();
-        mActivityScenarioRule.getScenario().onActivity(new ActivityScenario.ActivityAction<FavoriteActivity>() {
+        mScenarioRule.getScenario().onActivity(new ActivityScenario.ActivityAction<AdActivity>() {
             @Override
-            public void perform(FavoriteActivity ac) {
+            public void perform(AdActivity ac) {
                 decorView = ac.getWindow().getDecorView();
             }
         });
     }
 
     @Test
-    public void exceptionalllyInitShowsToast() {
-        mActivityScenarioRule.getScenario().onActivity(ac -> {
+    public void failedInitShowsToast() {
+        mScenarioRule.getScenario().onActivity(ac -> {
             SharedPreferencesHelper.clearSavedUserForAutoLogin(ac);
             ac.recreate();
         });
-        onView(withText("mock"))
-                .inRoot(withDecorView(not(decorView)))// Here we use decorView
+        onView(withText(R.string.loadFail_Ad))
+                .inRoot(withDecorView(not(decorView)))
                 .check(matches(isDisplayed()));
-
     }
 
     @After
     public void release() {
         Intents.release();
     }
+
 }
