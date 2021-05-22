@@ -1,6 +1,7 @@
 # Summary of week 10
 
 ## Quentin
+This week I finished the place service API by implementing the missing parts of the system as the geocoding service and I created modules so that we can mock the HTTP query service (used in places services) and the geocoding service (also used in places services). I also added tests for all of that. I worked with Antoine about doing an UI for the thing (we only discuss it). In addition, this week I worked with Lorenzo on finding a bug and I reviewed Fillipo and Lorenzo PRs. 
 
 ## Carlo
 This week I implemented the step counter activity. 
