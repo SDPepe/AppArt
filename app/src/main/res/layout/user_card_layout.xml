@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingBottom="16dp"
+  >
+
+  <androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    android:layout_margin="5dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+
+      <ImageView
+        android:id="@+id/image_CardLayout_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+      <TableLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+          <TextView
+              android:id="@+id/city_CardLayout_textView"
+              android:layout_column="1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:paddingStart="16dp"
+              android:paddingTop="16dp"
+              android:text="@string/Address"
+              android:textColor="@color/primaryStart"
+              android:textSize="20sp" />
+
+          <Button
+              android:id="@+id/card_edit_button"
+              android:layout_width="100dp"
+              android:layout_height="30dp"
+              android:layout_marginStart="@dimen/margin_button"
+              android:layout_marginEnd="@dimen/margin_button"
+              android:background="@drawable/style_primary"
+              android:gravity="end"
+              android:onClick="logIn"
+              android:text="@string/card_edit"
+              android:textAlignment="center"
+              android:textAllCaps="false"
+              android:textColor="#FFFFFF"
+              android:textSize="16sp"
+              app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_3"
+              app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_2"
+              app:layout_constraintStart_toStartOf="@+id/guideline_vertical_1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+          <TextView
+              android:id="@+id/price_CardLayout_textView"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="start"
+              android:paddingStart="16dp"
+              android:paddingBottom="16dp"
+              android:text="@string/Price"
+              android:textColor="@color/textSecondary"
+              android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+      </TableLayout>
+
+    </LinearLayout>
+    <ImageView
+      android:id="@+id/vrAvailable_CardLayout_imageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:layout_marginStart="16dp"
+      android:background="#4A272727"
+      app:layout_constraintTop_toTopOf="@+id/image_CardLayout_imageView"
+      app:layout_constraintStart_toStartOf="@+id/image_CardLayout_imageView"
+      app:srcCompat="@drawable/quantum_ic_cardboard_white_24" />
+
+
+
+  </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
