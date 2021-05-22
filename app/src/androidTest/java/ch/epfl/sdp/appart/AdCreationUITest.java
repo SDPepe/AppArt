@@ -161,68 +161,6 @@ public class AdCreationUITest {
     }
 
     @Test
-    public void panoramaCreationActivityWorksAndRespondsCorrectly() throws UiObjectNotFoundException {
-        onView(withId(R.id.createVirtualTour_AdCreation_button)).perform(scrollTo(), click());
-
-        // Create a bitmap we can use for our simulated camera image
-        Bitmap icon = BitmapFactory.decodeResource(
-                ApplicationProvider.getApplicationContext().getResources(),
-                R.mipmap.ic_launcher);
-
-        // Build a result to return from the Camera app
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("data", icon);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
-        //com.android.camera2
-        // When an intent is sent to the Camera, this tells Espresso to respond with the ActivityResult we just created
-        intending(toPackage("com.android.camera2")).respondWith(result);
-
-        // Now that we have the stub in place, click on the button in our app that launches into the Camera
-        onView(withId(R.id.camera_Camera_button)).perform(click());
-
-        // validate that an intent resolving to the "camera" activity has been sent out by app
-        intended(toPackage("com.android.camera2"));
-
-        // Initialize UiDevice instance
-        UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
-        // Search for correct button in the dialog.
-        UiObject buttonAllow = uiDevice.findObject(new UiSelector().text("ALLOW"));
-
-        if (buttonAllow.exists() && buttonAllow.isEnabled()) {
-            buttonAllow.click();
-            uiDevice.pressBack();
-        }
-
-        // Search for correct button in the dialog.
-        UiObject buttonAllow2 = uiDevice.findObject(new UiSelector().text("Allow all the time"));
-
-        if (buttonAllow2.exists() && buttonAllow2.isEnabled()) {
-            buttonAllow2.click();
-            uiDevice.pressBack();
-        }
-
-        ViewInteraction appCompatButton4 = onView(
-                allOf(withId(R.id.confirm_Camera_button), withText("Confirm"),
-                        isDisplayed()));
-        appCompatButton4.perform(click());
-
-        ViewInteraction horizontalScrollView = onView(
-                allOf(withId(R.id.picturesScroll_AdCreation_ScrollView),
-                        withParent(allOf(withId(R.id.vertical_AdCreation_linearLayout),
-                                withParent(withId(R.id.horizontal_AdCreation_scrollView)))),
-                        isDisplayed()));
-        horizontalScrollView.check(matches(isDisplayed()));
-
-        ViewInteraction linearLayout = onView(
-                allOf(withId(R.id.pictures_AdCreation_linearLayout),
-                        withParent(allOf(withId(R.id.picturesScroll_AdCreation_ScrollView),
-                                withParent(withId(R.id.vertical_AdCreation_linearLayout)))),
-                        isDisplayed()));
-        linearLayout.check(matches(isDisplayed()));
-    }
-
-    @Test
     public void successfulPostAdButtonOpensScrollingActivityTest() {
         //populate ad info
         onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo(), typeText("a"));
