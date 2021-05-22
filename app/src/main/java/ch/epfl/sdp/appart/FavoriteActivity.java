@@ -26,10 +26,7 @@ public class FavoriteActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
-    @Inject
-    LoginService login;
-    @Inject
-    LocalDatabaseService localdb;
+
     private RecyclerView recyclerView;
     private FavoriteViewModel mViewModel;
 

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.AndroidEntryPoint;

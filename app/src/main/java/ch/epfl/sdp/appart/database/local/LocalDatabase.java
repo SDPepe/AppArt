@@ -39,18 +39,18 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  * <p>
  * Here is the file structure of the favorites folder :
  * favorites
- * /currentUser
- * profile_picture.jpeg
- * currentUser.data
- * users/
- * users/
- * {$user_id}/
- * profile_picture.jpeg
- * user.data
- * ${card_id}/
- * data.fav
- * Photo${number}.jpeg
- * Panorama${number}.jpeg
+ *          /currentUser
+ *          profile_picture.jpeg
+ *          currentUser.data
+ *                      users/
+ *                      users/
+ *                                  {$user_id}/
+ *                                              profile_picture.jpeg
+ *                                              user.data
+ *                      ${card_id}/
+ *                                  data.fav
+ *                                  Photo${number}.jpeg
+ *                                  Panorama${number}.jpeg
  */
 // @formatter:on
 

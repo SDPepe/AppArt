@@ -27,7 +27,6 @@ import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
-import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
@@ -45,9 +44,6 @@ public class AdActivity extends ToolbarActivity {
 
     @Inject
     LoginService login;
-
-    @Inject
-    LocalDatabaseService localdb;
 
     public static class Intents {
         public static final String INTENT_PANORAMA_PICTURES =
