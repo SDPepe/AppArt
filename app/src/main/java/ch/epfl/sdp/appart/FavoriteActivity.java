@@ -28,7 +28,6 @@ public class FavoriteActivity extends ToolbarActivity {
     DatabaseService database;
 
     private RecyclerView recyclerView;
-    private FavoriteViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class FavoriteActivity extends ToolbarActivity {
         Toolbar toolbar = findViewById(R.id.Favorites_toolbar);
         setSupportActionBar(toolbar);
 
-        mViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        FavoriteViewModel mViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
 
         CompletableFuture<Void> initRes = mViewModel.initHome();
         initRes.exceptionally(e -> {
