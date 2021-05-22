@@ -8,6 +8,7 @@ This week I implemented the step counter activity.
 This activity introduces **sensor usage** in AppArt by counting the number of steps done by the user from when the start button was pressed. The main issue that was faced during this procedure was **making the step counter as more accurate/flexible as possible**. For example, the step counter still gets updated when the user pauses the activity by using the phone for other scopes, or when the user finishes the activity by navigating elsewhere on the app. Also it was managed the possiblility that the STEP_DETECTOR sensor could be missing on the device. In this case the user is informed and a less accurate implementation of the steps can still be computed using only the STEP_COUNTER sensor (which is available in almost all current androids). This progress was merged.
 
 ## Émilien
+This week I finished implementing the user ads feature. There was still a few issues that I had to fix, so it took me a bit of time. Then I proceeded to begin the edit/delete feature. I've began the deleting part, but the two features are a bit ambitious to do alone in one week, so I'll try to split the task in two and leave one for someone else to do. Right now I'm working on the UI part, which means creating a new kind of card that has different buttons than the normal cards.
 
 ## Filippo
 
