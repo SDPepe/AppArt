@@ -180,8 +180,6 @@ public class AdCreationUITest {
 
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
-        // TODO go back to adactivity when user is synced with firestore
-        //intended(hasComponent(AdActivity.class.getName()));
         intended(hasComponent(ScrollingActivity.class.getName()));
     }
 

@@ -22,6 +22,7 @@ import java.util.List;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
@@ -142,13 +143,8 @@ public class LocalDatabaseAndroidTest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @BindValue
-    LocalDatabase localDatabase =
+    LocalDatabaseService localDatabase =
             new LocalDatabase(InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath());
-
-    @Before
-    public void init() {
-        hiltRule.inject();
-    }
 
     @Test
     public void addAdWithPictureSimpleTest() throws IOException {
@@ -492,7 +488,7 @@ public class LocalDatabaseAndroidTest {
         localDatabase.cleanFavorites();
     }
 
-    private void checkRetrievedData(LocalDatabase localDatabase, Ad[] ads,
+    private void checkRetrievedData(LocalDatabaseService localDatabase, Ad[] ads,
                                     List<Card> cards, int nbValidUsers) {
         List<Card> cardsRetrieved = localDatabase.getCards().join();
         assertEquals(cards, cardsRetrieved);

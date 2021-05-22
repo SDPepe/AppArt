@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,7 +58,7 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
         BitmapTarget target = new BitmapTarget(bitmapFuture);
         Glide.with(context)
                 .asBitmap()
-                .load(Uri.parse(database.prependAndroidFilePath(imagePath)))
+                .load(Uri.parse(database.prependAndroidFilePath("panorama_test.jpg")))
                 .into(target);
 
     }

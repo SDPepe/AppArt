@@ -53,10 +53,4 @@ public class FullScreenImageUITest {
                 .check(matches(isDisplayed()));
     }
 
-    @Test
-    public void backButtonTest(){
-        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        mDevice.pressBack();
-        assertEquals(fullscreenActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
-    }
 }

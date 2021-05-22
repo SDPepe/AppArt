@@ -12,7 +12,9 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 
@@ -29,14 +31,16 @@ public class UserViewModel extends ViewModel {
 
     final DatabaseService db;
     final LoginService ls;
+    final LocalDatabaseService localdb;
 
     @Inject
-    public UserViewModel(DatabaseService database, LoginService loginService) {
+    public UserViewModel(DatabaseService database, LoginService loginService,
+                         LocalDatabaseService localdb) {
 
         this.db = database;
         this.ls = loginService;
+        this.localdb = localdb;
     }
-
 
     /**
      * Puts the user in the database and updates the LiveData
@@ -72,19 +76,15 @@ public class UserViewModel extends ViewModel {
      *
      * @param userId the id of the user
      */
-    public void updateImage(String userId){
-        StringBuilder imagePathAndName = new StringBuilder();
-        imagePathAndName
-                .append(FirebaseLayout.USERS_DIRECTORY)
-                .append(FirebaseLayout.SEPARATOR)
-                .append(userId)
-                .append(FirebaseLayout.SEPARATOR)
-                .append(FirebaseLayout.PROFILE_IMAGE_NAME)
-                .append(System.currentTimeMillis())
-                .append(FirebaseLayout.JPEG);
-                // TODO: support more image formats
+    public void updateImage(String userId) {
+        String imagePathAndName = new StoragePathBuilder()
+                .toUsersStorageDirectory()
+                .toDirectory(userId)
+                .withFile(FirebaseLayout.PROFILE_IMAGE_NAME +
+                        System.currentTimeMillis() +
+                        FirebaseLayout.JPEG);
 
-        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName.toString());
+        CompletableFuture<Boolean> updateImage = db.putImage(profileImageUri, imagePathAndName);
         updateImage.exceptionally(e -> {
             Log.d("UPDATE IMAGE", "DATABASE FAIL");
             return null;
@@ -98,7 +98,7 @@ public class UserViewModel extends ViewModel {
      *
      * @param profilePicture this is the complete path for the user's image: user.getProfileImage()
      */
-    public void deleteImage(String profilePicture){
+    public void deleteImage(String profilePicture) {
         CompletableFuture<Boolean> deleteImage = db.deleteImage(profilePicture);
         deleteImage.exceptionally(e -> {
             Log.d("DELETE IMAGE", "DATABASE FAIL");
@@ -108,29 +108,38 @@ public class UserViewModel extends ViewModel {
     }
 
     /**
-     * Get the user from the database and updates the LiveData
+     * Get the user from the database and updates the LiveData.
      *
      * @param userId the unique Id of the user to retrieve from database
      */
     public void getUser(String userId) {
         CompletableFuture<User> getUser = db.getUser(userId);
-        getUser.exceptionally(e -> {
+        getUser.exceptionally(e1 -> {
             Log.d("GET USER", "DATABASE FAIL");
             return null;
         });
+        // if server fetch worked, update user in localDB
         getUser.thenAccept(mUser::setValue);
     }
 
     /**
      * Get the current user from the database and updates the LiveData
+     *
+     * @return a completable future telling if the server fetch was successful
      */
-    public void getCurrentUser() {
-        CompletableFuture<User> getCurrentUser = db.getUser(ls.getCurrentUser().getUserId());
-        getCurrentUser.exceptionally(e -> {
+    public CompletableFuture<Void> getCurrentUser() {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<User> userRes = db.getUser(ls.getCurrentUser().getUserId());
+        userRes.exceptionally(e -> {
             Log.d("GET USER", "DATABASE FAIL");
+            result.completeExceptionally(e);
             return null;
         });
-        getCurrentUser.thenAccept(mUser::setValue);
+        userRes.thenAccept(cu -> {
+            mUser.setValue(cu);
+            result.complete(null);
+        });
+        return result;
     }
 
     /*
@@ -169,6 +178,5 @@ public class UserViewModel extends ViewModel {
     public Uri getUri() {
         return profileImageUri;
     }
-    
 
 }

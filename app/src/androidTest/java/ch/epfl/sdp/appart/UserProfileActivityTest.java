@@ -36,6 +36,7 @@ import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
@@ -95,6 +96,9 @@ public class UserProfileActivityTest {
     public void init() {
         Intents.init();
         hiltRule.inject();
+        login.signOut();
+        // clear shared preferences to avoid auto-login
+        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
     }
     @Test
     public void userProfileActivityTest() throws UiObjectNotFoundException {

@@ -65,12 +65,6 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * closes activity when back button pressed on phone
-     */
-    @Override
-    public void onBackPressed() { finish(); }
-
-    /**
      *  closes activity when back button pressed on UI
      */
     public void contactAdUser(View view) {
