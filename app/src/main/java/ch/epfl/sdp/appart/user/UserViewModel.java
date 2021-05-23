@@ -112,15 +112,20 @@ public class UserViewModel extends ViewModel {
      * Get the user from the database and updates the LiveData.
      *
      * @param userId the unique Id of the user to retrieve from database
+     * @return a completable future telling whether the operation was successful
      */
-    public void getUser(String userId) {
-        CompletableFuture<User> getUser = db.getUser(userId);
-        getUser.exceptionally(e1 -> {
-            Log.d("GET USER", "DATABASE FAIL");
+    public CompletableFuture<Void> getUser(String userId) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<User> localUserRes = localdb.getUser(userId);
+        localUserRes.exceptionally(e -> {
+            getFromDBAndSetUser(userId, result);
             return null;
         });
-        // if server fetch worked, update user in localDB
-        getUser.thenAccept(mUser::setValue);
+        localUserRes.thenAccept(u -> {
+            mUser.setValue(u);
+            getFromDBAndSetUser(userId, result);
+        });
+        return result;
     }
 
     /**
@@ -139,21 +144,24 @@ public class UserViewModel extends ViewModel {
 
         currentUser = ls.getCurrentUser();
         if (currentUser != null) {
-            CompletableFuture<User> userRes = db.getUser(currentUser.getUserId());
-            userRes.exceptionally(e -> {
-                Log.d("USER_VM", "Failed to fetch user from DB");
-                result.completeExceptionally(e);
-                return null;
-            });
-            userRes.thenAccept(cu -> {
-                mUser.setValue(cu);
-                result.complete(null);
-            });
-
+            getFromDBAndSetUser(currentUser.getUserId(), result);
         } else
             result.completeExceptionally(new IllegalStateException("Current user cannot be null!"));
 
         return result;
+    }
+
+    private void getFromDBAndSetUser(String userId, CompletableFuture<Void> result) {
+        CompletableFuture<User> userRes = db.getUser(userId);
+        userRes.exceptionally(e -> {
+            Log.d("USER_VM", "Failed to fetch user from DB");
+            result.completeExceptionally(e);
+            return null;
+        });
+        userRes.thenAccept(cu -> {
+            mUser.setValue(cu);
+            result.complete(null);
+        });
     }
 
     /*

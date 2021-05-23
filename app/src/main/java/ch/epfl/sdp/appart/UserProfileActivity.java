@@ -97,15 +97,13 @@ public class UserProfileActivity extends AppCompatActivity {
         CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
         // if user successfully fetched from DB, save it locally
         userRes.exceptionally(e -> {
-            Log.d("USER", "Failed to fetch user from DB");
             // failed to fetch -> prevent updated (we're probably offline)
             modifyButton.setVisibility(View.GONE);
             return null;
         });
-        userRes.thenAccept(res -> {
-            DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
-                    mViewModel.getUser().getValue().getUserId());
-        });
+        userRes.thenAccept(res ->
+                DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
+                        mViewModel.getUser().getValue().getUserId()));
         mViewModel.getUser().observe(this, this::setSessionUserToLocal);
     }
 
