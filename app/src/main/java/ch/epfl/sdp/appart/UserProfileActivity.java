@@ -95,8 +95,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
         /* get user from database from user ID */
         CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
+        // if user successfully fetched from DB, save it locally
         userRes.exceptionally(e -> {
             Log.d("USER", "Failed to fetch user from DB");
+            // failed to fetch -> prevent updated (we're probably offline)
+            modifyButton.setVisibility(View.GONE);
             return null;
         });
         userRes.thenAccept(res -> {
@@ -209,10 +212,16 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * sets the updated user information to the firestore database
+     * sets the updated user information to the firestore database and to the local database
      */
     private void setSessionUserToDatabase(View view) {
         mViewModel.updateUser(this.sessionUser);
+        CompletableFuture<Void> saveRes = DatabaseSync.saveCurrentUserToLocalDB(this, database,
+                localdb, mViewModel.getUser().getValue().getUserId());
+        saveRes.exceptionally(e -> {
+            Log.d("USER", "Failed to save user locally");
+            return null;
+        });
         mViewModel.getUpdateUserConfirmed().observe(this, this::informationUpdateResult);
     }
 
