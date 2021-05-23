@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -61,9 +62,11 @@ public class DatabaseSync {
                 CompletableFuture<Void> saveRes = ldb.setCurrentUser(u, img);
                 saveRes.exceptionally(e -> {
                     result.completeExceptionally(e);
+                    Log.d("SYNC", "Failed to save locally");
                     return null;
                 });
                 saveRes.thenAccept(res -> {
+                    Log.d("SYNC", "user saved locally");
                     result.complete(null);
                 });
             });
