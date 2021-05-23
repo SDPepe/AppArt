@@ -57,7 +57,8 @@ public class LoginActivity extends AppCompatActivity {
                 return null;
             });
             loginRes.thenAccept(u -> {
-                CompletableFuture<Void> saveRes = saveLoggedUser(u.getUserId());
+                CompletableFuture<Void> saveRes = DatabaseSync.saveCurrentUserToLocalDB(this,
+                        database, localdb, u.getUserId());
                 saveRes.exceptionally(e -> {
                     Log.d("LOGIN", "Failed to save user locally");
                     startScrollingActivity();
@@ -143,40 +144,5 @@ public class LoginActivity extends AppCompatActivity {
             ((EditText) findViewById(R.id.password_Login_editText))
                     .setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
         }
-    }
-
-    /**
-     * Retrieves the full user from the server, fetches the user images, saves everything to the
-     * local database.
-     *
-     * @param userId the id of the user that logged in
-     * @return a completable future telling whether the operation was successful
-     */
-    private CompletableFuture<Void> saveLoggedUser(String userId) {
-        CompletableFuture<Void> result = new CompletableFuture<>();
-        CompletableFuture<User> userRes = database.getUser(userId);
-        userRes.exceptionally(e -> {
-            result.completeExceptionally(e);
-            return null;
-        });
-        userRes.thenAccept(u -> {
-            CompletableFuture<Bitmap> pfpRes = DatabaseSync.getUserProfilePicture(this,
-                    database, u.getProfileImagePathAndName());
-            pfpRes.exceptionally(e -> {
-                result.completeExceptionally(e);
-                return null;
-            });
-            pfpRes.thenAccept(img -> {
-                CompletableFuture<Void> saveRes = localdb.setCurrentUser(u, img);
-                saveRes.exceptionally(e -> {
-                    result.completeExceptionally(e);
-                    return null;
-                });
-                saveRes.thenAccept(res -> {
-                    result.complete(null);
-                });
-            });
-        });
-        return result;
     }
 }
