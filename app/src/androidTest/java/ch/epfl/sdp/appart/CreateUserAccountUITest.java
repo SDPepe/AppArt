@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
@@ -44,7 +45,8 @@ public class CreateUserAccountUITest {
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityScenarioRule<CreateUserActivity> createUserActivityActivityRule = new ActivityScenarioRule<>(CreateUserActivity.class);
+    public ActivityScenarioRule<CreateUserActivity> createUserActivityActivityRule =
+            new ActivityScenarioRule<>(CreateUserActivity.class);
 
     @BindValue
     final
@@ -90,6 +92,9 @@ public class CreateUserAccountUITest {
         onView(ViewMatchers.isRoot()).perform(ViewActions.closeSoftKeyboard());
         onView(withId(R.id.create_account_CreateUser_button)).perform(click());
 
+        // clear shared preferences to avoid auto-login
+        createUserActivityActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+
         intended(hasComponent(LoginActivity.class.getName()));
 
         User user = loginService.getCurrentUser();
@@ -104,6 +109,8 @@ public class CreateUserAccountUITest {
 
     @After
     public void release() {
+        createUserActivityActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        loginService.signOut();
         Intents.release();
     }
 }

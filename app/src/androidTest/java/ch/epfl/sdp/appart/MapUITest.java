@@ -29,11 +29,13 @@ import java.util.Set;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import ch.epfl.sdp.appart.hilt.LocationModule;
+import ch.epfl.sdp.appart.hilt.GeocoderModule;
 import ch.epfl.sdp.appart.hilt.MapModule;
-import ch.epfl.sdp.appart.location.AndroidLocationService;
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.LocationService;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
+import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
+import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
+import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 import ch.epfl.sdp.appart.map.GoogleMapService;
 import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -50,7 +52,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-@UninstallModules({DatabaseModule.class, MapModule.class, LocationModule.class})
+@UninstallModules({DatabaseModule.class, MapModule.class, GeocoderModule.class})
 @HiltAndroidTest
 public class MapUITest {
 
@@ -76,8 +78,8 @@ public class MapUITest {
     final MapService mapService = new GoogleMapService();
 
     @BindValue
-    final LocationService locationService =
-            new AndroidLocationService(InstrumentationRegistry.getInstrumentation().getTargetContext());
+    final GeocodingService geocodingService =
+            new GoogleGeocodingService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
 
     private static final double SCREEN_HEIGHT_INFO_WINDOW_FACTOR = 0.35;
@@ -102,7 +104,7 @@ public class MapUITest {
         for (Card card : cards) {
             if (!markerDescs.contains(card.getCity())) {
                 Location loc =
-                        locationService.getLocationFromName(card.getCity()).join();
+                        geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
                 mapService.centerOnLocation(loc, true);
 
 
@@ -118,7 +120,7 @@ public class MapUITest {
 
         Card card = cards.get(0);
         Location loc =
-                locationService.getLocationFromName(card.getCity()).join();
+                geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
         mapService.centerOnLocation(loc, true);
 
 
@@ -159,7 +161,7 @@ public class MapUITest {
         Card card = cards.get(0);
 
         Location loc =
-                locationService.getLocationFromName(card.getCity()).join();
+                geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
         mapService.centerOnLocation(loc, true);
 
 

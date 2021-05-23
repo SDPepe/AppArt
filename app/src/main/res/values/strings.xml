@@ -9,6 +9,7 @@
     <string name="email_reset">Enter your email address</string>
     <string name="reset_button">Reset password</string>
     <string name="login_failed_snack">Login failed !</string>
+    <string name="saveUserFail_Login">Failed to auto-save user, please log in again</string>
     <string name="create_account_failed_snack">Create account failed !</string>
     <string name="invalid_email_snack">Invalid email !</string>
 
@@ -23,6 +24,11 @@
     <string name="contactbutton_text">Contact</string>
     <string name="seeLocationText">Location</string>
     <string name="intentLocationForMap">LOCATION</string>
+    <string name="loadFail_Ad">Failed to load the ad, please retry later</string>
+    <string name="favFail_Ad">Failed to add to favorites, please retry later</string>
+    <string name="localFavFail_Ad">Failed to save the new favorite locally</string>
+    <string name="favSuccess_Ad">Added to favorites!</string>
+    <string name="userNotLoggedIn_Ad">You cannot add to favorites if you are not logged in</string>
 
     <!-- Mock ad stuff -->
 
@@ -57,6 +63,8 @@
     <string name="updateUserFailedInDB">  Information update failed, try again </string>
     <string name="updateUserImageFailedInDB">  Image update failed, try again </string>
     <string name="contactAdUser"> CONTACT ANNOUNCER </string>
+    <string name="localSaveFailed_User">Failed to save updates locally!</string>
+    <string name="loadFailed_User">Failed to load user information</string>
     <string name="cameraAdButtonDesc">Add Picture</string>
 
     <!-- Strings for Step Counter UI -->
@@ -156,6 +164,9 @@
     <!-- FullScreenImageActivity stuff -->
     <string name="contentDescFullScreenImage">Photo</string>
 
+    <!-- FullScreenImageActivity stuff -->
+    <string name="localSaved_Favorite">Failed to save locally the new favorites</string>
+  
     <!-- FilterActivity stuff -->
     <string name="filterTitle">Filter</string>
     <string name="filterPrice">Price range:</string>
@@ -167,6 +178,5 @@
     <string name="km">kilometres</string>
     <string name="confirmFilter">Save</string>
     <string name="resetFilter">Remove all</string>
-
 
 </resources>

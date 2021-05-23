@@ -1,0 +1,844 @@
+{
+  "html_attributions" : [],
+  "next_page_token" : "ATtYBwJOGhgR31ISjEFwFefVe2Y8j8jgqE-k3UnImqELwH3WQEX_kZoVf8Gh9n3ibz_ZK8_1PmttTCsfkkU4Ko7myRh-ohy7pLPxaPG8XQPu9uPXwk_5LvHIMbl-aEG7J1DJ4H3jjRxKBSlco0DnFIWZbve5FpC1TPo2RBLukT87_ugqTfWmtx-QevsQJuV2hHcTXin5wfwtC4OR5YUm5VOVH5ZUHNeDD22wNOaD1sth5o_WjIES9wHos43tkzf2kEsMkan90gCkEXRV5iTm8vsUp_Rg0aR_oLv3xZqMCBdbHGkpjCt1IeMb7G8TVpsB5nG-owYWxxaKvkPULY1tnDWOHwuNSffcXwooB9XIlN8EDK8_cMy7dv087kQHe4_pTdB9eNDN6CsLV84QeaedmeD0_XQdR7JNnoM2vam-UPJswWGUpZjt80EN",
+  "results" : [
+    {
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7784736,
+          "lng" : 6.641183
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.79535694246018,
+            "lng" : 6.671710037059971
+          },
+          "southwest" : {
+            "lat" : 46.75513006405676,
+            "lng" : 6.604400048190917
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+      "name" : "Yverdon-les-Bains",
+      "photos" : [
+        {
+          "height" : 3096,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/102640603618760350308\"\u003eIrundina Müller\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJzsaKFYhiddsPMh0a07jYGPUNNRdP3xXUYbV8Q0M6V_xBh9CT_F1DHGq6wThqYniwlCajTYhNDKUt3RcZN0ByJrFpRBE9_DfA4lSh1FugTewxrc-AXS_uM4BSsWvn33Kr4QRL2YFteZ38K1EparWC5Pk2Rif3wx9eg3xZCLGooy3vP",
+          "width" : 4128
+        }
+      ],
+      "place_id" : "ChIJtfOraYHPjUcR-aTcS63BMs4",
+      "reference" : "ChIJtfOraYHPjUcR-aTcS63BMs4",
+      "scope" : "GOOGLE",
+      "types" : [ "locality", "political" ],
+      "vicinity" : "Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77972219999999,
+          "lng" : 6.643611099999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78101303029149,
+            "lng" : 6.644906730291502
+          },
+          "southwest" : {
+            "lat" : 46.77831506970849,
+            "lng" : 6.642208769708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/lodging-71.png",
+      "name" : "Hôtel du Théâtre",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 4713,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/110795643577574823610\"\u003eHôtel du Théâtre\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwKqjUKsp6uxCbCiwb2uViOI--wKAGh0hajSl7anGbQ470e2XM_PlIhgrYkv7p47DMrcnRtHxmJVtExky10s7nEPiPe4DWtQT-81jyCSbrZNBt0DIuuQtvrxkgShBFU0S1h1ojQqMaCQcMuS25lxEKAuu-26EoKBqg3JZK_q2IXzdn-j",
+          "width" : 7029
+        }
+      ],
+      "place_id" : "ChIJAWu7boXPjUcR4FmYYqrJP8Q",
+      "plus_code" : {
+        "compound_code" : "QJHV+VC Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHV+VC"
+      },
+      "rating" : 4.6,
+      "reference" : "ChIJAWu7boXPjUcR4FmYYqrJP8Q",
+      "scope" : "GOOGLE",
+      "types" : [ "lodging", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 197,
+      "vicinity" : "Avenue Haldimand 5, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7752056,
+          "lng" : 6.649564599999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.77645338029151,
+            "lng" : 6.650751730291502
+          },
+          "southwest" : {
+            "lat" : 46.77375541970851,
+            "lng" : 6.648053769708499
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Hotel La Prairie",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 2268,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/116859597692594868211\"\u003eDaniel\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIwfSJz_NvBBldaw3MseVzh4Uhq2Ll5-B1-N5Zd7zg6YeYqHdpPVSvGW-FBbei1OPu1X18f8EzeOVJAYq9higFTdLAZhkabfVmWvMoUprEyu1LiH4LiCEb1v1inPaVProqeV2QgQdaCsnNI6LIbmq_KUvU4YW5KwEyfUUv_-Oh1l2E1",
+          "width" : 4032
+        }
+      ],
+      "place_id" : "ChIJa2tozMjPjUcRrVeu47CCbgw",
+      "plus_code" : {
+        "compound_code" : "QJGX+3R Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJGX+3R"
+      },
+      "rating" : 4.1,
+      "reference" : "ChIJa2tozMjPjUcRrVeu47CCbgw",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "lodging", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 291,
+      "vicinity" : "Avenue des Bains 9, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7812343,
+          "lng" : 6.636091599999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7826114802915,
+            "lng" : 6.637516830291501
+          },
+          "southwest" : {
+            "lat" : 46.7799135197085,
+            "lng" : 6.634818869708496
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+      "name" : "Denner Express",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 2240,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/104486183603726033348\"\u003eRaphaël Pedrazzini\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIDo_zJ5Dg8it5aRBZ2omfU7J9ndCotQ12t4v0UHo150MhJRkAWg7DaH1H_3knBFk2iYbzUkqQ4KUFj5mo-RRLHwYJH44sKScfvrshZiSI0Ul-CG7Oxlg0WTeZf5FwZDboK7xzH8FTgmnmsYMqXkWAdi0vVLrdUH6ywiu5v9qiDRs6d",
+          "width" : 4608
+        }
+      ],
+      "place_id" : "ChIJfWQ-WILPjUcRXZ3JmhPEQP4",
+      "plus_code" : {
+        "compound_code" : "QJJP+FC Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+FC"
+      },
+      "rating" : 4,
+      "reference" : "ChIJfWQ-WILPjUcRXZ3JmhPEQP4",
+      "scope" : "GOOGLE",
+      "types" : [
+        "supermarket",
+        "grocery_or_supermarket",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "user_ratings_total" : 16,
+      "vicinity" : "Centre Metropole, Rue de Neuchâtel 3, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77930420000001,
+          "lng" : 6.642414300000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78065318029151,
+            "lng" : 6.643763280291504
+          },
+          "southwest" : {
+            "lat" : 46.77795521970851,
+            "lng" : 6.641065319708499
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Agence immobilière - COGESTIM SA - Yverdon",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 405,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/109644545300142503832\"\u003eAgence immobilière - COGESTIM SA - Yverdon\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwI8aGMtZW4-ewH2pkyadGw1qg6bRrojS3ocYD52LOQrnDM-FkypzpwtWJmKv99kJaawW2_qRauK_mwwqvV-dtJS6MzkJuQdS3zVzuHIy9gIaOJ6RLQ2EU9kWVlmD5qmsgcbFEmjyvQalZ8DYBO_wVjkX50ym5ct0StvSGhcq7jHaDQI",
+          "width" : 720
+        }
+      ],
+      "place_id" : "ChIJyYfePIXPjUcRZcs4sQdnNzE",
+      "plus_code" : {
+        "compound_code" : "QJHR+PX Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHR+PX"
+      },
+      "rating" : 4.9,
+      "reference" : "ChIJyYfePIXPjUcRZcs4sQdnNzE",
+      "scope" : "GOOGLE",
+      "types" : [ "real_estate_agency", "finance", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 106,
+      "vicinity" : "Rue du Casino 3, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7792442,
+          "lng" : 6.638607899999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78054418029149,
+            "lng" : 6.639739180291502
+          },
+          "southwest" : {
+            "lat" : 46.77784621970849,
+            "lng" : 6.637041219708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+      "name" : "Boutique Marilou",
+      "photos" : [
+        {
+          "height" : 3024,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/116574209336728040500\"\u003eRobert Helou\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJwF_RZV_btcBxiCQ9rFPskcrSjsRLVU7QFM3JugFomipxZ1hrDbQF6YLbJEbJg3v6LQiZCa3_j7HYZbcErkaeYwb9qLdm3WlLRISPDBWj1Q_vN9ZK2YVJyTEqWmuE6qMMa2D5fPFDoZfRlVvE8pIAn4qf9SEyN_xtKmDT8_QZzUuOG",
+          "width" : 4032
+        }
+      ],
+      "place_id" : "ChIJSUH2WIPPjUcRqF4HqE70icg",
+      "plus_code" : {
+        "compound_code" : "QJHQ+MC Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+MC"
+      },
+      "rating" : 4,
+      "reference" : "ChIJSUH2WIPPjUcRqF4HqE70icg",
+      "scope" : "GOOGLE",
+      "types" : [ "point_of_interest", "clothing_store", "store", "establishment" ],
+      "user_ratings_total" : 4,
+      "vicinity" : "Rue du Pré 11, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7815169,
+          "lng" : 6.6403411
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78276098029149,
+            "lng" : 6.641707580291503
+          },
+          "southwest" : {
+            "lat" : 46.78006301970849,
+            "lng" : 6.639009619708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+      "name" : "Coop Pronto",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 1036,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/106833556910280468155\"\u003eCoop Pronto\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIFWvgT3TQVZM1oEVAR7gMxL4obWOIHA7h1d1WF9yuqdV9s4D_F0wOqa6porWXzHKdzzosZMUzW0AqjCreFL94nqNA-O5zTksNXDENjT_rnjT_vRY6k2zDBzYK8zhU9JqgJCKf7Xk4S08nWJxef98ex_iR9QsdjbIyK7OPLpeKS4Dhj",
+          "width" : 1800
+        }
+      ],
+      "place_id" : "ChIJWehbW4TPjUcRRAtyuCk01DA",
+      "plus_code" : {
+        "compound_code" : "QJJR+J4 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJR+J4"
+      },
+      "rating" : 3.8,
+      "reference" : "ChIJWehbW4TPjUcRRAtyuCk01DA",
+      "scope" : "GOOGLE",
+      "types" : [
+        "supermarket",
+        "grocery_or_supermarket",
+        "food",
+        "point_of_interest",
+        "store",
+        "establishment"
+      ],
+      "user_ratings_total" : 299,
+      "vicinity" : "Place de la Gare, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.78102,
+          "lng" : 6.647986
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7823313802915,
+            "lng" : 6.649425330291503
+          },
+          "southwest" : {
+            "lat" : 46.7796334197085,
+            "lng" : 6.646727369708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "e-teach Sàrl",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 378,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/114713425941518439417\"\u003ee-teach Sàrl\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwL2xzP7hWpfIXAGW9acdaDjk0RCEtgjnzyFtxiJfnJIRb2r8riB6gz-I-Xd54ezSnXH9xRJP4hdQmthH7Ua-pYW5x3AFhflaonY6W7ksRJ_hKdT04vm0oLY-atrJnGYWvkFzEUarLpjO0QSFfQ4z0h_0O2Uc_LDCdGoYMqVGatlQaPO",
+          "width" : 979
+        }
+      ],
+      "place_id" : "ChIJ595Tr3sxjEcRlmVx2trJPg0",
+      "plus_code" : {
+        "compound_code" : "QJJX+C5 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJX+C5"
+      },
+      "reference" : "ChIJ595Tr3sxjEcRlmVx2trJPg0",
+      "scope" : "GOOGLE",
+      "types" : [ "point_of_interest", "establishment" ],
+      "vicinity" : "Avenue des Sports 26, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7811871,
+          "lng" : 6.636597599999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7825024802915,
+            "lng" : 6.637879830291502
+          },
+          "southwest" : {
+            "lat" : 46.7798045197085,
+            "lng" : 6.635181869708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "Café Le Tempo, Yverdon",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 371,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/107178438079478656266\"\u003eLe Tempo, Albertina De Almeida Ferreira Silva\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIpUr3zm34B2v466EXl70uNU-3dYEB_BFGUbAhrianRvOSQdFjIr73Qp-ivu-T13BgCKnJkIR3gcp9hnQisCmwaVQGZtW9jDuyttxk9M5VWOnq0LPk2E_XdqT81gn7cmwu1fGW5q06Zf0JmuNTnlKtePkVM0-RZ1E8mUuGKfzgervUb",
+          "width" : 1000
+        }
+      ],
+      "place_id" : "ChIJe7TGpYPPjUcRrXasvV3OMm0",
+      "plus_code" : {
+        "compound_code" : "QJJP+FJ Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+FJ"
+      },
+      "price_level" : 1,
+      "rating" : 4.3,
+      "reference" : "ChIJe7TGpYPPjUcRrXasvV3OMm0",
+      "scope" : "GOOGLE",
+      "types" : [ "restaurant", "food", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 138,
+      "vicinity" : "Quai de la Thièle 3, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.779506,
+          "lng" : 6.643026
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7809238302915,
+            "lng" : 6.644418730291503
+          },
+          "southwest" : {
+            "lat" : 46.7782258697085,
+            "lng" : 6.641720769708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/civic_building-71.png",
+      "name" : "BM-EMPLOI SA",
+      "place_id" : "ChIJ5-9AFYXPjUcR4mWT3xkwz5s",
+      "plus_code" : {
+        "compound_code" : "QJHV+R6 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHV+R6"
+      },
+      "rating" : 3.5,
+      "reference" : "ChIJ5-9AFYXPjUcR4mWT3xkwz5s",
+      "scope" : "GOOGLE",
+      "types" : [ "point_of_interest", "establishment" ],
+      "user_ratings_total" : 22,
+      "vicinity" : "Avenue Haldimand 2, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7792587,
+          "lng" : 6.635919899999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7805477802915,
+            "lng" : 6.637390880291503
+          },
+          "southwest" : {
+            "lat" : 46.7778498197085,
+            "lng" : 6.634692919708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/civic_building-71.png",
+      "name" : "Office d'impôt des districts du Jura-Nord vaudois et Broye-Vully",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 1864,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/111267199087368993265\"\u003eGratin d&#39; pâtes\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwJiZAI0bXa5wPJs8GoN0-Ap5E-3D-3d3AfaKUGqp8u_CMBRsSDn5ieE5-Q7GQab03rhd6XVl6L0diyJTpuFumX51liaSvEChZ_D28z8TL1cR1H1ORo3V_B1X8k9t0k64WNfAW_r7uK6mcvfWrlAAvSTNWzC6g5gCanbWeisANZLsFEi",
+          "width" : 4096
+        }
+      ],
+      "place_id" : "ChIJq-XjJ4PPjUcRReP9Xx8Czm4",
+      "plus_code" : {
+        "compound_code" : "QJHP+P9 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHP+P9"
+      },
+      "rating" : 2.1,
+      "reference" : "ChIJq-XjJ4PPjUcRReP9Xx8Czm4",
+      "scope" : "GOOGLE",
+      "types" : [
+        "accounting",
+        "finance",
+        "local_government_office",
+        "point_of_interest",
+        "establishment"
+      ],
+      "user_ratings_total" : 16,
+      "vicinity" : "Rue des Moulins 10, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.779691,
+          "lng" : 6.642081300000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7809656802915,
+            "lng" : 6.643604080291503
+          },
+          "southwest" : {
+            "lat" : 46.7782677197085,
+            "lng" : 6.640906119708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "name" : "La Grange Da Antonio",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 1200,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/107074030823607650617\"\u003eLa Grange Da Antonio\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwL5uJbJBOqTn3Ov1sw0erlyJRD723a9EoRP7q3z_ixOA9Uqg0qdZ4p2EiK4NaDaXILGb_JJr6SaL4CEbz7fplxUbx9g-nTF-YWRHEvFIupZczEzwft4kWUYrLQflr0qhzT32RYxWY2wvL3EdTHYrq-Z1wN9qWrQ0SLdpY4KkXhvbolh",
+          "width" : 1600
+        }
+      ],
+      "place_id" : "ChIJP6jcG4XPjUcRqZYJiaA-MTI",
+      "plus_code" : {
+        "compound_code" : "QJHR+VR Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHR+VR"
+      },
+      "price_level" : 2,
+      "rating" : 4.2,
+      "reference" : "ChIJP6jcG4XPjUcRqZYJiaA-MTI",
+      "scope" : "GOOGLE",
+      "types" : [
+        "restaurant",
+        "meal_delivery",
+        "meal_takeaway",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "user_ratings_total" : 628,
+      "vicinity" : "Rue du Casino 9, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7810577,
+          "lng" : 6.6471789
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7826194302915,
+            "lng" : 6.648704430291502
+          },
+          "southwest" : {
+            "lat" : 46.7799214697085,
+            "lng" : 6.646006469708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+      "name" : "HEIG-VD",
+      "photos" : [
+        {
+          "height" : 4000,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/112044856166468978626\"\u003eDominik Gehl\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIlLklK_WhuKYtKxD85XEWqAybhhF19HCkCzVt7T8B6A52jx1xYlyEdSa6T0F1wfObCuOdxosUxXxHiz_v3k8nfl62FJU9MktFGMWep_XPCk1B7UjjtE3BF4Vc3NtBV8sCcmtVk_RmBnM_gcDOVSybgh8ZGD4M0AHD8M6J7GQk3cVnd",
+          "width" : 6000
+        }
+      ],
+      "place_id" : "ChIJ_cjNG4_PjUcRLnl5DTrf11I",
+      "plus_code" : {
+        "compound_code" : "QJJW+CV Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJW+CV"
+      },
+      "rating" : 4.1,
+      "reference" : "ChIJ_cjNG4_PjUcRLnl5DTrf11I",
+      "scope" : "GOOGLE",
+      "types" : [ "university", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 30,
+      "vicinity" : "Avenue des Sports 20, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7812203,
+          "lng" : 6.635607699999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7826673302915,
+            "lng" : 6.637225580291502
+          },
+          "southwest" : {
+            "lat" : 46.7799693697085,
+            "lng" : 6.634527619708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Sky Job SA",
+      "place_id" : "ChIJ89FsPYXPjUcR4V-RRPX3T5E",
+      "plus_code" : {
+        "compound_code" : "QJJP+F6 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+F6"
+      },
+      "reference" : "ChIJ89FsPYXPjUcR4V-RRPX3T5E",
+      "scope" : "GOOGLE",
+      "types" : [ "point_of_interest", "establishment" ],
+      "vicinity" : "Rue de Neuchâtel 3, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77993989999999,
+          "lng" : 6.639923099999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78133923029149,
+            "lng" : 6.641318380291501
+          },
+          "southwest" : {
+            "lat" : 46.77864126970849,
+            "lng" : 6.638620419708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/bank-71.png",
+      "name" : "BCV Yverdon",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "photos" : [
+        {
+          "height" : 1152,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/114698966085074967766\"\u003ePaulo Couto\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwK9Ku6CG3Ja4qk826EVqH8EsFO80aJ8jS5Z2L73yERWdfstj408Z0oP02NrllHRWXFLrNVkJBpvYe0WVw-oT6K1YxfnLqBjJClDjiU8ruzDCZKcOJuxGxUrjhYusS969lLb8AcIQkuASLRtc8HlmoVfXUe7AtChVRbHvHNjs7AgOQVx",
+          "width" : 2048
+        }
+      ],
+      "place_id" : "ChIJ_fYDlITPjUcRmg7zGywC0d0",
+      "plus_code" : {
+        "compound_code" : "QJHQ+XX Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+XX"
+      },
+      "rating" : 3.6,
+      "reference" : "ChIJ_fYDlITPjUcRmg7zGywC0d0",
+      "scope" : "GOOGLE",
+      "types" : [ "bank", "finance", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 15,
+      "vicinity" : "Rue des Remparts 17, CP 256, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77823530000001,
+          "lng" : 6.638375099999999
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7795694302915,
+            "lng" : 6.639767780291502
+          },
+          "southwest" : {
+            "lat" : 46.7768714697085,
+            "lng" : 6.637069819708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Dr méd. Olivier Louis",
+      "place_id" : "ChIJCXQ7qpzPjUcRkly1kLg00qM",
+      "plus_code" : {
+        "compound_code" : "QJHQ+79 Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+79"
+      },
+      "rating" : 1.5,
+      "reference" : "ChIJCXQ7qpzPjUcRkly1kLg00qM",
+      "scope" : "GOOGLE",
+      "types" : [ "doctor", "health", "point_of_interest", "establishment" ],
+      "user_ratings_total" : 2,
+      "vicinity" : "Rue Roger-de-Guimps 4, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.77875199999999,
+          "lng" : 6.639409999999998
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7800924302915,
+            "lng" : 6.640448580291502
+          },
+          "southwest" : {
+            "lat" : 46.7773944697085,
+            "lng" : 6.637750619708497
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "Fidurex SA",
+      "opening_hours" : {
+        "open_now" : false
+      },
+      "photos" : [
+        {
+          "height" : 312,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/110242097938900794492\"\u003eFidurex SA\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwLi4hKHsSlPyX9cg3V5E_JQPixlVHVKfq38LVmck4On6k8WxPQzAsD3fyj5mcbRRi5s5Q0mqrr_oktMekJC-JJDKZ81G89e-3bADrnW_wAbS8fyswlV9pD-KWSLwsy2BDtNnDKG_nOIRmjKcsMpTW0VbZskbRqoyMtTCHSYhfiD0r0k",
+          "width" : 1022
+        }
+      ],
+      "place_id" : "ChIJwfIrH5vPjUcR7UGVzSkdzdc",
+      "plus_code" : {
+        "compound_code" : "QJHQ+GQ Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJHQ+GQ"
+      },
+      "rating" : 3.8,
+      "reference" : "ChIJwfIrH5vPjUcR7UGVzSkdzdc",
+      "scope" : "GOOGLE",
+      "types" : [ "point_of_interest", "establishment" ],
+      "user_ratings_total" : 10,
+      "vicinity" : "Rue du Milieu 23, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7807799,
+          "lng" : 6.636254300000001
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.78203163029149,
+            "lng" : 6.637528430291503
+          },
+          "southwest" : {
+            "lat" : 46.7793336697085,
+            "lng" : 6.634830469708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/civic_building-71.png",
+      "name" : "Registre Foncier Broye-Nord vaudois",
+      "opening_hours" : {
+        "open_now" : true
+      },
+      "place_id" : "ChIJiWYmVYLPjUcRutpXP5ExyIM",
+      "plus_code" : {
+        "compound_code" : "QJJP+8G Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJP+8G"
+      },
+      "rating" : 5,
+      "reference" : "ChIJiWYmVYLPjUcRutpXP5ExyIM",
+      "scope" : "GOOGLE",
+      "types" : [ "point_of_interest", "establishment" ],
+      "user_ratings_total" : 2,
+      "vicinity" : "Rue de Neuchâtel 1, Yverdon-les-Bains"
+    },
+    {
+      "business_status" : "OPERATIONAL",
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7822167,
+          "lng" : 6.6497785
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.7835850302915,
+            "lng" : 6.651071680291502
+          },
+          "southwest" : {
+            "lat" : 46.7808870697085,
+            "lng" : 6.648373719708498
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+      "name" : "L'Amalgame",
+      "photos" : [
+        {
+          "height" : 1000,
+          "html_attributions" : [
+            "\u003ca href=\"https://maps.google.com/maps/contrib/112857925338214419738\"\u003eL&#39;Amalgame\u003c/a\u003e"
+          ],
+          "photo_reference" : "ATtYBwIssl_p19YDKqnboUmmu0KwfVaWjMMfPE3b-NcqqCFYmP958yoigsIRxcuSJ6IKT1nx3w2SoJPMmwnGXnoa9cxV8UGkfd7K2fWyUNS_d3tYECuv6VVP1wPtQJjOFQNaqSZQgQWSpmW27QDzPcXwisWqoN_3HNKBYP6Uq1BiIHS09_W3",
+          "width" : 1500
+        }
+      ],
+      "place_id" : "ChIJTR7pxI7PjUcR59lxDLz2c9Y",
+      "plus_code" : {
+        "compound_code" : "QJJX+VW Yverdon-les-Bains, Switzerland",
+        "global_code" : "8FR8QJJX+VW"
+      },
+      "rating" : 4.4,
+      "reference" : "ChIJTR7pxI7PjUcR59lxDLz2c9Y",
+      "scope" : "GOOGLE",
+      "types" : [ "point_of_interest", "establishment" ],
+      "user_ratings_total" : 233,
+      "vicinity" : "Avenue des Sports 5, Yverdon-les-Bains"
+    },
+    {
+      "geometry" : {
+        "location" : {
+          "lat" : 46.7716527,
+          "lng" : 6.6358787
+        },
+        "viewport" : {
+          "northeast" : {
+            "lat" : 46.77331734288138,
+            "lng" : 6.638928710620187
+          },
+          "southwest" : {
+            "lat" : 46.76996663103454,
+            "lng" : 6.633354984204236
+          }
+        }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+      "name" : "Les Îles",
+      "place_id" : "ChIJH4WH2Z7PjUcR4Z0Cl7W0mng",
+      "reference" : "ChIJH4WH2Z7PjUcR4Z0Cl7W0mng",
+      "scope" : "GOOGLE",
+      "types" : [ "neighborhood", "political" ],
+      "vicinity" : "Yverdon-les-Bains"
+    }
+  ],
+  "status" : "OK"
+}

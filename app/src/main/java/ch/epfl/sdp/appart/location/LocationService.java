@@ -42,13 +42,4 @@ public interface LocationService {
      * @return a future that will indicate if the task succeeded or not.
      */
     CompletableFuture<Void> teardownLocationUpdate();
-
-    /**
-     * Gets the location from a city name.
-     *
-     * @param name The name of the location. This can be a city, an address, ...
-     * @return a completable future that will contain the location if the
-     * operation succeeds, an exception otherwise.
-     */
-    CompletableFuture<Location> getLocationFromName(String name);
 }
