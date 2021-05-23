@@ -1,12 +1,16 @@
 package ch.epfl.sdp.appart;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuthException;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -18,6 +22,7 @@ import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -45,11 +50,21 @@ public class LoginActivity extends AppCompatActivity {
         String email = SharedPreferencesHelper.getSavedEmail(this);
         if (!email.equals("")) {
             String password = SharedPreferencesHelper.getSavedPassword(this);
-            loginService.loginWithEmail(email, password);
-            // if loginWithEmail fails, we are offline. Continue to ScrollingActivity. The calls to
-            // currentUser in the app will be safely checked when the full PR is implemented (there
-            // will be a call to local currentUser first)
-            startScrollingActivity();
+            CompletableFuture<User> loginRes = loginService.loginWithEmail(email, password);
+            loginRes.exceptionally(e -> {
+                Log.d("LOGIN", "Couldn't login to firebase");
+                startScrollingActivity();
+                return null;
+            });
+            loginRes.thenAccept(u -> {
+                CompletableFuture<Void> saveRes = saveLoggedUser(u.getUserId());
+                saveRes.exceptionally(e -> {
+                    Log.d("LOGIN", "Failed to save user locally");
+                    startScrollingActivity();
+                    return null;
+                });
+                saveRes.thenAccept(r -> startScrollingActivity());
+            });
         } else {
             setBundleInfo(this.getIntent().getExtras());
         }
@@ -77,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         loginRes.thenAccept(user -> {
             SharedPreferencesHelper.saveUserForAutoLogin(this, email, password);
-                startScrollingActivity();
+            startScrollingActivity();
         });
     }
 
@@ -128,5 +143,40 @@ public class LoginActivity extends AppCompatActivity {
             ((EditText) findViewById(R.id.password_Login_editText))
                     .setText(extras.getString(ActivityCommunicationLayout.PROVIDING_PASSWORD));
         }
+    }
+
+    /**
+     * Retrieves the full user from the server, fetches the user images, saves everything to the
+     * local database.
+     *
+     * @param userId the id of the user that logged in
+     * @return a completable future telling whether the operation was successful
+     */
+    private CompletableFuture<Void> saveLoggedUser(String userId) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<User> userRes = database.getUser(userId);
+        userRes.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+        userRes.thenAccept(u -> {
+            CompletableFuture<Bitmap> pfpRes = DatabaseSync.getUserProfilePicture(this,
+                    database, u.getProfileImagePathAndName());
+            pfpRes.exceptionally(e -> {
+                result.completeExceptionally(e);
+                return null;
+            });
+            pfpRes.thenAccept(img -> {
+                CompletableFuture<Void> saveRes = localdb.setCurrentUser(u, img);
+                saveRes.exceptionally(e -> {
+                    result.completeExceptionally(e);
+                    return null;
+                });
+                saveRes.thenAccept(res -> {
+                    result.complete(null);
+                });
+            });
+        });
+        return result;
     }
 }
