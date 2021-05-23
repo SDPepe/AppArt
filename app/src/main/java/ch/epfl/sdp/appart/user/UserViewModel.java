@@ -138,7 +138,7 @@ public class UserViewModel extends ViewModel {
      */
     public CompletableFuture<Void> getCurrentUser() {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        User currentUser = localdb.loadCurrentUser();
+        User currentUser = localdb.getCurrentUser();
         if (currentUser != null)
             mUser.setValue(currentUser);
 
