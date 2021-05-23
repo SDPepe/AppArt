@@ -44,5 +44,10 @@ public class UserVMTest {
         assertEquals(user, vm.getUser().getValue());
     }
 
+    @Test
+    public void currentUserNullTest() {
+        assertTrue(vm.getCurrentUser().isCompletedExceptionally());
+    }
+
 
 }

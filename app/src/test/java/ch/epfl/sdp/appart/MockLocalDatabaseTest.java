@@ -12,6 +12,7 @@ import ch.epfl.sdp.appart.user.User;
 import kotlin.NotImplementedError;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -31,10 +32,8 @@ public class MockLocalDatabaseTest {
     }
 
     @Test
-    public void getCurrentUserThrows() {
-        assertThrows(NotImplementedError.class, () -> {
-            localdb.getCurrentUser();
-        });
+    public void getCurrentUserReturnsNull() {
+        assertNull(localdb.getCurrentUser());
     }
 
     @Test
@@ -66,12 +65,7 @@ public class MockLocalDatabaseTest {
 
     @Test
     public void getUserWorksForBadValue() {
-        CompletableFuture<User> res = localdb.getUser("");
-        res.exceptionally(e -> {
-            assertTrue(true);
-            return null;
-        });
-        res.thenAccept(u -> assertTrue(false));
+        assertTrue(localdb.getUser("").isCompletedExceptionally());
     }
 
     @Test

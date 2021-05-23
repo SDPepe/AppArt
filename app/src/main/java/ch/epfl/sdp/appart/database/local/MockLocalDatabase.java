@@ -33,7 +33,7 @@ public class MockLocalDatabase implements LocalDatabaseService {
 
     @Override
     public User getCurrentUser() {
-        throw new NotImplementedError();
+        return null;
     }
 
     @Override
