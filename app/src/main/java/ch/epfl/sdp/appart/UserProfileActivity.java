@@ -75,7 +75,23 @@ public class UserProfileActivity extends AppCompatActivity {
         /* User ViewModel initialization */
         mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        /* UI components initialisation */
+        initUIComponents();
+
+        /* get user from database from user ID */
+        CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
+        // if user successfully fetched from DB, save it locally
+        userRes.exceptionally(e -> {
+            // failed to fetch -> prevent updated (we're probably offline)
+            modifyButton.setVisibility(View.GONE);
+            return null;
+        });
+        userRes.thenAccept(res ->
+                DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
+                        mViewModel.getUser().getValue().getUserId()));
+        mViewModel.getUser().observe(this, this::setSessionUserToLocal);
+    }
+
+    private void initUIComponents() {
         this.modifyButton = findViewById(R.id.editProfile_UserProfile_button);
         this.doneButton = findViewById(R.id.doneEditing_UserProfile_button);
         this.removeImageButton = findViewById(R.id.removeImage_UserProfile_button);
@@ -92,19 +108,6 @@ public class UserProfileActivity extends AppCompatActivity {
         this.imageView.setEnabled(false);
         this.removeImageButton.setVisibility(View.GONE);
         this.changeImageButton.setVisibility(View.GONE);
-
-        /* get user from database from user ID */
-        CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
-        // if user successfully fetched from DB, save it locally
-        userRes.exceptionally(e -> {
-            // failed to fetch -> prevent updated (we're probably offline)
-            modifyButton.setVisibility(View.GONE);
-            return null;
-        });
-        userRes.thenAccept(res ->
-                DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
-                        mViewModel.getUser().getValue().getUserId()));
-        mViewModel.getUser().observe(this, this::setSessionUserToLocal);
     }
 
     /**
