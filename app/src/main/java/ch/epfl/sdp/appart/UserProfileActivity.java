@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -92,7 +94,15 @@ public class UserProfileActivity extends AppCompatActivity {
         this.changeImageButton.setVisibility(View.GONE);
 
         /* get user from database from user ID */
-        mViewModel.getCurrentUser();
+        CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
+        userRes.exceptionally(e -> {
+            Log.d("USER", "Failed to fetch user from DB");
+            return null;
+        });
+        userRes.thenAccept(res -> {
+            DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
+                    mViewModel.getUser().getValue().getUserId());
+        });
         mViewModel.getUser().observe(this, this::setSessionUserToLocal);
     }
 
