@@ -11,6 +11,7 @@ This activity introduces **sensor usage** in AppArt by counting the number of st
 This week I finished implementing the user ads feature. There was still a few issues that I had to fix, so it took me a bit of time. Then I proceeded to begin the edit/delete feature. I've began the deleting part, but the two features are a bit ambitious to do alone in one week, so I'll try to split the task in two and leave one for someone else to do. Right now I'm working on the UI part, which means creating a new kind of card that has different buttons than the normal cards.
 
 ## Filippo
+This week I finished the first part of the activity filter. Now the user can filter the ads by a range of prices. Next week I will finish the activity, allowing the user to filter the ads also based on a certain range from one place. Once finished the first part of the activity and after writing the tests and merge with the master, I continued the design refactor for a while. Specifically, I removed some unnecessary buttons and adapted the layout of the two activities (UserProfile, SimpleUSerProfile) in order to have a nice and coherent design. Unfortunately as always changing the layout of the activities, and considering the usual problems with cirrus, some tests do not pass anymore so I hope to be able to fix the errors and merge the refactor next week.
 
 ## Antoine
 
