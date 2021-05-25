@@ -152,7 +152,7 @@ public class CameraActivity extends AppCompatActivity {
             setDisplayAction();
         }
 
-        if (resultCode == ActivityCommunicationLayout.RESULT_IS_FOR_TEST) {
+        if (resultCode == ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING) {
             imageUri = Uri.EMPTY;
             setDisplayAction();
         }

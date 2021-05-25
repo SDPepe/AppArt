@@ -2,8 +2,10 @@ package ch.epfl.sdp.appart;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -33,12 +35,16 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     private TextView textViewKm;
     private Button startButton;
     private Button stopButton;
+    private Button closeButton;
     private ProgressBar progressBar;
 
     /* sensors */
     private SensorManager sensorManager;
     private Sensor mStepCounter;
     private Sensor mStepDetector;
+
+    private boolean ANDROID_TEST_IS_EXECUTING = false;
+    private final static int MOCK_STEP_ITERATIONS = 25;
 
     private final static int STEP_COUNTER_PERMISSION_CODE = 110;
 
@@ -48,20 +54,20 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
 
     /* in case this is not available (depends on the device running the app) the steps will be
      * computed as a subtraction of current total STEP_COUNT with the previous total STEP_COUNT */
-    private static boolean stepDetectorSensorIsAvailable = false;
+    private boolean stepDetectorSensorIsAvailable = true;
 
     /* boolean values which determine the state of the StepCounter activity */
-    private static boolean startWasPressed = false;
-    private static boolean stopWasPressed = false;
+    private boolean startWasPressed = false;
+    private boolean stopWasPressed = false;
 
     /* this value is updated with the STEP_COUNTER sensor */
-    private static int totalStepCountFromBoot = 0;
+    private int totalStepCountFromBoot = 0;
     /* these values are updated with the STEP_DETECTOR sensor */
-    private static int detectedStepsCount = 0;
+    private int detectedStepsCount = 0;
 
     /* number of steps registered by STEP_COUNT on start button pressed */
-    private static int initialTotalStepCountFromBoot = 0;
-    private static boolean initialTotalStepCountWasSet = false;
+    private int initialTotalStepCountFromBoot = 0;
+    private boolean initialTotalStepCountWasSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         textViewKm = findViewById(R.id.km_StepCounter_TextView);
         startButton = findViewById(R.id.startStepCount_StepCounter_Button);
         stopButton = findViewById(R.id.stopStepCount_StepCounter_Button);
+        closeButton = findViewById(R.id.closeStepCount_StepCounter_Button);
         progressBar = findViewById(R.id.progress_StepCounter_ProgressBar);
         progressBar.setVisibility(View.GONE);
         startButton.setVisibility(View.VISIBLE);
@@ -86,93 +93,115 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         });
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        Intent intent = getIntent();
+        int intentionCode = intent.getIntExtra(String.valueOf(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING), 0);
+        if (intent.getIntExtra(String.valueOf(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING), 0) == ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING) {
+            ANDROID_TEST_IS_EXECUTING = true;
+        } else {
+            getSensorsAndAddListeners();
+        }
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        getSensorsAndAddListeners();
-
         setTextViewStepCounter();
         setTextViewStepDetector();
+    }
 
-        /* this resumes the activity when the user previously
-         * moved the execution in background by quitting */
-        if (startWasPressed) {
-            onStartButton(this.findViewById(R.id.startStepCount_StepCounter_Button));
-        }
+    @Override
+    public void onBackPressed() {
+        /* do nothing - the step counter activity can only be finished with the close button - see below */
     }
 
     /**
-     * This method starts the count.
-     * Called by the start button.
+     * This method finishes the activity
+     * Called by the close button
+     */
+    public void onCloseButton(View view) {
+        finish();
+    }
+
+    /**
+     * This method starts the count
+     * Called by the start button
      */
     public void onStartButton(View view) {
+        startWasPressed = true;
+
+        startButton.setVisibility(View.GONE);
+        closeButton.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        stopButton.setVisibility(View.VISIBLE);
+
         /* needed for sensors */
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
         getSensorsAndAddListeners();
-        startButton.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        stopButton.setVisibility(View.VISIBLE);
-
-        startWasPressed = true;
-
-        /* this resets the text detector to 0 once the start button is re-pressed after stop */
-        if (stopWasPressed) {
-            textViewStepDetector.setText("0");
-            stopWasPressed = false;
-        }
 
         setTextViewStepCounter();
         setTextViewStepDetector();
-
     }
 
     /**
-     * This method stops the step count and resets all counters and states.
-     * Called by the stop button.
+     * This method stops the step count and resets all counters and states
+     * Called by the stop button
      */
     public void onStopButton(View view) {
-        startButton.setVisibility(View.VISIBLE);
+        stopWasPressed = true;
+        startWasPressed = false;
+
         progressBar.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
-
-        stopWasPressed = true;
-
-        /* unregister listeners for step sensor signals */
-        unregisterListeners();
-
-        resetDefaultActivityValues();
+        closeButton.setVisibility(View.VISIBLE);
 
         /* clear the screen flag */
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        /* sets step counter to '-' if stop was pressed while loading... */
+        if (textViewStepCounter.getText().toString().contains(getResources().getString(R.string.loadingMessage))) {
+            textViewStepCounter.setText("-");
+        }
+
+        /* unregister listeners for step sensor signals */
+        unregisterListeners();
     }
 
     private void getSensorsAndAddListeners() {
-
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-            mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+            mStepDetector = sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_STEP_DETECTOR);
             sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
             stepDetectorSensorIsAvailable = true;
+
         } else {
-            /* if only the STEP_DETECTOR sensor is missing this activity will still work
-             * but with less accuracy */
-            makeText(this, R.string.noStepDetectorSensorErrorMessage, Toast.LENGTH_LONG).show();
-            stepDetectorSensorIsAvailable = false;
+            if (ANDROID_TEST_IS_EXECUTING) {
+                onSensorChangedMock();
+            } else {
+                stepDetectorSensorIsAvailable = false;
+
+                /* if only the STEP_DETECTOR sensor is missing this activity will
+                 * still work but with less accuracy */
+                makeText(this, R.string.noStepDetectorSensorErrorMessage, Toast.LENGTH_LONG).show();
+            }
         }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
-            mStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_STEP_COUNTER) != null) {
+            mStepCounter = sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_STEP_COUNTER);
             sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+
         } else {
-            makeText(this, R.string.noStepCounterSensorErrorMessage, Toast.LENGTH_LONG).show();
-            /* if the STEP_COUNTER and STEP_DETECTOR sensor is missing on device this activity cannot work */
-            if (!stepDetectorSensorIsAvailable) {
-                finish();
+            if (ANDROID_TEST_IS_EXECUTING) {
+                onSensorChangedMock();
+            } else {
+                /* if the STEP_COUNTER and STEP_DETECTOR sensor is missing on device this activity cannot work */
+                if (!stepDetectorSensorIsAvailable) {
+                    //startButton.setEnabled(false);
+                }
+                makeText(this, R.string.noStepCounterSensorErrorMessage, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -226,7 +255,7 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
+    public void onAccuracyChanged(android.hardware.Sensor sensor, int i) {
         setTextViewStepCounter();
         setTextViewStepDetector();
     }
@@ -264,27 +293,22 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
 
     private void unregisterListeners() {
         /* unregister listeners for step sensor signals */
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+        if (sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_STEP_COUNTER) != null) {
             sensorManager.unregisterListener(this, mStepCounter);
         }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+        if (sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_STEP_DETECTOR) != null) {
             sensorManager.unregisterListener(this, mStepDetector);
         }
     }
 
-    private void resetDefaultActivityValues() {
-        /* reset activity attributes */
-        startWasPressed = false;
-        initialTotalStepCountWasSet = false;
-        totalStepCountFromBoot = 0;
-        detectedStepsCount = 0;
-        initialTotalStepCountFromBoot = 0;
+    public void onSensorChangedMock() {
+        for (int i=0; i < MOCK_STEP_ITERATIONS; ++i) {
+            totalStepCountFromBoot += 1;
+            detectedStepsCount += 1;
 
-        /* reset step counter to 0 if its state is loading... */
-        if (textViewStepCounter.getText().toString().contains(getResources().getString(R.string.loadingMessage))) {
-            textViewStepCounter.setText("0");
+            setTextViewStepCounter();
+            setTextViewStepDetector();
         }
     }
-
 }

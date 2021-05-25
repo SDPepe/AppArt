@@ -3,6 +3,8 @@ package ch.epfl.sdp.appart;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.hamcrest.Condition;
+
 import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 
@@ -38,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //public static boolean isDemoMode() {
-    //    return DEMO_MODE;
-    //}
+    /*
+    public static boolean isDemoMode() {
+        return DEMO_MODE;
+    }
+    */
 }
