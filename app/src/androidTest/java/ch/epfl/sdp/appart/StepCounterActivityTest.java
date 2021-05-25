@@ -102,7 +102,6 @@ public class StepCounterActivityTest {
         updatedStepCounterActivity.putExtra(String.valueOf(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING), ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING);
         mActivityTestRule.launchActivity(updatedStepCounterActivity);
 
-
         /* ================================================================================================================ */
         /*                                    Starting Count - the mock is done in-activity                                 */
         /* ================================================================================================================ */

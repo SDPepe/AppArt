@@ -73,7 +73,7 @@ public class FavoriteFailedInitTest {
     }
 
     @Test
-    public void exceptionalllyInitShowsToast() {
+    public void exceptionallyInitShowsToast() {
         mActivityScenarioRule.getScenario().onActivity(ac -> {
             SharedPreferencesHelper.clearSavedUserForAutoLogin(ac);
             ac.recreate();

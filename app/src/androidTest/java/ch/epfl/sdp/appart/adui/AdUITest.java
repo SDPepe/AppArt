@@ -16,6 +16,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -110,6 +111,7 @@ public class AdUITest {
     }
 
     @Test
+    @Ignore
     public void clickOnFavoriteAddsToFavorites() {
         login.loginWithEmail("test@testappart.ch", "password").join();
 
