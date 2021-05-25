@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ import ch.epfl.sdp.appart.user.Gender;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -73,7 +75,23 @@ public class UserProfileActivity extends AppCompatActivity {
         /* User ViewModel initialization */
         mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        /* UI components initialisation */
+        initUIComponents();
+
+        /* get user from database from user ID */
+        CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
+        // if user successfully fetched from DB, save it locally
+        userRes.exceptionally(e -> {
+            // failed to fetch -> prevent updated (we're probably offline)
+            modifyButton.setVisibility(View.GONE);
+            return null;
+        });
+        userRes.thenAccept(res ->
+                DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
+                        mViewModel.getUser().getValue().getUserId()));
+        mViewModel.getUser().observe(this, this::setSessionUserToLocal);
+    }
+
+    private void initUIComponents() {
         this.modifyButton = findViewById(R.id.editProfile_UserProfile_button);
         this.doneButton = findViewById(R.id.doneEditing_UserProfile_button);
         this.removeImageButton = findViewById(R.id.removeImage_UserProfile_button);
@@ -90,10 +108,6 @@ public class UserProfileActivity extends AppCompatActivity {
         this.imageView.setEnabled(false);
         this.removeImageButton.setVisibility(View.GONE);
         this.changeImageButton.setVisibility(View.GONE);
-
-        /* get user from database from user ID */
-        mViewModel.getCurrentUser();
-        mViewModel.getUser().observe(this, this::setSessionUserToLocal);
     }
 
     /**
@@ -199,10 +213,16 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * sets the updated user information to the firestore database
+     * sets the updated user information to the firestore database and to the local database
      */
     private void setSessionUserToDatabase(View view) {
         mViewModel.updateUser(this.sessionUser);
+        CompletableFuture<Void> saveRes = DatabaseSync.saveCurrentUserToLocalDB(this, database,
+                localdb, mViewModel.getUser().getValue().getUserId());
+        saveRes.exceptionally(e -> {
+            Log.d("USER", "Failed to save user locally");
+            return null;
+        });
         mViewModel.getUpdateUserConfirmed().observe(this, this::informationUpdateResult);
     }
 
