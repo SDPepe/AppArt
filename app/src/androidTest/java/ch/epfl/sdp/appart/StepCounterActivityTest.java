@@ -55,19 +55,13 @@ public class StepCounterActivityTest {
     @Test
     public void stepCounterActivityTest() {
 
+        /* ================================================================================================================ */
+        /*                                      FIRST BOOT OF THE ACTIVITY - STEP COUNT IS 0                                */
+        /* ================================================================================================================ */
+
         Intent justInitializedStepCounterActivity = new Intent();
         mActivityTestRule.launchActivity(justInitializedStepCounterActivity);
 
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.startStepCount_StepCounter_Button), withText("Start"),
-                        childAtPosition(
-                                allOf(withId(R.id.linearLayout),
-                                        childAtPosition(
-                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                0)),
-                                8),
-                        isDisplayed()));
-        appCompatButton.perform(click());
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.stepsToHomeSentence_StepCounter_TextView), withText("How many steps till home?"),
@@ -90,19 +84,43 @@ public class StepCounterActivityTest {
                         isDisplayed()));
         textView3.check(matches(withText("~ 0 meters")));
 
-        ViewInteraction textView4 = onView(
-                allOf(withId(R.id.totalNumberOfSteps_StepCounter_TextView), withText("loading…"),
-                        withParent(allOf(withId(R.id.linearLayout),
-                                withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
-                        isDisplayed()));
-        textView4.check(matches(withText("loading…")));
-
         ViewInteraction textView5 = onView(
                 allOf(withId(R.id.stepsFromLastBootSentence_StepCounter_TextView), withText("steps done from last boot"),
                         withParent(allOf(withId(R.id.linearLayout),
                                 withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
                         isDisplayed()));
         textView5.check(matches(withText("steps done from last boot")));
+
+        /* closing first boot of the activity */
+        onView(withId(R.id.closeStepCount_StepCounter_Button)).perform(click());
+
+        /* ================================================================================================================ */
+        /*               NEW BOOT OF THE ACTIVITY - onSensorChanged gets mocked for a total of 50 steps                     */
+        /* ================================================================================================================ */
+
+        Intent updatedStepCounterActivity = new Intent();
+        updatedStepCounterActivity.putExtra(String.valueOf(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING), ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING);
+        mActivityTestRule.launchActivity(updatedStepCounterActivity);
+
+
+        /* ================================================================================================================ */
+        /*                                    Starting Count - the mock is done in-activity                                 */
+        /* ================================================================================================================ */
+
+        String FINAL_STEP_COUNT_AFTER_MOCK = "50";
+        String FINAL_METER_COUNT_AFTER_MOCK = "~ 33 meters";
+
+
+        ViewInteraction appCompatButtonS = onView(
+                allOf(withId(R.id.startStepCount_StepCounter_Button), withText("Start"),
+                        childAtPosition(
+                                allOf(withId(R.id.linearLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                0)),
+                                8),
+                        isDisplayed()));
+        appCompatButtonS.perform(click());
 
         ViewInteraction progressBar = onView(
                 allOf(withId(R.id.progress_StepCounter_ProgressBar),
@@ -117,50 +135,6 @@ public class StepCounterActivityTest {
                                 withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
-
-
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.stopStepCount_StepCounter_Button), withText("Stop"),
-                        childAtPosition(
-                                allOf(withId(R.id.linearLayout),
-                                        childAtPosition(
-                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                0)),
-                                11),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
-
-        onView(withId(R.id.closeStepCount_StepCounter_Button)).perform(click());
-
-
-        Intent updatedStepCounterActivity = new Intent();
-        updatedStepCounterActivity.putExtra(String.valueOf(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING), ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING);
-        mActivityTestRule.launchActivity(updatedStepCounterActivity);
-
-
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        /* ================================================================================================================ */
-        ViewInteraction appCompatButtonS = onView(
-                allOf(withId(R.id.startStepCount_StepCounter_Button), withText("Start"),
-                        childAtPosition(
-                                allOf(withId(R.id.linearLayout),
-                                        childAtPosition(
-                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                0)),
-                                8),
-                        isDisplayed()));
-        appCompatButtonS.perform(click());
 
         ViewInteraction appCompatButtonStop = onView(
                 allOf(withId(R.id.stopStepCount_StepCounter_Button), withText("Stop"),
@@ -181,46 +155,46 @@ public class StepCounterActivityTest {
         textView6.check(matches(withText("How many steps till home?")));
 
         ViewInteraction textView7 = onView(
-                allOf(withId(R.id.numberOfSteps_StepCounter_TextView), withText("50"), // TODO
+                allOf(withId(R.id.numberOfSteps_StepCounter_TextView), withText(FINAL_STEP_COUNT_AFTER_MOCK),
                         withParent(allOf(withId(R.id.linearLayout),
                                 withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
                         isDisplayed()));
         textView7.check(matches(isDisplayed()));
 
         ViewInteraction textView8 = onView(
-                allOf(withId(R.id.numberOfSteps_StepCounter_TextView), withText("50"), // TODO
+                allOf(withId(R.id.numberOfSteps_StepCounter_TextView), withText(FINAL_STEP_COUNT_AFTER_MOCK),
                         withParent(allOf(withId(R.id.linearLayout),
                                 withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
                         isDisplayed()));
-        textView8.check(matches(withText("50"))); // TODO
+        textView8.check(matches(withText(FINAL_STEP_COUNT_AFTER_MOCK)));
 
         ViewInteraction textView9 = onView(
-                allOf(withId(R.id.km_StepCounter_TextView), withText("~ 33 meters"), // TODO
+                allOf(withId(R.id.km_StepCounter_TextView), withText(FINAL_METER_COUNT_AFTER_MOCK),
                         withParent(allOf(withId(R.id.linearLayout),
                                 withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
                         isDisplayed()));
         textView9.check(matches(isDisplayed()));
 
         ViewInteraction textView10 = onView(
-                allOf(withId(R.id.km_StepCounter_TextView), withText("~ 33 meters"), // TODO
+                allOf(withId(R.id.km_StepCounter_TextView), withText(FINAL_METER_COUNT_AFTER_MOCK),
                         withParent(allOf(withId(R.id.linearLayout),
                                 withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
                         isDisplayed()));
-        textView10.check(matches(withText("~ 33 meters"))); // TODO
+        textView10.check(matches(withText(FINAL_METER_COUNT_AFTER_MOCK)));
 
         ViewInteraction textView11 = onView(
-                allOf(withId(R.id.totalNumberOfSteps_StepCounter_TextView), withText("50"), // TODO
+                allOf(withId(R.id.totalNumberOfSteps_StepCounter_TextView), withText(FINAL_STEP_COUNT_AFTER_MOCK),
                         withParent(allOf(withId(R.id.linearLayout),
                                 withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
                         isDisplayed()));
         textView11.check(matches(isDisplayed()));
 
         ViewInteraction textView12 = onView(
-                allOf(withId(R.id.totalNumberOfSteps_StepCounter_TextView), withText("50"), // TODO
+                allOf(withId(R.id.totalNumberOfSteps_StepCounter_TextView), withText(FINAL_STEP_COUNT_AFTER_MOCK),
                         withParent(allOf(withId(R.id.linearLayout),
                                 withParent(IsInstanceOf.<View>instanceOf(ViewGroup.class)))),
                         isDisplayed()));
-        textView12.check(matches(withText("50"))); // TODO
+        textView12.check(matches(withText(FINAL_STEP_COUNT_AFTER_MOCK)));
 
         ViewInteraction textView13 = onView(
                 allOf(withId(R.id.stepsFromLastBootSentence_StepCounter_TextView), withText("steps done from last boot"),

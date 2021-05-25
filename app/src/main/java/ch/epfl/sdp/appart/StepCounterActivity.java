@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -43,6 +42,8 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
     private Sensor mStepCounter;
     private Sensor mStepDetector;
 
+    /* this activity takes into account the possibility of
+     * being executed by a test in order to mock the sensors */
     private boolean ANDROID_TEST_IS_EXECUTING = false;
     private final static int MOCK_STEP_ITERATIONS = 25;
 
@@ -94,13 +95,14 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        Intent intent = getIntent();
-        int intentionCode = intent.getIntExtra(String.valueOf(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING), 0);
-        if (intent.getIntExtra(String.valueOf(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING), 0) == ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING) {
+        /* this activity receives an extra string when it is executed
+         * by an android test in order to mock onSensorChanged */
+        int intentionCode = getIntent().getIntExtra(String.valueOf(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING), 0);
+        if (intentionCode == ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING) {
             ANDROID_TEST_IS_EXECUTING = true;
-        } else {
-            getSensorsAndAddListeners();
         }
+
+        getSensorsAndAddListeners();
     }
 
 
@@ -178,15 +180,11 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
             stepDetectorSensorIsAvailable = true;
 
         } else {
-            if (ANDROID_TEST_IS_EXECUTING) {
-                onSensorChangedMock();
-            } else {
-                stepDetectorSensorIsAvailable = false;
+            stepDetectorSensorIsAvailable = false;
 
-                /* if only the STEP_DETECTOR sensor is missing this activity will
-                 * still work but with less accuracy */
-                makeText(this, R.string.noStepDetectorSensorErrorMessage, Toast.LENGTH_LONG).show();
-            }
+            /* if only the STEP_DETECTOR sensor is missing this activity will
+             * still work but with less accuracy */
+            makeText(this, R.string.noStepDetectorSensorErrorMessage, Toast.LENGTH_LONG).show();
         }
 
         if (sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_STEP_COUNTER) != null) {
@@ -194,15 +192,9 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
             sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
 
         } else {
-            if (ANDROID_TEST_IS_EXECUTING) {
-                onSensorChangedMock();
-            } else {
-                /* if the STEP_COUNTER and STEP_DETECTOR sensor is missing on device this activity cannot work */
-                if (!stepDetectorSensorIsAvailable) {
-                    //startButton.setEnabled(false);
-                }
-                makeText(this, R.string.noStepCounterSensorErrorMessage, Toast.LENGTH_LONG).show();
-            }
+            makeText(this, R.string.noStepCounterSensorErrorMessage, Toast.LENGTH_LONG).show();
+
+            setStartButtonDisabledIfNoTestIsExecuting();
         }
     }
 
@@ -302,13 +294,27 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         }
     }
 
-    public void onSensorChangedMock() {
-        for (int i=0; i < MOCK_STEP_ITERATIONS; ++i) {
-            totalStepCountFromBoot += 1;
-            detectedStepsCount += 1;
+    /* =================================TESTING PURPOSES================================= */
 
-            setTextViewStepCounter();
-            setTextViewStepDetector();
+    private void setStartButtonDisabledIfNoTestIsExecuting() {
+        /* verify if the sensor is null because a test is running */
+        if (ANDROID_TEST_IS_EXECUTING) {
+            onSensorChangedMock();
+        } else {
+            /* if the STEP_COUNTER and STEP_DETECTOR sensor is missing on device this activity cannot work */
+            if (!stepDetectorSensorIsAvailable) {
+                startButton.setEnabled(false);
+            }
+        }
+    }
+
+    /**
+     * mocks the onSensorChanged call
+     */
+    private void onSensorChangedMock() {
+        for (int i=0; i < MOCK_STEP_ITERATIONS; ++i) {
+            totalStepCountFromBoot += 1; detectedStepsCount += 1;
+            setTextViewStepCounter(); setTextViewStepDetector();
         }
     }
 }
