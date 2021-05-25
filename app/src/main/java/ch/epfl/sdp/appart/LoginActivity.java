@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import ch.epfl.sdp.appart.utils.UIUtils;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -45,11 +47,22 @@ public class LoginActivity extends AppCompatActivity {
         String email = SharedPreferencesHelper.getSavedEmail(this);
         if (!email.equals("")) {
             String password = SharedPreferencesHelper.getSavedPassword(this);
-            loginService.loginWithEmail(email, password);
-            // if loginWithEmail fails, we are offline. Continue to ScrollingActivity. The calls to
-            // currentUser in the app will be safely checked when the full PR is implemented (there
-            // will be a call to local currentUser first)
-            startScrollingActivity();
+            CompletableFuture<User> loginRes = loginService.loginWithEmail(email, password);
+            loginRes.exceptionally(e -> {
+                Log.d("LOGIN", "Couldn't login to firebase");
+                startScrollingActivity();
+                return null;
+            });
+            loginRes.thenAccept(u -> {
+                CompletableFuture<Void> saveRes = DatabaseSync.saveCurrentUserToLocalDB(this,
+                        database, localdb, u.getUserId());
+                saveRes.exceptionally(e -> {
+                    Log.d("LOGIN", "Failed to save user locally");
+                    startScrollingActivity();
+                    return null;
+                });
+                saveRes.thenAccept(r -> startScrollingActivity());
+            });
         } else {
             setBundleInfo(this.getIntent().getExtras());
         }
@@ -77,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         loginRes.thenAccept(user -> {
             SharedPreferencesHelper.saveUserForAutoLogin(this, email, password);
-                startScrollingActivity();
+            startScrollingActivity();
         });
     }
 

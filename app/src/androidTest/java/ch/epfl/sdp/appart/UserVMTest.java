@@ -1,7 +1,6 @@
 package ch.epfl.sdp.appart;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -9,8 +8,8 @@ import org.junit.Test;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
-import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
 import ch.epfl.sdp.appart.user.AppUser;
@@ -27,7 +26,7 @@ public class UserVMTest {
 
     DatabaseService db = new MockDatabaseService();
     LoginService ls = new MockLoginService();
-    LocalDatabaseService localDatabaseService = new LocalDatabase(InstrumentationRegistry.getInstrumentation().getTargetContext().getFilesDir().getPath());
+    LocalDatabaseService localDatabaseService = new MockLocalDatabase();
 
     private UserViewModel vm;
 
@@ -38,11 +37,16 @@ public class UserVMTest {
 
     @Test
     public void putAndGetUserTest() {
-        User user = new AppUser("testId", "test@email.ch");
+        User user = new AppUser("vetterli-id", "vetterli@epfl.ch");
         vm.putUser(user);
         assertTrue(vm.getPutUserConfirmed().getValue());
-        vm.getUser("testId");
+        vm.getUser("vetterli-id");
         assertEquals(user, vm.getUser().getValue());
+    }
+
+    @Test
+    public void currentUserNullTest() {
+        assertTrue(vm.getCurrentUser().isCompletedExceptionally());
     }
 
 
