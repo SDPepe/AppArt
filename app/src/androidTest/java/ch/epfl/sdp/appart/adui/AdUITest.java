@@ -111,7 +111,6 @@ public class AdUITest {
     }
 
     @Test
-    @Ignore
     public void clickOnFavoriteAddsToFavorites() {
         login.loginWithEmail("test@testappart.ch", "password").join();
 
