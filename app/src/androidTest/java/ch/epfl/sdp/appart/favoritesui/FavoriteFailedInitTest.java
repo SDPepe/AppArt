@@ -8,7 +8,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -73,7 +72,6 @@ public class FavoriteFailedInitTest {
     }
 
     @Test
-    @Ignore
     public void exceptionallyInitShowsToast() {
         mActivityScenarioRule.getScenario().onActivity(ac -> {
             SharedPreferencesHelper.clearSavedUserForAutoLogin(ac);
