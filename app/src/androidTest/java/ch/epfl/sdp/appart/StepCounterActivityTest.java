@@ -94,6 +94,8 @@ public class StepCounterActivityTest {
         /* closing first boot of the activity */
         onView(withId(R.id.closeStepCount_StepCounter_Button)).perform(click());
 
+
+        
         /* ================================================================================================================ */
         /*               NEW BOOT OF THE ACTIVITY - onSensorChanged gets mocked for a total of 50 steps                     */
         /* ================================================================================================================ */

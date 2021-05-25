@@ -119,7 +119,7 @@ public class AdUITest {
         onView(withText(R.string.favSuccess_Ad))
                 .inRoot(withDecorView(not(decorView)))// Here we use decorView
                 .check(matches(isDisplayed()));
-                
+
          */
 
         User currentUser = login.getCurrentUser();
