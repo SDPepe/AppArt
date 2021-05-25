@@ -21,7 +21,6 @@ import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
-import ch.epfl.sdp.appart.favoritesui.MockFavoriteViewModel;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -35,7 +34,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 
 /**
- * Test class for FavoriteActivtiy where the viewmodel returns exceptionally from init().
+ * Test class for FavoriteActivity where the viewmodel returns exceptionally from init().
  */
 @UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
