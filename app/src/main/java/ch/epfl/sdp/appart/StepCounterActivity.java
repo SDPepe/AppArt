@@ -294,6 +294,10 @@ public class StepCounterActivity extends AppCompatActivity implements SensorEven
         }
     }
 
+
+
+
+
     /* =================================TESTING PURPOSES================================= */
 
     private void setStartButtonDisabledIfNoTestIsExecuting() {
