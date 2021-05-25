@@ -72,19 +72,6 @@ public class FavoriteFailedInitTest {
         });
     }
 
-    @Test
-    @Ignore
-    public void exceptionallyInitShowsToast() {
-        mActivityScenarioRule.getScenario().onActivity(ac -> {
-            SharedPreferencesHelper.clearSavedUserForAutoLogin(ac);
-            ac.recreate();
-        });
-        onView(withText("mock"))
-                .inRoot(withDecorView(not(decorView)))// Here we use decorView
-                .check(matches(isDisplayed()));
-
-    }
-
     @After
     public void release() {
         Intents.release();

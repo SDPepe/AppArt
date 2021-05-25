@@ -79,18 +79,6 @@ public class AdFailedInitTest {
         });
     }
 
-    @Test
-    @Ignore
-    public void failedInitShowsToast() {
-        mScenarioRule.getScenario().onActivity(ac -> {
-            SharedPreferencesHelper.clearSavedUserForAutoLogin(ac);
-            ac.recreate();
-        });
-        onView(withText(R.string.loadFail_Ad))
-                .inRoot(withDecorView(not(decorView)))
-                .check(matches(isDisplayed()));
-    }
-
     @After
     public void release() {
         Intents.release();
