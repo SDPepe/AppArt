@@ -2,6 +2,8 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -255,6 +257,7 @@ public class AdActivity extends ToolbarActivity {
 
     /**
      * Adds the ad id to the list of favorites of the user and update the user in the server.
+     * Then if successful, saves the ad locally.
      */
     private void saveFavorite(CompletableFuture<Void> result, User user) {
         user.addFavorite(adId);
@@ -266,11 +269,28 @@ public class AdActivity extends ToolbarActivity {
             return null;
         });
         updateRes.thenAccept(res -> {
-
             CompletableFuture<Void> localSaveRes = DatabaseSync.saveNewBookmarkedAd(this,
-                    database, localdb, cardId, adId, mViewModel.getAd(), null);
-            result.complete(null);
+                    database, localdb, cardId, adId, mViewModel.getAd(), getAdImages());
+            localSaveRes.exceptionally(e -> {
+                result.completeExceptionally(e);
+                return null;
+            });
+            localSaveRes.thenAccept(saveRes -> result.complete(null));
         });
+    }
+
+    /**
+     * Builds list of bitmaps from the horizontal layout of ad images
+     */
+    private List<Bitmap> getAdImages() {
+        LinearLayout imagesLayout =
+                findViewById(R.id.horizontal_children_Ad_linearLayout);
+        List<Bitmap> images = new ArrayList<>();
+        for (int i = 0; i < imagesLayout.getChildCount(); i++) {
+            ImageView view = (ImageView) imagesLayout.getChildAt(i);
+            images.add(((BitmapDrawable) view.getDrawable()).getBitmap());
+        }
+        return images;
     }
 
 }
