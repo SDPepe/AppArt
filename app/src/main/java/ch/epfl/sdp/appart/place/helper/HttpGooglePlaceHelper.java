@@ -45,56 +45,6 @@ public class HttpGooglePlaceHelper implements PlaceHelper {
         queue.add(nearbyPlacesRequest);
         return result;
 
-        /*CompletableFuture.supplyAsync(() -> {
-            InputStream stream = null;
-            HttpsURLConnection connection = null;
-            String potentialResult = null;
-            try {
-                connection = (HttpsURLConnection) url.openConnection();
-                connection.setReadTimeout(3000);
-                connection.setConnectTimeout(3000);
-                connection.setRequestMethod("GET");
-
-                // Already true by default but setting just in case; needs to
-                 be true since this request
-                // is carrying an input (response) body.
-                connection.setDoInput(true);
-                // Open communications link (network traffic occurs here).
-                connection.connect();
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode != HttpsURLConnection.HTTP_OK) {
-                    throw new IOException("HTTP error code: " + responseCode);
-                }
-
-                // Retrieve the response body as an InputStream.
-                stream = connection.getInputStream();
-                if (stream != null) {
-                    BufferedReader reader = new BufferedReader(new
-                    InputStreamReader(stream, StandardCharsets.UTF_8));
-                    potentialResult = reader.lines().collect(Collectors
-                    .joining("\n"));
-                }
-            } catch (IOException e) {
-                result.completeExceptionally(e);
-            } finally {
-                // Close Stream and disconnect HTTPS connection.
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        result.completeExceptionally(e);
-                    }
-                }
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-
-            result.complete(potentialResult);
-            return null;
-        });
-        return result;*/
     }
 
     /**
@@ -122,7 +72,7 @@ public class HttpGooglePlaceHelper implements PlaceHelper {
             sb.append(TEXT_SEARCH_BASE_URL).append("json?");
             sb.append("location=").append(location.latitude).append(",").append(location.longitude).append("&");
             sb.append("radius=").append(radius).append("&");
-            sb.append("type=").append(type.trim()).append("&");
+            sb.append("name=").append(type.trim()).append("&");
             sb.append("key=").append(apiKey);
             try {
                 url = new URL(sb.toString());
