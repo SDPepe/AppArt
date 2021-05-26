@@ -14,6 +14,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
@@ -111,27 +112,49 @@ public class UserViewModel extends ViewModel {
      * Get the user from the database and updates the LiveData.
      *
      * @param userId the unique Id of the user to retrieve from database
+     * @return a completable future telling whether the operation was successful
      */
-    public void getUser(String userId) {
-        CompletableFuture<User> getUser = db.getUser(userId);
-        getUser.exceptionally(e1 -> {
-            Log.d("GET USER", "DATABASE FAIL");
+    public CompletableFuture<Void> getUser(String userId) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<User> localUserRes = localdb.getUser(userId);
+        localUserRes.exceptionally(e -> {
+            getFromDBAndSetUser(userId, result);
             return null;
         });
-        // if server fetch worked, update user in localDB
-        getUser.thenAccept(mUser::setValue);
+        localUserRes.thenAccept(u -> {
+            mUser.setValue(u);
+            getFromDBAndSetUser(userId, result);
+        });
+        return result;
     }
 
     /**
-     * Get the current user from the database and updates the LiveData
+     * Gets the current user and updates the values with the user info.
+     * <p>
+     * It first tries to load the user from the local database. Independently from the result,
+     * it then tries to fetch the user from the database.
      *
      * @return a completable future telling if the server fetch was successful
      */
     public CompletableFuture<Void> getCurrentUser() {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        CompletableFuture<User> userRes = db.getUser(ls.getCurrentUser().getUserId());
+        User currentUser = localdb.getCurrentUser();
+        if (currentUser != null)
+            mUser.setValue(currentUser);
+
+        currentUser = ls.getCurrentUser();
+        if (currentUser != null) {
+            getFromDBAndSetUser(currentUser.getUserId(), result);
+        } else
+            result.completeExceptionally(new IllegalStateException("Current user cannot be null!"));
+
+        return result;
+    }
+
+    private void getFromDBAndSetUser(String userId, CompletableFuture<Void> result) {
+        CompletableFuture<User> userRes = db.getUser(userId);
         userRes.exceptionally(e -> {
-            Log.d("GET USER", "DATABASE FAIL");
+            Log.d("USER_VM", "Failed to fetch user from DB");
             result.completeExceptionally(e);
             return null;
         });
@@ -139,7 +162,6 @@ public class UserViewModel extends ViewModel {
             mUser.setValue(cu);
             result.complete(null);
         });
-        return result;
     }
 
     /*
