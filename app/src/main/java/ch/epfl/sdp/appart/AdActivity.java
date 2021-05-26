@@ -27,10 +27,12 @@ import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -41,9 +43,10 @@ public class AdActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
-
     @Inject
     LoginService login;
+    @Inject
+    LocalDatabaseService localdb;
 
     public static class Intents {
         public static final String INTENT_PANORAMA_PICTURES =
@@ -55,6 +58,7 @@ public class AdActivity extends ToolbarActivity {
     private ArrayList<String> panoramasReferences;
 
     private String adId;
+    private String cardId;
     private AdViewModel mViewModel;
 
     @Override
@@ -62,7 +66,7 @@ public class AdActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
         panoramasReferences = new ArrayList<>();
-        AdViewModel mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
 
         Toolbar toolbar = findViewById(R.id.account_Ad_toolbar);
@@ -80,6 +84,7 @@ public class AdActivity extends ToolbarActivity {
                 this::updatePanoramasReferences);
 
         adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
+        cardId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID);
         // init content, show a toast if load failed
         mViewModel.initAd(adId)
                 .exceptionally(e -> {
@@ -186,7 +191,8 @@ public class AdActivity extends ToolbarActivity {
      */
     public void onSeeLocationClick(View view) {
         Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra(getString(R.string.intentLocationForMap), mViewModel.getAddress().getValue());
+        intent.putExtra(getString(R.string.intentLocationForMap),
+                mViewModel.getAddress().getValue());
         startActivity(intent);
     }
 
@@ -259,7 +265,12 @@ public class AdActivity extends ToolbarActivity {
                             getString(R.string.favFail_Ad)));
             return null;
         });
-        updateRes.thenAccept(res -> result.complete(null));
+        updateRes.thenAccept(res -> {
+
+            CompletableFuture<Void> localSaveRes = DatabaseSync.saveNewBookmarkedAd(this,
+                    database, localdb, cardId, adId, mViewModel.getAd(), null);
+            result.complete(null);
+        });
     }
 
 }
