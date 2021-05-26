@@ -15,6 +15,9 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.location.Location;
 
+import static ch.epfl.sdp.appart.place.helper.HttpGooglePlaceHelper.NearbySearchPlaceURLBuilder.makeNearbyPlaceByDistanceURL;
+import static ch.epfl.sdp.appart.place.helper.HttpGooglePlaceHelper.NearbySearchPlaceURLBuilder.makeNearbyPlaceByRadiusURL;
+
 /**
  * Allows to make a query to Google API by using an http request and returns
  * a Json string.
@@ -34,110 +37,103 @@ public class HttpGooglePlaceHelper implements PlaceHelper {
     public CompletableFuture<String> query(Location location, int radius,
                                            String type) {
         CompletableFuture<String> result = new CompletableFuture<>();
-        URL url =
-                new HttpGooglePlaceHelper.NearbySearchPlaceURLBuilder(apiKey,
-                        location, radius, type).getUrl();
+        URL url = makeNearbyPlaceByRadiusURL(this.apiKey, location, radius,
+                type);
+        makeHttpRequest(url, result);
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<String> query(Location location, String type) {
+        CompletableFuture<String> result = new CompletableFuture<>();
+        URL url = makeNearbyPlaceByDistanceURL(apiKey, location, type);
+        makeHttpRequest(url, result);
+        return result;
+    }
+
+    /**
+     * Makes the http request described by the URL.
+     *
+     * @param url
+     * @param result
+     */
+    private void makeHttpRequest(URL url, CompletableFuture<String> result) {
         StringRequest nearbyPlacesRequest =
                 new StringRequest(Request.Method.GET, url.toString(),
                         result::complete,
                         error -> result.completeExceptionally(error.getCause()));
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(nearbyPlacesRequest);
-        return result;
-
-        /*CompletableFuture.supplyAsync(() -> {
-            InputStream stream = null;
-            HttpsURLConnection connection = null;
-            String potentialResult = null;
-            try {
-                connection = (HttpsURLConnection) url.openConnection();
-                connection.setReadTimeout(3000);
-                connection.setConnectTimeout(3000);
-                connection.setRequestMethod("GET");
-
-                // Already true by default but setting just in case; needs to
-                 be true since this request
-                // is carrying an input (response) body.
-                connection.setDoInput(true);
-                // Open communications link (network traffic occurs here).
-                connection.connect();
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode != HttpsURLConnection.HTTP_OK) {
-                    throw new IOException("HTTP error code: " + responseCode);
-                }
-
-                // Retrieve the response body as an InputStream.
-                stream = connection.getInputStream();
-                if (stream != null) {
-                    BufferedReader reader = new BufferedReader(new
-                    InputStreamReader(stream, StandardCharsets.UTF_8));
-                    potentialResult = reader.lines().collect(Collectors
-                    .joining("\n"));
-                }
-            } catch (IOException e) {
-                result.completeExceptionally(e);
-            } finally {
-                // Close Stream and disconnect HTTPS connection.
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        result.completeExceptionally(e);
-                    }
-                }
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-
-            result.complete(potentialResult);
-            return null;
-        });
-        return result;*/
     }
 
     /**
      * Builder that encapsulate the creation of the query URL
      */
-    private static class NearbySearchPlaceURLBuilder {
+    static class NearbySearchPlaceURLBuilder {
 
         private final static String TEXT_SEARCH_BASE_URL = "https://maps" +
                 ".googleapis.com/maps/api/place/nearbysearch/";
-        private URL url = null;
+
 
         /**
-         * Constructs the URL with a StringBuilder. The fields are hardcoded
-         * because it would make
-         * the code very unreadable with constants.
+         * Builds a URL for a request of nearby places ranked by distance
+         * from the location. Therefore, this doesn't require a radius.
          *
-         * @param apiKey
-         * @param location
-         * @param radius
-         * @param type
+         * @param apiKey   the Google API key
+         * @param location the location around which we want the nearby
+         *                 locations
+         * @param type     the type of location to search
+         * @return the URL
          */
-        public NearbySearchPlaceURLBuilder(String apiKey, Location location,
-                                           int radius, String type) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(TEXT_SEARCH_BASE_URL).append("json?");
-            sb.append("location=").append(location.latitude).append(",").append(location.longitude).append("&");
-            sb.append("radius=").append(radius).append("&");
-            sb.append("type=").append(type.trim()).append("&");
-            sb.append("key=").append(apiKey);
+        public static URL makeNearbyPlaceByDistanceURL(String apiKey,
+                                                       Location location,
+                                                       String type) {
+            StringBuilder sb = makeURLNearbyPlaceBase(apiKey, location, type);
+            sb.append("rankby=distance");
             try {
-                url = new URL(sb.toString());
+
+                return new URL(sb.toString());
+            } catch (MalformedURLException e) {
+                throw new IllegalStateException("the built url is malformed !");
+            }
+
+
+        }
+
+        /**
+         * Builds a URL for a request of nearby places within a circle
+         * centered at location and with radius radius.
+         *
+         * @param apiKey   the Google API key
+         * @param location the location around which we want the nearby
+         *                 locations
+         * @param radius the radius
+         * @param type     the type of location to search
+         * @return the URL
+         */
+        public static URL makeNearbyPlaceByRadiusURL(String apiKey,
+                                                     Location location,
+                                                     int radius, String type) {
+
+
+            StringBuilder sb = makeURLNearbyPlaceBase(apiKey, location, type);
+            sb.append("radius=").append(radius);
+            try {
+                return new URL(sb.toString());
             } catch (MalformedURLException e) {
                 throw new IllegalStateException("the built url is malformed !");
             }
         }
 
-        /**
-         * Get the URL of love.
-         *
-         * @return URL of love.
-         */
-        public URL getUrl() {
-            return url;
+        private static StringBuilder makeURLNearbyPlaceBase(String apiKey,
+                                                            Location location
+                , String type) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(TEXT_SEARCH_BASE_URL).append("json?");
+            sb.append("location=").append(location.latitude).append(",").append(location.longitude).append("&");
+            sb.append("type=").append(type.trim()).append("&");
+            sb.append("key=").append(apiKey).append("&");
+            return sb;
         }
 
     }

@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.place.address.Address;
+import ch.epfl.sdp.appart.location.place.locality.Locality;
 import ch.epfl.sdp.appart.place.helper.PlaceHelper;
 import dagger.hilt.android.scopes.ActivityScoped;
 
@@ -69,9 +70,53 @@ public class PlaceService {
      public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
         getNearbyPlacesWithDistances(Location location, int radius, String type, int top) {
 
-        CompletableFuture<List<Pair<PlaceOfInterest, Float>>> result = new CompletableFuture<>();
+
         CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type, top);
 
+
+        return computeDistances(placesFuture, location);
+    }
+
+    /**
+     * Retrieve the nearest places of interest with their respective distance to the Location
+     * Given as argument.
+     * @param location The location from which the request originate
+     * @param type the type of object you want to query
+     * @return CompletableFuture<List<Pair<PlaceOfInterest, Float>>> the places with the distances (at most 20).
+     */
+    public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
+    getNearbyPlacesWithDistances(Location location, String type, int top) {
+
+
+        CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, type, top);
+
+
+        return computeDistances(placesFuture, location);
+    }
+
+    /**
+     * Retrieve the top (at most 20) places of interests in addition to their respective distance
+     * to the given address.
+     * @param address The address from which the query originate
+     * @param type the type of place we want to find.
+     * @param top the quantity of places we want to retrieve (at most 20).
+     * @return
+     */
+    public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
+    getNearbyPlacesWithDistances(Address address, String type, int top) {
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Location location = geocoder.getLocation(address).get();
+                return getNearbyPlacesWithDistances(location, type, top).get();
+            } catch (Exception e) {
+                throw new CompletionException(e);
+            }
+        });
+    }
+
+    private CompletableFuture<List<Pair<PlaceOfInterest, Float>>> computeDistances(CompletableFuture<List<PlaceOfInterest>> placesFuture, Location location) {
+        CompletableFuture<List<Pair<PlaceOfInterest, Float>>> result = new CompletableFuture<>();
         placesFuture.thenAccept(placesOfInterests -> {
 
             List<PlaceOfInterest> placesWithLocation = placesOfInterests.stream()
@@ -88,11 +133,11 @@ public class PlaceService {
 
                 List<Pair<PlaceOfInterest, Float>> placesWithDistances =
                         IntStream.range(0, placesWithLocation.size()).mapToObj(value -> {
-                    return new Pair<>(
-                            placesWithLocation.get(value),
-                            locationsFutures.get(value).join()
-                    );
-                }).collect(Collectors.toList());
+                            return new Pair<>(
+                                    placesWithLocation.get(value),
+                                    locationsFutures.get(value).join()
+                            );
+                        }).collect(Collectors.toList());
                 result.complete(placesWithDistances);
 
             });
@@ -100,10 +145,9 @@ public class PlaceService {
         });
 
         placesFuture.exceptionally(throwable -> {
-             result.completeExceptionally(throwable);
-             return null;
+            result.completeExceptionally(throwable);
+            return null;
         });
-
         return result;
     }
 
@@ -130,6 +174,28 @@ public class PlaceService {
     }
 
     /**
+     * Retrieve the top nearby locations ranked by distance.
+     * @param location The <type>Location</type> from which the search is made.
+     * @param type the <type>String</type> that represent the type to search for.
+     * @param top if you want to get only a subset of results, an <type>int</type>
+     * @return A CompletableFuture<List<PlaceOfInterest>> the places of interest in a future.
+     */
+    private CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, String type, int top) {
+        CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, type);
+        CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
+        placesFuture.thenAccept(places -> {
+            int topAdjusted = Math.min(top, places.size());
+            result.complete(places.subList(0, topAdjusted));
+        });
+        placesFuture.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+        return result;
+    }
+
+
+    /**
      * Retrieve the nearby location within the radius range.
      * @param location The <type>Location</type> from which the search is made.
      * @param radius an <type>int</type> corresponding to the radius of search in meters.
@@ -141,6 +207,13 @@ public class PlaceService {
 
         //retrieve the raw results from the query as a Json string
         CompletableFuture<String> rawResult = helper.query(location, radius, type);
+
+        getResult(rawResult, result);
+
+        return result;
+    }
+
+    private void getResult(CompletableFuture<String> rawResult, CompletableFuture<List<PlaceOfInterest>> result) {
         //parse the Json String to a JSONArray to work with
         CompletableFuture<JSONArray> queriesResults = parseNearbySearch(rawResult);
 
@@ -179,9 +252,24 @@ public class PlaceService {
             result.complete(places);
         });
         queriesResults.exceptionally(e -> {
-           result.completeExceptionally(e);
-           return null;
+            result.completeExceptionally(e);
+            return null;
         });
+    }
+
+    /**
+     * Retrieve the nearby location within the radius range.
+     * @param location The <type>Location</type> from which the search is made.
+     * @param type the <type>String</type> that represent the type to search for.
+     * @return A CompletableFuture<List<PlaceOfInterest>> the places of interest in a future.
+     */
+    private CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, String type) {
+        CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
+
+        //retrieve the raw results from the query as a Json string
+        CompletableFuture<String> rawResult = helper.query(location, type);
+
+        getResult(rawResult, result);
 
         return result;
     }
