@@ -59,7 +59,6 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         FIELDS.add(tmp);
     }
 
-
     private List<Pair<PlaceOfInterest, Float>> currentSelectedPlaces;
     private final HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache = new HashMap<>();
     private Location userLocation;
