@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import android.content.Intent;
+import android.net.Uri;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -81,6 +83,16 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      */
     public void contactAdUser(View view) {
         // TODO: send message to user
+    }
+
+    public void openEmail(View view){
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{advertiserUser.getUserEmail()});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Rent apartment");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     /**
