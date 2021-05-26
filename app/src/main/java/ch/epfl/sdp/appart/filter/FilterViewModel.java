@@ -43,27 +43,18 @@ public class FilterViewModel extends ViewModel {
       return queriedCards.thenApply(cardList -> {
         List<Card> cardsFilterBuffer = new ArrayList<>();
         for (Card c : cardList){
-          System.out.println("--------- ");
-          System.out.println("card " + c.getCity() );
           //remove postal code
           String [] l = c.getCity().split(" ", 2);
           try {
             Locality location = LocalityFactory.makeLocality(l[1]);
             float dist;
             dist = geocodingService.getDistance(location, city).get();
-            System.out.println("dist=" + dist +" - "+ l[1] );
             //conversion in kilometers
             dist = dist/1000;
             if(dist <= range){
               cardsFilterBuffer.add(c);
             }
-          } catch (ExecutionException e) {
-            e.printStackTrace();
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }catch(MalformedLocalityException e){
-            e.printStackTrace();
-          }catch (Exception e){
+          } catch (Exception e) {
             e.printStackTrace();
           }
         }
