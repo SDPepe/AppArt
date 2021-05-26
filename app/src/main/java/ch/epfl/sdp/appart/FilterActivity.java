@@ -79,6 +79,7 @@ public class FilterActivity extends AppCompatActivity {
       makeText(this, "Set price and location filter!", Toast.LENGTH_SHORT).show();
     }
   }
+
   private void clearFilter(){
     Intent resultIntent = new Intent();
     resultIntent.putExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
