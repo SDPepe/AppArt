@@ -47,16 +47,15 @@ public class FilterActivity extends AppCompatActivity {
     if(!min.isEmpty() && !max.isEmpty()){
       mViewModel.setMin(Integer.parseInt(min));
       mViewModel.setMax(Integer.parseInt(max));
-      return true;
     }
-    /*
+
     String city = getContentOfEditText(R.id.location_Filter_editText);
     String range = getContentOfEditText(R.id.value_range_Filter_editText);
     if(!city.isEmpty() && !range.isEmpty()){
       mViewModel.setCity(city);
-      mViewModel.setRange(Integer.parseInt(range));
+      mViewModel.setRange(Float.parseFloat(range));
+      return true;
     }
-     */
     return false;
   }
   private String getContentOfEditText(int id) {
@@ -84,7 +83,7 @@ public class FilterActivity extends AppCompatActivity {
         }
       });
     } else {
-      makeText(this, "Set price or location filter!", Toast.LENGTH_SHORT).show();
+      makeText(this, "Set price and location filter!", Toast.LENGTH_SHORT).show();
     }
   }
   private void clearFilter(){
