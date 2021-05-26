@@ -13,4 +13,11 @@ public interface PlaceHelper {
      * @throws IOException
      */
     CompletableFuture<String> query(Location location, int radius, String type);
+
+    /**
+     * Based on the sdp project. Make a query to the in place service to retrieve the place.
+     * @return an Json String containing the data.
+     * @throws IOException
+     */
+    CompletableFuture<String> query(Location location, String type);
 }

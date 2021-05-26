@@ -80,4 +80,14 @@ public class MockPlaceServiceHelper implements PlaceHelper {
             }
         });
     }
+
+    @Override
+    public CompletableFuture<String> query(Location location, String type) {
+        return CompletableFuture.supplyAsync(new Supplier<String>() {
+            @Override
+            public String get() {
+                return resultPointer;
+            }
+        });
+    }
 }
