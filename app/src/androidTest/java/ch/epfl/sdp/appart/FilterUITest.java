@@ -24,7 +24,6 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import ch.epfl.sdp.appart.hilt.LoginModule;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -75,7 +74,7 @@ public class FilterUITest {
     appCompatButton2.perform(click());
 
     ViewInteraction appCompatEditText = onView(
-        allOf(withId(R.id.value_min_price__Filter_editText),
+        allOf(withId(R.id.value_min_price_Filter_editText),
             childAtPosition(
                 childAtPosition(
                     withClassName(is("android.widget.LinearLayout")),
@@ -95,7 +94,7 @@ public class FilterUITest {
     appCompatEditText2.perform(replaceText("100"), closeSoftKeyboard());
 
     ViewInteraction editText = onView(
-        allOf(withId(R.id.value_min_price__Filter_editText), withText("0"),
+        allOf(withId(R.id.value_min_price_Filter_editText), withText("0"),
             withParent(
                 withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
             isDisplayed()));
@@ -108,6 +107,25 @@ public class FilterUITest {
             isDisplayed()));
     editText2.check(matches(withText("100")));
 
+    ViewInteraction appCompatEditText3 = onView(
+        allOf(withId(R.id.location_Filter_editText),
+            isDisplayed()));
+    appCompatEditText3.perform(replaceText("Lausanne"), closeSoftKeyboard());
+
+    ViewInteraction appCompatEditText4 = onView(
+        allOf(withId(R.id.value_range_Filter_editText),
+            isDisplayed()));
+    appCompatEditText4.perform(replaceText("100"), closeSoftKeyboard());
+
+    ViewInteraction editText3 = onView(
+        allOf(withId(R.id.location_Filter_editText), withText("Lausanne"),
+            isDisplayed()));
+    editText3.check(matches(withText("Lausanne")));
+
+    ViewInteraction editText4 = onView(
+        allOf(withId(R.id.value_range_Filter_editText), withText("100"),
+            isDisplayed()));
+    editText4.check(matches(withText("100")));
 
     ViewInteraction button2 = onView(
         allOf(withId(R.id.clear_Filter_button), withText("Remove all"),
