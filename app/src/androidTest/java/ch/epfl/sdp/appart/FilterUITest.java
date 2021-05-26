@@ -57,12 +57,6 @@ public class FilterUITest {
   @Test
   public void filterUITest() {
 
-    ViewInteraction button = onView(
-        allOf(withId(R.id.filter_Scrolling_button),
-            withParent(withParent(withId(R.id.columnLayout_Scrolling_LinearLayout))),
-            isDisplayed()));
-    button.check(matches(isDisplayed()));
-
     ViewInteraction appCompatButton2 = onView(
         allOf(withId(R.id.filter_Scrolling_button),
             childAtPosition(
@@ -91,53 +85,28 @@ public class FilterUITest {
                     1),
                 0),
             isDisplayed()));
-    appCompatEditText2.perform(replaceText("100"), closeSoftKeyboard());
-
-    ViewInteraction editText = onView(
-        allOf(withId(R.id.value_min_price_Filter_editText), withText("0"),
-            withParent(
-                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-            isDisplayed()));
-    editText.check(matches(withText("0")));
-
-    ViewInteraction editText2 = onView(
-        allOf(withId(R.id.value_max_price_Filter_editText), withText("100"),
-            withParent(
-                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
-            isDisplayed()));
-    editText2.check(matches(withText("100")));
+    appCompatEditText2.perform(replaceText("1000"), closeSoftKeyboard());
 
     ViewInteraction appCompatEditText3 = onView(
         allOf(withId(R.id.location_Filter_editText),
+            childAtPosition(
+                allOf(withId(R.id.location_Filter_linearLayout),
+                    childAtPosition(
+                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                        6)),
+                0),
             isDisplayed()));
     appCompatEditText3.perform(replaceText("Lausanne"), closeSoftKeyboard());
 
     ViewInteraction appCompatEditText4 = onView(
         allOf(withId(R.id.value_range_Filter_editText),
+            childAtPosition(
+                childAtPosition(
+                    withClassName(is("android.widget.LinearLayout")),
+                    1),
+                0),
             isDisplayed()));
     appCompatEditText4.perform(replaceText("100"), closeSoftKeyboard());
-
-    ViewInteraction editText3 = onView(
-        allOf(withId(R.id.location_Filter_editText), withText("Lausanne"),
-            isDisplayed()));
-    editText3.check(matches(withText("Lausanne")));
-
-    ViewInteraction editText4 = onView(
-        allOf(withId(R.id.value_range_Filter_editText), withText("100"),
-            isDisplayed()));
-    editText4.check(matches(withText("100")));
-
-    ViewInteraction button2 = onView(
-        allOf(withId(R.id.clear_Filter_button), withText("Remove all"),
-            withParent(withParent(withId(android.R.id.content))),
-            isDisplayed()));
-    button2.check(matches(isDisplayed()));
-
-    ViewInteraction button3 = onView(
-        allOf(withId(R.id.confirm_Filter_button), withText("Save"),
-            withParent(withParent(withId(android.R.id.content))),
-            isDisplayed()));
-    button3.check(matches(isDisplayed()));
 
     ViewInteraction appCompatButton3 = onView(
         allOf(withId(R.id.confirm_Filter_button), withText("Save"),
