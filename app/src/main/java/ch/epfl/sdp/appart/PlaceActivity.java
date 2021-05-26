@@ -9,10 +9,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.google.common.collect.Maps;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -29,16 +33,43 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private final static int DEFAULT_POSITION = 0;
     private int currentSelectedIndex = DEFAULT_POSITION;
+    private final static String SELECT_ONE = "select one";
 
-    private static final List<String> FIELDS = Arrays.asList("select one", "shop", "bakery", "gym", "dentist", "drugstore", "restaurant", "university", "library");
+    //private static final List<String> FIELDS = Arrays.asList("select one", "bakery", "super market", "library", "restaurant", "library", "migros+denner+coop", "coop");
+
+    private static final HashMap<String, String> TYPE_TO_KEYWORDS = new HashMap<String, String>() {
+        {
+            put("bakery", "bakery");
+            put("super market", "migros+denner+coop");
+            put("library", "library");
+            put("university", "university+EPFL+UNIL");
+            put("drugstore", "drugstore");
+            put("fun", "cinema+party+dancing");
+            put("gym", "gym+fitness");
+            put("restaurant", "restaurant");
+        }
+    };
+
+    private static final List<String> FIELDS = new ArrayList<>(TYPE_TO_KEYWORDS.keySet());
+
+    static {
+        int index = FIELDS.indexOf(SELECT_ONE);
+        String tmp = FIELDS.get(0);
+        FIELDS.set(0, SELECT_ONE);
+        FIELDS.add(tmp);
+    }
+
 
     private List<Pair<PlaceOfInterest, Float>> currentSelectedPlaces;
-    private HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache = new HashMap<>();
+    private final HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache = new HashMap<>();
     private Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_place);
         Spinner spinner = (Spinner) findViewById(R.id.spinner_place_activity);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FIELDS);
@@ -49,7 +80,6 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         //here we will get the user location from the intents
         userLocation = new Location(6.635510, 46.781170);
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -66,6 +96,7 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
             placeService.getNearbyPlacesWithDistances(userLocation, type, 20);
 
         queriedPlaces.thenAccept(pairs -> {
+            selectionCache.put(FIELDS.get(currentSelectedIndex), pairs);
             currentSelectedPlaces = pairs;
         });
 
