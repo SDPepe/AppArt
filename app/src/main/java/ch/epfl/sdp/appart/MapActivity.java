@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -13,10 +14,13 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.location.place.Place;
@@ -42,6 +46,15 @@ public class MapActivity extends AppCompatActivity {
 
     @Inject
     MapService mapService;
+
+    //We need this because we have fake ads that do not have a real address
+    private static final String FAILED_ADDR = "failedAddr";
+
+    /**
+     * This corresponds to the maximum distance from the current user
+     * position at which apartments get drawn on the map.
+     */
+    private static final Float MAX_DISTANCE = 50_000.0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,39 +128,67 @@ public class MapActivity extends AppCompatActivity {
             });
             mapService.setMapFragment(mapFragment);
             onMapReadyCallback = () -> {
-                CompletableFuture<List<Card>> futureCards = databaseService
-                        .getCards();
+                CompletableFuture<List<Card>> futureCards =
+                        databaseService.getCards();
                 futureCards.exceptionally(e -> {
-                    Log.d("EXCEPTION_DB", e.getMessage());
+                    e.printStackTrace();
                     return null;
                 });
+                CompletableFuture<Location> futureCurrentLocation =
+                        locationService.getCurrentLocation();
+                CompletableFuture<Stream<Pair<Card, Location>>> filteredAds =
+                        CompletableFuture.allOf(futureCards,
+                                futureCurrentLocation).thenCompose(arg -> {
+                            Location currentLocation =
+                                    futureCurrentLocation.join();
+                            List<Card> cards = futureCards.join();
+                            mapService.zoomOnPosition(currentLocation, 12.0f);
+                            List<CompletableFuture<Pair<Card, Location>>> adsAndLocs =
+                                    cards.parallelStream().map(card -> databaseService.getAd(card.getAdId()).thenCompose(ad -> {
+                                        String city = ad.getCity();
+                                        Matcher extractPostalCodeMatcher =
+                                                Pattern.compile("\\d+").matcher(city);
+                                        Place place;
+                                        try {
+                                            if (extractPostalCodeMatcher.find()) {
+                                                String postalCode =
+                                                        extractPostalCodeMatcher.group();
+                                                String locality =
+                                                        ad.getCity().replaceAll(
+                                                                "\\d" +
+                                                                        "+",
+                                                                "");
+                                                place = AddressFactory.makeAddress(ad.getStreet()
+                                                        , postalCode, locality);
 
-                futureCards.thenAccept(cards -> {
-                    for (Card card : cards) {
-                        //First filter on location of the card
-                        databaseService.getAd(card.getAdId()).thenCompose(ad -> {
-                                    String city = ad.getCity();
-                                    Matcher extractPostalCodeMatcher = Pattern.compile("\\d+").matcher(city);
-                                    Place place;
-                                    if(extractPostalCodeMatcher.find()) {
-                                        String postalCode = extractPostalCodeMatcher.group();
-                                        String locality =
-                                                ad.getCity().replaceAll("\\d+", "");
-                                        place = AddressFactory.makeAddress(ad.getStreet(), postalCode, locality);
+                                            } else {
+                                                place = LocalityFactory.makeLocality(city);
+                                            }
+                                        } catch (Exception e) {
+                                            return CompletableFuture.completedFuture(new Pair<>(new Card(FAILED_ADDR, "adId", "ownerID", "city", 0, "url", false), new Location()));
+                                        }
 
-                                    } else {
-                                        place = LocalityFactory.makeLocality(city);
-                                    }
-                                    return geocodingService.getLocation(place);
-                                }
-                        )
-                                .thenAcceptAsync(location ->
-                                                mapService.addMarker(location
-                                                        , card,
-                                                        false, card.getCity()),
-                                        ContextCompat.getMainExecutor(this));
-                    }
-                });
+                                        return geocodingService.getLocation(place).thenApply(loc -> new Pair<>(card, loc));
+
+                                    })).collect(Collectors.toList());
+                            CompletableFuture<Stream<Pair<Card, Location>>> futureAdsAndLocs = CompletableFuture.allOf(adsAndLocs.toArray(new CompletableFuture[0]))
+                                    .thenApply(data -> adsAndLocs.parallelStream().map(CompletableFuture::join));
+                            futureAdsAndLocs.exceptionally(e -> {
+                                e.printStackTrace();
+                                return null;
+                            });
+                            return
+                                    futureAdsAndLocs.thenApply(adAndLocStream -> adAndLocStream.filter(adAndLoc -> {
+                                        Float distance =
+                                                geocodingService.getDistanceSync(adAndLoc.second, currentLocation);
+                                        return distance < MAX_DISTANCE && !adAndLoc.first.getId().equals(FAILED_ADDR);
+                                    }));
+
+                        });
+                filteredAds.thenAcceptAsync(adsAndLocs -> adsAndLocs.forEach(adAndLoc -> {
+                    mapService.addMarker(adAndLoc.second, adAndLoc.first,
+                            false, adAndLoc.first.getCity());
+                }));
             };
         }
 
@@ -155,4 +196,3 @@ public class MapActivity extends AppCompatActivity {
         mapFragment.getMapAsync(mapService);
     }
 }
-

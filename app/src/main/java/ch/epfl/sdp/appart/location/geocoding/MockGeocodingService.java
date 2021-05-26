@@ -37,4 +37,9 @@ public class MockGeocodingService implements GeocodingService {
     public CompletableFuture<Float> getDistance(Place a, Place b) {
         return CompletableFuture.supplyAsync(() -> 0.0f);
     }
+
+    @Override
+    public Float getDistanceSync(Location a, Location b) {
+        return 0.0f;
+    }
 }

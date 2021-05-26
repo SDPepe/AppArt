@@ -91,6 +91,21 @@ public class GoogleGeocodingService implements GeocodingService {
     }
 
     @Override
+    public Float getDistanceSync(Location a, Location b) {
+
+        android.location.Location l1 =
+                new android.location.Location(LOCATION_PROVIDER);
+        android.location.Location l2 =
+                new android.location.Location(LOCATION_PROVIDER);
+        l1.setLongitude(a.longitude);
+        l1.setLatitude(a.latitude);
+        l2.setLongitude(b.longitude);
+        l2.setLatitude(b.latitude);
+
+        return l1.distanceTo(l2);
+    }
+
+    @Override
     public CompletableFuture<Float> getDistance(Place a, Place b) {
 
         CompletableFuture<Location> l1 = getLocation(a);
