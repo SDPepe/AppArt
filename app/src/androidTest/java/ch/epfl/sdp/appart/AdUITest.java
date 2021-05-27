@@ -27,7 +27,10 @@ import ch.epfl.sdp.appart.SimpleUserProfileActivity;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -49,7 +52,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@UninstallModules({DatabaseModule.class, LoginModule.class})
+@UninstallModules({DatabaseModule.class, LoginModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class AdUITest {
 
@@ -68,6 +71,8 @@ public class AdUITest {
     @BindValue
     final
     LoginService login = new MockLoginService();
+    @BindValue
+    LocalDatabaseService localdb = new MockLocalDatabase();
 
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);

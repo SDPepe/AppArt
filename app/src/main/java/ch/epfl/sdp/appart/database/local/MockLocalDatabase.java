@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.database.local;
 
 import android.graphics.Bitmap;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
@@ -19,7 +21,8 @@ import kotlin.NotImplementedError;
 @Singleton
 public class MockLocalDatabase implements LocalDatabaseService {
 
-    Map<String,User> users;
+    Map<String, User> users;
+    Ad ad;
 
     public MockLocalDatabase() {
         users = new HashMap<>();
@@ -29,6 +32,30 @@ public class MockLocalDatabase implements LocalDatabaseService {
         vetterli.setGender("MALE");
         vetterli.setPhoneNumber("0777777777");
         users.put("vetterli-id", vetterli);
+        User unknown = new AppUser("unknown", "unknown@email.com");
+        unknown.setName("Unknown");
+        unknown.setPhoneNumber("0000000000");
+        users.put("unknown", unknown);
+
+        List<String> picturesReferences = Arrays.asList(
+                "fake_ad_1.jpg",
+                "fake_ad_2.jpg",
+                "fake_ad_3.jpg",
+                "fake_ad_4.jpg",
+                "fake_ad_5.jpg"
+        );
+        ad = new Ad.AdBuilder()
+                .withTitle("EPFL")
+                .withPrice(100000)
+                .withPricePeriod(PricePeriod.MONTH)
+                .withStreet("Station 18").withCity("1015 Lausanne")
+                .withAdvertiserName("Martin Vetterli")
+                .withAdvertiserId("vetterli-id")
+                .withDescription("Ever wanted the EPFL campus all for yourself?")
+                .withPicturesReferences(picturesReferences)
+                .withPanoramaReferences(picturesReferences) //put the pictures since its mocked
+                .hasVRTour(false)
+                .build();
     }
 
     @Override
@@ -50,14 +77,16 @@ public class MockLocalDatabase implements LocalDatabaseService {
 
     @Override
     public CompletableFuture<Ad> getAd(String adId) {
-        throw new NotImplementedError();
+        CompletableFuture<Ad> result = new CompletableFuture<>();
+        result.complete(ad);
+        return result;
     }
 
     @Override
     public CompletableFuture<User> getUser(String wantedUserID) {
         CompletableFuture<User> result = new CompletableFuture<>();
-        if (wantedUserID.equals("vetterli-id")) result.complete(
-                users.get("vetterli-id"));
+        if (users.containsKey(wantedUserID))
+            result.complete(users.get(wantedUserID));
         else result.completeExceptionally(new DatabaseServiceException("User not in db"));
         return result;
     }
