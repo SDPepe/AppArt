@@ -41,21 +41,13 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
     private static final HashMap<String, String> TYPE_TO_KEYWORDS =
             new HashMap<String, String>() {
         {
-            /*put("bakery", "bakery");
+            put("bakery", "bakery");
             put("super market", "migros+denner+coop");
             put("library", "library");
             put("university", "university+EPFL+UNIL");
             put("drugstore", "drugstore");
             put("fun", "cinema+party+dancing");
             put("gym", "gym+fitness");
-            put("restaurant", "restaurant");*/
-            put("bakery", "bakery");
-            put("super market", "super market");
-            put("library", "library");
-            put("university", "university");
-            put("drugstore", "drugstore");
-            put("fun", "fun");
-            put("gym", "gym");
             put("restaurant", "restaurant");
         }
     };
