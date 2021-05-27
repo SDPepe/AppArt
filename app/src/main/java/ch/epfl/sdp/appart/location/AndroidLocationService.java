@@ -45,8 +45,6 @@ public final class AndroidLocationService implements LocationService {
     private final FusedLocationProviderClient locationProvider;
 
     private LocationCallback locationCallback;
-    private final RequestQueue queue;
-    private final String api_key;
 
     @Inject
     public AndroidLocationService(Context context) {
@@ -54,9 +52,6 @@ public final class AndroidLocationService implements LocationService {
             throw new IllegalArgumentException();
         this.locationProvider =
                 LocationServices.getFusedLocationProviderClient(context);
-
-        this.queue = Volley.newRequestQueue(context);
-        this.api_key = context.getResources().getString(R.string.maps_api_key);
 
     }
 

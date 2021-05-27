@@ -30,8 +30,11 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.GeocoderModule;
+import ch.epfl.sdp.appart.hilt.LocationModule;
 import ch.epfl.sdp.appart.hilt.MapModule;
 import ch.epfl.sdp.appart.location.Location;
+import ch.epfl.sdp.appart.location.LocationService;
+import ch.epfl.sdp.appart.location.MockLocationService;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
 import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
@@ -52,7 +55,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-@UninstallModules({DatabaseModule.class, MapModule.class, GeocoderModule.class})
+@UninstallModules({DatabaseModule.class, MapModule.class, GeocoderModule.class, LocationModule.class})
 @HiltAndroidTest
 public class MapUITest {
 
@@ -80,6 +83,9 @@ public class MapUITest {
     @BindValue
     final GeocodingService geocodingService =
             new GoogleGeocodingService(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+    @BindValue
+    final LocationService locationService = new MockLocationService();
 
 
     private static final double SCREEN_HEIGHT_INFO_WINDOW_FACTOR = 0.35;
