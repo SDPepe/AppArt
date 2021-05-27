@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -70,9 +71,11 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
                 getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_USER_ID);
 
         /* get user from database from user ID */
-        CompletableFuture<Void> userRes = mViewModel.getUser(advertiserId);
-        userRes.thenAccept(res -> DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
-                mViewModel.getUser().getValue().getUserId()));
+        mViewModel.getUser(advertiserId)
+                .exceptionally(e -> {
+                    Log.d("SIMPLEUSER", "Failed to get the user");
+                    return null;
+                });
         mViewModel.getUser().observe(this, this::setAdUserToLocal);
     }
 
