@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -18,8 +19,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class MockFavoriteViewModel extends FavoriteViewModel {
 
     @Inject
-    public MockFavoriteViewModel(DatabaseService database, LoginService loginService) {
-        super(database, loginService);
+    public MockFavoriteViewModel(DatabaseService database, LoginService loginService,
+                                 LocalDatabaseService localdb) {
+        super(database, loginService, localdb);
     }
 
     @Override

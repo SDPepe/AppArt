@@ -28,8 +28,11 @@ import ch.epfl.sdp.appart.MainActivity;
 import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -54,7 +57,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
-@UninstallModules({LoginModule.class, DatabaseModule.class})
+@UninstallModules({LoginModule.class, DatabaseModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class FavoriteUITest {
 
@@ -69,6 +72,9 @@ public class FavoriteUITest {
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
+
+    @BindValue
+    LocalDatabaseService localdb = new MockLocalDatabase();
 
     @Before
     public void init() {
