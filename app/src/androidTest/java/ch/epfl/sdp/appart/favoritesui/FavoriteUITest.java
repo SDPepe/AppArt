@@ -161,7 +161,7 @@ public class FavoriteUITest {
 
         pressBack();
 
-        ViewInteraction appCompatImageView = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
+        ViewInteraction appCompatImageView = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0));
         appCompatImageView.perform(forceClick());
 
         ViewInteraction actionMenuItemView = onView(
@@ -189,17 +189,17 @@ public class FavoriteUITest {
                         isDisplayed()));
         appCompatTextView2.perform(click());
 
-        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 0),isDisplayed()));
+        onView(allOf(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0),isDisplayed()));
 
 
-        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 1),isDisplayed()));
+        onView(allOf(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1),isDisplayed()));
 
 
         pressBack();
 
         pressBack();
 
-        ViewInteraction appCompatImageView3 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
+        ViewInteraction appCompatImageView3 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0));
         appCompatImageView3.perform(forceClick());
 
         ViewInteraction actionMenuItemView3 = onView(
@@ -214,7 +214,7 @@ public class FavoriteUITest {
 
         pressBack();
 
-        ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 1));
+        ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1));
         appCompatImageView4.perform(forceClick());
 
         ViewInteraction actionMenuItemView4 = onView(

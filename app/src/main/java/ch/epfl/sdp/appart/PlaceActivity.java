@@ -67,12 +67,11 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
     private final HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache = new HashMap<>();
     private Location userLocation;
     private RecyclerView recyclerView;
-    private final PlaceAdapter placeAdapter = new PlaceAdapter(currentSelectedPlaces);
+    private final PlaceAdapter placeAdapter = new PlaceAdapter(this, currentSelectedPlaces);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         setContentView(R.layout.activity_place);
         Spinner spinner = (Spinner) findViewById(R.id.spinner_place_activity);
@@ -114,7 +113,6 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
             currentSelectedPlaces.clear();
             currentSelectedPlaces.addAll(pairs);
             this.runOnUiThread(placeAdapter::notifyDataSetChanged);
-
 
         });
 
