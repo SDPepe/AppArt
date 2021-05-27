@@ -3,9 +3,13 @@ package ch.epfl.sdp.appart;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
@@ -52,9 +56,26 @@ public class MockLocalDatabaseTest {
 
     @Test
     public void getAdThrows() {
-        assertThrows(NotImplementedError.class, () -> {
-            localdb.getAd(null);
-        });
+        List<String> picturesReferences = Arrays.asList(
+                "fake_ad_1.jpg",
+                "fake_ad_2.jpg",
+                "fake_ad_3.jpg",
+                "fake_ad_4.jpg",
+                "fake_ad_5.jpg"
+        );
+        Ad ad = new Ad.AdBuilder()
+                .withTitle("EPFL")
+                .withPrice(100000)
+                .withPricePeriod(PricePeriod.MONTH)
+                .withStreet("Station 18").withCity("1015 Lausanne")
+                .withAdvertiserName("Martin Vetterli")
+                .withAdvertiserId("vetterli-id")
+                .withDescription("Ever wanted the EPFL campus all for yourself?")
+                .withPicturesReferences(picturesReferences)
+                .withPanoramaReferences(picturesReferences) //put the pictures since its mocked
+                .hasVRTour(false)
+                .build();
+        assertEquals(ad, localdb.getAd("arandomidbecausewhocares"));
     }
 
     @Test
