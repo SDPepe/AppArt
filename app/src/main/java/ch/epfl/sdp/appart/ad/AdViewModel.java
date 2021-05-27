@@ -26,6 +26,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class AdViewModel extends ViewModel {
 
     final DatabaseService db;
+    final LocalDatabaseService localdb;
+
     private Ad ad;
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
@@ -37,19 +39,21 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
 
     @Inject
-    public AdViewModel(DatabaseService db) {
+    public AdViewModel(DatabaseService db, LocalDatabaseService localdb) {
         this.db = db;
+        this.localdb = localdb;
     }
 
     /**
-     * Fetches the ad info from the database and sets the information to the LiveData fields.
+     * Loads and sets ad info from the local database. It then tries to fetch the ad info from
+     * the database. If successful, sets the ad info with the new data form the server.
      *
      * @param id the unique ID of the ad in the database
-     * @return a completable future to let the activity know if the action was successful
+     * @return a completable future that is normally completed if the server fetch was successful
      */
     public CompletableFuture<Void> initAd(String id) {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        fetchAndSet(result, id);
+        localLoad(id).whenComplete((res, e) -> fetchAndSet(result, id));
         return result;
     }
 
@@ -90,6 +94,15 @@ public class AdViewModel extends ViewModel {
     @Nullable
     public Ad getAd() {
         return ad;
+    }
+
+    /**
+     * Loads the ad data from the local database and sets the values to mutablelivedata fields.
+     */
+    private CompletableFuture<Void> localLoad(String adId) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        setAdValues(result, localdb.getAd(adId));
+        return result;
     }
 
     /**
