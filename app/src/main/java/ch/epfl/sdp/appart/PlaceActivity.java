@@ -100,6 +100,7 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         if (selectionCache.containsKey(type)) {
             currentSelectedPlaces.clear();
             currentSelectedPlaces.addAll(selectionCache.get(type));
+            this.runOnUiThread(placeAdapter::notifyDataSetChanged);
 
             //currentSelectedPlaces = selectionCache.get(type);
         }
@@ -113,7 +114,7 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
             //recyclerView.setAdapter(new PlaceAdapter(currentSelectedPlaces));
             currentSelectedPlaces.clear();
             currentSelectedPlaces.addAll(pairs);
-            placeAdapter.notifyDataSetChanged();
+            this.runOnUiThread(placeAdapter::notifyDataSetChanged);
 
         });
 
