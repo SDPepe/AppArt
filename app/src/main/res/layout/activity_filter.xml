@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-          android:id="@+id/value_min_price__Filter_editText"
+          android:id="@+id/value_min_price_Filter_editText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="0000"
