@@ -285,7 +285,7 @@ public class SimpleUserProfileActivityTest {
         editText8.check(matches(withText("MALE")));
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.contact_SimpleUserProfile_button), withText("CONTACT ANNOUNCER"),
+                allOf(withId(R.id.contact_SimpleUserProfile_button), withText("Contact"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
