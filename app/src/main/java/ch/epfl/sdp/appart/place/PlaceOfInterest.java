@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.place;
 
+import android.graphics.Bitmap;
+
 import com.google.common.collect.Sets;
 
 import java.util.HashSet;
@@ -17,6 +19,7 @@ public class PlaceOfInterest {
     private String name;
     private Set<String> types;
     private double rating;
+    private Bitmap bitmap;
 
     public PlaceOfInterest() {}
 
@@ -52,6 +55,8 @@ public class PlaceOfInterest {
         return address != null;
     }
 
+    public Bitmap getBitmap() {return bitmap; }
+
     public void setId(String id) {
         this.placeId = id;
     }
@@ -85,6 +90,8 @@ public class PlaceOfInterest {
     public void setRating(double rating) {
         this.rating = rating;
     }
+
+    public void setBitmap(Bitmap bitmap) {this.bitmap = bitmap;}
 
 
 }

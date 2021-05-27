@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.place.helper;
 
+import android.graphics.Bitmap;
+
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
@@ -20,4 +22,8 @@ public interface PlaceHelper {
      * @throws IOException
      */
     CompletableFuture<String> query(Location location, String type);
+
+    CompletableFuture<Bitmap> queryImage(String photoReference, int maxHeight, int maxWidth);
+
+    CompletableFuture<String> queryPlaceDetails(String placeId);
 }

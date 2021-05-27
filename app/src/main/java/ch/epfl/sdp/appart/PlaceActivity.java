@@ -107,12 +107,10 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         }
 
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> queriedPlaces =
-            placeService.getNearbyPlacesWithDistances(userLocation, type, 20);
+            placeService.getNearbyPlacesWithDistances(userLocation, type, 5);
 
         queriedPlaces.thenAccept(pairs -> {
             selectionCache.put(FIELDS.get(currentSelectedIndex), pairs);
-            //currentSelectedPlaces = pairs;
-            //recyclerView.setAdapter(new PlaceAdapter(currentSelectedPlaces));
             currentSelectedPlaces.clear();
             currentSelectedPlaces.addAll(pairs);
             this.runOnUiThread(placeAdapter::notifyDataSetChanged);

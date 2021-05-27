@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.place.helper;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -89,5 +90,16 @@ public class MockPlaceServiceHelper implements PlaceHelper {
                 return resultPointer;
             }
         });
+    }
+
+    @Override
+    public CompletableFuture<Bitmap> queryImage(String photoReference,
+                                                int maxHeight, int maxWidth) {
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<String> queryPlaceDetails(String placeId) {
+        return null;
     }
 }
