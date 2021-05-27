@@ -1,7 +1,6 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,7 +19,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -110,7 +108,7 @@ public class AdCreationUITest {
         // Build a result to return from the Camera app
         Intent resultIntent = new Intent();
         resultIntent.putExtra("data", icon);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING, resultIntent);
         //com.android.camera2
         // When an intent is sent to the Camera, this tells Espresso to respond with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);

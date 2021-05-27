@@ -52,7 +52,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="0.4" />
 
         <TextView
             android:id="@+id/totalNumberOfSteps_StepCounter_TextView"
@@ -78,12 +78,7 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5" />
+            android:layout_weight="3.8" />
 
         <Button
             android:id="@+id/startStepCount_StepCounter_Button"
@@ -103,20 +98,42 @@
             android:textColor="@color/primaryStart"
             android:text="@string/startButtonText" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <Button
+            android:id="@+id/closeStepCount_StepCounter_Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/style_secondary"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:drawableEnd="@drawable/ic_close_counter"
+            android:gravity="center"
+            android:onClick="onCloseButton"
+            android:layout_marginStart="@dimen/margin_button"
+            android:layout_marginEnd="@dimen/margin_button"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/primaryStart"
+            android:text="@string/closeButtonText" />
+
         <Button
             android:id="@+id/stopStepCount_StepCounter_Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/style_primary"
-            android:layout_marginStart="@dimen/margin_button"
             android:layout_marginEnd="@dimen/margin_button"
+            android:layout_marginStart="@dimen/margin_button"
+            android:background="@drawable/style_primary"
             android:gravity="center"
-            android:textSize="16sp"
-            android:textAllCaps="false"
             android:onClick="onStopButton"
             android:text="@string/stopButtonText"
-            android:visibility="gone"
-            android:textColor="#FFFFFF "/>
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF "
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <Space
             android:layout_width="match_parent"
