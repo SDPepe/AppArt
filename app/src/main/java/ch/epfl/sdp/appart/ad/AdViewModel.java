@@ -96,6 +96,9 @@ public class AdViewModel extends ViewModel {
         return ad;
     }
 
+    /**
+     * Loads the ad data from the local database and sets the values to mutablelivedata fields.
+     */
     private CompletableFuture<Void> localLoad(String adId) {
         CompletableFuture<Void> result = new CompletableFuture<>();
         setAdValues(result, localdb.getAd(adId));

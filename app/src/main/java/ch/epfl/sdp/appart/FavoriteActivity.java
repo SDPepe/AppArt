@@ -71,9 +71,13 @@ public class FavoriteActivity extends ToolbarActivity {
         recyclerView.setAdapter(new CardAdapter(this, database, ls));
     }
 
+    /**
+     * Gets all favorite ads and their images from the database and tries to save the new data
+     * locally.
+     */
     private void updateFavsLocally() {
         List<Card> favs = mViewModel.getFavorites().getValue();
-        for (int i = 0; i < favs.size(); i++){
+        for (int i = 0; i < favs.size(); i++) {
             Card card = favs.get(i);
             CompletableFuture<Ad> adRes = database.getAd(card.getAdId());
             adRes.thenAccept(ad -> {
@@ -82,7 +86,6 @@ public class FavoriteActivity extends ToolbarActivity {
                 CompletableFuture<Void> allOfImages =
                         CompletableFuture.allOf(imgBitmapRes
                                 .toArray(new CompletableFuture[imgBitmapRes.size()]));
-                // TODO exceptionally
                 allOfImages.thenAccept(ignoreRes -> {
                     List<Bitmap> imgs = imgBitmapRes.stream()
                             .map(CompletableFuture::join)
@@ -90,10 +93,13 @@ public class FavoriteActivity extends ToolbarActivity {
                     DatabaseSync.saveFavoriteAd(this, database, localdb, card.getId(),
                             card.getAdId(), ad, imgs)
                             .thenAccept(r -> Log.d("FAVORITE", "Ad saved locally"));
-                    // TODO check save result
+                });
+                allOfImages.exceptionally(e -> {
+                    Log.d("FAVORITE", "Failed to retrieve ad images");
+                    return null;
                 });
             });
-         }
+        }
     }
 
 
