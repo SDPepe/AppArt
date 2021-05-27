@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 
 
 /**
@@ -72,13 +73,12 @@ public final class AndroidLocationService implements LocationService {
                     myLocation.longitude = androidLoc.getLongitude();
                     futureLocation.complete(myLocation);
                 } else {
-                    futureLocation.completeExceptionally(task.getException());
+                    futureLocation.complete(null);
                 }
             });
         } catch (SecurityException e) {
             throw e;
         }
-
         return futureLocation;
     }
 

@@ -136,13 +136,18 @@ public class MapActivity extends AppCompatActivity {
                 });
                 CompletableFuture<Location> futureCurrentLocation =
                         locationService.getCurrentLocation();
+
                 CompletableFuture<Stream<Pair<Card, Location>>> filteredAds =
                         CompletableFuture.allOf(futureCards,
                                 futureCurrentLocation).thenCompose(arg -> {
                             Location currentLocation =
                                     futureCurrentLocation.join();
                             List<Card> cards = futureCards.join();
-                            mapService.zoomOnPosition(currentLocation, 12.0f);
+
+                            if (currentLocation != null) {
+                                mapService.zoomOnPosition(currentLocation,
+                                        12.0f);
+                            }
                             List<CompletableFuture<Pair<Card, Location>>> adsAndLocs =
                                     cards.parallelStream().map(card -> databaseService.getAd(card.getAdId()).thenCompose(ad -> {
                                         String city = ad.getCity();
@@ -179,6 +184,8 @@ public class MapActivity extends AppCompatActivity {
                             });
                             return
                                     futureAdsAndLocs.thenApply(adAndLocStream -> adAndLocStream.filter(adAndLoc -> {
+                                        if (currentLocation == null)
+                                            return true;
                                         Float distance =
                                                 geocodingService.getDistanceSync(adAndLoc.second, currentLocation);
                                         return distance < MAX_DISTANCE && !adAndLoc.first.getId().equals(FAILED_ADDR);
