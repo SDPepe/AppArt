@@ -22,6 +22,14 @@
       app:layout_constraintEnd_toStartOf="@+id/guideline3"
       app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
+    <Button
+      android:id="@+id/create_account_login_CreateUser_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:onClick="backToLogin"
+      android:text="@string/backToLoginFromCreateButtonText"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
       android:id="@+id/create_account_password_CreateUser_editText"

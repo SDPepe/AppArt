@@ -20,6 +20,14 @@
       app:layout_constraintBottom_toTopOf="@+id/guideline10"
       app:layout_constraintEnd_toStartOf="@+id/guideline11"
       app:layout_constraintStart_toStartOf="@+id/guideline13" />
+    <Button
+      android:id="@+id/log_in_Reset_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:onClick="backToLogin"
+      android:text="@string/goToLoginFromResetButtonText"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
       android:id="@+id/email_Reset_editText"
