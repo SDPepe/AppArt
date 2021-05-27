@@ -125,7 +125,6 @@ public class UserAdsActivityTest {
         onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 0),isDisplayed()));
     }
     
-
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
