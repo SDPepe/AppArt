@@ -1,9 +1,5 @@
 package ch.epfl.sdp.appart;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
@@ -11,14 +7,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.google.common.collect.Maps;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -26,11 +22,10 @@ import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.place.PlaceAdapter;
 import ch.epfl.sdp.appart.place.PlaceOfInterest;
 import ch.epfl.sdp.appart.place.PlaceService;
-import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PlaceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener  {
+public class PlaceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     @Inject
     public PlaceService placeService;
@@ -39,22 +34,34 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
     private int currentSelectedIndex = DEFAULT_POSITION;
     private final static String SELECT_ONE = "select one";
 
-    //private static final List<String> FIELDS = Arrays.asList("select one", "bakery", "super market", "library", "restaurant", "library", "migros+denner+coop", "coop");
+    //private static final List<String> FIELDS = Arrays.asList("select one",
+    // "bakery", "super market", "library", "restaurant", "library",
+    // "migros+denner+coop", "coop");
 
-    private static final HashMap<String, String> TYPE_TO_KEYWORDS = new HashMap<String, String>() {
+    private static final HashMap<String, String> TYPE_TO_KEYWORDS =
+            new HashMap<String, String>() {
         {
-            put("bakery", "bakery");
+            /*put("bakery", "bakery");
             put("super market", "migros+denner+coop");
             put("library", "library");
             put("university", "university+EPFL+UNIL");
             put("drugstore", "drugstore");
             put("fun", "cinema+party+dancing");
             put("gym", "gym+fitness");
+            put("restaurant", "restaurant");*/
+            put("bakery", "bakery");
+            put("super market", "super market");
+            put("library", "library");
+            put("university", "university");
+            put("drugstore", "drugstore");
+            put("fun", "fun");
+            put("gym", "gym");
             put("restaurant", "restaurant");
         }
     };
 
-    private static final List<String> FIELDS = new ArrayList<>(TYPE_TO_KEYWORDS.keySet());
+    private static final List<String> FIELDS =
+            new ArrayList<>(TYPE_TO_KEYWORDS.keySet());
 
     static {
         int index = FIELDS.indexOf(SELECT_ONE);
@@ -63,11 +70,13 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         FIELDS.add(tmp);
     }
 
-    private final List<Pair<PlaceOfInterest, Float>> currentSelectedPlaces = new ArrayList<>();
+    private final List<Pair<PlaceOfInterest, Float>> currentSelectedPlaces =
+            new ArrayList<>();
     private final HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache = new HashMap<>();
     private Location userLocation;
     private RecyclerView recyclerView;
-    private final PlaceAdapter placeAdapter = new PlaceAdapter(this, currentSelectedPlaces);
+    private final PlaceAdapter placeAdapter = new PlaceAdapter(this,
+            currentSelectedPlaces);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +84,8 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
 
         setContentView(R.layout.activity_place);
         Spinner spinner = (Spinner) findViewById(R.id.spinner_place_activity);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FIELDS);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, FIELDS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
@@ -91,7 +101,8 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int position
+            , long id) {
         currentSelectedIndex = position;
         if (position == DEFAULT_POSITION) return;
 
@@ -106,7 +117,8 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         }
 
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> queriedPlaces =
-            placeService.getNearbyPlacesWithDistances(userLocation, type, 5);
+                placeService.getNearbyPlacesWithDistances(userLocation, type,
+                        5);
 
         queriedPlaces.thenAccept(pairs -> {
             selectionCache.put(FIELDS.get(currentSelectedIndex), pairs);

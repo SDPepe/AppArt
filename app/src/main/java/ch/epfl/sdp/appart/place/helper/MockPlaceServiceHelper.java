@@ -17,7 +17,8 @@ import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.location.Location;
 
 /**
- * Mock of the google place helper. Allows to return the same dummy json string while testing.
+ * Mock of the google place helper. Allows to return the same dummy json
+ * string while testing.
  */
 public class MockPlaceServiceHelper implements PlaceHelper {
 
@@ -26,22 +27,27 @@ public class MockPlaceServiceHelper implements PlaceHelper {
     private final String dummyEmptyOutput;
     private String resultPointer = null;
 
-    public enum MockMode {VALID, EMPTY, INVALID }
+    public enum MockMode {VALID, EMPTY, INVALID}
 
     public MockPlaceServiceHelper(Context context) {
-        this.dummyValidOutput = loadRawJson(context, R.raw.mocked_google_place_output);
-        this.dummyInvalidOutput = loadRawJson(context, R.raw.mocked_google_place_output_failure);
-        this.dummyEmptyOutput = loadRawJson(context, R.raw.mocked_google_place_output_no_results);
+        this.dummyValidOutput = loadRawJson(context,
+                R.raw.mocked_google_place_output);
+        this.dummyInvalidOutput = loadRawJson(context,
+                R.raw.mocked_google_place_output_failure);
+        this.dummyEmptyOutput = loadRawJson(context,
+                R.raw.mocked_google_place_output_no_results);
         resultPointer = this.dummyValidOutput;
     }
 
-    //from https://stackoverflow.com/questions/6349759/using-json-file-in-android-app-resources
+    //from https://stackoverflow
+    // .com/questions/6349759/using-json-file-in-android-app-resources
     private String loadRawJson(Context context, int id) {
         InputStream is = context.getResources().openRawResource(id);
         Writer writer = new StringWriter();
         char[] buffer = new char[50000];
         try {
-            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF" +
+                    "-8"));
             int n;
             while ((n = reader.read(buffer)) != -1) {
                 writer.write(buffer, 0, n);
@@ -59,7 +65,9 @@ public class MockPlaceServiceHelper implements PlaceHelper {
     }
 
     /**
-     * Allows to select which type of json output will be sent on any subsequent request.
+     * Allows to select which type of json output will be sent on any
+     * subsequent request.
+     *
      * @param mode
      */
     public void setMockMode(MockMode mode) {
@@ -73,7 +81,8 @@ public class MockPlaceServiceHelper implements PlaceHelper {
     }
 
     @Override
-    public CompletableFuture<String> query(Location location, int radius, String type) {
+    public CompletableFuture<String> query(Location location, int radius,
+                                           String type) {
         return CompletableFuture.supplyAsync(new Supplier<String>() {
             @Override
             public String get() {

@@ -10,20 +10,25 @@ import ch.epfl.sdp.appart.location.Location;
 public interface PlaceHelper {
 
     /**
-     * Based on the sdp project. Make a query to the in place service to retrieve the place.
+     * Based on the sdp project. Make a query to the in place service to
+     * retrieve the place.
+     *
      * @return an Json String containing the data.
      * @throws IOException
      */
     CompletableFuture<String> query(Location location, int radius, String type);
 
     /**
-     * Based on the sdp project. Make a query to the in place service to retrieve the place.
+     * Based on the sdp project. Make a query to the in place service to
+     * retrieve the place.
+     *
      * @return an Json String containing the data.
      * @throws IOException
      */
     CompletableFuture<String> query(Location location, String type);
 
-    CompletableFuture<Bitmap> queryImage(String photoReference, int maxHeight, int maxWidth);
+    CompletableFuture<Bitmap> queryImage(String photoReference, int maxHeight
+            , int maxWidth);
 
     CompletableFuture<String> queryPlaceDetails(String placeId);
 }

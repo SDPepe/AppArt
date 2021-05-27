@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.place;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     private final List<Pair<PlaceOfInterest, Float>> places;
     private final Context context;
 
-    public PlaceAdapter(Context context, List<Pair<PlaceOfInterest, Float>> places) {
+    public PlaceAdapter(Context context,
+                        List<Pair<PlaceOfInterest, Float>> places) {
         if (places == null) throw new IllegalArgumentException();
         this.places = places;
         this.context = context;
@@ -40,17 +42,18 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
                                  int position) {
         Pair<PlaceOfInterest, Float> placeAndDistance = places.get(position);
         PlaceOfInterest place = placeAndDistance.first;
-        
+
         holder.placeNameTextView.setText(place.getName());
 
         float distance = placeAndDistance.second;
         boolean overOneKilometer = distance >= 1000;
 
         String unit = overOneKilometer ? "km" : "m";
-        String distanceStr = overOneKilometer ? Integer.toString(((int) distance / 1000)) : Integer.toString((int) distance) ;
+        String distanceStr = overOneKilometer ?
+                Integer.toString(((int) distance / 1000)) :
+                Integer.toString((int) distance);
 
         holder.placeDistanceTextView.setText(distanceStr + " " + unit);
-        //holder.image.setImageDrawable(context.getDrawable(R.drawable.apart_fake_image_1));
 
         double rating = place.getRating();
         holder.star1.setVisibility(View.INVISIBLE);
@@ -74,7 +77,17 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         if (rating >= 5) {
             holder.star5.setVisibility(View.VISIBLE);
         }
+        Bitmap bitmap = place.getBitmap();
+        if (bitmap != null) {
+            holder.image.setImageBitmap(bitmap);
+        }
 
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull PlaceViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.image.setImageDrawable(context.getDrawable(R.drawable.ic_launcher_background));
     }
 
     @Override
@@ -94,7 +107,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
         public PlaceViewHolder(View view) {
             super(view);
-            placeNameTextView = view.findViewById(R.id.place_name_card_textView);
+            placeNameTextView =
+                    view.findViewById(R.id.place_name_card_textView);
             placeDistanceTextView = view.findViewById(R.id.place_card_distance);
             star1 = view.findViewById(R.id.place_card_star_1);
             star2 = view.findViewById(R.id.place_card_star_2);
