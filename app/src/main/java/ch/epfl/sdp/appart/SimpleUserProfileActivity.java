@@ -1,7 +1,16 @@
 package ch.epfl.sdp.appart;
 
+import static android.widget.Toast.makeText;
+
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -11,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import javax.inject.Inject;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -79,19 +90,59 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * closes activity when back button pressed on UI
+     * Contact announcer.
      */
-    public void contactAdUser(View view) {
-        // TODO: send message to user
+    public void openEmailOrPhone(View view){
+        if(advertiserUser.getPhoneNumber() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("How did you prefer contact the announcer ?");
+            builder.setPositiveButton("Contact via Email", (dialog, which) -> onEmail());
+            builder.setNeutralButton("Contact via phone number ", (dialog, which) -> onCall());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else {
+            onEmail();
+        }
     }
 
-    public void openEmail(View view){
+    private void onEmail() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{advertiserUser.getUserEmail()});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Rent apartment");
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        } else {
+            makeText(this, "Error open email, try again",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+    private void onCall() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.CALL_PHONE},
+                123);
+        } else {
+            startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:"+advertiserUser.getPhoneNumber())));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 123:
+                if ((grantResults.length > 0) && (grantResults[0]
+                    == PackageManager.PERMISSION_GRANTED)) {
+                    onCall();
+                } else {
+                    makeText(this, "Call Permission Not Granted",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
         }
     }
 
