@@ -48,8 +48,6 @@ public class AdActivity extends ToolbarActivity {
     DatabaseService database;
     @Inject
     LoginService login;
-    @Inject
-    LocalDatabaseService localdb;
 
     public static class Intents {
         public static final String INTENT_PANORAMA_PICTURES =
@@ -61,7 +59,6 @@ public class AdActivity extends ToolbarActivity {
     private ArrayList<String> panoramasReferences;
 
     private String adId;
-    private String cardId;
     private AdViewModel mViewModel;
 
     @Override
@@ -70,7 +67,6 @@ public class AdActivity extends ToolbarActivity {
         setContentView(R.layout.activity_announce);
         panoramasReferences = new ArrayList<>();
         mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
-
 
         Toolbar toolbar = findViewById(R.id.account_Ad_toolbar);
         setSupportActionBar(toolbar);
@@ -87,7 +83,6 @@ public class AdActivity extends ToolbarActivity {
                 this::updatePanoramasReferences);
 
         adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
-        cardId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID);
         // init content, show a toast if load failed
         mViewModel.initAd(adId)
                 .exceptionally(e -> {
