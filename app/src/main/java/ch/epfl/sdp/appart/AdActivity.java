@@ -86,8 +86,7 @@ public class AdActivity extends ToolbarActivity {
         // init content, show a toast if load failed
         mViewModel.initAd(adId)
                 .exceptionally(e -> {
-                    Toast.makeText(this, R.string.loadFail_Ad,
-                            Toast.LENGTH_SHORT).show();
+                    Log.d("AD", "Failed to fetch data from server");
                     return null;
                 });
     }
