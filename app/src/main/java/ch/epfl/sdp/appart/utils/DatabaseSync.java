@@ -111,19 +111,8 @@ public class DatabaseSync {
         userRes.thenAccept(u -> {
             getUserProfilePicture(context, db, u.getProfileImagePathAndName())
                     .thenAcceptBoth(allOfPanoramas, (pfp, ignoredRes) -> {
-                        List<Bitmap> panoramas = panoramasBitmaps.stream()
-                                .map(CompletableFuture::join)
-                                .collect(Collectors.toList());
-                        CompletableFuture<Void> writeRes =
-                                ldb.writeCompleteAd(adId, cardId, ad, u, images, panoramas, pfp);
-                        writeRes.thenAccept(res -> {
-                            Log.d("DATASYNC", "local write ok");
-                            result.complete(null);
-                        });
-                        writeRes.exceptionally(e -> {
-                            result.completeExceptionally(e);
-                            return null;
-                        });
+                        writeAndComplete(result, ldb, adId, cardId, u, ad, images,
+                                panoramasBitmaps, pfp);
                     })
                     .exceptionally(e -> {
                         result.completeExceptionally(e);
@@ -159,6 +148,24 @@ public class DatabaseSync {
         }
 
         return futures;
+    }
+
+    private static void writeAndComplete(CompletableFuture<Void> result, LocalDatabaseService ldb,
+                                 String adId, String cardId, User user, Ad ad,  List<Bitmap> images,
+                                 List<CompletableFuture<Bitmap>> panoramasBitmaps, Bitmap pfp) {
+        List<Bitmap> panoramas = panoramasBitmaps.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+        CompletableFuture<Void> writeRes =
+                ldb.writeCompleteAd(adId, cardId, ad, user, images, panoramas, pfp);
+        writeRes.thenAccept(res -> {
+            Log.d("DATASYNC", "local write ok");
+            result.complete(null);
+        });
+        writeRes.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
     }
 
 }
