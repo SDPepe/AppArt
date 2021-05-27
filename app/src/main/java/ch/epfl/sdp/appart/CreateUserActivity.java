@@ -61,17 +61,4 @@ public class CreateUserActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-
-    /**
-     * Method called when the Log In button is pushed
-     * Takes the user back to the login screen
-     *
-     * @param view the view that was clicked (i.e. the log in button)
-     */
-    public void backToLogin(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-
 }

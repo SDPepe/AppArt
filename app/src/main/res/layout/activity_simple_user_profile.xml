@@ -1,309 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SimpleUserProfileActivity">
-
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".SimpleUserProfileActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="fill"
-        android:orientation="vertical"
-        android:paddingTop="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:paddingTop="70dp"
+      android:gravity="fill"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/guideline30"
+      app:layout_constraintStart_toStartOf="@+id/guideline29"
+      app:layout_constraintTop_toTopOf="parent">
 
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="254dp"
-            android:orientation="horizontal">
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="180dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/email_SimpleUserProfile_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="80dp"
-                    android:text="@string/emailText"
-                    android:textAlignment="center"
-                    android:textAllCaps="false"
-                    android:textStyle="bold" />
+                  android:id="@+id/email_SimpleUserProfile_textView"
+                  android:textStyle="bold"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:paddingTop="80dp"
+                  android:text="@string/emailText"
+                  android:textAlignment="center"
+                  android:textAllCaps="false" />
 
                 <TextView
-                    android:id="@+id/emailText_SimpleUserProfile_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="20dp"
-                    android:textAlignment="center"
-                    android:textAllCaps="false"
-                    android:textStyle="bold" />
+                  android:id="@+id/emailText_SimpleUserProfile_textView"
+                  android:textStyle="bold"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:paddingTop="20dp"
+                  android:textAlignment="center"
+                  android:textAllCaps="false" />
             </LinearLayout>
-
             <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1" />
 
             <LinearLayout
-                android:layout_width="180dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingStart="10dp"
-                tools:ignore="RtlSymmetry,UseCompoundDrawables">
+              android:layout_width="180dp"
+              android:layout_height="match_parent"
+              android:layout_gravity="center_horizontal"
+              android:paddingStart="10dp"
+              android:gravity="center"
+              android:orientation="vertical"
+              tools:ignore="RtlSymmetry,UseCompoundDrawables">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profilePicture_SimpleUserProfile_imageView"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
-                    android:layout_gravity="start"
-                    android:clickable="false"
-                    android:contentDescription="profile picture"
-                    android:contextClickable="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.114"
-                    tools:ignore="HardcodedText" />
-
+                  android:id="@+id/profilePicture_SimpleUserProfile_imageView"
+                  android:layout_width="160dp"
+                  android:layout_height="160dp"
+                  android:layout_gravity="start"
+                  android:clickable="false"
+                  android:contentDescription="profile picture"
+                  android:contextClickable="false"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  app:layout_constraintHorizontal_bias="1.0"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintTop_toTopOf="parent"
+                  app:layout_constraintVertical_bias="0.114"
+                  tools:ignore="HardcodedText" />
                 <TextView
-                    android:id="@+id/uniAccountClaimer_SimpleUserProfile_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingTop="20dp"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                  android:id="@+id/uniAccountClaimer_SimpleUserProfile_textView"
+                  android:textStyle="bold"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_horizontal"
+                  android:paddingTop="20dp"
+                  android:textAlignment="center"
+                  android:textSize="12sp" />
 
             </LinearLayout>
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+      <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|center"
-            android:orientation="vertical">
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="bottom|center"
+          android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/attributes_SimpleUserProfile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+              android:id="@+id/attributes_SimpleUserProfile_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/name_SimpleUserProfile_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:paddingStart="20dp"
-                    tools:ignore="RtlSymmetry">
+                  android:id="@+id/name_SimpleUserProfile_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="50dp"
+                  android:paddingStart="20dp"
+                  android:orientation="horizontal"
+                  tools:ignore="RtlSymmetry">
 
                     <TextView
-                        android:id="@+id/name_SimpleUserProfile_textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:paddingTop="15dp"
-                        android:text="@string/nameText"
-                        android:textAlignment="viewStart"
-                        android:textSize="16sp" />
+                      android:id="@+id/name_SimpleUserProfile_textView"
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:paddingTop="15dp"
+                      android:text="@string/nameText"
+                      android:textAlignment="viewStart"
+                      android:textSize="16sp" />
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/name_SimpleUserProfile_editText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start"
-                        android:background="@android:color/transparent"
-                        android:enabled="false"
-                        android:imeOptions="actionDone"
-                        android:inputType="textPersonName"
-                        android:paddingStart="50dp"
-                        android:shadowColor="#FFFFFF"
-                        android:text=""
-                        android:textAlignment="viewStart"
-                        android:textColor="#5C5757"
-                        android:textColorHint="#FFFFFF"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profilePicture_SimpleUserProfile_imageView"
-                        app:textInputLayoutFocusedRectEnabled="false"
-                        tools:ignore="RtlSymmetry" />
+                      android:id="@+id/name_SimpleUserProfile_editText"
+                      android:textStyle="bold"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:layout_gravity="start"
+                      android:paddingStart="50dp"
+                      android:background="@android:color/transparent"
+                      android:enabled="false"
+                      android:imeOptions="actionDone"
+                      android:inputType="textPersonName"
+                      android:shadowColor="#FFFFFF"
+                      android:text=""
+                      android:textAlignment="viewStart"
+                      android:textColor="#5C5757"
+                      android:textColorHint="#FFFFFF"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintTop_toBottomOf="@+id/profilePicture_SimpleUserProfile_imageView"
+                      app:textInputLayoutFocusedRectEnabled="false"
+                      tools:ignore="RtlSymmetry" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/age_SimpleUserProfile_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:paddingStart="20dp"
-                    tools:ignore="RtlSymmetry">
+                  android:id="@+id/age_SimpleUserProfile_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="50dp"
+                  android:paddingStart="20dp"
+                  android:orientation="horizontal"
+                  tools:ignore="RtlSymmetry">
 
                     <TextView
-                        android:id="@+id/age_SimpleUserProfile_textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:paddingTop="15dp"
-                        android:text="@string/ageText"
-                        android:textAlignment="viewStart"
-                        android:textSize="16sp" />
+                      android:id="@+id/age_SimpleUserProfile_textView"
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:paddingTop="15dp"
+                      android:text="@string/ageText"
+                      android:textAlignment="viewStart"
+                      android:textSize="16sp" />
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/age_SimpleUserProfile_editText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:backgroundTint="#00FFFFFF"
-                        android:drawableTint="#00FFFFFF"
-                        android:enabled="false"
-                        android:imeOptions="actionDone"
-                        android:inputType="none|phone"
-                        android:paddingStart="65dp"
-                        android:shadowColor="#FFFFFF"
-                        android:text=""
-                        android:textAlignment="viewStart"
-                        android:textColor="#5C5757"
-                        android:textColorHint="#FFFFFF"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profilePicture_SimpleUserProfile_imageView"
-                        app:textInputLayoutFocusedRectEnabled="false"
-                        tools:ignore="InefficientWeight,RtlSymmetry" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/phoneNumber_SimpleUserProfile_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:paddingStart="20dp"
-                    tools:ignore="RtlSymmetry">
-
-                    <TextView
-                        android:id="@+id/phoneNumber_SimpleUserProfile_textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:paddingTop="15dp"
-                        android:text="@string/phoneNumberText"
-                        android:textAlignment="viewStart"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toStartOf="@+id/phoneNumber_SimpleUserProfile_editText"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/age_SimpleUserProfile_textView" />
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/phoneNumber_SimpleUserProfile_editText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:backgroundTint="#00FFFFFF"
-                        android:drawableTint="#00FFFFFF"
-                        android:enabled="false"
-                        android:imeOptions="actionDone"
-                        android:inputType="none|phone"
-                        android:paddingStart="48dp"
-                        android:shadowColor="#FFFFFF"
-                        android:text=""
-                        android:textAlignment="viewStart"
-                        android:textColor="#5C5757"
-                        android:textColorHint="#FFFFFF"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profilePicture_SimpleUserProfile_imageView"
-                        app:textInputLayoutFocusedRectEnabled="false"
-                        tools:ignore="InefficientWeight,RtlSymmetry" />
+                      android:id="@+id/age_SimpleUserProfile_editText"
+                      android:textStyle="bold"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:layout_weight="1"
+                      android:layout_gravity="start"
+                      android:paddingStart="65dp"
+                      android:background="@android:color/transparent"
+                      android:backgroundTint="#00FFFFFF"
+                      android:drawableTint="#00FFFFFF"
+                      android:enabled="false"
+                      android:imeOptions="actionDone"
+                      android:inputType="none|phone"
+                      android:shadowColor="#FFFFFF"
+                      android:text=""
+                      android:textAlignment="viewStart"
+                      android:textColor="#5C5757"
+                      android:textColorHint="#FFFFFF"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintTop_toBottomOf="@+id/profilePicture_SimpleUserProfile_imageView"
+                      app:textInputLayoutFocusedRectEnabled="false"
+                      tools:ignore="InefficientWeight,RtlSymmetry" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/gender_SimpleUserProfile_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:paddingStart="20dp"
-                    tools:ignore="RtlSymmetry">
+                  android:id="@+id/phoneNumber_SimpleUserProfile_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="50dp"
+                  android:paddingStart="20dp"
+                  android:orientation="horizontal"
+                  tools:ignore="RtlSymmetry">
 
                     <TextView
-                        android:id="@+id/gender_SimpleUserProfile_textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start"
-                        android:paddingTop="15dp"
-                        android:text="@string/genderText"
-                        android:textAlignment="viewStart"
-                        android:textSize="16sp" />
+                      android:id="@+id/phoneNumber_SimpleUserProfile_textView"
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:paddingTop="15dp"
+                      android:text="@string/phoneNumberText"
+                      android:textAlignment="viewStart"
+                      android:textSize="16sp"
+                      app:layout_constraintEnd_toStartOf="@+id/phoneNumber_SimpleUserProfile_editText"
+                      app:layout_constraintHorizontal_bias="0.0"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintTop_toBottomOf="@+id/age_SimpleUserProfile_textView" />
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/gender_SimpleUserProfile_editText"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:enabled="false"
-                        android:imeOptions="actionDone"
-                        android:inputType="textPersonName"
-                        android:paddingStart="50dp"
-                        android:shadowColor="#FFFFFF"
-                        android:text=""
-                        android:textAlignment="viewStart"
-                        android:textColor="#5C5757"
-                        android:textColorHint="#FFFFFF"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profilePicture_SimpleUserProfile_imageView"
-                        app:textInputLayoutFocusedRectEnabled="false"
-                        tools:ignore="RtlSymmetry" />
+                      android:id="@+id/phoneNumber_SimpleUserProfile_editText"
+                      android:textStyle="bold"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:layout_weight="1"
+                      android:layout_gravity="start"
+                      android:paddingStart="48dp"
+                      android:background="@android:color/transparent"
+                      android:backgroundTint="#00FFFFFF"
+                      android:drawableTint="#00FFFFFF"
+                      android:enabled="false"
+                      android:imeOptions="actionDone"
+                      android:inputType="none|phone"
+                      android:shadowColor="#FFFFFF"
+                      android:text=""
+                      android:textAlignment="viewStart"
+                      android:textColor="#5C5757"
+                      android:textColorHint="#FFFFFF"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintTop_toBottomOf="@+id/profilePicture_SimpleUserProfile_imageView"
+                      app:textInputLayoutFocusedRectEnabled="false"
+                      tools:ignore="InefficientWeight,RtlSymmetry" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                  android:id="@+id/gender_SimpleUserProfile_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="50dp"
+                  android:paddingStart="20dp"
+                  android:orientation="horizontal"
+                  tools:ignore="RtlSymmetry">
+
+                    <TextView
+                      android:id="@+id/gender_SimpleUserProfile_textView"
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:layout_gravity="start"
+                      android:paddingTop="15dp"
+                      android:text="@string/genderText"
+                      android:textAlignment="viewStart"
+                      android:textSize="16sp" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                      android:id="@+id/gender_SimpleUserProfile_editText"
+                      android:textStyle="bold"
+                      android:layout_width="0dp"
+                      android:layout_height="match_parent"
+                      android:layout_weight="1"
+                      android:layout_gravity="start"
+                      android:paddingStart="50dp"
+                      android:background="@android:color/transparent"
+                      android:enabled="false"
+                      android:imeOptions="actionDone"
+                      android:inputType="textPersonName"
+                      android:shadowColor="#FFFFFF"
+                      android:text=""
+                      android:textAlignment="viewStart"
+                      android:textColor="#5C5757"
+                      android:textColorHint="#FFFFFF"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintTop_toBottomOf="@+id/profilePicture_SimpleUserProfile_imageView"
+                      app:textInputLayoutFocusedRectEnabled="false"
+                      tools:ignore="RtlSymmetry" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="bottom|center"
+              android:paddingTop="20dp"
+              android:paddingBottom="20dp">
 
                 <Button
-                    android:id="@+id/contact_SimpleUserProfile_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="40dp"
-                    android:layout_marginTop="40dp"
-                    android:text="@string/contactAdUser"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteX="147dp" />
+                  android:id="@+id/contact_SimpleUserProfile_button"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="40dp"
+                  android:layout_marginBottom="40dp"
+                  android:layout_marginStart="@dimen/margin_button"
+                  android:layout_marginEnd="@dimen/margin_button"
+                  android:text="@string/contactAdUser"
+                  android:paddingStart="40dp"
+                  android:paddingEnd="16dp"
+                  android:background="@drawable/style_secondary"
+                  android:drawableEnd="@drawable/ic_call"
+                  android:textColor="@color/primaryStart"
+                  android:textSize="16sp"
+                  android:textAllCaps="false"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
-
     </LinearLayout>
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline29"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_1" />
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline30"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="@dimen/vertical_2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
