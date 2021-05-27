@@ -94,7 +94,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      * Contact announcer.
      */
     public void openEmailOrPhone(View view){
-        if(advertiserUser.getPhoneNumber() != null) {
+        if(!advertiserUser.getPhoneNumber().isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("How did you prefer contact the announcer ?");
             builder.setPositiveButton("Contact via Email", (dialog, which) -> onEmail());
