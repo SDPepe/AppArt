@@ -302,7 +302,7 @@ public class SimpleUserProfileActivityTest {
         imageView2.check(matches(isDisplayed()));
 
         ViewInteraction appCompatButton2 = onView(
-            allOf(withId(R.id.contact_SimpleUserProfile_button), withText("Contact")));
+            allOf(withId(R.id.contact_SimpleUserProfile_button), withText("CONTACT ANNOUNCER")));
         appCompatButton2.perform(click());
 
         onView(withText("How did you prefer contact the announcer ?"))
