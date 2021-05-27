@@ -31,13 +31,5 @@ public class FullScreenImageActivity extends AppCompatActivity {
         db.accept(new GlideImageViewLoader(this, photo, fullRef));
     }
 
-    /**
-     * Closes the activity.
-     */
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
 }
 

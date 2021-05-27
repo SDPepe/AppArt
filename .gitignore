@@ -17,3 +17,4 @@ ui-debug.log
 .idea/codeStyles/codeStyleConfig.xml
 database-debug.log
 firestore-debug.log
+glidefirebase/*

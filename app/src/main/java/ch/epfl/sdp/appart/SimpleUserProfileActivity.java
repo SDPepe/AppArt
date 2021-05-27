@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 
 import android.view.View;
@@ -11,11 +12,17 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.concurrent.CompletableFuture;
+
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -29,6 +36,8 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
+    @Inject
+    LocalDatabaseService localdb;
 
     /* UI components */
     private EditText nameText;
@@ -57,31 +66,27 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_SimpleUserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_SimpleUserProfile_imageView);
 
-        String advertiserId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_USER_ID);
+        String advertiserId =
+                getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_USER_ID);
 
         /* get user from database from user ID */
-        mViewModel.getUser(advertiserId);
+        CompletableFuture<Void> userRes = mViewModel.getUser(advertiserId);
+        userRes.thenAccept(res -> DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
+                mViewModel.getUser().getValue().getUserId()));
         mViewModel.getUser().observe(this, this::setAdUserToLocal);
     }
 
     /**
-     * closes activity when back button pressed on phone
-     */
-    @Override
-    public void onBackPressed() { finish(); }
-
-    /**
-     *  closes activity when back button pressed on UI
+     * closes activity when back button pressed on UI
      */
     public void contactAdUser(View view) {
         // TODO: send message to user
     }
 
     /**
-     *
      * @param user sets the value of the current user to the session user object
      */
-    private void setAdUserToLocal(User user){
+    private void setAdUserToLocal(User user) {
         this.advertiserUser = user;
 
         /* set attributes of session user to the UI components */
@@ -94,7 +99,8 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     private void getAndSetCurrentAttributes() {
         this.nameText.setText(this.advertiserUser.getName());
         this.emailTextView.setText(this.advertiserUser.getUserEmail());
-        this.uniAccountClaimer.setText((this.advertiserUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
+        this.uniAccountClaimer.setText((this.advertiserUser.hasUniversityEmail() ?
+                getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
         if (this.advertiserUser.getAge() != 0) {
             this.ageText.setText(String.valueOf(this.advertiserUser.getAge()));
         }
@@ -114,5 +120,5 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         database.accept(new GlideImageViewLoader(this, imageView,
                 this.advertiserUser.getProfileImagePathAndName()));
     }
-    
+
 }

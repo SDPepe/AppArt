@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -72,6 +73,8 @@ public class ResetPasswordTest {
 
     @Test
     public void resetPasswordSuccessfulTest() throws ExecutionException, InterruptedException {
+        loginService.signOut();
+
         String email = "test@testappart.ch";
         String password = "password";
         loginService.createUser(email, password).get();
@@ -80,6 +83,8 @@ public class ResetPasswordTest {
         intended(hasComponent(LoginActivity.class.getName()));
         loginService.deleteUser().get();
         assertNull(loginService.getCurrentUser());
+        loginService.signOut();
+        resetPasswordActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
     }
 
     @Test

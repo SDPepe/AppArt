@@ -37,6 +37,8 @@ public final class ActivityCommunicationLayout {
 
     public static final String AD_CREATION_ACTIVITY = "AdCreationActivity";
 
-    public static final int RESULT_IS_FOR_TEST = 111;
+    public static final String FAVORITES_ACTIVITY = "FavoriteActivity";
+
+    public static final int ANDROID_TEST_IS_RUNNING = 73577357;
 
 }

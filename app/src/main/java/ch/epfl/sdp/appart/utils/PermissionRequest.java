@@ -90,6 +90,19 @@ public class PermissionRequest {
                         Manifest.permission.ACCESS_FINE_LOCATION});
     }
 
+    public static void askForActivityRecognitionPermission(Activity activity,
+                                                           Runnable permissionGranted,
+                                                           Runnable permissionRefused)  {
+        String[] permissions;
+
+        permissions = new String[]{Manifest.permission.ACTIVITY_RECOGNITION};
+
+        askForPermission(activity, permissionGranted, permissionRefused,
+                () -> Log.d("PERMISSION", "Educational popup for activity recognition !"),
+                permissions);
+    }
+
+
     public static void askForStoragePermission(Activity activity,
                                                Runnable permissionGranted,
                                                Runnable permissionRefused,

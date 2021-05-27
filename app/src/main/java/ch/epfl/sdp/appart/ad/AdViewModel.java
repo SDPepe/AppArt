@@ -1,8 +1,7 @@
 package ch.epfl.sdp.appart.ad;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,8 +14,8 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-
 
 /**
  * ViewModel for the AdActivity.
@@ -27,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class AdViewModel extends ViewModel {
 
     final DatabaseService db;
+    private Ad ad;
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
@@ -45,43 +45,93 @@ public class AdViewModel extends ViewModel {
      * Fetches the ad info from the database and sets the information to the LiveData fields.
      *
      * @param id the unique ID of the ad in the database
+     * @return a completable future to let the activity know if the action was successful
      */
-    public void initAd(String id) {
+    public CompletableFuture<Void> initAd(String id) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        fetchAndSet(result, id);
+        return result;
+    }
 
-        CompletableFuture<Ad> futureAd = db.getAd(id);
-        futureAd.exceptionally(e -> {
-            Log.d("ANNOUNCE", "DATABASE FAIL");
+    public <T> void observePanoramasReferences(LifecycleOwner owner, @NonNull Observer<?
+            super List<String>> observer) {
+        panoramasReferences.observe(owner, observer);
+    }
+
+    // Getters
+    public LiveData<String> getTitle() {
+        return adTitle;
+    }
+
+    public LiveData<List<String>> getPhotosRefs() {
+        return adPhotosReferences;
+    }
+
+    public LiveData<String> getAddress() {
+        return adAddress;
+    }
+
+    public LiveData<String> getPrice() {
+        return adPrice;
+    }
+
+    public LiveData<String> getDescription() {
+        return adDescription;
+    }
+
+    public LiveData<String> getAdAdvertiserName() {
+        return adAdvertiserName;
+    }
+
+    public LiveData<String> getAdvertiserId() {
+        return adAdvertiserId;
+    }
+
+    @Nullable
+    public Ad getAd() {
+        return ad;
+    }
+
+    /**
+     * Fetches ad data from the server
+     */
+    private void fetchAndSet(CompletableFuture<Void> result, String adId) {
+        setAdValues(result, db.getAd(adId));
+    }
+
+    /**
+     * Helper to set values from an ad
+     */
+    private void setAdValues(CompletableFuture<Void> result, CompletableFuture<Ad> adRes) {
+        adRes.exceptionally(e -> {
+            result.completeExceptionally(e);
             return null;
         });
-        futureAd.thenAccept(ad -> {
-            this.adAddress.setValue(ad.getStreet() + ", " + ad.getCity());
+        adRes.thenAccept(ad -> {
+            this.ad = ad;
+            this.adAddress.setValue(addressFrom(ad.getStreet(), ad.getCity()));
             this.adTitle.setValue(ad.getTitle());
-            this.adPrice.setValue(ad.getPrice() + " / " + ad.getPricePeriod().toString());
+            this.adPrice.setValue(priceFrom(ad.getPrice(), ad.getPricePeriod()));
             this.adDescription.setValue(ad.getDescription());
             this.adAdvertiserName.setValue(ad.getAdvertiserName());
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
-
             this.adPhotosReferences.setValue(ad.getPhotosRefs());
             this.panoramasReferences.setValue(ad.getPanoramaReferences());
+            result.complete(null);
         });
     }
 
-    public <T> void observePanoramasReferences(LifecycleOwner owner, @NonNull Observer<? super List<String>> observer) {
-        panoramasReferences.observe(owner, observer);
+    /**
+     * Helper to concatenate an address string
+     */
+    private String addressFrom(String street, String city) {
+        return street + ", " + city;
     }
-    // Getters
-    public LiveData<String> getTitle() { return adTitle; }
 
-    public LiveData<List<String>> getPhotosRefs() { return adPhotosReferences; }
-
-    public LiveData<String> getAddress() { return adAddress; }
-
-    public LiveData<String> getPrice() { return adPrice; }
-
-    public LiveData<String> getDescription() { return adDescription; }
-
-    public LiveData<String> getAdAdvertiserName() { return adAdvertiserName; }
-
-    public LiveData<String> getAdvertiserId() { return adAdvertiserId; }
-
+    /**
+     * Helper to concatenate a price
+     */
+    private String priceFrom(long price, PricePeriod period) {
+        return price + " / " + period.toString();
+    }
 }

@@ -23,6 +23,7 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreDatabaseService;
 import ch.epfl.sdp.appart.database.FirestoreEmulatorDatabaseServiceWrapper;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
@@ -157,6 +158,8 @@ public class DatabaseTest {
 
         loginService.signInAnonymously().join();
 
+        int currentNbOfCards =  this.db.getCards().join().size();
+
         String path = copy.getPath();
         photoIds.add(path);
 
@@ -175,7 +178,7 @@ public class DatabaseTest {
         String adId = db.putAd(ad, uriList, uriList).join();
 
         List<Card> retrievedCards = this.db.getCards().join();
-        assertThat(retrievedCards.size(), is(1));
+        assertThat(retrievedCards.size(), is(currentNbOfCards+1));
         Card card = retrievedCards.get(0);
         verifyCard(card, city, price, globalUser.getUserId());
 
@@ -240,5 +243,7 @@ public class DatabaseTest {
         getCardsFilterTest();
         putImageThrowsOnNullParameters();
         deleteImageThrowsOnNullPathAndName();
+
+        loginService.signOut();
     }
 }

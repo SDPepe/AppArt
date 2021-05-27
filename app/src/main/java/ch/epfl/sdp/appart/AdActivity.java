@@ -3,7 +3,6 @@ package ch.epfl.sdp.appart;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,20 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
@@ -41,24 +41,27 @@ public class AdActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
-    
+
     @Inject
     LoginService login;
 
     public static class Intents {
-        public static final String INTENT_PANORAMA_PICTURES = "panoramas_pictures_references";
+        public static final String INTENT_PANORAMA_PICTURES =
+                "panoramas_pictures_references";
         public static final String INTENT_AD_ID = "adId";
     }
 
     private String advertiserId;
-    private ArrayList<String> panoramasReferences = new ArrayList<>();
+    private ArrayList<String> panoramasReferences;
 
     private String adId;
+    private AdViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
+        panoramasReferences = new ArrayList<>();
         AdViewModel mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
 
@@ -70,12 +73,20 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getAddress().observe(this, this::updateAddress);
         mViewModel.getPrice().observe(this, this::updatePrice);
         mViewModel.getDescription().observe(this, this::updateDescription);
-        mViewModel.getAdAdvertiserName().observe(this, this::updateAdvertiserName);
+        mViewModel.getAdAdvertiserName().observe(this,
+                this::updateAdvertiserName);
         mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
-        mViewModel.observePanoramasReferences(this, this::updatePanoramasReferences);
+        mViewModel.observePanoramasReferences(this,
+                this::updatePanoramasReferences);
 
         adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
-        mViewModel.initAd(adId);
+        // init content, show a toast if load failed
+        mViewModel.initAd(adId)
+                .exceptionally(e -> {
+                    Toast.makeText(this, R.string.loadFail_Ad,
+                            Toast.LENGTH_SHORT).show();
+                    return null;
+                });
     }
 
     private void updateTitle(String title) {
@@ -84,15 +95,18 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updatePhotos(List<String> references) {
-        LinearLayout horizontalLayout = findViewById(R.id.horizontal_children_Ad_linearLayout);
+        LinearLayout horizontalLayout =
+                findViewById(R.id.horizontal_children_Ad_linearLayout);
         horizontalLayout.removeAllViews();
 
         for (int i = 0; i < references.size(); i++) {
             String sep = FirebaseLayout.SEPARATOR;
-            String fullRef = FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
+            String fullRef =
+                    FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View myView = inflater.inflate(R.layout.photo_layout, (ViewGroup) null);
+            View myView = inflater.inflate(R.layout.photo_layout,
+                    (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             database.accept(new GlideImageViewLoader(this, photo, fullRef));
             horizontalLayout.addView(myView);
@@ -118,7 +132,8 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateDescription(String description) {
-        TextView descriptionView = findViewById(R.id.description_field_Ad_textView);
+        TextView descriptionView =
+                findViewById(R.id.description_field_Ad_textView);
         setIfNotNull(descriptionView, description);
     }
 
@@ -140,46 +155,42 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Method called when the device back button is pressed.
-     * <p>
-     * It goes back to the scrolling activity.
-     */
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
-    /**
      * Method called when you want open the contact info.
      *
      * @param view
      */
     public void openContactInfo(View view) {
         Intent intent = new Intent(this, SimpleUserProfileActivity.class);
-        intent.putExtra(ActivityCommunicationLayout.PROVIDING_USER_ID, this.advertiserId);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_USER_ID,
+                this.advertiserId);
         startActivity(intent);
     }
 
     /**
      * Method called when you want open the virtual tour.
      *
-     * @param view
+     * @param view the view that we never use in this calls
      */
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
-        intent.putStringArrayListExtra(Intents.INTENT_PANORAMA_PICTURES, panoramasReferences);
+        intent.putStringArrayListExtra(Intents.INTENT_PANORAMA_PICTURES,
+                panoramasReferences);
         intent.putExtra(Intents.INTENT_AD_ID, adId);
         startActivity(intent);
     }
 
+    /**
+     * Opens the location activity showing the position of this ad
+     *
+     * @param view the view that we never use in this calls
+     */
     public void onSeeLocationClick(View view) {
         Intent intent = new Intent(this, MapActivity.class);
-        TextView addressView = findViewById(R.id.address_field_Ad_textView);
-        intent.putExtra(getString(R.string.intentLocationForMap), addressView.getText().toString());
+        intent.putExtra(getString(R.string.intentLocationForMap), mViewModel.getAddress().getValue());
         startActivity(intent);
     }
 
-    private void openImageFullscreen(String imageId){
+    private void openImageFullscreen(String imageId) {
         Intent intent = new Intent(this, FullScreenImageActivity.class);
         intent.putExtra("imageId", imageId);
         startActivity(intent);
@@ -192,18 +203,63 @@ public class AdActivity extends ToolbarActivity {
         return true;
     }
 
+    /**
+     * Adds ad to favorites, shows a toast with the action result
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO check the user is logged in
         if (item.getItemId() == R.id.action_add_favorite) {
-            database.getUser(login.getCurrentUser().getUserId()).thenAccept(u -> {
-                u.addFavorite(adId);
-                database.updateUser(u);
+            CompletableFuture<Void> addRes = addNewFavorite();
+            addRes.exceptionally(e -> {
+                Toast.makeText(this, e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                return null;
             });
+            addRes.thenAccept(res ->
+                    Toast.makeText(this, R.string.favSuccess_Ad,
+                            Toast.LENGTH_SHORT).show()
+            );
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Check if user is logged in and add new favorite ad to user
+     */
+    private CompletableFuture<Void> addNewFavorite() {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        // check that the user is logged in
+        User user = login.getCurrentUser();
+        if (user == null) {
+            result.completeExceptionally(
+                    new UnsupportedOperationException(getString(R.string.userNotLoggedIn_Ad))
+            );
+            return result;
+        }
+        CompletableFuture<User> userRes = database.getUser(user.getUserId());
+        userRes.exceptionally(e -> {
+            result.completeExceptionally(
+                    new DatabaseServiceException(getString(R.string.favFail_Ad)));
+            return null;
+        });
+        userRes.thenAccept(u -> saveFavorite(result, u));
+        return result;
+    }
+
+    /**
+     * Adds the ad id to the list of favorites of the user and update the user in the server.
+     */
+    private void saveFavorite(CompletableFuture<Void> result, User user) {
+        user.addFavorite(adId);
+        CompletableFuture<Boolean> updateRes = database.updateUser(user);
+        updateRes.exceptionally(e -> {
+            result.completeExceptionally(
+                    new DatabaseServiceException(
+                            getString(R.string.favFail_Ad)));
+            return null;
+        });
+        updateRes.thenAccept(res -> result.complete(null));
+    }
 
 }
