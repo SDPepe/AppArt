@@ -145,7 +145,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
                 break;
         }
     }
-    
+
     /**
      * @param user sets the value of the current user to the session user object
      */

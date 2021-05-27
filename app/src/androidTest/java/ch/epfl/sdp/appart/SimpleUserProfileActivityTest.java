@@ -68,6 +68,7 @@ public class SimpleUserProfileActivityTest {
         hiltRule.inject();
     }
 
+
     public static ViewAction forceClick() {
         return new ViewAction() {
             @Override public Matcher<View> getConstraints() {
