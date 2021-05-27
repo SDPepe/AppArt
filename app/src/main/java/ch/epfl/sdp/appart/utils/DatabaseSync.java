@@ -91,14 +91,14 @@ public class DatabaseSync {
      * @param images  list of ad images
      * @return a completable future telling whether the operation was successful
      */
-    public static CompletableFuture<Void> saveNewBookmarkedAd(Context context,
-                                                              DatabaseService db,
-                                                              LocalDatabaseService ldb,
-                                                              String cardId, String adId,
-                                                              Ad ad, List<Bitmap> images) {
+    public static CompletableFuture<Void> saveFavoriteAd(Context context,
+                                                           DatabaseService db,
+                                                           LocalDatabaseService ldb,
+                                                           String cardId, String adId,
+                                                           Ad ad, List<Bitmap> images) {
         CompletableFuture<Void> result = new CompletableFuture<>();
         CompletableFuture<User> userRes = db.getUser(ad.getAdvertiserId());
-        List<CompletableFuture<Bitmap>> panoramasBitmaps = fetchPanoramas(context, db, adId,
+        List<CompletableFuture<Bitmap>> panoramasBitmaps = fetchImages(context, db, adId,
                 ad.getPanoramaReferences());
         CompletableFuture<Void> allOfPanoramas =
                 CompletableFuture.allOf(panoramasBitmaps
@@ -117,6 +117,7 @@ public class DatabaseSync {
                         CompletableFuture<Void> writeRes =
                                 ldb.writeCompleteAd(adId, cardId, ad, u, images, panoramas, pfp);
                         writeRes.thenAccept(res -> {
+                            Log.d("DATASYNC", "local write ok");
                             result.complete(null);
                         });
                         writeRes.exceptionally(e -> {
@@ -134,21 +135,27 @@ public class DatabaseSync {
     }
 
     /**
-     * Sets the list of futures for the bitmaps of panorama images of the given ad.
+     * Fetches from the server the images from the given references.
+     *
+     * @param context    the context to use with Glide
+     * @param db         the database we fetch the images from
+     * @param adID       the id of the ad
+     * @param references the list of image ids
+     * @return a list of completablefutures of bitmaps containing the images
      */
-    private static List<CompletableFuture<Bitmap>> fetchPanoramas(Context context,
-                                                                  DatabaseService db,
-                                                                  String adID,
-                                                                  List<String> references) {
+    public static List<CompletableFuture<Bitmap>> fetchImages(Context context,
+                                                              DatabaseService db,
+                                                              String adID,
+                                                              List<String> references) {
         List<CompletableFuture<Bitmap>> futures = new ArrayList<>();
         for (int i = 0; i < references.size(); i++) {
             String ref = new StoragePathBuilder()
                     .toAdsStorageDirectory()
                     .toDirectory(adID)
                     .withFile(references.get(i));
-            CompletableFuture<Bitmap> panoramaBitmapRes = new CompletableFuture<>();
-            db.accept(new GlideBitmapLoader(context, panoramaBitmapRes, ref));
-            futures.add(panoramaBitmapRes);
+            CompletableFuture<Bitmap> bitmapRes = new CompletableFuture<>();
+            db.accept(new GlideBitmapLoader(context, bitmapRes, ref));
+            futures.add(bitmapRes);
         }
 
         return futures;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -219,8 +220,7 @@ public class AdActivity extends ToolbarActivity {
         if (item.getItemId() == R.id.action_add_favorite) {
             CompletableFuture<Void> addRes = addNewFavorite();
             addRes.exceptionally(e -> {
-                Toast.makeText(this, e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                Log.d("AD", "Failed to add to favorites");
                 return null;
             });
             addRes.thenAccept(res ->
@@ -240,15 +240,13 @@ public class AdActivity extends ToolbarActivity {
         // check that the user is logged in
         User user = login.getCurrentUser();
         if (user == null) {
-            result.completeExceptionally(
-                    new UnsupportedOperationException(getString(R.string.userNotLoggedIn_Ad))
-            );
+            result.completeExceptionally(new IllegalStateException("User has to be logged in"));
             return result;
         }
         CompletableFuture<User> userRes = database.getUser(user.getUserId());
         userRes.exceptionally(e -> {
-            result.completeExceptionally(
-                    new DatabaseServiceException(getString(R.string.favFail_Ad)));
+            Log.d("AD", "Failed to get user");
+            result.completeExceptionally(e);
             return null;
         });
         userRes.thenAccept(u -> saveFavorite(result, u));
@@ -263,34 +261,16 @@ public class AdActivity extends ToolbarActivity {
         user.addFavorite(adId);
         CompletableFuture<Boolean> updateRes = database.updateUser(user);
         updateRes.exceptionally(e -> {
+            Log.d("AD", "failed to update user");
             result.completeExceptionally(
                     new DatabaseServiceException(
                             getString(R.string.favFail_Ad)));
             return null;
         });
         updateRes.thenAccept(res -> {
-            CompletableFuture<Void> localSaveRes = DatabaseSync.saveNewBookmarkedAd(this,
-                    database, localdb, cardId, adId, mViewModel.getAd(), getAdImages());
-            localSaveRes.exceptionally(e -> {
-                result.completeExceptionally(e);
-                return null;
-            });
-            localSaveRes.thenAccept(saveRes -> result.complete(null));
+            Log.d("AD", "user updated");
+            result.complete(null);
         });
-    }
-
-    /**
-     * Builds list of bitmaps from the horizontal layout of ad images
-     */
-    private List<Bitmap> getAdImages() {
-        LinearLayout imagesLayout =
-                findViewById(R.id.horizontal_children_Ad_linearLayout);
-        List<Bitmap> images = new ArrayList<>();
-        for (int i = 0; i < imagesLayout.getChildCount(); i++) {
-            ImageView view = (ImageView) imagesLayout.getChildAt(i);
-            images.add(((BitmapDrawable) view.getDrawable()).getBitmap());
-        }
-        return images;
     }
 
 }
