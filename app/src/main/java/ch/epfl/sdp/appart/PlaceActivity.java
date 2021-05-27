@@ -84,7 +84,7 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         recyclerView = findViewById(R.id.places_Place_recyclerView);
 
         recyclerView.setAdapter(placeAdapter);
-        recyclerView.setHasFixedSize(false);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //here we will get the user location from the intents
@@ -101,6 +101,7 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         if (selectionCache.containsKey(type)) {
             currentSelectedPlaces.clear();
             currentSelectedPlaces.addAll(selectionCache.get(type));
+            this.runOnUiThread(placeAdapter::notifyDataSetChanged);
 
             //currentSelectedPlaces = selectionCache.get(type);
         }
@@ -114,7 +115,7 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
             //recyclerView.setAdapter(new PlaceAdapter(currentSelectedPlaces));
             currentSelectedPlaces.clear();
             currentSelectedPlaces.addAll(pairs);
-            placeAdapter.notifyDataSetChanged();
+            this.runOnUiThread(placeAdapter::notifyDataSetChanged);
 
 
         });
