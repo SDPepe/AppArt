@@ -3,10 +3,16 @@ package ch.epfl.sdp.appart;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.ad.Ad;
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import kotlin.NotImplementedError;
@@ -44,17 +50,37 @@ public class MockLocalDatabaseTest {
     }
 
     @Test
-    public void getCardsThrows() {
-        assertThrows(NotImplementedError.class, () -> {
-            localdb.getCards();
-        });
+    public void getCardsWorks() throws ExecutionException, InterruptedException {
+        List<Card> cards = new ArrayList<>();
+        cards.add(new Card("1111", "unknown", "unknown", "Lausanne", 1000, "apart_fake_image_1.jpeg"));
+        cards.add(new Card("2222", "unknown2", "vetterli-id", "Lausanne", 1000,
+                "apart_fake_image_1" +
+                        ".jpeg"));
+        assertEquals(cards, localdb.getCards().get());
     }
 
     @Test
-    public void getAdThrows() {
-        assertThrows(NotImplementedError.class, () -> {
-            localdb.getAd(null);
-        });
+    public void getAdWorks() throws ExecutionException, InterruptedException {
+        List<String> picturesReferences = Arrays.asList(
+                "fake_ad_1.jpg",
+                "fake_ad_2.jpg",
+                "fake_ad_3.jpg",
+                "fake_ad_4.jpg",
+                "fake_ad_5.jpg"
+        );
+        Ad ad = new Ad.AdBuilder()
+                .withTitle("EPFL")
+                .withPrice(100000)
+                .withPricePeriod(PricePeriod.MONTH)
+                .withStreet("Station 18").withCity("1015 Lausanne")
+                .withAdvertiserName("Martin Vetterli")
+                .withAdvertiserId("vetterli-id")
+                .withDescription("Ever wanted the EPFL campus all for yourself?")
+                .withPicturesReferences(picturesReferences)
+                .withPanoramaReferences(picturesReferences) //put the pictures since its mocked
+                .hasVRTour(false)
+                .build();
+        assertEquals(ad, localdb.getAd("arandomidbecausewhocares").get());
     }
 
     @Test
