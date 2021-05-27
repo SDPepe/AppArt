@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import ch.epfl.sdp.appart.utils.PermissionRequest;
 import javax.inject.Inject;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -134,22 +135,17 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 123:
-                checkPermission(grantResults);
+                if(PermissionRequest.checkPermission(grantResults)){
+                    onCall();
+                }else{
+                    makeText(this, "Permission Not Granted",Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 break;
         }
     }
-
-    private void checkPermission(int[] grantResults){
-        if ((grantResults.length > 0) && (grantResults[0]
-            == PackageManager.PERMISSION_GRANTED)) {
-            onCall();
-        } else {
-            makeText(this, "Call Permission Not Granted",Toast.LENGTH_SHORT).show();
-        }
-    }
-
+    
     /**
      * @param user sets the value of the current user to the session user object
      */
