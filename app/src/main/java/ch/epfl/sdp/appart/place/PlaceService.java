@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -51,15 +53,8 @@ public class PlaceService {
     getNearbyPlacesWithDistances(Address address, int radius, String type,
                                  int top) {
 
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                Location location = geocoder.getLocation(address).get();
-                return getNearbyPlacesWithDistances(location, radius, type,
-                        top).get();
-            } catch (Exception e) {
-                throw new CompletionException(e);
-            }
-        });
+
+        return geocoder.getLocation(address).thenCompose(location -> getNearbyPlacesWithDistances(location, radius, type, top));
     }
 
     /**
@@ -141,10 +136,8 @@ public class PlaceService {
 
             List<CompletableFuture<Float>> locationsFutures =
                     placesWithLocation.stream()
-                            .map(place -> {
-                                return geocoder.getDistance(location,
-                                        place.getLocation());
-                            })
+                            .map(place -> geocoder.getDistance(location,
+                                    place.getLocation()))
                             .collect(Collectors.toList());
 
             CompletableFuture.allOf(locationsFutures.toArray(new CompletableFuture[locationsFutures.size()])).thenAccept(aVoid -> {

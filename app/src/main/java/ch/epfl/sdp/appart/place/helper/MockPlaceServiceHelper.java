@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.place.helper;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,11 +105,14 @@ public class MockPlaceServiceHelper implements PlaceHelper {
     @Override
     public CompletableFuture<Bitmap> queryImage(String photoReference,
                                                 int maxHeight, int maxWidth) {
-        return null;
+        Bitmap fakeBitmap = Bitmap.createBitmap(100, 100,
+                Bitmap.Config.ARGB_8888);
+        fakeBitmap.eraseColor(Color.rgb(255, 0, 0));
+        return CompletableFuture.completedFuture(fakeBitmap);
     }
 
     @Override
     public CompletableFuture<String> queryPlaceDetails(String placeId) {
-        return null;
+        return CompletableFuture.completedFuture("");
     }
 }
