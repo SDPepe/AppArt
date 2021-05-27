@@ -57,7 +57,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
-@UninstallModules({LoginModule.class, DatabaseModule.class, LocalDatabaseModule.class})
+@UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
 public class FavoriteUITest {
 
@@ -73,8 +73,6 @@ public class FavoriteUITest {
     @BindValue
     DatabaseService database = new MockDatabaseService();
 
-    @BindValue
-    LocalDatabaseService localdb = new MockLocalDatabase();
 
     @Before
     public void init() {

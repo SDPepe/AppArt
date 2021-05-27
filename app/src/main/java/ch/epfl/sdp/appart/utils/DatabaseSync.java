@@ -150,6 +150,9 @@ public class DatabaseSync {
         return futures;
     }
 
+    /**
+     * Writes the ad data to the local database and completes the future accordingly.
+     */
     private static void writeAndComplete(CompletableFuture<Void> result, LocalDatabaseService ldb,
                                  String adId, String cardId, User user, Ad ad,  List<Bitmap> images,
                                  List<CompletableFuture<Bitmap>> panoramasBitmaps, Bitmap pfp) {
