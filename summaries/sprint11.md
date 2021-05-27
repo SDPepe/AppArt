@@ -12,5 +12,6 @@ This week I work on several different task. First I finish the filter activity. 
 ## Antoine
 
 ## Lorenzo
+This week I finally finished my task on the syncrhonization between server and local database. Now the user can login automatically if they didn't log out during the previous session, and also the offline login is working. When opening the favorite activity the ads are saved locally and can be accessed offline too (with images and info about the advertiser). Despite being very tight on time this week I had the feeling of spending my work time well and in a very productive way. The meetings were good and quick.
 
 ## Overall team
