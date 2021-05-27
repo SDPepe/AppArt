@@ -9,32 +9,22 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 
 import ch.epfl.sdp.appart.FavoriteActivity;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
-import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
-import ch.epfl.sdp.appart.favoritesui.MockFavoriteViewModel;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
-
 /**
- * Test class for FavoriteActivtiy where the viewmodel returns exceptionally from init().
+ * Test class for FavoriteActivity where the viewmodel returns exceptionally from init().
  */
 @UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
@@ -70,18 +60,6 @@ public class FavoriteFailedInitTest {
                 decorView = ac.getWindow().getDecorView();
             }
         });
-    }
-
-    @Test
-    public void exceptionalllyInitShowsToast() {
-        mActivityScenarioRule.getScenario().onActivity(ac -> {
-            SharedPreferencesHelper.clearSavedUserForAutoLogin(ac);
-            ac.recreate();
-        });
-        onView(withText("mock"))
-                .inRoot(withDecorView(not(decorView)))// Here we use decorView
-                .check(matches(isDisplayed()));
-
     }
 
     @After
