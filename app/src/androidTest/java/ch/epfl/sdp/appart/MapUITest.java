@@ -95,7 +95,7 @@ public class MapUITest {
                 10000);
         assertThat(foundMap, is(true));
 
-        Thread.sleep(2000);
+        Thread.sleep(4000);
 
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
@@ -106,6 +106,7 @@ public class MapUITest {
                 Location loc =
                         geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
                 mapService.centerOnLocation(loc, true);
+                Thread.sleep(1000);
 
 
                 List<UiObject2> lists =
@@ -122,6 +123,7 @@ public class MapUITest {
         Location loc =
                 geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
         mapService.centerOnLocation(loc, true);
+        Thread.sleep(1000);
 
 
         boolean isMarkerPresent =
@@ -154,7 +156,7 @@ public class MapUITest {
                 10000);
         assertThat(foundMap, is(true));
 
-        Thread.sleep(2000);
+        Thread.sleep(4000);
 
         List<Card> cards = databaseService.getCards().join();
 
@@ -163,6 +165,7 @@ public class MapUITest {
         Location loc =
                 geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
         mapService.centerOnLocation(loc, true);
+        Thread.sleep(1000);
 
 
         boolean isMarkerPresent =
