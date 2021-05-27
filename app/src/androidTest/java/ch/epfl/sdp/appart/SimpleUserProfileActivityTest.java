@@ -305,6 +305,7 @@ public class SimpleUserProfileActivityTest {
             allOf(withId(R.id.contact_SimpleUserProfile_button), withText("CONTACT ANNOUNCER")));
         appCompatButton2.perform(click());
 
+        
         onView(withText("How did you prefer contact the announcer ?"))
             .inRoot(isDialog())
             .check(matches(isDisplayed()));
