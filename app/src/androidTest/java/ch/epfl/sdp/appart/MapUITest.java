@@ -106,8 +106,8 @@ public class MapUITest {
                 Location loc =
                         geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
                 assertNotNull(loc);
-                assertThat(loc.latitude, greaterThan(0.0));
-                assertThat(loc.longitude, greaterThan(0.0));
+                assertThat(loc.latitude > 0.0, is(true));
+                assertThat(loc.longitude > 0.0, is(true));
                 mapService.centerOnLocation(loc, true);
                 Thread.sleep(1000);
 
