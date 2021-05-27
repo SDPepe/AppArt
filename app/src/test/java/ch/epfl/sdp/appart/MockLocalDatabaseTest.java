@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -11,6 +12,7 @@ import java.util.concurrent.ExecutionException;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
 import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import kotlin.NotImplementedError;
@@ -48,10 +50,13 @@ public class MockLocalDatabaseTest {
     }
 
     @Test
-    public void getCardsThrows() {
-        assertThrows(NotImplementedError.class, () -> {
-            localdb.getCards();
-        });
+    public void getCardsWorks() throws ExecutionException, InterruptedException {
+        List<Card> cards = new ArrayList<>();
+        cards.add(new Card("1111", "unknown", "unknown", "Lausanne", 1000, "apart_fake_image_1.jpeg"));
+        cards.add(new Card("2222", "unknown2", "vetterli-id", "Lausanne", 1000,
+                "apart_fake_image_1" +
+                        ".jpeg"));
+        assertEquals(cards, localdb.getCards().get());
     }
 
     @Test

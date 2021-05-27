@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.database.local;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ public class MockLocalDatabase implements LocalDatabaseService {
 
     Map<String, User> users;
     Ad ad;
+    List<Card> cards = new ArrayList<>();
 
     public MockLocalDatabase() {
         users = new HashMap<>();
@@ -56,6 +58,11 @@ public class MockLocalDatabase implements LocalDatabaseService {
                 .withPanoramaReferences(picturesReferences) //put the pictures since its mocked
                 .hasVRTour(false)
                 .build();
+
+        cards.add(new Card("1111", "unknown", "unknown", "Lausanne", 1000, "apart_fake_image_1.jpeg"));
+        cards.add(new Card("2222", "unknown2", "vetterli-id", "Lausanne", 1000,
+                "apart_fake_image_1" +
+                ".jpeg"));
     }
 
     @Override
@@ -72,7 +79,9 @@ public class MockLocalDatabase implements LocalDatabaseService {
 
     @Override
     public CompletableFuture<List<Card>> getCards() {
-        throw new NotImplementedError();
+        CompletableFuture<List<Card>> result = new CompletableFuture<>();
+        result.complete(cards);
+        return result;
     }
 
     @Override

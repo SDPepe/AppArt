@@ -57,7 +57,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
-@UninstallModules({LoginModule.class, DatabaseModule.class})
+@UninstallModules({LoginModule.class, DatabaseModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class FavoriteUITest {
 
@@ -69,9 +69,10 @@ public class FavoriteUITest {
 
     @BindValue
     LoginService login = new MockLoginService();
-
     @BindValue
     DatabaseService database = new MockDatabaseService();
+    @BindValue
+    LocalDatabaseService localdb = new MockLocalDatabase();
 
 
     @Before
@@ -113,6 +114,7 @@ public class FavoriteUITest {
     public void favoriteUITest() {
         // clear shared preferences to avoid auto-login
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+
 
         ViewInteraction appCompatEditText = onView(
                 Matchers.allOf(ViewMatchers.withId(R.id.email_Login_editText),

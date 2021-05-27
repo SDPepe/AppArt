@@ -8,18 +8,14 @@ import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
-import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
-import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 import ch.epfl.sdp.appart.utils.DatabaseSync;
-import ch.epfl.sdp.appart.utils.StoragePathBuilder;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
