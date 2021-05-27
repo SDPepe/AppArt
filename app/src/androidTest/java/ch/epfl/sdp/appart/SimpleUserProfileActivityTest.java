@@ -296,6 +296,10 @@ public class SimpleUserProfileActivityTest {
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         imageView2.check(matches(isDisplayed()));
+
+        ViewInteraction appCompatButton2 = onView(
+            allOf(withId(R.id.contact_SimpleUserProfile_button), withText("CONTACT ANNOUNCER")));
+        appCompatButton2.perform(click());
     }
 
     private static Matcher<View> childAtPosition(
