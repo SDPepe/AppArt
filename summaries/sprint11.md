@@ -12,6 +12,9 @@ This week I work on several different task. First I finish the filter activity. 
 
 ## Antoine
 
+This week I worked on the destabilization feature and on the map. First, I helped Quentin a bit on implementing features for the place service. More specifically, we now query places based on their distance from the user and not specifically in a specific radius. This way we always get the smae number of results for each type of place.  We also built the UI together.
+I improved the way apartments are displayed in the main map view. Now, the app zooms in on the user postition and only displays the apartments that are 50 kms or less from the current user position.
+
 ## Lorenzo
 This week I finally finished my task on the syncrhonization between server and local database. Now the user can login automatically if they didn't log out during the previous session, and also the offline login is working. When opening the favorite activity the ads are saved locally and can be accessed offline too (with images and info about the advertiser). Despite being very tight on time this week I had the feeling of spending my work time well and in a very productive way. The meetings were good and quick.
 
