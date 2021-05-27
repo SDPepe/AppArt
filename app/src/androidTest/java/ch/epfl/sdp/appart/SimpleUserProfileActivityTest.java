@@ -38,6 +38,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -300,6 +301,10 @@ public class SimpleUserProfileActivityTest {
         ViewInteraction appCompatButton2 = onView(
             allOf(withId(R.id.contact_SimpleUserProfile_button), withText("CONTACT ANNOUNCER")));
         appCompatButton2.perform(click());
+
+        onView(withText("How did you prefer contact the announcer ?"))
+            .inRoot(isDialog()) // <---
+            .check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(
