@@ -55,7 +55,7 @@ public class MockLocalDatabaseTest {
     }
 
     @Test
-    public void getAdThrows() {
+    public void getAdWorks() throws ExecutionException, InterruptedException {
         List<String> picturesReferences = Arrays.asList(
                 "fake_ad_1.jpg",
                 "fake_ad_2.jpg",
@@ -75,7 +75,7 @@ public class MockLocalDatabaseTest {
                 .withPanoramaReferences(picturesReferences) //put the pictures since its mocked
                 .hasVRTour(false)
                 .build();
-        assertEquals(ad, localdb.getAd("arandomidbecausewhocares"));
+        assertEquals(ad, localdb.getAd("arandomidbecausewhocares").get());
     }
 
     @Test
