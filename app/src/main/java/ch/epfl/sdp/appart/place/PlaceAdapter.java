@@ -57,4 +57,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
                     view.findViewById(R.id.placeDistance_Place_textView);
         }
     }
+
+
 }

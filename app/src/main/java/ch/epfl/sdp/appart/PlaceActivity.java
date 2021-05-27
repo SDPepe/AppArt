@@ -73,7 +73,6 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_place);
         Spinner spinner = (Spinner) findViewById(R.id.spinner_place_activity);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FIELDS);
@@ -84,7 +83,7 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         recyclerView = findViewById(R.id.places_Place_recyclerView);
 
         recyclerView.setAdapter(placeAdapter);
-        recyclerView.setHasFixedSize(false);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //here we will get the user location from the intents
@@ -115,7 +114,6 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
             currentSelectedPlaces.clear();
             currentSelectedPlaces.addAll(pairs);
             placeAdapter.notifyDataSetChanged();
-
 
         });
 
