@@ -250,7 +250,6 @@ public class AdActivity extends ToolbarActivity {
 
     /**
      * Adds the ad id to the list of favorites of the user and update the user in the server.
-     * Then if successful, saves the ad locally.
      */
     private void saveFavorite(CompletableFuture<Void> result, User user) {
         user.addFavorite(adId);
