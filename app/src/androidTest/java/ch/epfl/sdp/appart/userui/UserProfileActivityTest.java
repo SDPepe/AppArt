@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.userui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -104,6 +105,7 @@ public class UserProfileActivityTest {
         login.signOut();
         // clear shared preferences to avoid auto-login
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        mActivityTestRule.getScenario().onActivity(Activity::recreate);
     }
     @Test
     public void userProfileActivityTest() throws UiObjectNotFoundException {
