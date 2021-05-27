@@ -41,8 +41,7 @@ public class FirestoreUserHelper {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
         }
-
-
+        
         CompletableFuture<User> result = new CompletableFuture<>();
 
         //ask firebase asynchronously to get the associated user object and notify the future

@@ -290,7 +290,7 @@ public class SimpleUserProfileActivityTest {
         editText8.check(matches(withText("MALE")));
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.contact_SimpleUserProfile_button), withText("CONTACT ANNOUNCER"),
+                allOf(withId(R.id.contact_SimpleUserProfile_button), withText("Contact"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
@@ -317,25 +317,6 @@ public class SimpleUserProfileActivityTest {
             .inRoot(isDialog())
             .check(matches(isDisplayed()));
 
-    }
-
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
     }
 
     public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
