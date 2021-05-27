@@ -98,7 +98,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("How did you prefer contact the announcer ?");
             builder.setPositiveButton("Contact via Email", (dialog, which) -> onEmail());
-            builder.setNeutralButton("Contact via phone number ", (dialog, which) -> onCall());
+            builder.setNeutralButton("Contact via phone number", (dialog, which) -> onCall());
             AlertDialog dialog = builder.create();
             dialog.show();
         } else {

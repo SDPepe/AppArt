@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import android.widget.Button;
+import androidx.appcompat.app.AlertDialog;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import org.hamcrest.Description;
@@ -35,6 +37,7 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -303,8 +306,17 @@ public class SimpleUserProfileActivityTest {
         appCompatButton2.perform(click());
 
         onView(withText("How did you prefer contact the announcer ?"))
-            .inRoot(isDialog()) // <---
+            .inRoot(isDialog())
             .check(matches(isDisplayed()));
+
+        onView(withText("Contact via Email"))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()));
+
+        onView(withText("Contact via phone number"))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()));
+
     }
 
     private static Matcher<View> childAtPosition(
