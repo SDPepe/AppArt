@@ -32,7 +32,6 @@ import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.GeocoderModule;
 import ch.epfl.sdp.appart.hilt.MapModule;
 import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
 import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
@@ -51,6 +50,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 
 @UninstallModules({DatabaseModule.class, MapModule.class, GeocoderModule.class})
 @HiltAndroidTest
@@ -105,6 +105,9 @@ public class MapUITest {
             if (!markerDescs.contains(card.getCity())) {
                 Location loc =
                         geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
+                assertNotNull(loc);
+                assertThat(loc.latitude, greaterThan(0.0));
+                assertThat(loc.longitude, greaterThan(0.0));
                 mapService.centerOnLocation(loc, true);
                 Thread.sleep(1000);
 
