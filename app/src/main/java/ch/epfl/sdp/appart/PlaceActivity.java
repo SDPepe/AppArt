@@ -1,6 +1,8 @@
 package ch.epfl.sdp.appart;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Pair;
@@ -21,8 +23,10 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.location.Location;
+import ch.epfl.sdp.appart.place.PlaceAdapter;
 import ch.epfl.sdp.appart.place.PlaceOfInterest;
 import ch.epfl.sdp.appart.place.PlaceService;
+import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -59,14 +63,15 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         FIELDS.add(tmp);
     }
 
-    private List<Pair<PlaceOfInterest, Float>> currentSelectedPlaces;
+    private final List<Pair<PlaceOfInterest, Float>> currentSelectedPlaces = new ArrayList<>();
     private final HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache = new HashMap<>();
     private Location userLocation;
+    private RecyclerView recyclerView;
+    private final PlaceAdapter placeAdapter = new PlaceAdapter(currentSelectedPlaces);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
         setContentView(R.layout.activity_place);
@@ -75,6 +80,12 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
+        recyclerView = findViewById(R.id.places_Place_recyclerView);
+
+        recyclerView.setAdapter(placeAdapter);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //here we will get the user location from the intents
         userLocation = new Location(6.635510, 46.781170);
@@ -88,7 +99,10 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         String type = FIELDS.get(position);
         //here get the type in the list
         if (selectionCache.containsKey(type)) {
-            currentSelectedPlaces = selectionCache.get(type);
+            currentSelectedPlaces.clear();
+            currentSelectedPlaces.addAll(selectionCache.get(type));
+
+            //currentSelectedPlaces = selectionCache.get(type);
         }
 
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> queriedPlaces =
@@ -96,7 +110,13 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
 
         queriedPlaces.thenAccept(pairs -> {
             selectionCache.put(FIELDS.get(currentSelectedIndex), pairs);
-            currentSelectedPlaces = pairs;
+            //currentSelectedPlaces = pairs;
+            //recyclerView.setAdapter(new PlaceAdapter(currentSelectedPlaces));
+            currentSelectedPlaces.clear();
+            currentSelectedPlaces.addAll(pairs);
+            placeAdapter.notifyDataSetChanged();
+
+
         });
 
         //maybe we don't do anything if the request fail

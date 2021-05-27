@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
@@ -63,6 +64,7 @@ public class ScrollingActivity extends ToolbarActivity {
         recyclerView = findViewById(R.id.recycler_Scrolling_recyclerView);
         recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
         recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mViewModel.getCards().observe(this, this::updateList);
 
         // init floating action button
