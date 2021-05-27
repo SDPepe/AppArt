@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.favoritesui;
+package ch.epfl.sdp.appart;
 
 import android.view.View;
 import android.view.ViewGroup;

@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.adui;
+package ch.epfl.sdp.appart;
 
 import android.content.Intent;
 import android.view.View;
