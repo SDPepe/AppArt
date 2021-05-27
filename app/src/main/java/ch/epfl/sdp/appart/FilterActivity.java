@@ -37,14 +37,12 @@ public class FilterActivity extends AppCompatActivity {
   private boolean setValues() {
     String min = getContentOfEditText(R.id.value_min_price_Filter_editText);
     String max = getContentOfEditText(R.id.value_max_price_Filter_editText);
-    if(!min.isEmpty() && !max.isEmpty()){
-      mViewModel.setMin(Integer.parseInt(min));
-      mViewModel.setMax(Integer.parseInt(max));
-    }
-
     String city = getContentOfEditText(R.id.location_Filter_editText);
     String range = getContentOfEditText(R.id.value_range_Filter_editText);
-    if(!city.isEmpty() && !range.isEmpty()){
+
+    if(!min.isEmpty() && !max.isEmpty() && !city.isEmpty() && !range.isEmpty()){
+      mViewModel.setMin(Integer.parseInt(min));
+      mViewModel.setMax(Integer.parseInt(max));
       mViewModel.setCity(city);
       mViewModel.setRange(Float.parseFloat(range));
       return true;
