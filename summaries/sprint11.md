@@ -3,6 +3,7 @@
 ## Quentin
 
 ## Carlo (scrum master)
+This week I mainly worked on creating a mock environment to test the StepCounterActivity. I encoutered various difficulties doing this: first I implemented a mock SensorManager and mock Sensor class to simulate the STEP_DETECTOR and STEP_COUNTER sensor. Because of an issue with mockito simulating hardware sensor classes other approaches had to be considered. In the end I implemented the testing by passing a parameter which informs the StepCounterActivity to mock the **onSensorChanged(...)** function. Furthermore I fixed a bug in the activity which was caused by the use of static fields and had do modify the UI in order to match the new behaviour.
 
 ## Émilien
 
@@ -15,3 +16,4 @@ This week I work on several different task. First I finish the filter activity. 
 This week I finally finished my task on the syncrhonization between server and local database. Now the user can login automatically if they didn't log out during the previous session, and also the offline login is working. When opening the favorite activity the ads are saved locally and can be accessed offline too (with images and info about the advertiser). Despite being very tight on time this week I had the feeling of spending my work time well and in a very productive way. The meetings were good and quick.
 
 ## Overall team
+This week the team mainly worked on the last features of AppArt. The local database feature was updated and implemented in various activities. Major progress on the destabilization sprint which is now finished and just has to be merged. Some test coverage was added and also the implementation of last features as forwarding to email/call app on phone to contact an announcer, filter ads by location and personal ads management view/delete. Outside of the regular meetings communication was constant throught the week but limited to sub-groups which worked on similar fronts.
