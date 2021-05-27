@@ -52,7 +52,7 @@ public class CameraUITest {
                 }
         );*/
     }
-    
+
     @Test
     public void clickOnGalleryBtn() {
         onView(withId(R.id.gallery_Camera_button)).perform(click());
