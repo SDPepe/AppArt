@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -24,6 +25,8 @@ public abstract class ToolbarActivity extends AppCompatActivity {
 
     @Inject
     LoginService loginService;
+    @Inject
+    LocalDatabaseService localdb;
 
     /**
      * Sets the toolbar as the main menu
@@ -49,6 +52,7 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_logout:
                 loginService.signOut();
+                localdb.cleanFavorites();
                 SharedPreferencesHelper.clearSavedUserForAutoLogin(this);
                 Intent intentLogout = new Intent(this, LoginActivity.class);
                 startActivity(intentLogout);
