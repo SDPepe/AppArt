@@ -19,9 +19,12 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.location.Location;
+import ch.epfl.sdp.appart.location.place.address.Address;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import ch.epfl.sdp.appart.place.PlaceAdapter;
 import ch.epfl.sdp.appart.place.PlaceOfInterest;
 import ch.epfl.sdp.appart.place.PlaceService;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -34,29 +37,24 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
     private int currentSelectedIndex = DEFAULT_POSITION;
     private final static String SELECT_ONE = "select one";
 
-    //private static final List<String> FIELDS = Arrays.asList("select one",
-    // "bakery", "super market", "library", "restaurant", "library",
-    // "migros+denner+coop", "coop");
-
     private static final HashMap<String, String> TYPE_TO_KEYWORDS =
             new HashMap<String, String>() {
-        {
-            put("bakery", "bakery");
-            put("super market", "migros+denner+coop");
-            put("library", "library");
-            put("university", "university+EPFL+UNIL");
-            put("drugstore", "drugstore");
-            put("fun", "cinema+party+dancing");
-            put("gym", "gym+fitness");
-            put("restaurant", "restaurant");
-        }
-    };
+                {
+                    put("bakery", "bakery");
+                    put("super market", "migros+denner+coop");
+                    put("library", "library");
+                    put("university", "university+EPFL+UNIL");
+                    put("drugstore", "drugstore");
+                    put("fun", "cinema+party+dancing");
+                    put("gym", "gym+fitness");
+                    put("restaurant", "restaurant");
+                }
+            };
 
     private static final List<String> FIELDS =
             new ArrayList<>(TYPE_TO_KEYWORDS.keySet());
 
     static {
-        int index = FIELDS.indexOf(SELECT_ONE);
         String tmp = FIELDS.get(0);
         FIELDS.set(0, SELECT_ONE);
         FIELDS.add(tmp);
@@ -65,14 +63,16 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
     private final List<Pair<PlaceOfInterest, Float>> currentSelectedPlaces =
             new ArrayList<>();
     private final HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache = new HashMap<>();
-    private Location userLocation;
-    private RecyclerView recyclerView;
+    private Address adAddress;
     private final PlaceAdapter placeAdapter = new PlaceAdapter(this,
             currentSelectedPlaces);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String addressStr = getIntent().getStringExtra(ActivityCommunicationLayout.AD_ADDRESS);
+        this.adAddress = AddressFactory.makeAddress(addressStr);
 
         setContentView(R.layout.activity_place);
         Spinner spinner = (Spinner) findViewById(R.id.spinner_place_activity);
@@ -82,14 +82,15 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        recyclerView = findViewById(R.id.places_Place_recyclerView);
+        RecyclerView recyclerView =
+                findViewById(R.id.places_Place_recyclerView);
 
         recyclerView.setAdapter(placeAdapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //here we will get the user location from the intents
-        userLocation = new Location(6.635510, 46.781170);
+        //userLocation = new Location(6.635510, 46.781170);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
         }
 
         CompletableFuture<List<Pair<PlaceOfInterest, Float>>> queriedPlaces =
-                placeService.getNearbyPlacesWithDistances(userLocation, type,
+                placeService.getNearbyPlacesWithDistances(adAddress, type,
                         5);
 
         queriedPlaces.thenAccept(pairs -> {
@@ -126,6 +127,5 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        int i = 0;
     }
 }
