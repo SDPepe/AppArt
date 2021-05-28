@@ -43,7 +43,16 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         Pair<PlaceOfInterest, Float> placeAndDistance = places.get(position);
         PlaceOfInterest place = placeAndDistance.first;
 
-        holder.placeNameTextView.setText(place.getName());
+        String name = place.getName();
+        int max = 15;
+        int lines = (name.length() / 15) + ((name.length() % 15) != 0 ? 1 : 0)  + 1;
+
+
+        if (name.length() > 15) {
+            name = name.substring(0, 15) + "\n" + name.substring(15);
+        }
+
+        holder.placeNameTextView.setText(name);
 
         float distance = placeAndDistance.second;
         boolean overOneKilometer = distance >= 1000;
@@ -80,6 +89,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         Bitmap bitmap = place.getBitmap();
         if (bitmap != null) {
             holder.image.setImageBitmap(bitmap);
+        } else {
+            holder.image.setVisibility(View.INVISIBLE);
         }
 
     }
