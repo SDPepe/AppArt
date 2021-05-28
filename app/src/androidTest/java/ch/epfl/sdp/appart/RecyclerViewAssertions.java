@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+// copied from https://medium.com/koala-tea-assurance/better-android-recyclerview-testing-a5e3ed7ef38b
 public class RecyclerViewAssertions {
 
     /**
