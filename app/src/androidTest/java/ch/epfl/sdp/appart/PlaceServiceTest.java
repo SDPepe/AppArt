@@ -68,7 +68,6 @@ public class PlaceServiceTest {
         assertTrue(p.hasLocation());
         assertTrue(p.hasAddress());
 
-
     }
 
 
