@@ -13,6 +13,8 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @HiltAndroidTest
@@ -32,7 +34,7 @@ public class CameraUITest {
 
     @Test
     public void clickOnCameraBtn() {
-        onView(withId(R.id.camera_Camera_button)).perform(click());
+        onView(withId(R.id.camera_Camera_button)).perform(closeSoftKeyboard()).perform(click());
         /*onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
                 new ViewAction() {
                     @Override
@@ -56,7 +58,7 @@ public class CameraUITest {
     
     @Test
     public void clickOnGalleryBtn() {
-        onView(withId(R.id.gallery_Camera_button)).perform(click());
+        onView(withId(R.id.gallery_Camera_button)).perform(closeSoftKeyboard()).perform(click());
         /*onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
                 new ViewAction() {
                     @Override

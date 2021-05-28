@@ -28,8 +28,11 @@ import dagger.hilt.android.testing.UninstallModules;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -69,6 +72,11 @@ public class NearbyPlacesTest {
         onView(withId(R.id.places_Place_recyclerView))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
+
+        //check that a particular place name is in the card which proves its shown
+        onView(withId(R.id.places_Place_recyclerView))
+                .check(RecyclerViewAssertions.withRowContaining(withText("Hôtel du Théâtr-\ne")));
+
         //click on something else
         onView(withId(R.id.spinner_place_activity)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("drugstore"))).perform(click());
@@ -77,7 +85,12 @@ public class NearbyPlacesTest {
         onView(withId(R.id.spinner_place_activity)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("gym"))).perform(click());
 
+        //same data must be shown
+        onView(withId(R.id.places_Place_recyclerView))
+                .check(RecyclerViewAssertions.withRowContaining(withText("Hôtel du Théâtr-\ne")));
+
         swipeDown();
+
     }
 
 
