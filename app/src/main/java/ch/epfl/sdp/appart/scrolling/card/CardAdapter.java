@@ -3,9 +3,11 @@ package ch.epfl.sdp.appart.scrolling.card;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,9 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.AdActivity;
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.UserAdsActivity;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.firebaselayout.CardLayout;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
@@ -34,6 +38,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     private final List<Card> cards;
     private final Context context;
     private final DatabaseService database;
+    private final boolean isUserAd;
 
     /**
      * Constructor of the card adapter.
@@ -42,7 +47,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
      * @param database the database where the card images are fetched
      * @param cards    list of Firebase Storage image references
      */
-    public CardAdapter(Activity context, DatabaseService database, List<Card> cards) {
+    public CardAdapter(Activity context, DatabaseService database, List<Card> cards, boolean isUserAd) {
         if (cards == null)
             throw new IllegalArgumentException("cards cannot be null");
         if (context == null)
@@ -51,15 +56,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         this.cards = cards;
         this.context = context;
         this.database = database;
+        this.isUserAd = isUserAd;
     }
 
-    /**
-     * Create a new CardViewHolder based on the layout of a card.
-     *
-     * @param parent   the View that will contain the ViewHolder
-     * @param viewType unknown
-     * @return the newly created CardViewHolder
-     */
+    public CardAdapter(Activity context, DatabaseService database, List<Card> cards) {
+        this(context, database, cards, false);
+    }
+
+
+        /**
+         * Create a new CardViewHolder based on the layout of a card.
+         *
+         * @param parent   the View that will contain the ViewHolder
+         * @param viewType unknown
+         * @return the newly created CardViewHolder
+         */
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -93,6 +104,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.priceTextView.setText(String.format("%d.-/mo", card.getPrice()));
         if (!card.hasVRTour())
             holder.vrAvailableImageView.setVisibility(View.INVISIBLE);
+
+        // Not the cleanest way of doing it, but it was difficult to do it differently with inheritance
+        Log.d("delete_ads", "This card is a UserCardAdapter");
+        if (isUserAd)
+            holder.deleteButton.setOnClickListener(v -> {
+                CompletableFuture<Boolean> deleteFuture = database.deleteAd(card.getAdId(), card.getId());
+                deleteFuture.thenAccept(b -> {
+                    if (b) {
+                        Intent intent = new Intent(context, UserAdsActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
+            });
+        else
+            holder.deleteButton.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -114,6 +140,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         private final TextView priceTextView;
         private final ImageView cardImageView;
         private final ImageView vrAvailableImageView;
+        private final Button deleteButton;
 
         public CardViewHolder(View view) {
             super(view);
@@ -121,6 +148,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             addressTextView = view.findViewById(R.id.city_CardLayout_textView);
             priceTextView = view.findViewById(R.id.price_CardLayout_textView);
             vrAvailableImageView = view.findViewById(R.id.vrAvailable_CardLayout_imageView);
+            deleteButton = view.findViewById(R.id.card_delete_button);
         }
 
     }

@@ -42,29 +42,29 @@
 
           <TextView
               android:id="@+id/city_CardLayout_textView"
-              android:layout_column="1"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:gravity="start"
               android:paddingStart="16dp"
               android:paddingTop="16dp"
               android:text="@string/Address"
               android:textColor="@color/primaryStart"
               android:textSize="20sp" />
 
+          <Space
+              android:layout_width="206dp"
+              android:layout_height="wrap_content" />
+
           <Button
-              android:id="@+id/card_edit_button"
+              android:id="@+id/card_delete_button"
               android:layout_width="100dp"
               android:layout_height="30dp"
-              android:layout_marginStart="@dimen/margin_button"
-              android:layout_marginEnd="@dimen/margin_button"
               android:background="@drawable/style_primary"
-              android:gravity="end"
               android:onClick="logIn"
-              android:text="@string/card_edit"
-              android:textAlignment="center"
+              android:text="@string/card_delete"
               android:textAllCaps="false"
               android:textColor="#FFFFFF"
-              android:textSize="16sp"
+              android:textSize="13sp"
               app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_3"
               app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_2"
               app:layout_constraintStart_toStartOf="@+id/guideline_vertical_1" />
@@ -86,13 +86,6 @@
               android:textSize="18sp" />
         </TableRow>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
       </TableLayout>
 
     </LinearLayout>

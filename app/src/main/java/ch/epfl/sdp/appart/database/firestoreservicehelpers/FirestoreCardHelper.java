@@ -128,6 +128,19 @@ public class FirestoreCardHelper {
         return result;
     }
 
+    @NotNull
+    @NonNull
+    public CompletableFuture<Boolean> deleteCard(String cardId) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        db.collection(FirebaseLayout.CARDS_DIRECTORY).document(cardId).delete().addOnCompleteListener(t -> {
+            if (t.isSuccessful())
+                result.complete(true);
+            else
+                result.complete(false);
+        });
+        return result;
+    }
+
     /* <--- general util private methods ---> */
 
     /**
