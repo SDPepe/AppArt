@@ -5,6 +5,8 @@ import android.net.Uri;
 import org.junit.Test;
 
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
 import ch.epfl.sdp.appart.user.AppUser;
@@ -22,8 +24,10 @@ public class UserViewModelTest {
 
     MockDatabaseService database = new MockDatabaseService();
 
+    LocalDatabaseService localDB = new LocalDatabase("");
+
     /* User ViewModel */
-    UserViewModel mViewModel = new UserViewModel(database, login);
+    UserViewModel mViewModel = new UserViewModel(database, login, localDB);
 
     @Test
     public void userViewModelCorrectlyUpdatesImageDatabase() {

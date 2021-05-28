@@ -29,11 +29,15 @@ import java.util.Set;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.GeocoderModule;
 import ch.epfl.sdp.appart.hilt.LocationModule;
 import ch.epfl.sdp.appart.hilt.MapModule;
-import ch.epfl.sdp.appart.location.AndroidLocationService;
 import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
+import ch.epfl.sdp.appart.location.MockLocationService;
+import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
+import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
+import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 import ch.epfl.sdp.appart.map.GoogleMapService;
 import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -49,8 +53,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 
-@UninstallModules({DatabaseModule.class, MapModule.class, LocationModule.class})
+@UninstallModules({DatabaseModule.class, MapModule.class, GeocoderModule.class, LocationModule.class})
 @HiltAndroidTest
 public class MapUITest {
 
@@ -76,8 +81,11 @@ public class MapUITest {
     final MapService mapService = new GoogleMapService();
 
     @BindValue
-    final LocationService locationService =
-            new AndroidLocationService(InstrumentationRegistry.getInstrumentation().getTargetContext());
+    final GeocodingService geocodingService =
+            new GoogleGeocodingService(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
+    @BindValue
+    final LocationService locationService = new MockLocationService();
 
 
     private static final double SCREEN_HEIGHT_INFO_WINDOW_FACTOR = 0.35;
@@ -93,7 +101,7 @@ public class MapUITest {
                 10000);
         assertThat(foundMap, is(true));
 
-        Thread.sleep(2000);
+        Thread.sleep(4000);
 
         Set<String> markerDescs = new HashSet<>();
         ArrayList<UiObject2> markers = new ArrayList<>();
@@ -102,8 +110,12 @@ public class MapUITest {
         for (Card card : cards) {
             if (!markerDescs.contains(card.getCity())) {
                 Location loc =
-                        locationService.getLocationFromName(card.getCity()).join();
+                        geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
+                assertNotNull(loc);
+                assertThat(loc.latitude > 0.0, is(true));
+                assertThat(loc.longitude > 0.0, is(true));
                 mapService.centerOnLocation(loc, true);
+                Thread.sleep(1000);
 
 
                 List<UiObject2> lists =
@@ -118,8 +130,9 @@ public class MapUITest {
 
         Card card = cards.get(0);
         Location loc =
-                locationService.getLocationFromName(card.getCity()).join();
+                geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
         mapService.centerOnLocation(loc, true);
+        Thread.sleep(1000);
 
 
         boolean isMarkerPresent =
@@ -152,15 +165,16 @@ public class MapUITest {
                 10000);
         assertThat(foundMap, is(true));
 
-        Thread.sleep(2000);
+        Thread.sleep(4000);
 
         List<Card> cards = databaseService.getCards().join();
 
         Card card = cards.get(0);
 
         Location loc =
-                locationService.getLocationFromName(card.getCity()).join();
+                geocodingService.getLocation(LocalityFactory.makeLocality(card.getCity())).join();
         mapService.centerOnLocation(loc, true);
+        Thread.sleep(1000);
 
 
         boolean isMarkerPresent =

@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 
 
 /**
@@ -44,8 +45,6 @@ public final class AndroidLocationService implements LocationService {
     private final FusedLocationProviderClient locationProvider;
 
     private LocationCallback locationCallback;
-    private final RequestQueue queue;
-    private final String api_key;
 
     @Inject
     public AndroidLocationService(Context context) {
@@ -53,9 +52,6 @@ public final class AndroidLocationService implements LocationService {
             throw new IllegalArgumentException();
         this.locationProvider =
                 LocationServices.getFusedLocationProviderClient(context);
-
-        this.queue = Volley.newRequestQueue(context);
-        this.api_key = context.getResources().getString(R.string.maps_api_key);
 
     }
 
@@ -72,13 +68,12 @@ public final class AndroidLocationService implements LocationService {
                     myLocation.longitude = androidLoc.getLongitude();
                     futureLocation.complete(myLocation);
                 } else {
-                    futureLocation.completeExceptionally(task.getException());
+                    futureLocation.complete(null);
                 }
             });
         } catch (SecurityException e) {
             throw e;
         }
-
         return futureLocation;
     }
 
@@ -129,42 +124,5 @@ public final class AndroidLocationService implements LocationService {
             }
         });
         return futureSuccess;
-    }
-
-    @Override
-    public CompletableFuture<Location> getLocationFromName(String address) {
-        CompletableFuture<Location> futureLocation = new CompletableFuture<>();
-        try {
-            String url = "https://maps.googleapis" +
-                    ".com/maps/api/geocode/json?address=" + URLEncoder.encode(address, "UTF-8") + "&key=" + api_key;
-            JsonObjectRequest request = new JsonObjectRequest(url,
-                    new JSONObject(), jsonObject -> {
-                double lat = 0;
-                double lng = 0;
-                try {
-                    lat = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
-                            .getJSONObject("geometry").getJSONObject("location")
-                            .getDouble("lat");
-                    lng = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
-                            .getJSONObject("geometry").getJSONObject("location")
-                            .getDouble("lng");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    futureLocation.completeExceptionally(e);
-                }
-
-                Location loc = new Location();
-                loc.latitude = lat;
-                loc.longitude = lng;
-                futureLocation.complete(loc);
-            }, error -> futureLocation.completeExceptionally(error.getCause()));
-            queue.add(request);
-
-
-        } catch (UnsupportedEncodingException e) {
-            futureLocation.completeExceptionally(e);
-        }
-
-        return futureLocation;
     }
 }

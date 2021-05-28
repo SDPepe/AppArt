@@ -53,6 +53,7 @@ public class CameraUITest {
         );*/
     }
 
+    
     @Test
     public void clickOnGalleryBtn() {
         onView(withId(R.id.gallery_Camera_button)).perform(click());
@@ -62,12 +63,10 @@ public class CameraUITest {
                     public Matcher<View> getConstraints() {
                         return ViewMatchers.isEnabled(); // no constraints, they are checked above
                     }
-
                     @Override
                     public String getDescription() {
                         return "click gallery button";
                     }
-
                     @Override
                     public void perform(UiController uiController, View view) {
                         view.performClick();

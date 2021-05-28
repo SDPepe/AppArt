@@ -1,6 +1,8 @@
 package ch.epfl.sdp.appart.database;
 
 import android.net.Uri;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,6 +39,7 @@ public class MockDatabaseService implements DatabaseService {
         cards.add(new Card("3333", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("4444", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
         cards.add(new Card("5555", "unknown", "unknown", "Lausanne", 1000, "file:///android_asset/apart_fake_image_1.jpeg"));
+
 
         images.add("users/default/user_example_female.png");
         images.add("users/default/user_example_male.png");
@@ -78,6 +81,10 @@ public class MockDatabaseService implements DatabaseService {
         users.put("vetterli-id", vetterli);
         users.put("3333", new AppUser("3333", "carlo@epfl.ch"));
         users.put("5555", new AppUser("5555", "emilien@epfl.ch"));
+        users.put("1234", new AppUser("1234", "test@testappart.ch"));
+
+        User testUser = new AppUser("password", "test@testappart.ch");
+        users.put("password", testUser);
     }
 
     @NotNull
@@ -221,6 +228,7 @@ public class MockDatabaseService implements DatabaseService {
     }
 
     public void accept(GlideLoaderVisitor visitor) {
+        Log.d("MOCK", "accepting visitor");
         visitor.visit(this);
     }
 

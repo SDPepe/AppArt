@@ -25,6 +25,7 @@ import ch.epfl.sdp.appart.utils.FileIO;
 import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 
 // @formatter:off
+
 /**
  * This class represents the local database. It will perform the storing of
  * data "on disk", and the reading of data "from disk". It is unaware of the
@@ -35,7 +36,7 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
  * disk and we can read it, or the caller must set it. One thing that is not
  * handled for now is the privacy of the users, maybe we don't want to store
  * everything "on disk".
- *
+ * <p>
  * Here is the file structure of the favorites folder :
  * favorites
  *          /currentUser
@@ -54,7 +55,7 @@ import ch.epfl.sdp.appart.utils.serializers.UserSerializer;
 // @formatter:on
 
 @Singleton
-public class LocalDatabase {
+public class LocalDatabase implements LocalDatabaseService {
 
     /*
         Keys for the different maps.
@@ -318,8 +319,8 @@ public class LocalDatabase {
         clearMemory();
 
         CompletableFuture<Void> futureReadAd =
-                LocalAdReader.readAdDataForAUser(getCurrentUser().getUserId()
-                        , this.cards, this.idsToAd, this.adIdsToPanoramas);
+                LocalAdReader.readAdDataForAUser(getCurrentUser().getUserId(),
+                        this.cards, this.idsToAd, this.adIdsToPanoramas);
         CompletableFuture<Void> futureReadUser =
                 LocalUserReader.readUsers(getCurrentUser().getUserId(),
                         this.idsToUser, this.userIds);
@@ -471,7 +472,8 @@ public class LocalDatabase {
         if (!favoritesFolder.exists()) {
             boolean success = favoritesFolder.mkdirs();
             if (!success) {
-                futureSuccess.completeExceptionally(new LocalDatabaseException("Error while creating favorites folder !"));
+                futureSuccess.completeExceptionally(new LocalDatabaseException("Error while " +
+                        "creating favorites folder !"));
                 return futureSuccess;
             }
         }

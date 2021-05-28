@@ -90,8 +90,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         Card card = cards.get(position);
         holder.cardImageView.setOnClickListener(v -> {
+            String activityName = ((Activity) context).getLocalClassName();
             Intent intent = new Intent(context, AdActivity.class);
-            intent.putExtra("fromAdCreation", false); // not used currently
+            intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, activityName);
+            intent.putExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID, card.getId());
             intent.putExtra(ActivityCommunicationLayout.PROVIDING_AD_ID, card.getAdId());
             context.startActivity(intent);
         });

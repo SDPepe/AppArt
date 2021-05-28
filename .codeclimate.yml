@@ -21,3 +21,5 @@ exclude_patterns:
 - "hilt_aggregated_deps/**"
 - "**/*_Factory.class"
 - "**/*_MembersInjector.class"
+- "**/place/helper/HttpGooglePlaceHelper.java"
+- "**/location/geocoding/GoogleGeocodingService.java"

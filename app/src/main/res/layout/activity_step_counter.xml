@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StepCounterActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/guideline2_StepCounter"
+        app:layout_constraintStart_toStartOf="@+id/guideline_StepCounter"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/stepsToHomeSentence_StepCounter_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/stepsToHomeSentence"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textStyle="italic" />
+
+
+        <TextView
+            android:id="@+id/numberOfSteps_StepCounter_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:gravity="bottom|center_horizontal"
+            android:textAlignment="gravity"
+            android:textSize="100sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/km_StepCounter_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="22sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4" />
+
+        <TextView
+            android:id="@+id/totalNumberOfSteps_StepCounter_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/stepsFromLastBootSentence_StepCounter_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/stepsFromLastBootSentence"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="italic" />
+
+        <ProgressBar
+            android:id="@+id/progress_StepCounter_ProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3.8" />
+
+        <Button
+            android:id="@+id/startStepCount_StepCounter_Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/style_secondary"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:drawableEnd="@drawable/ic_step_counter"
+            android:gravity="center"
+            android:onClick="onStartButton"
+            android:layout_marginStart="@dimen/margin_button"
+            android:layout_marginEnd="@dimen/margin_button"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/primaryStart"
+            android:text="@string/startButtonText" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <Button
+            android:id="@+id/closeStepCount_StepCounter_Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/style_secondary"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:drawableEnd="@drawable/ic_close_counter"
+            android:gravity="center"
+            android:onClick="onCloseButton"
+            android:layout_marginStart="@dimen/margin_button"
+            android:layout_marginEnd="@dimen/margin_button"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/primaryStart"
+            android:text="@string/closeButtonText" />
+
+        <Button
+            android:id="@+id/stopStepCount_StepCounter_Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_button"
+            android:layout_marginStart="@dimen/margin_button"
+            android:background="@drawable/style_primary"
+            android:gravity="center"
+            android:onClick="onStopButton"
+            android:text="@string/stopButtonText"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF "
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="top" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_StepCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/vertical_1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2_StepCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/vertical_2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

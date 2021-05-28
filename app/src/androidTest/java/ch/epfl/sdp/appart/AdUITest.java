@@ -5,10 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.uiautomator.UiDevice;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -18,13 +19,22 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.sdp.appart.AdActivity;
+import ch.epfl.sdp.appart.FullScreenImageActivity;
+import ch.epfl.sdp.appart.PanoramaActivity;
+import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.SimpleUserProfileActivity;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
@@ -39,16 +49,19 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-@UninstallModules({DatabaseModule.class, LoginModule.class})
+@UninstallModules({DatabaseModule.class, LoginModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class AdUITest {
 
-    static final String testId = "1PoUWbeNHvMNotxwAui5";
+    static final String testId = "unknown";
     static final Intent intent;
 
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(), AdActivity.class);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_AD_ID, testId);
         intent.putExtra(ActivityCommunicationLayout.PROVIDING_CARD_ID, testId);
     }
 
@@ -58,22 +71,31 @@ public class AdUITest {
     @BindValue
     final
     LoginService login = new MockLoginService();
+    @BindValue
+    LocalDatabaseService localdb = new MockLocalDatabase();
+
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
     @Rule(order = 1)
     public ActivityScenarioRule<AdActivity> adActivityRule = new ActivityScenarioRule<>(intent);
 
-    UiDevice mDevice;
+    private View decorView;
 
     @Before
     public void init() {
         Intents.init();
         hiltRule.inject();
+        adActivityRule.getScenario().onActivity(new ActivityScenario.ActivityAction<AdActivity>() {
+            @Override
+            public void perform(AdActivity ac) {
+                decorView = ac.getWindow().getDecorView();
+            }
+        });
     }
 
     @Test
     public void clickOnVTourOpensVTourActivity() {
-        onView(withId(R.id.vtour_Ad_button)).perform(scrollTo(), click());
+        onView(ViewMatchers.withId(R.id.vtour_Ad_button)).perform(scrollTo(), click());
         intended(hasComponent(PanoramaActivity.class.getName()));
     }
 
@@ -89,12 +111,17 @@ public class AdUITest {
         intended(hasComponent(FullScreenImageActivity.class.getName()));
     }
 
-   /* @Test
-    public void clickOnGoBackFinishes() {
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        mDevice.pressBack();
-        assertEquals(adActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
-    }*/
+    @Test
+    public void clickOnFavoriteAddsToFavorites() {
+        login.loginWithEmail("test@testappart.ch", "password").join();
+
+        onView(withId(R.id.action_add_favorite)).perform(click());
+
+        User currentUser = login.getCurrentUser();
+        assertNotNull(currentUser);
+        assertTrue(database.getUser(currentUser.getUserId()).join().getFavoritesIds().contains(testId));
+        login.signOut();
+    }
 
     @Test
     public void displayAdInfoTest() {
@@ -111,6 +138,7 @@ public class AdUITest {
     @After
     public void release() {
         Intents.release();
+        login.signOut();
     }
 
     private static Matcher<View> childAtPosition(

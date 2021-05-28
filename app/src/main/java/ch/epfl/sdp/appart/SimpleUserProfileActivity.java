@@ -1,6 +1,17 @@
 package ch.epfl.sdp.appart;
 
+import static android.widget.Toast.makeText;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 
 import android.view.View;
@@ -8,10 +19,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import ch.epfl.sdp.appart.utils.PermissionRequest;
 import javax.inject.Inject;
 
 import androidx.lifecycle.ViewModelProvider;
+
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
@@ -29,6 +45,8 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
 
     @Inject
     DatabaseService database;
+    @Inject
+    LocalDatabaseService localdb;
 
     /* UI components */
     private EditText nameText;
@@ -38,6 +56,8 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     private TextView uniAccountClaimer;
     private TextView emailTextView;
     private ImageView imageView;
+
+    private final static int PHONE_CALL_PERMISSION_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,31 +77,79 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_SimpleUserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_SimpleUserProfile_imageView);
 
-        String advertiserId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_USER_ID);
+        String advertiserId =
+                getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_USER_ID);
 
         /* get user from database from user ID */
-        mViewModel.getUser(advertiserId);
+        mViewModel.getUser(advertiserId)
+                .exceptionally(e -> {
+                    Log.d("SIMPLEUSER", "Failed to get the user");
+                    return null;
+                });
         mViewModel.getUser().observe(this, this::setAdUserToLocal);
     }
 
     /**
-     * closes activity when back button pressed on phone
+     * Contact announcer.
      */
-    @Override
-    public void onBackPressed() { finish(); }
-
-    /**
-     *  closes activity when back button pressed on UI
-     */
-    public void contactAdUser(View view) {
-        // TODO: send message to user
+    public void openEmailOrPhone(View view){
+        if(!advertiserUser.getPhoneNumber().isEmpty()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("How did you prefer contact the announcer ?");
+            builder.setPositiveButton("Contact via Email", (dialog, which) -> onEmail());
+            builder.setNeutralButton("Contact via phone number", (dialog, which) -> onCall());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else {
+            onEmail();
+        }
     }
 
+    private void onEmail() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{advertiserUser.getUserEmail()});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Rent apartment");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            makeText(this, "Error open email, try again",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+    private void onCall() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.CALL_PHONE},
+                    PHONE_CALL_PERMISSION_CODE);
+        } else {
+            startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:"+advertiserUser.getPhoneNumber())));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PHONE_CALL_PERMISSION_CODE:
+                if(PermissionRequest.checkPermission(grantResults)){
+                    onCall();
+                }else{
+                    makeText(this, "Permission Not Granted",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
+
     /**
-     *
      * @param user sets the value of the current user to the session user object
      */
-    private void setAdUserToLocal(User user){
+    private void setAdUserToLocal(User user) {
         this.advertiserUser = user;
 
         /* set attributes of session user to the UI components */
@@ -94,7 +162,8 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     private void getAndSetCurrentAttributes() {
         this.nameText.setText(this.advertiserUser.getName());
         this.emailTextView.setText(this.advertiserUser.getUserEmail());
-        this.uniAccountClaimer.setText((this.advertiserUser.hasUniversityEmail() ? getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
+        this.uniAccountClaimer.setText((this.advertiserUser.hasUniversityEmail() ?
+                getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
         if (this.advertiserUser.getAge() != 0) {
             this.ageText.setText(String.valueOf(this.advertiserUser.getAge()));
         }
@@ -114,5 +183,5 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         database.accept(new GlideImageViewLoader(this, imageView,
                 this.advertiserUser.getProfileImagePathAndName()));
     }
-    
+
 }

@@ -86,13 +86,6 @@ public class PanoramaUITest {
 
     }
 
-    @Test
-    public void backButtonTest(){
-        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        mDevice.pressBack();
-        assertEquals(panoramaActivityRule.getScenario().getResult().getResultCode(), RESULT_CANCELED);
-    }
-
     /**
      * This test does nothing but allows to increase coverage over an internal method of
      * panoramagl

@@ -51,6 +51,10 @@ public class MockLoginService implements LoginService {
         Pair<String, String> quentinEmailPassword = new Pair<>(quentin.getUserEmail(),
                 quentin.getUserId());
         users.put(quentinEmailPassword, quentin);
+        AppUser testUser = new AppUser("password", "test@testappart.ch");
+        Pair<String, String> testUserEmailPassword = new Pair<>(testUser.getUserEmail(),
+                testUser.getUserId());
+        users.put(testUserEmailPassword, testUser);
         lorenzo.setName("Lorenzo");
         lorenzo.setPhoneNumber("000");
         lorenzo.addAdId("id0");
@@ -123,7 +127,7 @@ public class MockLoginService implements LoginService {
         CompletableFuture<User> result = new CompletableFuture<>();
         byte[] temporary = new byte[5]; //one more than the other to avoid collision
         new Random().nextBytes(temporary);
-        String id = new String(temporary, StandardCharsets.UTF_8);
+        String id = "1234";
 
         User newUser = new AppUser(id, email);
         users.put(new Pair<>(email, password), newUser);

@@ -92,17 +92,19 @@ public class GoogleMapService implements MapService {
         if (location == null) {
             throw new IllegalArgumentException();
         }
-        Marker cardMarker = map.addMarker(new MarkerOptions()
-                .position(new LatLng(location.latitude, location
-                        .longitude)));
-        if (title != null) {
-            cardMarker.setTitle(title);
-        }
-        cardMarker.setTag(tag);
+        myActivity.runOnUiThread(() -> {
+            LatLng pos = new LatLng(location.latitude, location.longitude);
+            MarkerOptions options = new MarkerOptions().position(pos);
+            Marker cardMarker = map.addMarker(options);
+            if (title != null) {
+                cardMarker.setTitle(title);
+            }
+            cardMarker.setTag(tag);
+            if (centerOnMarker) {
+                this.centerOnLocation(location, true);
+            }
+        });
 
-        if (centerOnMarker) {
-            this.centerOnLocation(location, true);
-        }
     }
 
 
@@ -137,6 +139,11 @@ public class GoogleMapService implements MapService {
     public void setOnInfoWindowClickListener(Consumer<Marker> infoWindowClickListener) {
         this.infoWindowClickListener =
                 infoWindowClickListener::accept;
+    }
+
+    @Override
+    public void zoomOnPosition(Location loc, float zoomLevel) {
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.latitude, loc.longitude), zoomLevel));
     }
 
 

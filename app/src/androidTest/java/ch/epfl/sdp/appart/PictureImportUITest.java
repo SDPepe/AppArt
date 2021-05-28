@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.Manifest;
+import android.content.Intent;
 import android.net.Uri;
 
 import androidx.test.core.app.ActivityScenario;
@@ -20,6 +21,13 @@ import ch.epfl.sdp.appart.panorama.SwapNotifiable;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 
 @HiltAndroidTest
@@ -40,20 +48,10 @@ public class PictureImportUITest {
         hiltRule.inject();
     }
 
-
-
     @After
     public void release() {
         Intents.release();
     }
-
-    /*
-    @Test
-    public void ImportButtonRedirectsToAdCreationActivity() {
-        ViewInteraction importButtonInteraction = onView(withId(R.id.finish_PictureImport_button));
-        importButtonInteraction.perform(click());
-        intended(hasComponent(AdCreationActivity.class.getCanonicalName()));
-    }*/
 
     @Test
     public void AddTwoCardsAndSwapThem() {
@@ -74,9 +72,6 @@ public class PictureImportUITest {
                 assertEquals("2 uris should be present", 2, uris.size());
             }
         });
-
-        //ViewInteraction upButtonInteraction = onView(ViewUtils.withIndex(withId(R.id.up_button_card_PictureImport), 0));
-        //upButtonInteraction.perform(click());
 
         pictureImportActivityRule.getScenario().onActivity(new ActivityScenario.ActivityAction<PicturesImportActivity>() {
             @Override
@@ -116,5 +111,17 @@ public class PictureImportUITest {
             }
         });
 
+    }
+
+    @Test
+    public void addButtonStartOpenDocument(){
+        onView(withId(R.id.add_PictureImport_button)).perform(click());
+        intended(hasAction(Intent.ACTION_OPEN_DOCUMENT));
+    }
+
+    @Test
+    public void importButtonFinishes() {
+        onView(withId(R.id.finish_PictureImport_button)).perform(click());
+        assertEquals(pictureImportActivityRule.getScenario().getResult().getResultCode(), RESULT_OK);
     }
 }

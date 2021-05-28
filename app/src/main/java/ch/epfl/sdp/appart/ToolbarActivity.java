@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.login.LoginService;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -23,6 +25,8 @@ public abstract class ToolbarActivity extends AppCompatActivity {
 
     @Inject
     LoginService loginService;
+    @Inject
+    LocalDatabaseService localdb;
 
     /**
      * Sets the toolbar as the main menu
@@ -48,6 +52,8 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_logout:
                 loginService.signOut();
+                localdb.cleanFavorites();
+                SharedPreferencesHelper.clearSavedUserForAutoLogin(this);
                 Intent intentLogout = new Intent(this, LoginActivity.class);
                 startActivity(intentLogout);
                 return true;
@@ -70,6 +76,11 @@ public abstract class ToolbarActivity extends AppCompatActivity {
             case R.id.map_Toolbar_item:
                 Intent intentMap = new Intent(this, MapActivity.class);
                 startActivity(intentMap);
+                return true;
+
+            case R.id.action_step_counter:
+                Intent intentStepCounter = new Intent(this, StepCounterActivity.class);
+                startActivity(intentStepCounter);
                 return true;
 
             // If we got here, the user's action was not recognized.
