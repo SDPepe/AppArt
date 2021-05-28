@@ -39,4 +39,6 @@ public interface GeocodingService {
      * @return CompletableFuture<Float> containing the distance in meters
      */
     CompletableFuture<Float> getDistance(Place a, Place b);
+
+    Float getDistanceSync(Location a, Location b);
 }
