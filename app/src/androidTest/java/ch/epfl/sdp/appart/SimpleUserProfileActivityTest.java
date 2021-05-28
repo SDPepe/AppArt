@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import android.widget.Button;
+import androidx.appcompat.app.AlertDialog;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import org.hamcrest.Description;
@@ -35,9 +37,11 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -67,6 +71,7 @@ public class SimpleUserProfileActivityTest {
         Intents.init();
         hiltRule.inject();
     }
+
 
     public static ViewAction forceClick() {
         return new ViewAction() {
@@ -295,6 +300,24 @@ public class SimpleUserProfileActivityTest {
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         imageView2.check(matches(isDisplayed()));
+
+        ViewInteraction appCompatButton2 = onView(
+            allOf(withId(R.id.contact_SimpleUserProfile_button), withText("Contact")));
+        appCompatButton2.perform(click());
+
+        
+        onView(withText("How did you prefer contact the announcer ?"))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()));
+
+        onView(withText("Contact via Email"))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()));
+
+        onView(withText("Contact via phone number"))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()));
+
     }
 
     private static Matcher<View> childAtPosition(
