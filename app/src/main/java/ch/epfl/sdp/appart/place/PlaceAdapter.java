@@ -20,6 +20,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
     private final List<Pair<PlaceOfInterest, Float>> places;
     private final Context context;
+    private static final int MAX_CHARACTER_PER_LINE = 15;
 
     public PlaceAdapter(Context context,
                         List<Pair<PlaceOfInterest, Float>> places) {
@@ -44,15 +45,27 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         PlaceOfInterest place = placeAndDistance.first;
 
         String name = place.getName();
-        int max = 15;
-        int lines = (name.length() / 15) + ((name.length() % 15) != 0 ? 1 : 0)  + 1;
+        int lines = (name.length() / MAX_CHARACTER_PER_LINE) + ((name.length() % MAX_CHARACTER_PER_LINE) != 0 ? 1 : 0);
+        StringBuilder sb = new StringBuilder();
 
+        for (int i = 0; i < lines; i++) {
+            String sub =
+                    name.substring(
+                            i * MAX_CHARACTER_PER_LINE, Math.min((i + 1) * MAX_CHARACTER_PER_LINE,
+                                    name.length())
+                    );
+            sb.append(sub);
 
-        if (name.length() > 15) {
-            name = name.substring(0, 15) + "\n" + name.substring(15);
+            if (!Character.isSpaceChar(sub.charAt(sub.length() - 1)) && i != lines - 1) {
+                sb.append("-");
+            }
+
+            if (i != lines - 1) {
+                sb.append("\n");
+            }
         }
 
-        holder.placeNameTextView.setText(name);
+        holder.placeNameTextView.setText(sb.toString());
 
         float distance = placeAndDistance.second;
         boolean overOneKilometer = distance >= 1000;
@@ -90,7 +103,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         if (bitmap != null) {
             holder.image.setImageBitmap(bitmap);
         } else {
-            holder.image.setVisibility(View.INVISIBLE);
+            holder.image.setVisibility(View.GONE);
         }
 
     }
