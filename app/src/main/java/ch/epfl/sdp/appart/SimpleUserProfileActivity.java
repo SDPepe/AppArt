@@ -3,7 +3,6 @@ package ch.epfl.sdp.appart;
 import static android.widget.Toast.makeText;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,16 +26,12 @@ import javax.inject.Inject;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.concurrent.CompletableFuture;
-
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.user.UserViewModel;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
-import ch.epfl.sdp.appart.utils.DatabaseSync;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -62,6 +56,8 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     private TextView uniAccountClaimer;
     private TextView emailTextView;
     private ImageView imageView;
+
+    private final static int PHONE_CALL_PERMISSION_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +123,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(
                 this,
                 new String[]{Manifest.permission.CALL_PHONE},
-                123);
+                    PHONE_CALL_PERMISSION_CODE);
         } else {
             startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:"+advertiserUser.getPhoneNumber())));
         }
@@ -137,7 +133,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case 123:
+            case PHONE_CALL_PERMISSION_CODE:
                 if(PermissionRequest.checkPermission(grantResults)){
                     onCall();
                 }else{
