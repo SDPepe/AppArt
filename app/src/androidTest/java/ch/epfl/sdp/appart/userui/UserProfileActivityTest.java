@@ -1,6 +1,7 @@
-package ch.epfl.sdp.appart;
+package ch.epfl.sdp.appart.userui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.view.ViewParent;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
@@ -25,6 +27,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
@@ -34,10 +37,17 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
+
+import ch.epfl.sdp.appart.MainActivity;
+import ch.epfl.sdp.appart.R;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -72,7 +82,7 @@ import static org.junit.Assert.assertTrue;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
-@UninstallModules({LoginModule.class, DatabaseModule.class})
+@UninstallModules({LoginModule.class, DatabaseModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class UserProfileActivityTest {
     @Rule(order = 0)
@@ -88,9 +98,10 @@ public class UserProfileActivityTest {
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
-
     @BindValue
     LoginService login = new MockLoginService();
+    @BindValue
+    LocalDatabaseService localdb = new MockLocalDatabase();
 
     @Before
     public void init() {
@@ -99,11 +110,12 @@ public class UserProfileActivityTest {
         login.signOut();
         // clear shared preferences to avoid auto-login
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+        mActivityTestRule.getScenario().onActivity(Activity::recreate);
     }
     @Test
     public void userProfileActivityTest() throws UiObjectNotFoundException {
         ViewInteraction appCompatEditText = onView(
-            allOf(withId(R.id.email_Login_editText),
+            Matchers.allOf(ViewMatchers.withId(R.id.email_Login_editText),
                 childAtPosition(
                     childAtPosition(
                         withId(android.R.id.content),
@@ -306,7 +318,7 @@ public class UserProfileActivityTest {
         // Build a result to return from the Camera app
         Intent resultIntent = new Intent();
         resultIntent.putExtra("data", icon);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.RESULT_IS_FOR_TEST, resultIntent);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(ActivityCommunicationLayout.ANDROID_TEST_IS_RUNNING, resultIntent);
 
         // When an intent is sent to the Camera, this tells Espresso to respond with the ActivityResult we just created
         intending(toPackage("com.android.camera2")).respondWith(result);

@@ -25,7 +25,10 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -42,12 +45,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
-@UninstallModules(DatabaseModule.class)
+@UninstallModules({DatabaseModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class SimpleUserProfileActivityTest {
     @Rule(order = 0)
@@ -58,6 +59,8 @@ public class SimpleUserProfileActivityTest {
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
+    @BindValue
+    LocalDatabaseService localdb = new MockLocalDatabase();
 
     @Before
     public void init() {
@@ -282,7 +285,7 @@ public class SimpleUserProfileActivityTest {
         editText8.check(matches(withText("MALE")));
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.contact_SimpleUserProfile_button), withText("CONTACT ANNOUNCER"),
+                allOf(withId(R.id.contact_SimpleUserProfile_button), withText("Contact"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));

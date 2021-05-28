@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //public static boolean isDemoMode() {
-    //    return DEMO_MODE;
-    //}
+    /*
+    public static boolean isDemoMode() {
+        return DEMO_MODE;
+    }
+    */
 }

@@ -2,7 +2,10 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,10 +30,12 @@ import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -41,7 +46,6 @@ public class AdActivity extends ToolbarActivity {
 
     @Inject
     DatabaseService database;
-
     @Inject
     LoginService login;
 
@@ -62,8 +66,7 @@ public class AdActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
         panoramasReferences = new ArrayList<>();
-        AdViewModel mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
-
+        mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
         Toolbar toolbar = findViewById(R.id.account_Ad_toolbar);
         setSupportActionBar(toolbar);
@@ -83,8 +86,7 @@ public class AdActivity extends ToolbarActivity {
         // init content, show a toast if load failed
         mViewModel.initAd(adId)
                 .exceptionally(e -> {
-                    Toast.makeText(this, R.string.loadFail_Ad,
-                            Toast.LENGTH_SHORT).show();
+                    Log.d("AD", "Failed to fetch data from server");
                     return null;
                 });
     }
@@ -186,7 +188,8 @@ public class AdActivity extends ToolbarActivity {
      */
     public void onSeeLocationClick(View view) {
         Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra(getString(R.string.intentLocationForMap), mViewModel.getAddress().getValue());
+        intent.putExtra(getString(R.string.intentLocationForMap),
+                mViewModel.getAddress().getValue());
         startActivity(intent);
     }
 
@@ -211,8 +214,7 @@ public class AdActivity extends ToolbarActivity {
         if (item.getItemId() == R.id.action_add_favorite) {
             CompletableFuture<Void> addRes = addNewFavorite();
             addRes.exceptionally(e -> {
-                Toast.makeText(this, e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                Log.d("AD", "Failed to add to favorites");
                 return null;
             });
             addRes.thenAccept(res ->
@@ -232,15 +234,13 @@ public class AdActivity extends ToolbarActivity {
         // check that the user is logged in
         User user = login.getCurrentUser();
         if (user == null) {
-            result.completeExceptionally(
-                    new UnsupportedOperationException(getString(R.string.userNotLoggedIn_Ad))
-            );
+            result.completeExceptionally(new IllegalStateException("User has to be logged in"));
             return result;
         }
         CompletableFuture<User> userRes = database.getUser(user.getUserId());
         userRes.exceptionally(e -> {
-            result.completeExceptionally(
-                    new DatabaseServiceException(getString(R.string.favFail_Ad)));
+            Log.d("AD", "Failed to get user");
+            result.completeExceptionally(e);
             return null;
         });
         userRes.thenAccept(u -> saveFavorite(result, u));
@@ -254,12 +254,16 @@ public class AdActivity extends ToolbarActivity {
         user.addFavorite(adId);
         CompletableFuture<Boolean> updateRes = database.updateUser(user);
         updateRes.exceptionally(e -> {
+            Log.d("AD", "failed to update user");
             result.completeExceptionally(
                     new DatabaseServiceException(
                             getString(R.string.favFail_Ad)));
             return null;
         });
-        updateRes.thenAccept(res -> result.complete(null));
+        updateRes.thenAccept(res -> {
+            Log.d("AD", "user updated");
+            result.complete(null);
+        });
     }
 
 }

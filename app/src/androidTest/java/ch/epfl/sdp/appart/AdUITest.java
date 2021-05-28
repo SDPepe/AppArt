@@ -1,4 +1,4 @@
-package ch.epfl.sdp.appart.adui;
+package ch.epfl.sdp.appart;
 
 import android.content.Intent;
 import android.view.View;
@@ -27,7 +27,10 @@ import ch.epfl.sdp.appart.SimpleUserProfileActivity;
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -44,15 +47,12 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@UninstallModules({DatabaseModule.class, LoginModule.class})
+@UninstallModules({DatabaseModule.class, LoginModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class AdUITest {
 
@@ -71,6 +71,8 @@ public class AdUITest {
     @BindValue
     final
     LoginService login = new MockLoginService();
+    @BindValue
+    LocalDatabaseService localdb = new MockLocalDatabase();
 
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
@@ -114,10 +116,6 @@ public class AdUITest {
         login.loginWithEmail("test@testappart.ch", "password").join();
 
         onView(withId(R.id.action_add_favorite)).perform(click());
-        // test the toast is shown
-        onView(withText(R.string.favSuccess_Ad))
-                .inRoot(withDecorView(not(decorView)))// Here we use decorView
-                .check(matches(isDisplayed()));
 
         User currentUser = login.getCurrentUser();
         assertNotNull(currentUser);

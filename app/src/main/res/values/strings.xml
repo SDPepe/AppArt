@@ -62,7 +62,13 @@
     <string name="changeProfilePicture"> CHANGE </string>
     <string name="updateUserFailedInDB">  Information update failed, try again </string>
     <string name="updateUserImageFailedInDB">  Image update failed, try again </string>
-    <string name="contactAdUser"> CONTACT ANNOUNCER </string>
+    <string-array name="genderList">
+        <item> </item>
+        <item>Female</item>
+        <item>Male</item>
+        <item>Other</item>
+    </string-array>
+    <string name="contactAdUser">Contact</string>
     <string name="localSaveFailed_User">Failed to save updates locally!</string>
     <string name="loadFailed_User">Failed to load user information</string>
     <string name="cameraAdButtonDesc">Add Picture</string>
@@ -72,6 +78,7 @@
     <string name="stepsFromLastBootSentence"> steps done from last boot </string>
     <string name="startButtonText"> Start </string>
     <string name="stopButtonText"> Stop </string>
+    <string name="closeButtonText"> Close </string>
     <string name="stepCounterInToolbar"> Step Counter </string>
     <string name="noStepDetectorSensorErrorMessage"> Attention: this device has no step detector sensor. This causes higher latency and less accurate step count! </string>
     <string name="noStepCounterSensorErrorMessage"> Attention: this device does not support the step counter sensor! </string>
@@ -148,12 +155,6 @@
     <string name="add_to_favorites">Add to Favorites</string>
     <string name="favorites">Favorites</string>
     <string name="userAds">Your Ads</string>
-    <string-array name="genderList">
-        <item> </item>
-        <item>Female</item>
-        <item>Male</item>
-        <item>Other</item>
-    </string-array>
 
     <!-- FullScreenImageActivity stuff -->
     <string-array name="periodList">

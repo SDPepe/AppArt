@@ -33,20 +33,33 @@ public class FavoriteViewModel extends ViewModel {
     private final MutableLiveData<List<Card>> lFavorites = new MutableLiveData<>();
     final DatabaseService database;
     final LoginService loginService;
+    final LocalDatabaseService localdb;
 
     @Inject
-    public FavoriteViewModel(DatabaseService database, LoginService loginService) {
+    public FavoriteViewModel(DatabaseService database, LoginService loginService,
+                             LocalDatabaseService localdb) {
         this.database = database;
         this.loginService = loginService;
+        this.localdb = localdb;
     }
 
     /**
      * Initializes the list of favorites.
      * <p>
-     * Fetches the favorites cards from the server.
+     * Loads favorites locally, then tries to fetch them from the server.
      */
     public CompletableFuture<Void> initHome() {
-        return fetch();
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        localLoad().whenComplete((res, e) -> {
+            CompletableFuture<Void> fetchRes = fetch();
+            fetchRes.exceptionally(e1 -> {
+                result.completeExceptionally(e1);
+                return null;
+            });
+            fetchRes.thenAccept(r -> result.complete(null));
+        });
+
+        return result;
     }
 
 
@@ -55,6 +68,23 @@ public class FavoriteViewModel extends ViewModel {
      */
     public MutableLiveData<List<Card>> getFavorites() {
         return lFavorites;
+    }
+
+    /**
+     * Tries to load favorites from local database.
+     */
+    private CompletableFuture<Void> localLoad() {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<List<Card>> cardsRes = localdb.getCards();
+        cardsRes.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+        cardsRes.thenAccept(cards -> {
+            lFavorites.setValue(cards);
+            result.complete(null);
+        });
+        return result;
     }
 
     /**

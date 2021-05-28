@@ -24,7 +24,6 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import ch.epfl.sdp.appart.hilt.LoginModule;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -57,12 +56,17 @@ public class FilterUITest {
   }
   @Test
   public void filterUITest() {
-
     ViewInteraction button = onView(
         allOf(withId(R.id.filter_Scrolling_button),
             withParent(withParent(withId(R.id.columnLayout_Scrolling_LinearLayout))),
             isDisplayed()));
     button.check(matches(isDisplayed()));
+
+    ViewInteraction button2 = onView(
+        allOf(withId(R.id.filter_Scrolling_button),
+            withParent(withParent(withId(R.id.columnLayout_Scrolling_LinearLayout))),
+            isDisplayed()));
+    button2.check(matches(isDisplayed()));
 
     ViewInteraction appCompatButton2 = onView(
         allOf(withId(R.id.filter_Scrolling_button),
@@ -74,8 +78,92 @@ public class FilterUITest {
             isDisplayed()));
     appCompatButton2.perform(click());
 
+    ViewInteraction textView = onView(
+        allOf(withId(R.id.title_Filter_TextView), withText("Filter"),
+            withParent(withParent(withId(android.R.id.content))),
+            isDisplayed()));
+    textView.check(matches(withText("Filter")));
+
+    ViewInteraction textView2 = onView(
+        allOf(withId(R.id.price_title_Filter_TextView), withText("Price range:"),
+            withParent(withParent(withId(android.R.id.content))),
+            isDisplayed()));
+    textView2.check(matches(withText("Price range:")));
+
+    ViewInteraction textView3 = onView(
+        allOf(withId(R.id.min_price_Filter_TextView), withText("min price"),
+            withParent(withParent(withId(R.id.price_Filter_linearLayout))),
+            isDisplayed()));
+    textView3.check(matches(withText("min price")));
+
+    ViewInteraction textView4 = onView(
+        allOf(withId(R.id.max_price_Filter_TextView), withText("max price"),
+            withParent(withParent(withId(R.id.price_Filter_linearLayout))),
+            isDisplayed()));
+    textView4.check(matches(withText("max price")));
+
+    ViewInteraction editText = onView(
+        allOf(withId(R.id.value_min_price_Filter_editText),
+            withParent(
+                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+            isDisplayed()));
+    editText.check(matches(isDisplayed()));
+
+    ViewInteraction textView5 = onView(
+        allOf(withId(R.id.chf_min_Filter_TextView), withText("CHF/ month"),
+            withParent(
+                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+            isDisplayed()));
+    textView5.check(matches(withText("CHF/ month")));
+
+    ViewInteraction textView6 = onView(
+        allOf(withId(R.id.chf_max_Filter_TextView), withText("CHF/ month"),
+            withParent(
+                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+            isDisplayed()));
+    textView6.check(matches(withText("CHF/ month")));
+
+    ViewInteraction textView7 = onView(
+        allOf(withId(R.id.location_title_Filter_textView), withText("Location:"),
+            withParent(withParent(withId(android.R.id.content))),
+            isDisplayed()));
+    textView7.check(matches(withText("Location:")));
+
+    ViewInteraction textView8 = onView(
+        allOf(withId(R.id.location_distance_Filter_TextView), withText("location range :"),
+            withParent(withParent(withId(R.id.location_Filter_linearLayout))),
+            isDisplayed()));
+    textView8.check(matches(withText("location range :")));
+
+    ViewInteraction editText3 = onView(
+        allOf(withId(R.id.location_Filter_editText),
+            withParent(allOf(withId(R.id.location_Filter_linearLayout),
+                withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
+            isDisplayed()));
+    editText3.check(matches(isDisplayed()));
+
+    ViewInteraction textView11 = onView(
+        allOf(withId(R.id.km_Filter_TextView), withText("kilometres"),
+            withParent(
+                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
+            isDisplayed()));
+    textView11.check(matches(withText("kilometres")));
+
+    ViewInteraction button3 = onView(
+        allOf(withId(R.id.clear_Filter_button), withText("Remove all"),
+            withParent(withParent(withId(android.R.id.content))),
+            isDisplayed()));
+    button3.check(matches(isDisplayed()));
+
+    ViewInteraction button4 = onView(
+        allOf(withId(R.id.confirm_Filter_button), withText("Save"),
+            withParent(withParent(withId(android.R.id.content))),
+            isDisplayed()));
+    button4.check(matches(isDisplayed()));
+
+
     ViewInteraction appCompatEditText = onView(
-        allOf(withId(R.id.value_min_price__Filter_editText),
+        allOf(withId(R.id.value_min_price_Filter_editText),
             childAtPosition(
                 childAtPosition(
                     withClassName(is("android.widget.LinearLayout")),
@@ -92,34 +180,67 @@ public class FilterUITest {
                     1),
                 0),
             isDisplayed()));
-    appCompatEditText2.perform(replaceText("100"), closeSoftKeyboard());
+    appCompatEditText2.perform(replaceText("10000"), closeSoftKeyboard());
 
-    ViewInteraction editText = onView(
-        allOf(withId(R.id.value_min_price__Filter_editText), withText("0"),
+    ViewInteraction appCompatEditText4 = onView(
+        allOf(withId(R.id.value_range_Filter_editText),
+            childAtPosition(
+                childAtPosition(
+                    withClassName(is("android.widget.LinearLayout")),
+                    1),
+                0),
+            isDisplayed()));
+    appCompatEditText4.perform(replaceText("100"), closeSoftKeyboard());
+
+    ViewInteraction appCompatEditText5 = onView(
+        allOf(withId(R.id.location_Filter_editText),
+            childAtPosition(
+                allOf(withId(R.id.location_Filter_linearLayout),
+                    childAtPosition(
+                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                        6)),
+                0),
+            isDisplayed()));
+    appCompatEditText5.perform(replaceText("Lausanne"));
+
+    ViewInteraction appCompatEditText6 = onView(
+        allOf(withId(R.id.location_Filter_editText), withText("Lausanne"),
+            childAtPosition(
+                allOf(withId(R.id.location_Filter_linearLayout),
+                    childAtPosition(
+                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                        6)),
+                0),
+            isDisplayed()));
+    appCompatEditText6.perform(closeSoftKeyboard());
+
+    ViewInteraction editText5 = onView(
+        allOf(withId(R.id.value_min_price_Filter_editText), withText("0"),
             withParent(
                 withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
             isDisplayed()));
-    editText.check(matches(withText("0")));
+    editText5.check(matches(withText("0")));
 
-    ViewInteraction editText2 = onView(
-        allOf(withId(R.id.value_max_price_Filter_editText), withText("100"),
+    ViewInteraction editText6 = onView(
+        allOf(withId(R.id.value_max_price_Filter_editText), withText("10000"),
             withParent(
                 withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
             isDisplayed()));
-    editText2.check(matches(withText("100")));
+    editText6.check(matches(withText("10000")));
 
-
-    ViewInteraction button2 = onView(
-        allOf(withId(R.id.clear_Filter_button), withText("Remove all"),
-            withParent(withParent(withId(android.R.id.content))),
+    ViewInteraction editText7 = onView(
+        allOf(withId(R.id.location_Filter_editText), withText("Lausanne"),
+            withParent(allOf(withId(R.id.location_Filter_linearLayout),
+                withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
             isDisplayed()));
-    button2.check(matches(isDisplayed()));
+    editText7.check(matches(withText("Lausanne")));
 
-    ViewInteraction button3 = onView(
-        allOf(withId(R.id.confirm_Filter_button), withText("Save"),
-            withParent(withParent(withId(android.R.id.content))),
+    ViewInteraction editText8 = onView(
+        allOf(withId(R.id.value_range_Filter_editText), withText("100"),
+            withParent(
+                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class))),
             isDisplayed()));
-    button3.check(matches(isDisplayed()));
+    editText8.check(matches(withText("100")));
 
     ViewInteraction appCompatButton3 = onView(
         allOf(withId(R.id.confirm_Filter_button), withText("Save"),
