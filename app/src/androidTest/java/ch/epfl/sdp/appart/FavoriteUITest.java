@@ -82,7 +82,7 @@ public class FavoriteUITest {
         // clear shared preferences to avoid auto-login
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
     }
-    
+
     /**
      * taken from :
      * https://stackoverflow.com/questions/29378552/in-espresso-how-to-avoid-ambiguousviewmatcherexception-when-multiple-views-matc
@@ -170,10 +170,7 @@ public class FavoriteUITest {
         ViewInteraction appCompatImageView = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0));
         appCompatImageView.perform(forceClick());
 
-        ViewInteraction actionMenuItemView = onView(
-                allOf(withId(R.id.action_add_favorite), withContentDescription("Add to Favorites"),
-                        isDisplayed()));
-        actionMenuItemView.perform(click());
+        onView(withId(R.id.action_add_favorite)).perform(click());
 
         ViewInteraction overflowMenuButton3 = onView(
                 allOf(withContentDescription("More options"),
@@ -307,5 +304,5 @@ public class FavoriteUITest {
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
         login.signOut();
     }
-    
+
 }

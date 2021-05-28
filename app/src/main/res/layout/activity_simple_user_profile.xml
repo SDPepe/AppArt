@@ -300,6 +300,7 @@
                   android:drawableEnd="@drawable/ic_call"
                   android:textColor="@color/primaryStart"
                   android:textSize="16sp"
+                  android:onClick="openEmailOrPhone"
                   android:textAllCaps="false"
                   app:layout_constraintBottom_toBottomOf="parent"
                   app:layout_constraintTop_toTopOf="parent" />
