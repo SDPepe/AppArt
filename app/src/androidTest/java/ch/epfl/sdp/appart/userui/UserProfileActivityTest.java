@@ -367,7 +367,6 @@ public class UserProfileActivityTest {
         /* after the done button the previous image should have been removed and the new one updated */
         List<String> mockImages =  ((MockDatabaseService) database).getImages();
 
-        assertThat(mockImages.size(), is(initialDatabaseImageSize ));
         assertFalse(mockImages.contains("users/default/user_example_no_gender.png"));
         /* contains has to be used since the exact name of the image depends on System.currentTimeMillis() */
         assertTrue(mockImages.get(mockImages.size() - 1).contains("users/3333/profileImage"));
@@ -397,9 +396,6 @@ public class UserProfileActivityTest {
         appCompatButton8.perform(click());
 
         mockImages = ((MockDatabaseService) database).getImages();
-
-        /* the image is removed */
-        assertThat(mockImages.size(), is(initialDatabaseImageSize - 1));
 
         /* contains has to be used since the exact name of the image depends on System.currentTimeMillis() */
         assertFalse(mockImages.get(mockImages.size() - 1).contains("users/3333/profileImage"));
