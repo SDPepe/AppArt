@@ -1,6 +1,7 @@
 # Summary of week 11
 
 ## Quentin
+This week I worked on the UI with Antoine. We implemented a great looking UI with cards and a spinner widget to allow the user to select which type of place is located near the address of the ad he's looking for. I had to create various components to make it work but this was not an easy week as I had a lot of job to do and the tests are not finished.
 
 ## Carlo (scrum master)
 This week I mainly worked on creating a mock environment to test the StepCounterActivity. I encoutered various difficulties doing this: first I implemented a mock SensorManager and mock Sensor class to simulate the STEP_DETECTOR and STEP_COUNTER sensor. Because of an issue with mockito simulating hardware sensor classes other approaches had to be considered. In the end I implemented the testing by passing a parameter which informs the StepCounterActivity to mock the **onSensorChanged(...)** function. Furthermore I fixed a bug in the activity which was caused by the use of static fields and had do modify the UI in order to match the new behaviour.
