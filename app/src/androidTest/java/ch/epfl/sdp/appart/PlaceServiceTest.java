@@ -3,7 +3,7 @@ package ch.epfl.sdp.appart;
 import android.content.Context;
 import android.util.Pair;
 
-import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.InstrumentationRegistry;
 
 import org.junit.Before;
 import org.junit.Rule;

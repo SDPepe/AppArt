@@ -27,6 +27,7 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.action.ViewActions.click;
 import static org.hamcrest.Matchers.allOf;
@@ -65,34 +66,19 @@ public class NearbyPlacesTest {
     public void selectItemsShowsList() {
         onView(withId(R.id.spinner_place_activity)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("gym"))).perform(click());
-        onView(withId(R.id.places_Place_recyclerView)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, RecyclerViewItemViewAction.clickChildViewWithId(0)));
-        int i = 0;
+        onView(withId(R.id.places_Place_recyclerView))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        //click on something else
+        onView(withId(R.id.spinner_place_activity)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("drugstore"))).perform(click());
+
+        //the re-click on the same to test the cache
+        onView(withId(R.id.spinner_place_activity)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("gym"))).perform(click());
+
+        swipeDown();
     }
 
-    //From https://stackoverflow.com/questions/28476507/using-espresso-to-click-view-inside-recyclerview-item
-    public static class RecyclerViewItemViewAction {
-
-        public static ViewAction clickChildViewWithId(final int id) {
-            return new ViewAction() {
-                @Override
-                public Matcher<View> getConstraints() {
-                    return null;
-                }
-
-                @Override
-                public String getDescription() {
-                    return "Click on a child view with specified id.";
-                }
-
-                @Override
-                public void perform(UiController uiController, View view) {
-                    View v = view.findViewById(id);
-                    v.performClick();
-                }
-            };
-        }
-
-    }
 
 }
