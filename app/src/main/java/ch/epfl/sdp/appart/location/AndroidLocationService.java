@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import ch.epfl.sdp.appart.R;
+import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 
 
 /**
@@ -44,8 +45,6 @@ public final class AndroidLocationService implements LocationService {
     private final FusedLocationProviderClient locationProvider;
 
     private LocationCallback locationCallback;
-    private final RequestQueue queue;
-    private final String api_key;
 
     @Inject
     public AndroidLocationService(Context context) {
@@ -53,9 +52,6 @@ public final class AndroidLocationService implements LocationService {
             throw new IllegalArgumentException();
         this.locationProvider =
                 LocationServices.getFusedLocationProviderClient(context);
-
-        this.queue = Volley.newRequestQueue(context);
-        this.api_key = context.getResources().getString(R.string.maps_api_key);
 
     }
 
@@ -72,13 +68,12 @@ public final class AndroidLocationService implements LocationService {
                     myLocation.longitude = androidLoc.getLongitude();
                     futureLocation.complete(myLocation);
                 } else {
-                    futureLocation.completeExceptionally(task.getException());
+                    futureLocation.complete(null);
                 }
             });
         } catch (SecurityException e) {
             throw e;
         }
-
         return futureLocation;
     }
 
