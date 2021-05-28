@@ -82,4 +82,6 @@ public interface MapService extends OnMapReadyCallback {
      * @param infoWindowClickListener the listener
      */
     void setOnInfoWindowClickListener(Consumer<Marker> infoWindowClickListener);
+
+    void zoomOnPosition(Location loc, float zoomLevel);
 }
