@@ -11,19 +11,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
-import ch.epfl.sdp.appart.location.place.Place;
-import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 import ch.epfl.sdp.appart.map.ApartmentInfoWindow;
 import ch.epfl.sdp.appart.map.MapService;
+import ch.epfl.sdp.appart.map.helper.MapFrontendHelper;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.utils.PermissionRequest;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -57,21 +56,6 @@ public class MapActivity extends AppCompatActivity {
         }, () -> Log.d("PERMISSION", "Popup"));
 
     }
-
-
-    /*
-        To implement the feature :
-            - Set map center on user location
-            - Get location from all the ads (or all the ads in the country),
-            see if it is possible to get ad only
-                if they satisfy a condition.
-                It would be great if I could get all the ads (location only
-                because if we have millions of ad this is going to be huge,
-                or restrict by country for instance)
-                , then transform the address into latitude and longitude,
-                then maybe it is possible to ask the map object if a
-                   specific location is on the map. If it is display it.
-     */
 
     private void setupMap() {
         SupportMapFragment mapFragment =
@@ -114,45 +98,40 @@ public class MapActivity extends AppCompatActivity {
 
             });
             mapService.setMapFragment(mapFragment);
-            onMapReadyCallback = () -> {
-                CompletableFuture<List<Card>> futureCards = databaseService
-                        .getCards();
-                futureCards.exceptionally(e -> {
-                    Log.d("EXCEPTION_DB", e.getMessage());
-                    return null;
-                });
-
-                futureCards.thenAccept(cards -> {
-                    for (Card card : cards) {
-                        //First filter on location of the card
-                        databaseService.getAd(card.getAdId()).thenCompose(ad -> {
-                                    String city = ad.getCity();
-                                    Matcher extractPostalCodeMatcher = Pattern.compile("\\d+").matcher(city);
-                                    Place place;
-                                    if(extractPostalCodeMatcher.find()) {
-                                        String postalCode = extractPostalCodeMatcher.group();
-                                        String locality =
-                                                ad.getCity().replaceAll("\\d+", "");
-                                        place = AddressFactory.makeAddress(ad.getStreet(), postalCode, locality);
-
-                                    } else {
-                                        place = LocalityFactory.makeLocality(city);
-                                    }
-                                    return geocodingService.getLocation(place);
-                                }
-                        )
-                                .thenAcceptAsync(location ->
-                                                mapService.addMarker(location
-                                                        , card,
-                                                        false, card.getCity()),
-                                        ContextCompat.getMainExecutor(this));
-                    }
-                });
-            };
+            onMapReadyCallback = buildOnMapReadyCallbackMain();
         }
 
         mapService.setOnReadyCallback(onMapReadyCallback);
         mapFragment.getMapAsync(mapService);
+
+    }
+
+
+    private Runnable buildOnMapReadyCallbackMain() {
+        return () -> {
+            CompletableFuture<List<Card>> futureCards =
+                    MapFrontendHelper.retrieveCards(databaseService);
+            CompletableFuture<Location> futureCurrentLocation =
+                    locationService.getCurrentLocation();
+            CompletableFuture.allOf(futureCards,
+                    futureCurrentLocation).thenAccept(arg -> {
+                Location currentLocation =
+                        futureCurrentLocation.join();
+                List<Card> cards = futureCards.join();
+
+                MapFrontendHelper.centerOnCurrentLocation(mapService,
+                        currentLocation);
+
+                cards.parallelStream().forEach(card -> {
+
+                    CompletableFuture<Ad> futureAd =
+                            MapFrontendHelper.retrieveAd(databaseService,
+                                    card.getAdId());
+                    MapFrontendHelper.addMarker(futureAd, geocodingService,
+                            currentLocation, mapService, card);
+                });
+
+            });
+        };
     }
 }
-
