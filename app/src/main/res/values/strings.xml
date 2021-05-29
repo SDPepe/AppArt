@@ -30,6 +30,10 @@
     <string name="favSuccess_Ad">Added to favorites!</string>
     <string name="userNotLoggedIn_Ad">You cannot add to favorites if you are not logged in</string>
 
+    <!-- MapActivity stuff -->
+    <string name="alertDialogMessage">The application could not locate the apartment.</string>
+    <string name="alertDialogButton">OK</string>
+
     <!-- Mock ad stuff -->
 
     <!-- Ad photo layout -->
