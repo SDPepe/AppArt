@@ -101,7 +101,7 @@ public class MapActivity extends AppCompatActivity {
                         }
                         CompletableFuture<Location> futureLocation =
                                 geocodingService.getLocation(place);
-                        futureLocation.thenAccept(location -> mapService.addMarker(location, null, true, null))
+                        futureLocation.thenAccept(location -> mapService.addMarker(location, null, true, "AddressMarker"))
                                 .exceptionally(e -> {
                                     e.printStackTrace();
                                     return null;
