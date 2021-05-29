@@ -103,10 +103,4 @@ public class MapUIWithAddressTest {
         UiObject2 marker = device.findObject(By.descContains("AddressMarker"));
         assertNotNull(marker);
     }
-
-
-    @After
-    public void release() {
-        Intents.release();
-    }
 }

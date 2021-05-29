@@ -80,14 +80,8 @@ public class MapUIWithAddressFailsTest {
 
 
     @Test
-    public void performIncorrectLocationTest() throws InterruptedException {
+    public void performIncorrectLocationTest() {
         onView(withText(InstrumentationRegistry.getInstrumentation().getTargetContext()
                 .getString(R.string.alertDialogMessage))).check(matches(isDisplayed()));
-    }
-
-
-    @After
-    public void release() {
-        Intents.release();
     }
 }
