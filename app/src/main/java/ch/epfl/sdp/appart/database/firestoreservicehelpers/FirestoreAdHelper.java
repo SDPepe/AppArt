@@ -346,10 +346,7 @@ public class FirestoreAdHelper {
         CompletableFuture<Boolean> result1 = new CompletableFuture<>();
 
         db.collection(adsPath).document(adId).delete().addOnCompleteListener(t -> {
-            if (t.isSuccessful())
-                result1.complete(true);
-            else
-                result1.complete(false);
+            result1.complete(t.isSuccessful());
         });
 
         CompletableFuture<Boolean> result2 = cardHelper.deleteCard(cardId);

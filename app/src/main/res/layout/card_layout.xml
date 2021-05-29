@@ -77,7 +77,6 @@
               android:layout_width="100dp"
               android:layout_height="30dp"
               android:background="@drawable/style_primary"
-              android:onClick="logIn"
               android:text="@string/card_delete"
               android:textAllCaps="false"
               android:textColor="#FFFFFF"

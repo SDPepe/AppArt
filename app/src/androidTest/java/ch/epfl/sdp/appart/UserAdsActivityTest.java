@@ -71,10 +71,13 @@ public class UserAdsActivityTest {
     public void init() {
         Intents.init();
         hiltRule.inject();
+        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
     }
 
     @Test
     public void userThatCreatedAnAdCanFindHisAds() {
+        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+
         ViewInteraction appCompatEditText6 = onView(
                 allOf(withId(R.id.email_Login_editText),
                         childAtPosition(
@@ -130,6 +133,8 @@ public class UserAdsActivityTest {
 
     @Test
     public void deletingAdsWork() {
+        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
+
         ViewInteraction appCompatEditText6 = onView(
                 allOf(withId(R.id.email_Login_editText),
                         childAtPosition(
