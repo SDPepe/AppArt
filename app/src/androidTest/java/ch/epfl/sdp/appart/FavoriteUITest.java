@@ -46,6 +46,7 @@ import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -219,6 +220,9 @@ public class FavoriteUITest {
 
         ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1));
         appCompatImageView4.perform(forceClick());
+
+        //added by quentin
+        onView(withId(R.id.action_add_favorite)).perform(closeSoftKeyboard());
 
         ViewInteraction actionMenuItemView4 = onView(
                 allOf(withId(R.id.action_add_favorite), withContentDescription("Add to Favorites"),
