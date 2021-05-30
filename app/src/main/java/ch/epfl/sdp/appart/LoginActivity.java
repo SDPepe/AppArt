@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                 return null;
             });
             loginRes.thenAccept(u -> {
+
                 CompletableFuture<Void> saveRes = DatabaseSync.saveCurrentUserToLocalDB(this,
                         database, localdb, u.getUserId());
                 saveRes.exceptionally(e -> {
