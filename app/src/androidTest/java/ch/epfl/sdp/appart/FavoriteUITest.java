@@ -221,9 +221,6 @@ public class FavoriteUITest {
         ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1));
         appCompatImageView4.perform(forceClick());
 
-        //added by quentin
-        onView(withId(R.id.action_add_favorite)).perform(closeSoftKeyboard());
-
         ViewInteraction actionMenuItemView4 = onView(
                 allOf(withId(R.id.action_add_favorite), withContentDescription("Add to Favorites"),
                         childAtPosition(
