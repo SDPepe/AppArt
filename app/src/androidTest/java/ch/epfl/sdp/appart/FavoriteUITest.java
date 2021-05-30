@@ -217,7 +217,7 @@ public class FavoriteUITest {
         actionMenuItemView3.perform(click());
 
         pressBack();
-
+        //hallo cirrus
         ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1));
         appCompatImageView4.perform(forceClick());
 
