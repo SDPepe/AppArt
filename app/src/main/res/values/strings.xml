@@ -102,6 +102,7 @@
     <string name="loadingTextAdActivity">Loading…</string>
     <string name="editTitleAdCreation">Title</string>
     <string name="streetAdCreation">Street:</string>
+    <string name="buttonInfoMessageAdNotLoaded">The ad information is not available !</string>
 
     <!-- AdCreationActivity stuff -->
     <string name="numberAdCreation">Number:</string>
