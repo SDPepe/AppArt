@@ -1,6 +1,9 @@
 package ch.epfl.sdp.appart;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +29,10 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
+import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
+import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.scrolling.ScrollingViewModel;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
@@ -46,14 +53,34 @@ public class ScrollingActivity extends ToolbarActivity {
     DatabaseService database;
 
     @Inject
+    LoginService loginService;
+
+    @Inject
+    LocalDatabaseService localDatabaseService;
+
+    @Inject
     ApplicationConfiguration configuration;
 
     private RecyclerView recyclerView;
+
+    private AlertDialog onBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("test");
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+            loginService.signOut();
+            localDatabaseService.cleanFavorites();
+            SharedPreferencesHelper.clearSavedUserForAutoLogin(this);
+            finish();
+        });
+        builder.setNegativeButton("No", (dialogInterface, i) ->  {
+        });
+        onBackPressed = builder.create();
 
         Toolbar toolbar = findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
@@ -167,6 +194,11 @@ public class ScrollingActivity extends ToolbarActivity {
         } else {
             mViewModel.initHome();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        onBackPressed.show();
     }
 
 }
