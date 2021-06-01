@@ -93,7 +93,7 @@ public class SimpleUserProfileActivityTest {
     @Test
     public void simpleUserProfileActivityTest() {
         ViewInteraction appCompatImageView = onView(
-            ViewUtils.withIndex(withId(R.id.image_CardLayout_imageView),
+            ViewUtils.withIndex(withId(R.id.place_card_image_CardLayout_imageView),
                 0));
         appCompatImageView.perform(forceClick());
 

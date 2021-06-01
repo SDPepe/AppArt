@@ -29,6 +29,7 @@ public final class ActivityCommunicationLayout {
     public static final String PROVIDING_IMAGE_URI = "uri";
 
     public static final String PROVIDING_SIZE = "size";
+    public static final String AD_ADDRESS = "adAddress";
 
 
     /*  IDs for provided information */
@@ -40,5 +41,7 @@ public final class ActivityCommunicationLayout {
     public static final String FAVORITES_ACTIVITY = "FavoriteActivity";
 
     public static final int ANDROID_TEST_IS_RUNNING = 73577357;
+
+
 
 }
