@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,6 +62,8 @@ public class AdActivity extends ToolbarActivity {
     private String adId;
     private AdViewModel mViewModel;
 
+    private Button panoramaButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +73,9 @@ public class AdActivity extends ToolbarActivity {
 
         Toolbar toolbar = findViewById(R.id.account_Ad_toolbar);
         setSupportActionBar(toolbar);
+
+        panoramaButton = findViewById(R.id.vtour_Ad_button);
+        panoramaButton.setVisibility(View.INVISIBLE);
 
         mViewModel.getTitle().observe(this, this::updateTitle);
         mViewModel.getPhotosRefs().observe(this, this::updatePhotos);
@@ -81,6 +87,7 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
         mViewModel.observePanoramasReferences(this,
                 this::updatePanoramasReferences);
+        mViewModel.getHasVTour().observe(this, this::updateHasVTourButton);
 
         adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
         // init content, show a toast if load failed
@@ -94,6 +101,12 @@ public class AdActivity extends ToolbarActivity {
     private void updateTitle(String title) {
         TextView titleView = findViewById(R.id.title_Ad_textView);
         setIfNotNull(titleView, title);
+    }
+
+    private void updateHasVTourButton(Boolean hasVTour) {
+        if(hasVTour) {
+            panoramaButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void updatePhotos(List<String> references) {

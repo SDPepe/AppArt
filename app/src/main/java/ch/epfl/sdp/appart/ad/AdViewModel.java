@@ -32,11 +32,17 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
-    private final MutableLiveData<String> adDescription = new MutableLiveData<>();
-    private final MutableLiveData<String> adAdvertiserName = new MutableLiveData<>();
-    private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> adPhotosReferences = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
+    private final MutableLiveData<String> adDescription =
+            new MutableLiveData<>();
+    private final MutableLiveData<String> adAdvertiserName =
+            new MutableLiveData<>();
+    private final MutableLiveData<String> adAdvertiserId =
+            new MutableLiveData<>();
+    private final MutableLiveData<List<String>> adPhotosReferences =
+            new MutableLiveData<>();
+    private final MutableLiveData<List<String>> panoramasReferences =
+            new MutableLiveData<>();
+    private final MutableLiveData<Boolean> hasVTour = new MutableLiveData<>();
 
     @Inject
     public AdViewModel(DatabaseService db, LocalDatabaseService localdb) {
@@ -45,11 +51,14 @@ public class AdViewModel extends ViewModel {
     }
 
     /**
-     * Loads and sets ad info from the local database. It then tries to fetch the ad info from
-     * the database. If successful, sets the ad info with the new data form the server.
+     * Loads and sets ad info from the local database. It then tries to fetch
+     * the ad info from
+     * the database. If successful, sets the ad info with the new data form
+     * the server.
      *
      * @param id the unique ID of the ad in the database
-     * @return a completable future that is normally completed if the server fetch was successful
+     * @return a completable future that is normally completed if the server
+     * fetch was successful
      */
     public CompletableFuture<Void> initAd(String id) {
         CompletableFuture<Void> result = new CompletableFuture<>();
@@ -57,8 +66,9 @@ public class AdViewModel extends ViewModel {
         return result;
     }
 
-    public <T> void observePanoramasReferences(LifecycleOwner owner, @NonNull Observer<?
-            super List<String>> observer) {
+    public <T> void observePanoramasReferences(LifecycleOwner owner,
+                                               @NonNull Observer<?
+                                                       super List<String>> observer) {
         panoramasReferences.observe(owner, observer);
     }
 
@@ -91,13 +101,18 @@ public class AdViewModel extends ViewModel {
         return adAdvertiserId;
     }
 
+    public LiveData<Boolean> getHasVTour() {
+        return hasVTour;
+    }
+
     @Nullable
     public Ad getAd() {
         return ad;
     }
 
     /**
-     * Loads the ad data from the local database and sets the values to mutablelivedata fields.
+     * Loads the ad data from the local database and sets the values to
+     * mutablelivedata fields.
      */
     private CompletableFuture<Void> localLoad(String adId) {
         CompletableFuture<Void> result = new CompletableFuture<>();
@@ -115,7 +130,8 @@ public class AdViewModel extends ViewModel {
     /**
      * Helper to set values from an ad
      */
-    private void setAdValues(CompletableFuture<Void> result, CompletableFuture<Ad> adRes) {
+    private void setAdValues(CompletableFuture<Void> result,
+                             CompletableFuture<Ad> adRes) {
         adRes.exceptionally(e -> {
             result.completeExceptionally(e);
             return null;
@@ -124,12 +140,24 @@ public class AdViewModel extends ViewModel {
             this.ad = ad;
             this.adAddress.setValue(addressFrom(ad.getStreet(), ad.getCity()));
             this.adTitle.setValue(ad.getTitle());
-            this.adPrice.setValue(priceFrom(ad.getPrice(), ad.getPricePeriod()));
+            this.adPrice.setValue(priceFrom(ad.getPrice(),
+                    ad.getPricePeriod()));
             this.adDescription.setValue(ad.getDescription());
             this.adAdvertiserName.setValue(ad.getAdvertiserName());
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
             this.adPhotosReferences.setValue(ad.getPhotosRefs());
             this.panoramasReferences.setValue(ad.getPanoramaReferences());
+            /*
+                This is not exactly set as the equivalent of the hasVRTour
+                attribute. However, this modification prevent some crashes in
+                 the PanoramaActivity.
+                 Some ads have the boolean hasVTour at false, while they have
+                  panoramaReferences.
+                 I think this is because while building an ad you have to
+                 explicitly set the hasVTour and this can be forgotten.
+                 Maybe here we can only rely on the panoramaReferences size.
+             */
+            this.hasVTour.setValue(ad.getPanoramaReferences().size() > 0);
             result.complete(null);
         });
     }
