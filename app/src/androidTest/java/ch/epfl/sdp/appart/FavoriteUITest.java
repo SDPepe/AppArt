@@ -37,6 +37,7 @@ import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -50,6 +51,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -57,6 +59,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertTrue;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
@@ -68,7 +72,7 @@ public class FavoriteUITest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityScenarioRule<MainActivity> mActivityTestRule = new ActivityScenarioRule<>(MainActivity.class);
+    public ActivityScenarioRule<ScrollingActivity> mActivityTestRule = new ActivityScenarioRule<>(ScrollingActivity.class);
 
     @BindValue
     LoginService login = new MockLoginService();
@@ -117,29 +121,8 @@ public class FavoriteUITest {
     public void favoriteUITest() {
         // clear shared preferences to avoid auto-login
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
-
-
-        ViewInteraction appCompatEditText = onView(
-                Matchers.allOf(ViewMatchers.withId(R.id.email_Login_editText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText.perform(replaceText("emilien@epfl.ch"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.password_Login_editText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText2.perform(replaceText("5555"), closeSoftKeyboard());
-
-        onView(withId(R.id.login_Login_button)).perform(click());
+        
+        login.loginWithEmail("emilien@epfl.ch", "5555");
 
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
@@ -167,6 +150,10 @@ public class FavoriteUITest {
         appCompatImageView.perform(forceClick());
 
         onView(withId(R.id.action_add_favorite)).perform(click());
+
+        User currentUser = database.getUser(login.getCurrentUser().getUserId()).join();
+        assertThat(currentUser.getFavoritesIds().size(), greaterThan(0));
+        assertTrue(currentUser.getFavoritesIds().contains("unknown"));
 
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
@@ -236,6 +223,11 @@ public class FavoriteUITest {
                                 withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
                         isDisplayed()));
         recyclerView3.check(matches(isDisplayed()));
+
+        currentUser = database.getUser(login.getCurrentUser().getUserId()).join();
+        assertThat(currentUser.getFavoritesIds().size(), greaterThan(0));
+        assertTrue(currentUser.getFavoritesIds().contains("unknown"));
+
     }
 
     private static ViewAction forceClick() {
