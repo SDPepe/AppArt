@@ -121,7 +121,7 @@ public class FavoriteUITest {
     public void favoriteUITest() {
         // clear shared preferences to avoid auto-login
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
-        
+
         login.loginWithEmail("emilien@epfl.ch", "5555");
 
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
