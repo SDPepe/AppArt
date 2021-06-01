@@ -23,6 +23,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.appart.MainActivity;
 import ch.epfl.sdp.appart.R;
@@ -42,6 +43,7 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -139,15 +141,8 @@ public class FavoriteUITest {
 
         onView(withId(R.id.login_Login_button)).perform(click());
 
-        ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.login_Scrolling_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        overflowMenuButton.perform(click());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+
 
         ViewInteraction appCompatTextView = onView(
                 allOf(withId(R.id.title), withText("Favorites"),
@@ -173,15 +168,7 @@ public class FavoriteUITest {
 
         onView(withId(R.id.action_add_favorite)).perform(click());
 
-        ViewInteraction overflowMenuButton3 = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.account_Ad_toolbar),
-                                        1),
-                                1),
-                        isDisplayed()));
-        overflowMenuButton3.perform(click());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         ViewInteraction appCompatTextView2 = onView(
                 allOf(withId(R.id.title), withText("Favorites"),
@@ -231,15 +218,7 @@ public class FavoriteUITest {
                         isDisplayed()));
         actionMenuItemView4.perform(click());
 
-        ViewInteraction overflowMenuButton4 = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.account_Ad_toolbar),
-                                        1),
-                                1),
-                        isDisplayed()));
-        overflowMenuButton4.perform(click());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         ViewInteraction appCompatTextView3 = onView(
                 allOf(withId(R.id.title), withText("Favorites"),
