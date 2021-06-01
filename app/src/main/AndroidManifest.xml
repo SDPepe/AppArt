@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.sdp.appart">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
     <application
         android:name=".hilt.HiltApplication"
         android:allowBackup="true"
@@ -11,15 +20,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".StepCounterActivity"/>
+        <activity android:name=".PlaceActivity"></activity>
+        <activity android:name=".StepCounterActivity" />
         <activity android:name=".AdCreationActivityDemo" />
-        <activity android:name=".UserAdsActivity"></activity>
+        <activity android:name=".UserAdsActivity" />
         <activity android:name=".FavoriteActivity" />
         <activity android:name=".PicturesImportActivity" />
         <activity
             android:name=".MapActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity android:name=".FullScreenImageActivity" />
         <activity android:name=".SimpleUserProfileActivity" />
         <activity android:name=".CameraActivity" />
@@ -56,6 +65,4 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
-
-
 </manifest>

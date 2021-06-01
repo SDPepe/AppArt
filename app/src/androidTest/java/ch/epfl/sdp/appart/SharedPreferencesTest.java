@@ -8,19 +8,28 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
 
 import static org.junit.Assert.assertEquals;
 
 @HiltAndroidTest
+@UninstallModules(DatabaseModule.class)
 public class SharedPreferencesTest {
 
     @Rule(order = 0)
     public final HiltAndroidRule hiltRule = new HiltAndroidRule(this);
     @Rule(order = 1)
     public ActivityScenarioRule<ScrollingActivity> mActivityRule = new ActivityScenarioRule<>(ScrollingActivity.class);
+
+    @BindValue
+    DatabaseService databaseService = new MockDatabaseService();
 
     @Before
     public void init() {

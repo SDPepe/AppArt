@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 
 import javax.inject.Inject;

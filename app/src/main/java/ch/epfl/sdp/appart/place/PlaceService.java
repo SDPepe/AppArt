@@ -13,13 +13,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.inject.Inject;
 
-import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.location.Location;
+import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.location.place.address.Address;
 import ch.epfl.sdp.appart.place.helper.PlaceHelper;
 import dagger.hilt.android.scopes.ActivityScoped;
@@ -37,62 +39,116 @@ public class PlaceService {
     }
 
     /**
-     * Retrieve the top (at most 20) places of interests in addition to their respective distance
+     * Retrieve the top (at most 20) places of interests in addition to their
+     * respective distance
      * to the given address.
+     *
      * @param address The address from which the query originate
-     * @param radius the radius in which we search for the place.
-     * @param type the type of place we want to find.
-     * @param top the quantity of places we want to retrieve (at most 20).
+     * @param radius  the radius in which we search for the place.
+     * @param type    the type of place we want to find.
+     * @param top     the quantity of places we want to retrieve (at most 20).
      * @return
      */
     public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
-        getNearbyPlacesWithDistances(Address address, int radius, String type, int top) {
+    getNearbyPlacesWithDistances(Address address, int radius, String type,
+                                 int top) {
 
-        return CompletableFuture.supplyAsync(() -> {
-           try {
-               Location location = geocoder.getLocation(address).get();
-               return getNearbyPlacesWithDistances(location, radius, type, top).get();
-           } catch (Exception e) {
-               throw new CompletionException(e);
-           }
-        });
+
+        return geocoder.getLocation(address).thenCompose(location -> getNearbyPlacesWithDistances(location, radius, type, top));
     }
 
     /**
-     * Retrieve the nearest places of interest with their respective distance to the Location
+     * Retrieve the nearest places of interest with their respective distance
+     * to the Location
      * Given as argument.
+     *
      * @param location The location from which the request originate
-     * @param radius The radius in which the query originate
-     * @param type the type of object you want to query
-     * @return CompletableFuture<List<Pair<PlaceOfInterest, Float>>> the places with the distances (at most 20).
+     * @param radius   The radius in which the query originate
+     * @param type     the type of object you want to query
+     * @return CompletableFuture<List < Pair < PlaceOfInterest, Float>>> the
+     * places with the distances (at most 20).
      */
-     public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
-        getNearbyPlacesWithDistances(Location location, int radius, String type, int top) {
+    public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
+    getNearbyPlacesWithDistances(Location location, int radius, String type,
+                                 int top) {
 
-        CompletableFuture<List<Pair<PlaceOfInterest, Float>>> result = new CompletableFuture<>();
-        CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type, top);
 
+        CompletableFuture<List<PlaceOfInterest>> placesFuture =
+                getNearbyPlaces(location, radius, type, top);
+
+
+        return computeDistances(placesFuture, location);
+    }
+
+    /**
+     * Retrieve the nearest places of interest with their respective distance
+     * to the Location
+     * Given as argument.
+     *
+     * @param location The location from which the request originate
+     * @param type     the type of object you want to query
+     * @return CompletableFuture<List < Pair < PlaceOfInterest, Float>>> the
+     * places with the distances (at most 20).
+     */
+    public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
+    getNearbyPlacesWithDistances(Location location, String type, int top) {
+
+
+        CompletableFuture<List<PlaceOfInterest>> placesFuture =
+                getNearbyPlaces(location, type, top);
+
+
+        return computeDistances(placesFuture, location);
+    }
+
+    /**
+     * Retrieve the top (at most 20) places of interests in addition to their
+     * respective distance
+     * to the given address.
+     *
+     * @param address The address from which the query originate
+     * @param type    the type of place we want to find.
+     * @param top     the quantity of places we want to retrieve (at most 20).
+     * @return
+     */
+    public CompletableFuture<List<Pair<PlaceOfInterest, Float>>>
+    getNearbyPlacesWithDistances(Address address, String type, int top) {
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Location location = geocoder.getLocation(address).get();
+                return getNearbyPlacesWithDistances(location, type, top).get();
+            } catch (Exception e) {
+                throw new CompletionException(e);
+            }
+        });
+    }
+
+    private CompletableFuture<List<Pair<PlaceOfInterest, Float>>> computeDistances(CompletableFuture<List<PlaceOfInterest>> placesFuture, Location location) {
+        CompletableFuture<List<Pair<PlaceOfInterest, Float>>> result =
+                new CompletableFuture<>();
         placesFuture.thenAccept(placesOfInterests -> {
 
-            List<PlaceOfInterest> placesWithLocation = placesOfInterests.stream()
-                    .filter(PlaceOfInterest::hasLocation)
-                    .collect(Collectors.toList());
+            List<PlaceOfInterest> placesWithLocation =
+                    placesOfInterests.stream()
+                            .filter(PlaceOfInterest::hasLocation)
+                            .collect(Collectors.toList());
 
-            List<CompletableFuture<Float>> locationsFutures = placesWithLocation.stream()
-                    .map(place -> {
-                        return geocoder.getDistance(location, place.getLocation());
-                    })
-                    .collect(Collectors.toList());
+            List<CompletableFuture<Float>> locationsFutures =
+                    placesWithLocation.stream()
+                            .map(place -> geocoder.getDistance(location,
+                                    place.getLocation()))
+                            .collect(Collectors.toList());
 
             CompletableFuture.allOf(locationsFutures.toArray(new CompletableFuture[locationsFutures.size()])).thenAccept(aVoid -> {
 
                 List<Pair<PlaceOfInterest, Float>> placesWithDistances =
                         IntStream.range(0, placesWithLocation.size()).mapToObj(value -> {
-                    return new Pair<>(
-                            placesWithLocation.get(value),
-                            locationsFutures.get(value).join()
-                    );
-                }).collect(Collectors.toList());
+                            return new Pair<>(
+                                    placesWithLocation.get(value),
+                                    locationsFutures.get(value).join()
+                            );
+                        }).collect(Collectors.toList());
                 result.complete(placesWithDistances);
 
             });
@@ -100,24 +156,30 @@ public class PlaceService {
         });
 
         placesFuture.exceptionally(throwable -> {
-             result.completeExceptionally(throwable);
-             return null;
+            result.completeExceptionally(throwable);
+            return null;
         });
-
         return result;
     }
 
     /**
      * Retrieve the top nearby location within the radius range.
+     *
      * @param location The <type>Location</type> from which the search is made.
-     * @param radius an <type>int</type> corresponding to the radius of search in meters.
-     * @param type the <type>String</type> that represent the type to search for.
-     * @param top if you want to get only a subset of results, an <type>int</type>
-     * @return A CompletableFuture<List<PlaceOfInterest>> the places of interest in a future.
+     * @param radius   an <type>int</type> corresponding to the radius of
+     *                 search in meters.
+     * @param type     the <type>String</type> that represent the type to
+     *                 search for.
+     * @param top      if you want to get only a subset of results, an
+     *                 <type>int</type>
+     * @return A CompletableFuture<List<PlaceOfInterest>> the places of
+     * interest in a future.
      */
     private CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, int radius, String type, int top) {
-        CompletableFuture<List<PlaceOfInterest>> placesFuture = getNearbyPlaces(location, radius, type);
-        CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
+        CompletableFuture<List<PlaceOfInterest>> placesFuture =
+                getNearbyPlaces(location, radius, type);
+        CompletableFuture<List<PlaceOfInterest>> result =
+                new CompletableFuture<>();
         placesFuture.thenAccept(places -> {
             int topAdjusted = Math.min(top, places.size());
             result.complete(places.subList(0, topAdjusted));
@@ -130,23 +192,67 @@ public class PlaceService {
     }
 
     /**
-     * Retrieve the nearby location within the radius range.
+     * Retrieve the top nearby locations ranked by distance.
+     *
      * @param location The <type>Location</type> from which the search is made.
-     * @param radius an <type>int</type> corresponding to the radius of search in meters.
-     * @param type the <type>String</type> that represent the type to search for.
-     * @return A CompletableFuture<List<PlaceOfInterest>> the places of interest in a future.
+     * @param type     the <type>String</type> that represent the type to
+     *                 search for.
+     * @param top      if you want to get only a subset of results, an
+     *                 <type>int</type>
+     * @return A CompletableFuture<List<PlaceOfInterest>> the places of
+     * interest in a future.
+     */
+    private CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, String type, int top) {
+        CompletableFuture<List<PlaceOfInterest>> placesFuture =
+                getNearbyPlaces(location, type);
+        CompletableFuture<List<PlaceOfInterest>> result =
+                new CompletableFuture<>();
+        placesFuture.thenAccept(places -> {
+            int topAdjusted = Math.min(top, places.size());
+            result.complete(places.subList(0, topAdjusted));
+        });
+        placesFuture.exceptionally(e -> {
+            result.completeExceptionally(e);
+            return null;
+        });
+        return result;
+    }
+
+
+    /**
+     * Retrieve the nearby location within the radius range.
+     *
+     * @param location The <type>Location</type> from which the search is made.
+     * @param radius   an <type>int</type> corresponding to the radius of
+     *                 search in meters.
+     * @param type     the <type>String</type> that represent the type to
+     *                 search for.
+     * @return A CompletableFuture<List<PlaceOfInterest>> the places of
+     * interest in a future.
      */
     private CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, int radius, String type) {
-        CompletableFuture<List<PlaceOfInterest>> result = new CompletableFuture<>();
+        CompletableFuture<List<PlaceOfInterest>> result =
+                new CompletableFuture<>();
 
         //retrieve the raw results from the query as a Json string
-        CompletableFuture<String> rawResult = helper.query(location, radius, type);
+        CompletableFuture<String> rawResult = helper.query(location, radius,
+                type);
+
+        getResult(rawResult, result);
+
+        return result;
+    }
+
+    private void getResult(CompletableFuture<String> rawResult,
+                           CompletableFuture<List<PlaceOfInterest>> result) {
         //parse the Json String to a JSONArray to work with
-        CompletableFuture<JSONArray> queriesResults = parseNearbySearch(rawResult);
+        CompletableFuture<JSONArray> queriesResults =
+                rawResult.thenCompose(this::parseRawResults);
 
         queriesResults.thenAccept(queriesJson -> {
 
             List<PlaceOfInterest> places = new ArrayList<>();
+            List<CompletableFuture<Void>> bitmaps = new ArrayList<>();
 
             for (int i = 0; i < queriesJson.length(); i++) {
                 try {
@@ -159,15 +265,38 @@ public class PlaceService {
 
                     JSONArray typesArray = element.getJSONArray("types");
                     Set<String> types = new HashSet<>();
-                    for (int j = 0; j < typesArray.length(); j ++) {
+                    for (int j = 0; j < typesArray.length(); j++) {
                         types.add(typesArray.optString(i));
                     }
 
                     place.setTypes(types);
 
                     JSONObject geometryJson = element.getJSONObject("geometry");
-                    JSONObject locationJson = geometryJson.getJSONObject("location");
-                    place.setLocation(locationJson.optDouble("lng"), locationJson.optDouble("lat"));
+                    JSONObject locationJson = geometryJson.getJSONObject(
+                            "location");
+                    place.setLocation(locationJson.optDouble("lng"),
+                            locationJson.optDouble("lat"));
+
+                    /**
+                     * Add bitmap to place
+                     */
+                    JSONArray photosArraysJson = element.optJSONArray("photos");
+                    if (photosArraysJson == null) {
+                        places.add(place);
+                        continue;
+                    }
+
+                    JSONObject photosJson =
+                            (JSONObject) photosArraysJson.get(0);
+
+                    int maxHeight = photosJson.getInt("height");
+                    int maxWidth = photosJson.getInt("width");
+
+                    String photoReference = photosJson.getString(
+                            "photo_reference");
+
+                    bitmaps.add(helper.queryImage(photoReference, maxHeight,
+                            maxWidth).thenAccept(place::setBitmap));
 
                     places.add(place);
 
@@ -176,48 +305,67 @@ public class PlaceService {
                 }
 
             }
-            result.complete(places);
+            CompletableFuture.allOf(bitmaps.toArray(new CompletableFuture[bitmaps.size()])).thenAccept(arg -> {
+                result.complete(places);
+            });
         });
         queriesResults.exceptionally(e -> {
-           result.completeExceptionally(e);
-           return null;
+            result.completeExceptionally(e);
+            return null;
         });
+    }
+
+    /**
+     * Retrieve the nearby location within the radius range.
+     *
+     * @param location The <type>Location</type> from which the search is made.
+     * @param type     the <type>String</type> that represent the type to
+     *                 search for.
+     * @return A CompletableFuture<List<PlaceOfInterest>> the places of
+     * interest in a future.
+     */
+    private CompletableFuture<List<PlaceOfInterest>> getNearbyPlaces(Location location, String type) {
+        CompletableFuture<List<PlaceOfInterest>> result =
+                new CompletableFuture<>();
+
+        //retrieve the raw results from the query as a Json string
+        CompletableFuture<String> rawResult = helper.query(location, type);
+
+        getResult(rawResult, result);
 
         return result;
     }
 
     /**
      * Parse the JSON string given in argument to a JSON Array
+     *
      * @param rawSearch the Json String
      * @return CompletableFuture<JSONArray> the parsed data
      */
-    private CompletableFuture<JSONArray> parseNearbySearch(CompletableFuture<String> rawSearch) {
+    private CompletableFuture<JSONArray> parseRawResults(String rawSearch) {
         CompletableFuture<JSONArray> result = new CompletableFuture<>();
-        rawSearch.thenAccept(raw -> {
-            JSONObject json = null;
 
-            try {
-                json = (JSONObject) new JSONTokener(raw).nextValue();
-                String status = (String) json.get("status");
-                if (!status.equals("OK") && !status.equals("ZERO_RESULTS")) {
-                    result.completeExceptionally(new PlaceServiceException("failed to get the query"));
-                }
-                JSONArray resultsJson = json.getJSONArray("results");
+        JSONObject json = null;
 
-                if (resultsJson == null) {
-                    result.completeExceptionally(new PlaceServiceException("failed to convert candidates to json object"));
-                } else {
-                    result.complete(resultsJson);
-                }
-
-            } catch (JSONException e) {
-                result.completeExceptionally(e);
+        try {
+            json = (JSONObject) new JSONTokener(rawSearch).nextValue();
+            String status = (String) json.get("status");
+            if (!status.equals("OK") && !status.equals("ZERO_RESULTS")) {
+                result.completeExceptionally(new PlaceServiceException(
+                        "failed to get the query"));
             }
-        });
-        rawSearch.exceptionally(e -> {
+            JSONArray resultsJson = json.getJSONArray("results");
+
+            if (resultsJson == null) {
+                result.completeExceptionally(new PlaceServiceException(
+                        "failed to convert candidates to json object"));
+            } else {
+                result.complete(resultsJson);
+            }
+
+        } catch (JSONException e) {
             result.completeExceptionally(e);
-            return null;
-        });
+        }
         return result;
     }
 

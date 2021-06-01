@@ -266,4 +266,10 @@ public class AdActivity extends ToolbarActivity {
         });
     }
 
+    public void onNearbyPlacesClick(View view) {
+        Intent intent = new Intent(this, PlaceActivity.class);
+        intent.putExtra(ActivityCommunicationLayout.AD_ADDRESS, mViewModel.getAddress().getValue());
+        startActivity(intent);
+    }
+
 }

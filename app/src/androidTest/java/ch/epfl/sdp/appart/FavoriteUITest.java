@@ -46,6 +46,7 @@ import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -167,7 +168,7 @@ public class FavoriteUITest {
 
         pressBack();
 
-        ViewInteraction appCompatImageView = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
+        ViewInteraction appCompatImageView = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0));
         appCompatImageView.perform(forceClick());
 
         onView(withId(R.id.action_add_favorite)).perform(click());
@@ -192,17 +193,17 @@ public class FavoriteUITest {
                         isDisplayed()));
         appCompatTextView2.perform(click());
 
-        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 0),isDisplayed()));
+        onView(allOf(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0),isDisplayed()));
 
 
-        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 1),isDisplayed()));
+        onView(allOf(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1),isDisplayed()));
 
 
         pressBack();
 
         pressBack();
 
-        ViewInteraction appCompatImageView3 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
+        ViewInteraction appCompatImageView3 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0));
         appCompatImageView3.perform(forceClick());
 
         ViewInteraction actionMenuItemView3 = onView(
@@ -216,8 +217,8 @@ public class FavoriteUITest {
         actionMenuItemView3.perform(click());
 
         pressBack();
-
-        ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 1));
+        //hallo cirrus
+        ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1));
         appCompatImageView4.perform(forceClick());
 
         ViewInteraction actionMenuItemView4 = onView(
