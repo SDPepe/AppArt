@@ -21,6 +21,9 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.AppConfigurationModule;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import ch.epfl.sdp.appart.hilt.LoginModule;
+import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.login.MockLoginService;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -41,10 +44,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
+import static androidx.test.espresso.Espresso.pressBack;
+
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 
-@UninstallModules({DatabaseModule.class, AppConfigurationModule.class})
+@UninstallModules({DatabaseModule.class, AppConfigurationModule.class,
+        LoginModule.class})
 @HiltAndroidTest
 public class ScrollingUITest {
 
@@ -57,6 +63,9 @@ public class ScrollingUITest {
     @BindValue
     DatabaseService database = new MockDatabaseService();
 
+    @BindValue
+    LoginService loginService = new MockLoginService();
+
     //just to reset demo mode
     @BindValue
     ApplicationConfiguration configuration = new ApplicationConfiguration();
@@ -68,7 +77,7 @@ public class ScrollingUITest {
     }
 
     @Test
-    public void clickOnImageViewFromCardViewStartAnnounceActivity() throws InterruptedException {
+    public void clickOnImageViewFromCardViewStartAnnounceActivity() {
         ViewInteraction appCompatImageView = onView(
             ViewUtils.withIndex(withId(R.id.place_card_image_CardLayout_imageView),
                 0));
@@ -96,6 +105,15 @@ public class ScrollingUITest {
     public void clickOnFABStartsCreationActivity() {
         onView(withId(R.id.newAd_Scrolling_floatingActionButton)).perform(click());
         intended(hasComponent(AdCreationActivity.class.getName()));
+
+    }
+
+    @Test
+    public void onBackPressedTest() {
+        loginService.loginWithEmail("antoine@epfl.ch", "1111");
+        pressBack();
+
+
 
     }
 
