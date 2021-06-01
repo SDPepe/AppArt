@@ -71,14 +71,22 @@ public class ScrollingActivity extends ToolbarActivity {
         setContentView(R.layout.activity_scrolling);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("test");
-        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+        builder.setMessage(R.string.scrollingActivityAlertDialogMessage);
+        builder.setPositiveButton(R.string.scrollingActivityAlertDialogPositiveButton, (dialogInterface, i) -> {
             loginService.signOut();
             localDatabaseService.cleanFavorites();
             SharedPreferencesHelper.clearSavedUserForAutoLogin(this);
-            finish();
+
+            /*
+                We can't just do finish because we want to completely reset the login activity.
+                For instance, if we just use finish the progress bar still appears on the login activity
+                and there is no way to hide it.
+             */
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         });
-        builder.setNegativeButton("No", (dialogInterface, i) ->  {
+        builder.setNegativeButton(R.string.scrollingActivityAlertDialogNegativeButton, (dialogInterface, i) ->  {
         });
         onBackPressed = builder.create();
 
