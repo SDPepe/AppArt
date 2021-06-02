@@ -84,7 +84,7 @@ public class FavoriteViewModel extends ViewModel {
             return null;
         });
         cardsRes.thenAccept(cards -> {
-            new Handler(Looper.getMainLooper()).post(() -> lFavorites.setValue(new Pair(cards, true)));
+            lFavorites.postValue(new Pair(cards, true));
             result.complete(null);
         });
         return result;
