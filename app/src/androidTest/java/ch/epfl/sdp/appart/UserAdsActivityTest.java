@@ -8,20 +8,16 @@ import android.view.ViewParent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
@@ -42,10 +38,8 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.appart.ViewUtils.withIndex;
 import static org.hamcrest.Matchers.allOf;
@@ -128,7 +122,7 @@ public class UserAdsActivityTest {
                         isDisplayed()));
         appCompatTextView.perform(click());
 
-        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 0),isDisplayed()));
+        onView(allOf(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0),isDisplayed()));
     }
 
     @Test

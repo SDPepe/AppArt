@@ -23,6 +23,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import ch.epfl.sdp.appart.MainActivity;
 import ch.epfl.sdp.appart.R;
@@ -36,17 +37,21 @@ import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.user.User;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -54,6 +59,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertTrue;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
@@ -65,7 +72,7 @@ public class FavoriteUITest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityScenarioRule<MainActivity> mActivityTestRule = new ActivityScenarioRule<>(MainActivity.class);
+    public ActivityScenarioRule<ScrollingActivity> mActivityTestRule = new ActivityScenarioRule<>(ScrollingActivity.class);
 
     @BindValue
     LoginService login = new MockLoginService();
@@ -115,38 +122,10 @@ public class FavoriteUITest {
         // clear shared preferences to avoid auto-login
         mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
 
+        login.loginWithEmail("emilien@epfl.ch", "5555");
 
-        ViewInteraction appCompatEditText = onView(
-                Matchers.allOf(ViewMatchers.withId(R.id.email_Login_editText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText.perform(replaceText("emilien@epfl.ch"), closeSoftKeyboard());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.password_Login_editText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText2.perform(replaceText("5555"), closeSoftKeyboard());
-
-        onView(withId(R.id.login_Login_button)).perform(click());
-
-        ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.login_Scrolling_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        overflowMenuButton.perform(click());
 
         ViewInteraction appCompatTextView = onView(
                 allOf(withId(R.id.title), withText("Favorites"),
@@ -167,20 +146,16 @@ public class FavoriteUITest {
 
         pressBack();
 
-        ViewInteraction appCompatImageView = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
+        ViewInteraction appCompatImageView = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0));
         appCompatImageView.perform(forceClick());
 
         onView(withId(R.id.action_add_favorite)).perform(click());
 
-        ViewInteraction overflowMenuButton3 = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.account_Ad_toolbar),
-                                        1),
-                                1),
-                        isDisplayed()));
-        overflowMenuButton3.perform(click());
+        User currentUser = database.getUser(login.getCurrentUser().getUserId()).join();
+        assertThat(currentUser.getFavoritesIds().size(), greaterThan(0));
+        assertTrue(currentUser.getFavoritesIds().contains("unknown"));
+
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         ViewInteraction appCompatTextView2 = onView(
                 allOf(withId(R.id.title), withText("Favorites"),
@@ -192,17 +167,17 @@ public class FavoriteUITest {
                         isDisplayed()));
         appCompatTextView2.perform(click());
 
-        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 0),isDisplayed()));
+        onView(allOf(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0),isDisplayed()));
 
 
-        onView(allOf(withIndex(withId(R.id.image_CardLayout_imageView), 1),isDisplayed()));
+        onView(allOf(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1),isDisplayed()));
 
 
         pressBack();
 
         pressBack();
 
-        ViewInteraction appCompatImageView3 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 0));
+        ViewInteraction appCompatImageView3 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0));
         appCompatImageView3.perform(forceClick());
 
         ViewInteraction actionMenuItemView3 = onView(
@@ -216,8 +191,8 @@ public class FavoriteUITest {
         actionMenuItemView3.perform(click());
 
         pressBack();
-
-        ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.image_CardLayout_imageView), 1));
+        //hallo cirrus
+        ViewInteraction appCompatImageView4 = onView(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 1));
         appCompatImageView4.perform(forceClick());
 
         ViewInteraction actionMenuItemView4 = onView(
@@ -230,15 +205,7 @@ public class FavoriteUITest {
                         isDisplayed()));
         actionMenuItemView4.perform(click());
 
-        ViewInteraction overflowMenuButton4 = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.account_Ad_toolbar),
-                                        1),
-                                1),
-                        isDisplayed()));
-        overflowMenuButton4.perform(click());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         ViewInteraction appCompatTextView3 = onView(
                 allOf(withId(R.id.title), withText("Favorites"),
@@ -256,6 +223,11 @@ public class FavoriteUITest {
                                 withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
                         isDisplayed()));
         recyclerView3.check(matches(isDisplayed()));
+
+        currentUser = database.getUser(login.getCurrentUser().getUserId()).join();
+        assertThat(currentUser.getFavoritesIds().size(), greaterThan(0));
+        assertTrue(currentUser.getFavoritesIds().contains("unknown"));
+
     }
 
     private static ViewAction forceClick() {

@@ -146,9 +146,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         public CardViewHolder(View view) {
             super(view);
-            cardImageView = view.findViewById(R.id.image_CardLayout_imageView);
-            addressTextView = view.findViewById(R.id.city_CardLayout_textView);
-            priceTextView = view.findViewById(R.id.price_CardLayout_textView);
+            cardImageView = view.findViewById(R.id.place_card_image_CardLayout_imageView);
+            addressTextView = view.findViewById(R.id.place_name_card_textView);
+            priceTextView = view.findViewById(R.id.place_price_CardLayout_textView);
             vrAvailableImageView = view.findViewById(R.id.vrAvailable_CardLayout_imageView);
             deleteButton = view.findViewById(R.id.card_delete_button);
         }

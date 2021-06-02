@@ -96,8 +96,8 @@
       android:layout_marginTop="16dp"
       android:layout_marginStart="16dp"
       android:background="#4A272727"
-      app:layout_constraintTop_toTopOf="@+id/image_CardLayout_imageView"
-      app:layout_constraintStart_toStartOf="@+id/image_CardLayout_imageView"
+      app:layout_constraintTop_toTopOf="@+id/place_card_image_CardLayout_imageView"
+      app:layout_constraintStart_toStartOf="@+id/place_card_image_CardLayout_imageView"
       app:srcCompat="@drawable/quantum_ic_cardboard_white_24" />
 
 

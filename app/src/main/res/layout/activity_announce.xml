@@ -186,6 +186,23 @@
               android:textColor="@color/primaryStart"
               android:textSize="16sp" />
 
+            <Button
+                android:id="@+id/seeNearbyPlaces_Ad_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_button"
+                android:layout_marginEnd="@dimen/margin_button"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/style_secondary"
+                android:drawableEnd="@drawable/ic_location"
+                android:onClick="onNearbyPlacesClick"
+                android:paddingStart="40dp"
+                android:paddingEnd="16dp"
+                android:text="@string/seeNearbyPlacesText"
+                android:textAllCaps="false"
+                android:textColor="@color/primaryStart"
+                android:textSize="16sp" />
+
         </LinearLayout>
     </ScrollView>
 

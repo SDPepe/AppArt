@@ -21,7 +21,6 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.AppConfigurationModule;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
-import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -71,7 +70,7 @@ public class ScrollingUITest {
     @Test
     public void clickOnImageViewFromCardViewStartAnnounceActivity() throws InterruptedException {
         ViewInteraction appCompatImageView = onView(
-            ViewUtils.withIndex(withId(R.id.image_CardLayout_imageView),
+            ViewUtils.withIndex(withId(R.id.place_card_image_CardLayout_imageView),
                 0));
         appCompatImageView.perform(forceClick());
         intended(hasComponent(AdActivity.class.getName()));
