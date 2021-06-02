@@ -111,27 +111,7 @@ public class ScrollingUITest {
                                 0),
                         isDisplayed()));
         overflowMenuButton.perform(click());
-
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Settings"),
-                        ViewUtils.childAtPosition(
-                                ViewUtils.childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatTextView.perform(click());
-
-        ViewInteraction overflowMenuButton3 = onView(
-                allOf(withContentDescription("More options"),
-                        ViewUtils.childAtPosition(
-                                ViewUtils.childAtPosition(
-                                        withId(R.id.login_Scrolling_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        overflowMenuButton3.perform(click());
-
+        
         ViewInteraction appCompatTextView3 = onView(
                 allOf(withId(R.id.title), withText("Log Out"),
                         ViewUtils.childAtPosition(

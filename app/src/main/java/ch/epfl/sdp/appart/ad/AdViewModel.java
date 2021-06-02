@@ -32,11 +32,17 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
-    private final MutableLiveData<String> adDescription = new MutableLiveData<>();
-    private final MutableLiveData<String> adAdvertiserName = new MutableLiveData<>();
-    private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> adPhotosReferences = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
+    private final MutableLiveData<String> adDescription =
+            new MutableLiveData<>();
+    private final MutableLiveData<String> adAdvertiserName =
+            new MutableLiveData<>();
+    private final MutableLiveData<String> adAdvertiserId =
+            new MutableLiveData<>();
+    private final MutableLiveData<List<String>> adPhotosReferences =
+            new MutableLiveData<>();
+    private final MutableLiveData<List<String>> panoramasReferences =
+            new MutableLiveData<>();
+    private final MutableLiveData<Boolean> hasVTour = new MutableLiveData<>();
     private final MutableLiveData<Boolean> hasLoaded = new MutableLiveData<>();
 
     @Inject
@@ -96,6 +102,9 @@ public class AdViewModel extends ViewModel {
         return adAdvertiserId;
     }
 
+    public LiveData<Boolean> getHasVTour() {
+        return hasVTour;
+    }
     public LiveData<Boolean> getHasLoaded() {
         return hasLoaded;
     }
@@ -161,6 +170,17 @@ public class AdViewModel extends ViewModel {
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
             this.adPhotosReferences.setValue(ad.getPhotosRefs());
             this.panoramasReferences.setValue(ad.getPanoramaReferences());
+            /*
+                This is not exactly set as the equivalent of the hasVRTour
+                attribute. However, this modification prevent some crashes in
+                 the PanoramaActivity.
+                 Some ads have the boolean hasVTour at false, while they have
+                  panoramaReferences.
+                 I think this is because while building an ad you have to
+                 explicitly set the hasVTour and this can be forgotten.
+                 Maybe here we can only rely on the panoramaReferences size.
+             */
+            this.hasVTour.setValue(ad.getPanoramaReferences().size() > 0);
             this.hasLoaded.setValue(true);
             result.complete(null);
         });
