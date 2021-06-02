@@ -25,6 +25,7 @@ public class MockLocalDatabase implements LocalDatabaseService {
     Map<String, User> users;
     Ad ad;
     List<Card> cards = new ArrayList<>();
+    private User currentUser = null;
 
     public MockLocalDatabase() {
         users = new HashMap<>();
@@ -67,7 +68,7 @@ public class MockLocalDatabase implements LocalDatabaseService {
 
     @Override
     public User getCurrentUser() {
-        return null;
+        return currentUser;
     }
 
     @Override
@@ -112,7 +113,8 @@ public class MockLocalDatabase implements LocalDatabaseService {
 
     @Override
     public CompletableFuture<Void> setCurrentUser(User currentUser, Bitmap profilePic) {
-        throw new NotImplementedError();
+        this.currentUser = null;
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

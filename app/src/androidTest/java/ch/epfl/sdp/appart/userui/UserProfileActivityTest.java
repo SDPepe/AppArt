@@ -110,8 +110,7 @@ public class UserProfileActivityTest {
         hiltRule.inject();
         login.signOut();
         // clear shared preferences to avoid auto-login
-        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
-        mActivityTestRule.getScenario().onActivity(Activity::recreate);
+        SharedPreferencesHelper.clearSavedUserForAutoLogin(InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
     @Test
     public void userProfileActivityTest() throws UiObjectNotFoundException {
