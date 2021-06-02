@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import androidx.test.InstrumentationRegistry;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -31,6 +30,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,6 +39,10 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.Until;
 
 @HiltAndroidTest
 @UninstallModules({PlaceModule.class})
@@ -56,8 +60,7 @@ public class NearbyPlacesTest {
     @Rule(order = 1)
     public ActivityScenarioRule<PlaceActivity> placeActivityRule = new ActivityScenarioRule<>(intent);
 
-    private final Context context =
-            InstrumentationRegistry.getInstrumentation().getTargetContext();
+    private final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
     @BindValue
     public final PlaceService placeService = new PlaceService(new MockPlaceServiceHelper(context), new MockGeocodingService());
@@ -68,9 +71,24 @@ public class NearbyPlacesTest {
     }
 
     @Test
-    public void selectItemsShowsList() {
+    public void selectItemsShowsList() throws InterruptedException {
         onView(withId(R.id.spinner_place_activity)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("gym"))).perform(click());
+
+        UiDevice device =
+                UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+        /*
+            Sometimes it takes some time to display the cards, which caused errors on cirrus.
+            With this, we are sure to wait for the cards to display.
+         */
+        boolean foundCard = device.wait(Until.hasObject(By.textContains("Hôtel du " +
+                        "Théâtr-\ne")),
+                10000);
+        assertThat(foundCard, is(true));
+
+        //Thread.sleep(4000);
+
         onView(withId(R.id.places_Place_recyclerView)).perform(closeSoftKeyboard())
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, scrollTo()))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
@@ -89,6 +107,11 @@ public class NearbyPlacesTest {
         //the re-click on the same to test the cache
         onView(withId(R.id.spinner_place_activity)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("gym"))).perform(click());
+
+        foundCard = device.wait(Until.hasObject(By.textContains("Hôtel du " +
+                        "Théâtr-\ne")),
+                10000);
+        assertThat(foundCard, is(true));
 
         //same data must be shown
         onView(withId(R.id.places_Place_recyclerView))
