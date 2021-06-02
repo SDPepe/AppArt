@@ -59,6 +59,7 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
@@ -139,7 +140,7 @@ public class UserProfileActivityTest {
                 isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction overflowMenuButton = onView(
+        /*ViewInteraction overflowMenuButton = onView(
             allOf(withContentDescription("More options"),
                 childAtPosition(
                     childAtPosition(
@@ -147,7 +148,8 @@ public class UserProfileActivityTest {
                         1),
                     0),
                 isDisplayed()));
-        overflowMenuButton.perform(click());
+        overflowMenuButton.perform(click());*/
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         ViewInteraction appCompatTextView = onView(
             allOf(withId(R.id.title), withText("Account"),
