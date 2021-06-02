@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +64,8 @@ public class FavoriteActivity extends ToolbarActivity {
      *
      * @param ls a list of card.
      */
-    private void updateList(List<Card> ls) {
-        recyclerView.setAdapter(new CardAdapter(this, database, ls));
+    private void updateList(Pair<List<Card>, Boolean> ls) {
+        recyclerView.setAdapter(new CardAdapter(this, database, ls.first, false, ls.second));
     }
 
     /**
@@ -72,7 +73,7 @@ public class FavoriteActivity extends ToolbarActivity {
      * locally.
      */
     private void updateFavsLocally() {
-        List<Card> favs = mViewModel.getFavorites().getValue();
+        List<Card> favs = mViewModel.getFavorites().getValue().first;
         for (int i = 0; i < favs.size(); i++) {
             Card card = favs.get(i);
             CompletableFuture<Ad> adRes = database.getAd(card.getAdId());

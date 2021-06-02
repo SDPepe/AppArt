@@ -2,8 +2,11 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -144,25 +147,32 @@ public class AdActivity extends ToolbarActivity {
         }
     }
 
-    private void updatePhotos(List<String> references) {
+    private void updatePhotos(Pair<List<String>, Boolean> referencesAndIsLocal) {
         LinearLayout horizontalLayout =
                 findViewById(R.id.horizontal_children_Ad_linearLayout);
         horizontalLayout.removeAllViews();
-
+        List<String> references = referencesAndIsLocal.first;
+        boolean isLocal = referencesAndIsLocal.second;
         for (int i = 0; i < references.size(); i++) {
             String sep = FirebaseLayout.SEPARATOR;
-            String fullRef =
-                    FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.photo_layout,
                     (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
-            database.accept(new GlideImageViewLoader(this, photo, fullRef));
+            String fullRef;
+            if(isLocal) {
+                fullRef = references.get(i);
+                Bitmap bitmap = BitmapFactory.decodeFile(fullRef);
+                photo.setImageBitmap(bitmap);
+            } else {
+                fullRef =  FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
+                database.accept(new GlideImageViewLoader(this, photo, fullRef));
+            }
             horizontalLayout.addView(myView);
 
             // open image fullscreen on tap
-            myView.setOnClickListener(e -> openImageFullscreen(fullRef));
+            myView.setOnClickListener(e -> openImageFullscreen(fullRef, isLocal));
         }
     }
 
@@ -241,9 +251,10 @@ public class AdActivity extends ToolbarActivity {
         startActivity(intent);
     }
 
-    private void openImageFullscreen(String imageId) {
+    private void openImageFullscreen(String imageId, boolean isLocal) {
         Intent intent = new Intent(this, FullScreenImageActivity.class);
         intent.putExtra("imageId", imageId);
+        intent.putExtra("isLocalExtra", isLocal);
         startActivity(intent);
     }
 

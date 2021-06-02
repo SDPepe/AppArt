@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.ad;
 
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
@@ -38,7 +40,7 @@ public class AdViewModel extends ViewModel {
             new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiserId =
             new MutableLiveData<>();
-    private final MutableLiveData<List<String>> adPhotosReferences =
+    private final MutableLiveData<Pair<List<String>, Boolean>> adPhotosReferences =
             new MutableLiveData<>();
     private final MutableLiveData<List<String>> panoramasReferences =
             new MutableLiveData<>();
@@ -78,7 +80,7 @@ public class AdViewModel extends ViewModel {
         return adTitle;
     }
 
-    public LiveData<List<String>> getPhotosRefs() {
+    public LiveData<Pair<List<String>, Boolean>> getPhotosRefs() {
         return adPhotosReferences;
     }
 
@@ -120,7 +122,7 @@ public class AdViewModel extends ViewModel {
      */
     private CompletableFuture<Void> localLoad(String adId) {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        setAdValues(result, localdb.getAd(adId));
+        setAdValues(result, localdb.getAd(adId), true);
         return result;
     }
 
@@ -128,14 +130,14 @@ public class AdViewModel extends ViewModel {
      * Fetches ad data from the server
      */
     private void fetchAndSet(CompletableFuture<Void> result, String adId) {
-        setAdValues(result, db.getAd(adId));
+        setAdValues(result, db.getAd(adId), false);
     }
 
     /**
      * Helper to set values from an ad
      */
     private void setAdValues(CompletableFuture<Void> result,
-                             CompletableFuture<Ad> adRes) {
+                             CompletableFuture<Ad> adRes, boolean isLocal) {
         adRes.exceptionally(e -> {
             result.completeExceptionally(e);
             return null;
@@ -168,7 +170,7 @@ public class AdViewModel extends ViewModel {
             this.adDescription.setValue(ad.getDescription());
             this.adAdvertiserName.setValue(ad.getAdvertiserName());
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
-            this.adPhotosReferences.setValue(ad.getPhotosRefs());
+            this.adPhotosReferences.setValue(new Pair(ad.getPhotosRefs(), isLocal));
             this.panoramasReferences.setValue(ad.getPanoramaReferences());
             /*
                 This is not exactly set as the equivalent of the hasVRTour

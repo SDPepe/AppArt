@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,7 +30,13 @@ public class FullScreenImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fullscreen_image);
         ResizableImageView photo = findViewById(R.id.image_FullScreenImage_imageView);
         String fullRef = getIntent().getStringExtra("imageId");
-        db.accept(new GlideImageViewLoader(this, photo, fullRef));
+        boolean isLocal = getIntent().getBooleanExtra("isLocalExtra", false);
+        if(isLocal) {
+            Bitmap bitmap = BitmapFactory.decodeFile(fullRef);
+            photo.setImageBitmap(bitmap);
+        } else {
+            db.accept(new GlideImageViewLoader(this, photo, fullRef));
+        }
     }
 
 }

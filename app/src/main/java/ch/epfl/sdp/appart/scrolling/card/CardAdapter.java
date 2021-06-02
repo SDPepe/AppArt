@@ -3,6 +3,8 @@ package ch.epfl.sdp.appart.scrolling.card;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +41,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     private final Context context;
     private final DatabaseService database;
     private final boolean isUserAd;
+    private final boolean isLocal;
 
     /**
      * Constructor of the card adapter.
@@ -47,7 +50,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
      * @param database the database where the card images are fetched
      * @param cards    list of Firebase Storage image references
      */
-    public CardAdapter(Activity context, DatabaseService database, List<Card> cards, boolean isUserAd) {
+    public CardAdapter(Activity context, DatabaseService database, List<Card> cards, boolean isUserAd, boolean isLocal) {
         if (cards == null)
             throw new IllegalArgumentException("cards cannot be null");
         if (context == null)
@@ -57,6 +60,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         this.context = context;
         this.database = database;
         this.isUserAd = isUserAd;
+        this.isLocal = isLocal;
+    }
+
+    /**
+     * Constructor of the card adapter.
+     *
+     * @param context  the parent activity
+     * @param database the database where the card images are fetched
+     * @param cards    list of Firebase Storage image references
+     */
+    public CardAdapter(Activity context, DatabaseService database, List<Card> cards, boolean isUserAd) {
+        this(context, database, cards, isUserAd, false);
     }
 
     public CardAdapter(Activity context, DatabaseService database, List<Card> cards) {
@@ -100,8 +115,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         // load image from database into ImageView
         String sep = FirebaseLayout.SEPARATOR;
-        database.accept(new GlideImageViewLoader(context, holder.cardImageView,
-                CardLayout.IMAGE_DIRECTORY + sep + card.getAdId() + sep + card.getImageUrl()));
+        if(isLocal) {
+            Bitmap bitmap = BitmapFactory.decodeFile(card.getImageUrl());
+            holder.cardImageView.setImageBitmap(bitmap);
+        }
+        else {
+            database.accept(new GlideImageViewLoader(context, holder.cardImageView,
+                    CardLayout.IMAGE_DIRECTORY + sep + card.getAdId() + sep + card.getImageUrl()));
+        }
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(String.format("%d.-/mo", card.getPrice()));
         if (!card.hasVRTour())

@@ -3,6 +3,7 @@ package ch.epfl.sdp.appart.favorites;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -32,7 +33,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class FavoriteViewModel extends ViewModel {
 
-    private final MutableLiveData<List<Card>> lFavorites = new MutableLiveData<>();
+    private final MutableLiveData<Pair<List<Card>, Boolean>> lFavorites = new MutableLiveData<>();
     final DatabaseService database;
     final LoginService loginService;
     final LocalDatabaseService localdb;
@@ -68,7 +69,7 @@ public class FavoriteViewModel extends ViewModel {
     /**
      * Getter for the LiveData of the list of favorite cards
      */
-    public MutableLiveData<List<Card>> getFavorites() {
+    public MutableLiveData<Pair<List<Card>, Boolean>> getFavorites() {
         return lFavorites;
     }
 
@@ -83,7 +84,7 @@ public class FavoriteViewModel extends ViewModel {
             return null;
         });
         cardsRes.thenAccept(cards -> {
-            new Handler(Looper.getMainLooper()).post(() -> lFavorites.setValue(cards));
+            new Handler(Looper.getMainLooper()).post(() -> lFavorites.setValue(new Pair(cards, true)));
             result.complete(null);
         });
         return result;
@@ -102,7 +103,7 @@ public class FavoriteViewModel extends ViewModel {
                 .exceptionally(e -> {
                     Log.d("EXCEPTION_DB", e.getMessage());
                     result.completeExceptionally(e);
-                    lFavorites.setValue(new ArrayList<>());
+                    lFavorites.setValue(new Pair<>(new ArrayList<>(), false));
                     return null;
                 })
                 .thenAccept(u -> {
@@ -131,7 +132,7 @@ public class FavoriteViewModel extends ViewModel {
             if (favoritesIds.contains(c.getAdId()))
                 filteredCards.add(c);
         }
-        lFavorites.setValue(filteredCards);
+        lFavorites.setValue(new Pair<>(filteredCards, false));
     }
 
 }
