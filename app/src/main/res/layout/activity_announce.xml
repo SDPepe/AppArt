@@ -218,7 +218,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:subtitleTextColor="#FFFFFF "
-        app:titleTextColor="#FFFFFF "/>
+        app:titleTextColor="@android:color/white"/>
 
     <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline_add1"
