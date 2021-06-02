@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         setViews();
 
+
         String email = SharedPreferencesHelper.getSavedEmail(this);
         if (!email.equals("")) {
             String password = SharedPreferencesHelper.getSavedPassword(this);
