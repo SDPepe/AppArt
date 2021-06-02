@@ -5,6 +5,7 @@ import static android.widget.Toast.makeText;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,6 +26,8 @@ import ch.epfl.sdp.appart.utils.PermissionRequest;
 import javax.inject.Inject;
 
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.List;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
@@ -106,15 +109,16 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     }
 
     private void onEmail() {
+
+
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{advertiserUser.getUserEmail()});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Rent apartment");
-        if (intent.resolveActivity(getPackageManager()) != null) {
+        try {
             startActivity(intent);
-        } else {
+        } catch (Exception e) {
             makeText(this, "Error open email, try again",Toast.LENGTH_SHORT).show();
-
         }
     }
     private void onCall() {

@@ -65,4 +65,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <category android:name="android.intent.category." />
+        </intent>
+    </queries>
 </manifest>
