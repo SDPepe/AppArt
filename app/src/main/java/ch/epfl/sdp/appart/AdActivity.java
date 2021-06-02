@@ -2,8 +2,6 @@ package ch.epfl.sdp.appart;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +18,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +32,13 @@ import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
-import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
-import ch.epfl.sdp.appart.utils.DatabaseSync;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static android.widget.Toast.makeText;
 
 /**
  * This class manages the UI of the ad.
@@ -61,10 +63,30 @@ public class AdActivity extends ToolbarActivity {
     private String adId;
     private AdViewModel mViewModel;
 
+    private Button panoramaButton;
+    private Button contactButton;
+    private Button seeLocationButton;
+    private Button seeNearbyPlacesButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
+
+        /**
+         * Retrieve buttons
+         */
+        panoramaButton = findViewById(R.id.vtour_Ad_button);
+        contactButton = findViewById(R.id.contact_info_Ad_button);
+        seeLocationButton = findViewById(R.id.seeLocation_Ad_button);
+        seeNearbyPlacesButton = findViewById(R.id.seeNearbyPlaces_Ad_button);
+
+        panoramaButton.setOnClickListener(this::noInformationOnClickListener);
+        contactButton.setOnClickListener(this::noInformationOnClickListener);
+        seeLocationButton.setOnClickListener(this::noInformationOnClickListener);
+        seeNearbyPlacesButton.setOnClickListener(this::noInformationOnClickListener);
+
+
         panoramasReferences = new ArrayList<>();
         mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
@@ -81,6 +103,8 @@ public class AdActivity extends ToolbarActivity {
         mViewModel.getAdvertiserId().observe(this, this::updateAdvertiserId);
         mViewModel.observePanoramasReferences(this,
                 this::updatePanoramasReferences);
+        mViewModel.getHasLoaded().observe(this, this::setNormalClickListeners);
+
 
         adId = getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_AD_ID);
         // init content, show a toast if load failed
@@ -89,6 +113,20 @@ public class AdActivity extends ToolbarActivity {
                     Log.d("AD", "Failed to fetch data from server");
                     return null;
                 });
+
+
+    }
+
+    public void noInformationOnClickListener(View view) {
+        Snackbar.make(view, R.string.buttonInfoMessageAdNotLoaded,
+                BaseTransientBottomBar.LENGTH_SHORT).show();
+    }
+
+    private void setNormalClickListeners(Boolean hasLoaded) {
+        panoramaButton.setOnClickListener(this::openVirtualTour);
+        contactButton.setOnClickListener(this::openContactInfo);
+        seeLocationButton.setOnClickListener(this::onSeeLocationClick);
+        seeNearbyPlacesButton.setOnClickListener(this::onNearbyPlacesClick);
     }
 
     private void updateTitle(String title) {
@@ -218,7 +256,7 @@ public class AdActivity extends ToolbarActivity {
                 return null;
             });
             addRes.thenAccept(res ->
-                    Toast.makeText(this, R.string.favSuccess_Ad,
+                    makeText(this, R.string.favSuccess_Ad,
                             Toast.LENGTH_SHORT).show()
             );
             return true;
@@ -234,7 +272,8 @@ public class AdActivity extends ToolbarActivity {
         // check that the user is logged in
         User user = login.getCurrentUser();
         if (user == null) {
-            result.completeExceptionally(new IllegalStateException("User has to be logged in"));
+            result.completeExceptionally(new IllegalStateException("User has " +
+                    "to be logged in"));
             return result;
         }
         CompletableFuture<User> userRes = database.getUser(user.getUserId());
@@ -248,7 +287,8 @@ public class AdActivity extends ToolbarActivity {
     }
 
     /**
-     * Adds the ad id to the list of favorites of the user and update the user in the server.
+     * Adds the ad id to the list of favorites of the user and update the
+     * user in the server.
      */
     private void saveFavorite(CompletableFuture<Void> result, User user) {
         user.addFavorite(adId);
@@ -268,7 +308,8 @@ public class AdActivity extends ToolbarActivity {
 
     public void onNearbyPlacesClick(View view) {
         Intent intent = new Intent(this, PlaceActivity.class);
-        intent.putExtra(ActivityCommunicationLayout.AD_ADDRESS, mViewModel.getAddress().getValue());
+        intent.putExtra(ActivityCommunicationLayout.AD_ADDRESS,
+                mViewModel.getAddress().getValue());
         startActivity(intent);
     }
 
