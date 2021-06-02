@@ -59,6 +59,7 @@ import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
@@ -109,8 +110,7 @@ public class UserProfileActivityTest {
         hiltRule.inject();
         login.signOut();
         // clear shared preferences to avoid auto-login
-        mActivityTestRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
-        mActivityTestRule.getScenario().onActivity(Activity::recreate);
+        SharedPreferencesHelper.clearSavedUserForAutoLogin(InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
     @Test
     public void userProfileActivityTest() throws UiObjectNotFoundException {
@@ -139,15 +139,7 @@ public class UserProfileActivityTest {
                 isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction overflowMenuButton = onView(
-            allOf(withContentDescription("More options"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.login_Scrolling_toolbar),
-                        1),
-                    0),
-                isDisplayed()));
-        overflowMenuButton.perform(click());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         ViewInteraction appCompatTextView = onView(
             allOf(withId(R.id.title), withText("Account"),

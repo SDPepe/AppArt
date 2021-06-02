@@ -17,7 +17,10 @@ import ch.epfl.sdp.appart.user.AppUser;
 import ch.epfl.sdp.appart.user.User;
 import kotlin.NotImplementedError;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
@@ -109,10 +112,12 @@ public class MockLocalDatabaseTest {
     }
 
     @Test
-    public void setCurrentUserThrows() {
-        assertThrows(NotImplementedError.class, () -> {
-            localdb.setCurrentUser(null, null);
-        });
+    public void setCurrentUserWorks() {
+        AppUser test = new AppUser("testIDsetCurrentUserWorks", "test");
+       localdb.setCurrentUser(test, null).join();
+       User currentUser = localdb.getCurrentUser();
+       assertNotNull(currentUser);
+       assertThat(currentUser.getUserId(), is(test.getUserId()));
     }
 
     @Test
