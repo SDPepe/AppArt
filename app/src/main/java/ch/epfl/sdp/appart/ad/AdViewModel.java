@@ -32,16 +32,12 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<String> adTitle = new MutableLiveData<>();
     private final MutableLiveData<String> adAddress = new MutableLiveData<>();
     private final MutableLiveData<String> adPrice = new MutableLiveData<>();
-    private final MutableLiveData<String> adDescription =
-            new MutableLiveData<>();
-    private final MutableLiveData<String> adAdvertiserName =
-            new MutableLiveData<>();
-    private final MutableLiveData<String> adAdvertiserId =
-            new MutableLiveData<>();
-    private final MutableLiveData<List<String>> adPhotosReferences =
-            new MutableLiveData<>();
-    private final MutableLiveData<List<String>> panoramasReferences =
-            new MutableLiveData<>();
+    private final MutableLiveData<String> adDescription = new MutableLiveData<>();
+    private final MutableLiveData<String> adAdvertiserName = new MutableLiveData<>();
+    private final MutableLiveData<String> adAdvertiserId = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> adPhotosReferences = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> panoramasReferences = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> hasLoaded = new MutableLiveData<>();
 
     @Inject
     public AdViewModel(DatabaseService db, LocalDatabaseService localdb) {
@@ -98,6 +94,10 @@ public class AdViewModel extends ViewModel {
 
     public LiveData<String> getAdvertiserId() {
         return adAdvertiserId;
+    }
+
+    public LiveData<Boolean> getHasLoaded() {
+        return hasLoaded;
     }
 
     @Nullable
@@ -161,6 +161,7 @@ public class AdViewModel extends ViewModel {
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
             this.adPhotosReferences.setValue(ad.getPhotosRefs());
             this.panoramasReferences.setValue(ad.getPanoramaReferences());
+            this.hasLoaded.setValue(true);
             result.complete(null);
         });
     }
