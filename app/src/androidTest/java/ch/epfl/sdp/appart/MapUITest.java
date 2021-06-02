@@ -180,6 +180,7 @@ public class MapUITest {
         boolean isMarkerPresent =
                 device.hasObject(By.descContains(card.getCity())) | device.wait(Until.hasObject(By.descContains(card.getCity())), 10000);
         assertThat(isMarkerPresent, is(true));
+        
 
 
         UiObject2 marker = device.findObject(By.descContains(card.getCity()));

@@ -144,4 +144,12 @@ public class MockDatabaseTest {
         assertThrows(ExecutionException.class, () -> dataBase.deleteImage(null).get());
     }
 
+    @Test
+    public void deleteAdIsSuccessful() {
+        dataBase.getCards().thenAccept(ls -> {
+            int initSize = ls.size();
+            assertTrue(dataBase.deleteAd("1111", "1111").getNow(false));
+            dataBase.getCards().thenAccept(newLs -> assertEquals(newLs.size(), initSize >= 1 ? initSize - 1 : 0)); });
+    }
+
 }

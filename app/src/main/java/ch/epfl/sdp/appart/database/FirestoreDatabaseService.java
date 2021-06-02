@@ -138,6 +138,13 @@ public class FirestoreDatabaseService implements DatabaseService {
     }
 
     @NotNull
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> deleteAd(String adId, String cardId) {
+        return adHelper.deleteAd(adId, cardId);
+    }
+
+    @NotNull
     @Override
     @NonNull
     public CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName) {
