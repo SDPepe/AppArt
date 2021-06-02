@@ -107,6 +107,7 @@ public class AdViewModel extends ViewModel {
     public LiveData<Boolean> getHasVTour() {
         return hasVTour;
     }
+
     public LiveData<Boolean> getHasLoaded() {
         return hasLoaded;
     }
@@ -163,15 +164,22 @@ public class AdViewModel extends ViewModel {
                 return;
             }
             this.ad = ad;
-            this.adAddress.setValue(addressFrom(ad.getStreet(), ad.getCity()));
-            this.adTitle.setValue(ad.getTitle());
-            this.adPrice.setValue(priceFrom(ad.getPrice(),
+
+            /*
+                We need to use postValue because setValue only works from the
+                 main thread. However, this lambda ban be called from a
+                 background thread.
+             */
+            this.adAddress.postValue(addressFrom(ad.getStreet(), ad.getCity()));
+            this.adTitle.postValue(ad.getTitle());
+            this.adPrice.postValue(priceFrom(ad.getPrice(),
                     ad.getPricePeriod()));
-            this.adDescription.setValue(ad.getDescription());
-            this.adAdvertiserName.setValue(ad.getAdvertiserName());
-            this.adAdvertiserId.setValue(ad.getAdvertiserId());
-            this.adPhotosReferences.setValue(new Pair(ad.getPhotosRefs(), isLocal));
-            this.panoramasReferences.setValue(new Pair(ad.getPanoramaReferences(), isLocal));
+            this.adDescription.postValue(ad.getDescription());
+            this.adAdvertiserName.postValue(ad.getAdvertiserName());
+            this.adAdvertiserId.postValue(ad.getAdvertiserId());
+            this.adPhotosReferences.postValue(new Pair(ad.getPhotosRefs(),
+                    isLocal));
+            this.panoramasReferences.postValue(new Pair(ad.getPanoramaReferences(), isLocal));
             /*
                 This is not exactly set as the equivalent of the hasVRTour
                 attribute. However, this modification prevent some crashes in
@@ -182,8 +190,8 @@ public class AdViewModel extends ViewModel {
                  explicitly set the hasVTour and this can be forgotten.
                  Maybe here we can only rely on the panoramaReferences size.
              */
-            this.hasVTour.setValue(ad.getPanoramaReferences().size() > 0);
-            this.hasLoaded.setValue(true);
+            this.hasVTour.postValue(ad.getPanoramaReferences().size() > 0);
+            this.hasLoaded.postValue(true);
             result.complete(null);
         });
     }

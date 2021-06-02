@@ -14,6 +14,7 @@ import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,10 +63,10 @@ public class PanoramaActivity extends AppCompatActivity {
                 && extras.containsKey(AdActivity.Intents.INTENT_AD_ID))  {
             images = extras.getStringArrayList(AdActivity.Intents.INTENT_PANORAMA_PICTURES);
             //This is needed to remove double / in paths : data//file --> data/file
-            images.stream().map(imagePath -> imagePath.replaceAll("/+", "/"));
+            isLocal = extras.getBoolean("isLocalExtra");
             Collections.sort(images, new FirebaseIndexedImagesComparator());
             currentAdId = extras.getString(AdActivity.Intents.INTENT_AD_ID);
-            isLocal = extras.getBoolean("isLocalExtra");
+
         }
 
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
