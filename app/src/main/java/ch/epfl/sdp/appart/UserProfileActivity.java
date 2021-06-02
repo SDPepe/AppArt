@@ -76,6 +76,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         initUIComponents();
+        modifyButton.setVisibility(View.INVISIBLE);
 
         /* get user from database from user ID */
         CompletableFuture<Void> userRes = mViewModel.getCurrentUser();
@@ -207,6 +208,7 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     private void setSessionUserToLocal(User user) {
         this.sessionUser = user;
+        modifyButton.setVisibility(View.VISIBLE);
 
         /* set attributes of session user to the UI components */
         getAndSetCurrentAttributes();
