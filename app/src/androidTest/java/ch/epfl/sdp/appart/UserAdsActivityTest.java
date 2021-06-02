@@ -26,6 +26,7 @@ import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -38,6 +39,7 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -182,11 +184,15 @@ public class UserAdsActivityTest {
         appCompatTextView.perform(click());
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.card_delete_button), withText("Delete Ad"),
-                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.TableLayout.class))),
-                        isDisplayed()));
+                allOf(withId(R.id.card_delete_button), withText("Delete Ad"), isDisplayed()));
         button.check(matches(isDisplayed()));
+        button.perform(click());
 
+        database.getCards().thenAccept(ls -> {
+            boolean found = false;
+            for (Card c : ls) if (c.getUserId().equals("5555")) found = true;
+            assertThat(found, is(false));
+        });
 
     }
 
