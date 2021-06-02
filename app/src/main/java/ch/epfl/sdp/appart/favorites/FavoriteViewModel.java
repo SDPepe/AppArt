@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.favorites;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -81,7 +83,7 @@ public class FavoriteViewModel extends ViewModel {
             return null;
         });
         cardsRes.thenAccept(cards -> {
-            lFavorites.setValue(cards);
+            new Handler(Looper.getMainLooper()).post(() -> lFavorites.setValue(cards));
             result.complete(null);
         });
         return result;
