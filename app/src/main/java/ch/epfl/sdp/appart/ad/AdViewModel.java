@@ -137,6 +137,25 @@ public class AdViewModel extends ViewModel {
             return null;
         });
         adRes.thenAccept(ad -> {
+            /*
+            If the ad is null then the ad isn't stored locally --> it is
+            not on disk
+            Having a null ad here probably caused a NullPointerException, and
+             since this is executed in another
+            thread, it just disappeared... And therefore, the future was
+            never completed,
+            which resulted in fetchAndSet never being called.
+            If an ad is null, we can just complete with null directly.
+            We could also modify the behavior of the get in the local
+            database to maybe
+            complete exceptionally when an id is not present in the data
+            structure.
+            However, this is probably the simplest solution.
+            */
+            if (ad == null) {
+                result.complete(null);
+                return;
+            }
             this.ad = ad;
             this.adAddress.setValue(addressFrom(ad.getStreet(), ad.getCity()));
             this.adTitle.setValue(ad.getTitle());
