@@ -103,7 +103,7 @@ public class LocalDatabase implements LocalDatabaseService {
      * @return the current user if it manages to find one, throws
      * {@link IllegalStateException} otherwise.
      */
-    public User getCurrentUser() {
+    public User getCurrentUser() throws IllegalStateException {
         User currentUser;
         if (this.currentUser == null) {
             currentUser = loadCurrentUser();
@@ -318,17 +318,27 @@ public class LocalDatabase implements LocalDatabaseService {
         //Basically we reach this point even though firstLoad is true
         clearMemory();
 
+        CompletableFuture<T> futureData = new CompletableFuture<>();
+        User currentUser;
+
+        try {
+            currentUser = getCurrentUser();
+        } catch (IllegalStateException e){
+            e.printStackTrace();
+            futureData.completeExceptionally(e);
+            return futureData;
+        }
+
         CompletableFuture<Void> futureReadAd =
-                LocalAdReader.readAdDataForAUser(getCurrentUser().getUserId(),
+                LocalAdReader.readAdDataForAUser(currentUser.getUserId(),
                         this.cards, this.idsToAd, this.adIdsToPanoramas);
         CompletableFuture<Void> futureReadUser =
-                LocalUserReader.readUsers(getCurrentUser().getUserId(),
+                LocalUserReader.readUsers(currentUser.getUserId(),
                         this.idsToUser, this.userIds);
 
         CompletableFuture<Void> combinedFuture =
                 CompletableFuture.allOf(futureReadAd, futureReadUser);
 
-        CompletableFuture<T> futureData = new CompletableFuture<>();
         combinedFuture.thenAccept(arg -> {
             futureData.complete(returnFunc.get());
             this.firstLoad = true;
@@ -389,8 +399,17 @@ public class LocalDatabase implements LocalDatabaseService {
      * @param cardId the id of the card
      */
     public void removeCard(String cardId) {
+        // if there is no currentUser, then card is no present
+        User currentUser;
+        try {
+            currentUser = getCurrentUser();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return;
+        }
+
         String pathToCard =
-                LocalDatabasePaths.cardFolder(getCurrentUser().getUserId(),
+                LocalDatabasePaths.cardFolder(currentUser.getUserId(),
                         cardId);
         FileIO.deleteDirectory(new File(pathToCard));
 
@@ -420,7 +439,7 @@ public class LocalDatabase implements LocalDatabaseService {
             this.userIds.remove(userId);
             this.idsToUser.remove(userId);
             String userPath =
-                    LocalDatabasePaths.userFolder(getCurrentUser().getUserId(), userId);
+                    LocalDatabasePaths.userFolder(currentUser.getUserId(), userId);
             FileIO.deleteDirectory(new File(userPath));
         }
     }

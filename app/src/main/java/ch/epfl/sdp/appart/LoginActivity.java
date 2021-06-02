@@ -48,21 +48,15 @@ public class LoginActivity extends AppCompatActivity {
         String email = SharedPreferencesHelper.getSavedEmail(this);
         if (!email.equals("")) {
             String password = SharedPreferencesHelper.getSavedPassword(this);
-            CompletableFuture<User> loginRes = loginService.loginWithEmail(email, password);
+            CompletableFuture<User> loginRes =
+                    loginService.loginWithEmail(email, password);
             loginRes.exceptionally(e -> {
                 Log.d("LOGIN", "Couldn't login to firebase");
                 startScrollingActivity();
                 return null;
             });
             loginRes.thenAccept(u -> {
-                CompletableFuture<Void> saveRes = DatabaseSync.saveCurrentUserToLocalDB(this,
-                        database, localdb, u.getUserId());
-                saveRes.exceptionally(e -> {
-                    Log.d("LOGIN", "Failed to save user locally");
-                    startScrollingActivity();
-                    return null;
-                });
-                saveRes.thenAccept(r -> startScrollingActivity());
+                saveCurrentUserToLocalDB(u.getUserId());
             });
         } else {
             setBundleInfo(this.getIntent().getExtras());
@@ -71,7 +65,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Method called when the login button is pushed
-     * Given the email and the password in the corresponding views, login with firebase, or show
+     * Given the email and the password in the corresponding views, login
+     * with firebase, or show
      * a popup if it failed to connect
      *
      * @param view
@@ -83,7 +78,8 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordView.getText().toString();
 
         showProgressBar();
-        CompletableFuture<User> loginRes = loginService.loginWithEmail(email, password);
+        CompletableFuture<User> loginRes = loginService.loginWithEmail(email,
+                password);
         loginRes.exceptionally(e -> {
             UIUtils.makeSnakeAndLogOnFail(view, R.string.login_failed_snack, e);
             hideProgressBar();
@@ -91,8 +87,25 @@ public class LoginActivity extends AppCompatActivity {
         });
         loginRes.thenAccept(user -> {
             SharedPreferencesHelper.saveUserForAutoLogin(this, email, password);
-            startScrollingActivity();
+            //There was no save to the current db here
+            /*
+                The start of the scrolling activity is done inside
+                saveCurrentUserToLocalDB
+             */
+            saveCurrentUserToLocalDB(user.getUserId());
         });
+    }
+
+    private void saveCurrentUserToLocalDB(String userID) {
+        CompletableFuture<Void> saveRes =
+                DatabaseSync.saveCurrentUserToLocalDB(this,
+                database, localdb, userID);
+        saveRes.exceptionally(e -> {
+            Log.d("LOGIN", "Failed to save user locally");
+            startScrollingActivity();
+            return null;
+        });
+        saveRes.thenAccept(r -> startScrollingActivity());
     }
 
     /**
@@ -108,7 +121,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Method called when the forgotten password button is pushed
-     * Takes the user to the reset password page, where he can put his address mail and change
+     * Takes the user to the reset password page, where he can put his
+     * address mail and change
      * his password
      *
      * @param view
