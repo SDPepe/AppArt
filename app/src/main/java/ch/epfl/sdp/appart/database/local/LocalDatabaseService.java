@@ -55,7 +55,7 @@ public interface LocalDatabaseService {
      *
      * @return a completable future containing the list of cards
      */
-    CompletableFuture<List<Card>> getCards() throws IllegalStateException;
+    CompletableFuture<List<Card>> getCards();
 
     /**
      * Returns an ad with ad id.
