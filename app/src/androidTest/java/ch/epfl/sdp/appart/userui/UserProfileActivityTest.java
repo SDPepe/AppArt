@@ -140,15 +140,6 @@ public class UserProfileActivityTest {
                 isDisplayed()));
         appCompatButton.perform(click());
 
-        /*ViewInteraction overflowMenuButton = onView(
-            allOf(withContentDescription("More options"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.login_Scrolling_toolbar),
-                        1),
-                    0),
-                isDisplayed()));
-        overflowMenuButton.perform(click());*/
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         ViewInteraction appCompatTextView = onView(
