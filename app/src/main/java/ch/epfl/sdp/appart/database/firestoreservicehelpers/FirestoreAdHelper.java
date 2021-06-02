@@ -68,7 +68,7 @@ public class FirestoreAdHelper {
         // get panoramas, if successful try to retrieve the other ad fields
         CompletableFuture<List<String>> panoramasReferencesFutures =
                 getAndCheckImagesIds(adId, AdLayout.PANORAMA_DIRECTORY);
-        picturesReferencesFutures.exceptionally(e -> {
+        panoramasReferencesFutures.exceptionally(e -> {
             result.completeExceptionally(e);
             return null;
         });
@@ -338,6 +338,21 @@ public class FirestoreAdHelper {
             return null;
         });
         return result;
+    }
+
+    public CompletableFuture<Boolean> deleteAd(String adId, String cardId) {
+        CompletableFuture<Boolean> finalResult = new CompletableFuture<>();
+
+        CompletableFuture<Boolean> result1 = new CompletableFuture<>();
+
+        db.collection(adsPath).document(adId).delete().addOnCompleteListener(t -> {
+            result1.complete(t.isSuccessful());
+        });
+
+        CompletableFuture<Boolean> result2 = cardHelper.deleteCard(cardId);
+
+        CompletableFuture.allOf(result1, result2).thenAccept(res -> finalResult.complete(result1.join() && result2.join()));
+        return finalResult;
     }
 
     /**

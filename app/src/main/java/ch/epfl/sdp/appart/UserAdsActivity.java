@@ -36,7 +36,7 @@ public class UserAdsActivity extends ToolbarActivity {
         mViewModel.initHome();
 
         recyclerView = findViewById(R.id.recycler_userAds);
-        recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>()));
+        recyclerView.setAdapter(new CardAdapter(this, database, new ArrayList<>(), true));
         recyclerView.setHasFixedSize(true); //use for performance if card dims does not change
         mViewModel.getUserAds().observe(this, this::updateList);
     }
@@ -47,6 +47,6 @@ public class UserAdsActivity extends ToolbarActivity {
      * @param ls a list of card.
      */
     private void updateList(List<Card> ls) {
-        recyclerView.setAdapter(new CardAdapter(this, database, ls));
+        recyclerView.setAdapter(new CardAdapter(this, database, ls, true));
     }
 }

@@ -110,6 +110,15 @@ public interface DatabaseService extends DatabaseHostVisitor {
     CompletableFuture<String> putAd(Ad ad, List<Uri> picturesUris, List<Uri> panoramasUris);
 
     /**
+     * Deletes the given ad from the database
+     *
+     * @param adId the id of the ad to be deleted from the database
+     * @return a future that will return true if the ad was deleted successfully, false if not
+     */
+    @NonNull
+    CompletableFuture<Boolean> deleteAd(String adId, String cardId);
+
+    /**
      * Upload a image
      *
      * @param uri  a Uri of the image.
