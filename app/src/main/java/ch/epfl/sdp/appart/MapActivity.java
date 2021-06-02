@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -19,7 +19,8 @@ import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.location.Location;
 import ch.epfl.sdp.appart.location.LocationService;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
-import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
+import ch.epfl.sdp.appart.location.place.Place;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import ch.epfl.sdp.appart.map.ApartmentInfoWindow;
 import ch.epfl.sdp.appart.map.MapService;
 import ch.epfl.sdp.appart.map.helper.MapFrontendHelper;
@@ -42,10 +43,21 @@ public class MapActivity extends AppCompatActivity {
     @Inject
     MapService mapService;
 
+    AlertDialog onFailedLocalizationDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.alertDialogMessage);
+        builder.setPositiveButton(R.string.alertDialogButton,
+                (dialogInterface, i) -> {
+            onFailedLocalizationDialog.dismiss();
+            finish();
+        });
+        onFailedLocalizationDialog = builder.create();
 
         PermissionRequest.askForLocationPermission(this, () -> {
             Log.d("PERMISSION", "Location permission granted");
@@ -79,12 +91,26 @@ public class MapActivity extends AppCompatActivity {
         if (address != null) {
             mapService.setMapFragment(mapFragment);
             onMapReadyCallback =
-                    () -> geocodingService.getLocation(LocalityFactory.makeLocality(address)).
-                            thenAcceptAsync(location -> mapService.addMarker(location, null, true, null), ContextCompat.getMainExecutor(this))
-                            .exceptionally(e -> {
-                                e.printStackTrace();
-                                return null;
-                            });
+                    () -> {
+                        Place place;
+                        try {
+                            place = AddressFactory.makeAddress(address);
+                        } catch (Exception e) {
+                            handleFailedLocalization(e);
+                            return;
+                        }
+                        CompletableFuture<Location> futureLocation =
+                                geocodingService.getLocation(place);
+                        futureLocation.thenAccept(location -> mapService.addMarker(location, null, true, "AddressMarker"))
+                                .exceptionally(e -> {
+                                    e.printStackTrace();
+                                    return null;
+                                });
+                        futureLocation.exceptionally(e -> {
+                            handleFailedLocalization(e);
+                            return null;
+                        });
+                    };
         } else {
 
             mapService.setInfoWindow(new ApartmentInfoWindow(this,
@@ -134,4 +160,10 @@ public class MapActivity extends AppCompatActivity {
             });
         };
     }
+
+    private void handleFailedLocalization(Throwable e) {
+        e.printStackTrace();
+        onFailedLocalizationDialog.show();
+    }
 }
+
