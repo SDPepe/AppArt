@@ -47,6 +47,7 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
         Glide.with(context)
                 .asBitmap()
                 .load(database.getStorageReference(imagePath))
+                .error(R.drawable.no_connection)
                 .into(target);
     }
 
