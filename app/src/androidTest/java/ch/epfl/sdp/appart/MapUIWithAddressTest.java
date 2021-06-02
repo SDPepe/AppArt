@@ -2,31 +2,32 @@ package ch.epfl.sdp.appart;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Bundle;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
 import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.GeocoderModule;
+import ch.epfl.sdp.appart.hilt.LocationModule;
 import ch.epfl.sdp.appart.hilt.MapModule;
-import ch.epfl.sdp.appart.location.Location;
-import ch.epfl.sdp.appart.location.place.address.AddressFactory;
+import ch.epfl.sdp.appart.location.LocationService;
+import ch.epfl.sdp.appart.location.MockLocationService;
 import ch.epfl.sdp.appart.location.geocoding.GeocodingService;
 import ch.epfl.sdp.appart.location.geocoding.GoogleGeocodingService;
-import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 import ch.epfl.sdp.appart.map.GoogleMapService;
 import ch.epfl.sdp.appart.map.MapService;
 import dagger.hilt.android.testing.BindValue;
@@ -35,24 +36,20 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertNotNull;
 
-@UninstallModules({DatabaseModule.class, MapModule.class, GeocoderModule.class})
+@UninstallModules({DatabaseModule.class, MapModule.class, GeocoderModule.class, LocationModule.class})
 @HiltAndroidTest
-public class AdMapTest {
+public class MapUIWithAddressTest {
 
-    static Intent intent;
-
-    static String testCity = "Lausanne";
+    static final String intentExtra = "Funny Street 1A, 1000 Lausanne";
+    static final Intent intent;
 
     static {
         intent = new Intent(ApplicationProvider.getApplicationContext(),
                 MapActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(ApplicationProvider.getApplicationContext().getResources().getString(R.string.intentLocationForMap), testCity);
-        intent.putExtras(bundle);
+        intent.putExtra(InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.intentLocationForMap), intentExtra);
     }
 
     @Rule(order = 0)
@@ -62,9 +59,12 @@ public class AdMapTest {
     public ActivityScenarioRule<MapActivity> mapActivityRule =
             new ActivityScenarioRule<>(intent);
 
-    @Rule
+    @Rule(order = 2)
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET);
+
+    @Rule
+    public InstantTaskExecutorRule executorRule = new InstantTaskExecutorRule();
 
     @BindValue
     final
@@ -77,10 +77,15 @@ public class AdMapTest {
     final GeocodingService geocodingService =
             new GoogleGeocodingService(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
+    @BindValue
+    final LocationService locationService = new MockLocationService();
+
+
+    private static final double SCREEN_HEIGHT_INFO_WINDOW_FACTOR = 0.35;
+
 
     @Test
-    public void markerTest() {
-
+    public void performGoodLocationTest() throws InterruptedException {
         UiDevice device =
                 UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
@@ -88,22 +93,14 @@ public class AdMapTest {
                 10000);
         assertThat(foundMap, is(true));
 
-        Location markerLocation = geocodingService.getLocation(LocalityFactory.makeLocality(testCity)).join();
-        assertThat(Math.abs(markerLocation.latitude - 46.51), lessThanOrEqualTo(0.05));
-        assertThat(Math.abs(markerLocation.longitude - 6.63), lessThanOrEqualTo(0.05));
+        Thread.sleep(4000);
 
-        CompletableFuture<Location> futureCameraLoc =
-                mapService.getCameraPosition();
-
-        Location cameraLoc = futureCameraLoc.join();
-        assertThat(cameraLoc.longitude, greaterThan(6.0));
-        assertThat(cameraLoc.latitude, greaterThan(46.0));
-
-        assertThat(Math.abs(cameraLoc.latitude - markerLocation.latitude),
-                lessThanOrEqualTo(0.05));
-        assertThat(Math.abs(cameraLoc.longitude - markerLocation.longitude),
-                lessThanOrEqualTo(0.05));
+        boolean isMarkerPresent =
+                device.hasObject(By.descContains("AddressMarker")) | device.wait(Until.hasObject(By.descContains("AddressMarker")), 10000);
+        assertThat(isMarkerPresent, is(true));
 
 
+        UiObject2 marker = device.findObject(By.descContains("AddressMarker"));
+        assertNotNull(marker);
     }
 }
