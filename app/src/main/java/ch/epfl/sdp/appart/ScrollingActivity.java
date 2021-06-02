@@ -53,12 +53,6 @@ public class ScrollingActivity extends ToolbarActivity {
     DatabaseService database;
 
     @Inject
-    LoginService loginService;
-
-    @Inject
-    LocalDatabaseService localDatabaseService;
-
-    @Inject
     ApplicationConfiguration configuration;
 
     private RecyclerView recyclerView;
@@ -69,12 +63,11 @@ public class ScrollingActivity extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.scrollingActivityAlertDialogMessage);
         builder.setPositiveButton(R.string.scrollingActivityAlertDialogPositiveButton, (dialogInterface, i) -> {
             loginService.signOut();
-            localDatabaseService.cleanFavorites();
+            localdb.cleanFavorites();
             SharedPreferencesHelper.clearSavedUserForAutoLogin(this);
 
             /*
