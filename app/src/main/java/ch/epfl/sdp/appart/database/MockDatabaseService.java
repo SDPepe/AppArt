@@ -40,6 +40,9 @@ public class MockDatabaseService implements DatabaseService {
         cards.add(new Card("4444", "unknown", "unknown", "Lausanne", 1000, "apart_fake_image_1.jpeg"));
         cards.add(new Card("5555", "unknown", "unknown", "Lausanne", 1000, "apart_fake_image_1.jpeg"));
 
+        cards.add(new Card("6666", "6666", "5555", "Lausanne", 2000, "file:///android_asset/apart_fake_image_1.jpeg"));
+
+
         images.add("users/default/user_example_female.png");
         images.add("users/default/user_example_male.png");
         images.add("users/default/user_example_no_gender.png");
@@ -172,6 +175,20 @@ public class MockDatabaseService implements DatabaseService {
         } else {
             result.complete("1234");
         }
+        return result;
+    }
+
+    @NonNull
+    @Override
+    public CompletableFuture<Boolean> deleteAd(String adId, String cardId) {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+        boolean found = false;
+        for (Card c : cards) if (c.getId().equals(cardId)) {
+            cards.remove(c);
+            found = true;
+        }
+
+        result.complete(found);
         return result;
     }
 
