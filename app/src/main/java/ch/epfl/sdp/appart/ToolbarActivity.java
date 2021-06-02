@@ -55,6 +55,9 @@ public abstract class ToolbarActivity extends AppCompatActivity {
                 localdb.cleanFavorites();
                 SharedPreferencesHelper.clearSavedUserForAutoLogin(this);
                 Intent intentLogout = new Intent(this, LoginActivity.class);
+
+                //See explanation for the flags in the ScrollingActivity
+                intentLogout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intentLogout);
                 return true;
 

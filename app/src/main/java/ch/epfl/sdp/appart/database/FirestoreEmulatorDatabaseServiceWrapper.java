@@ -102,6 +102,12 @@ public class FirestoreEmulatorDatabaseServiceWrapper implements DatabaseService 
 
     @NonNull
     @Override
+    public CompletableFuture<Boolean> deleteAd(String adId, String cardId) {
+        return db.deleteAd(adId, cardId);
+    }
+
+    @NonNull
+    @Override
     public CompletableFuture<Boolean> putImage(Uri uri, String imagePathAndName) {
         return db.putImage(uri, imagePathAndName);
     }
