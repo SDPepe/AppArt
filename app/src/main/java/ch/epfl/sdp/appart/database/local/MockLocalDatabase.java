@@ -113,7 +113,7 @@ public class MockLocalDatabase implements LocalDatabaseService {
 
     @Override
     public CompletableFuture<Void> setCurrentUser(User currentUser, Bitmap profilePic) {
-        this.currentUser = null;
+        this.currentUser = currentUser;
         return CompletableFuture.completedFuture(null);
     }
 
