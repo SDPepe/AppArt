@@ -43,6 +43,7 @@ public class AdViewModel extends ViewModel {
     private final MutableLiveData<List<String>> panoramasReferences =
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> hasVTour = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> hasLoaded = new MutableLiveData<>();
 
     @Inject
     public AdViewModel(DatabaseService db, LocalDatabaseService localdb) {
@@ -103,6 +104,9 @@ public class AdViewModel extends ViewModel {
 
     public LiveData<Boolean> getHasVTour() {
         return hasVTour;
+    }
+    public LiveData<Boolean> getHasLoaded() {
+        return hasLoaded;
     }
 
     @Nullable
@@ -177,6 +181,7 @@ public class AdViewModel extends ViewModel {
                  Maybe here we can only rely on the panoramaReferences size.
              */
             this.hasVTour.setValue(ad.getPanoramaReferences().size() > 0);
+            this.hasLoaded.setValue(true);
             result.complete(null);
         });
     }
