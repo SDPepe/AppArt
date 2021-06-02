@@ -61,7 +61,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private String advertiserId;
-    private ArrayList<String> panoramasReferences;
+    private Pair<ArrayList<String>, Boolean> panoramasReferences;
 
     private String adId;
     private AdViewModel mViewModel;
@@ -90,7 +90,7 @@ public class AdActivity extends ToolbarActivity {
         seeNearbyPlacesButton.setOnClickListener(this::noInformationOnClickListener);
 
 
-        panoramasReferences = new ArrayList<>();
+        panoramasReferences = new Pair(new ArrayList<>(), false);
         mViewModel = new ViewModelProvider(this).get(AdViewModel.class);
 
         Toolbar toolbar = findViewById(R.id.account_Ad_toolbar);
@@ -176,9 +176,10 @@ public class AdActivity extends ToolbarActivity {
         }
     }
 
-    private void updatePanoramasReferences(List<String> references) {
-        panoramasReferences.clear();
-        panoramasReferences.addAll(references);
+    private void updatePanoramasReferences(Pair<List<String>, Boolean> references) {
+        panoramasReferences.first.clear();
+        panoramasReferences.first.addAll(references.first);
+        panoramasReferences = new Pair<>(panoramasReferences.first, references.second);
     }
 
     private void updateAddress(String address) {
@@ -234,8 +235,9 @@ public class AdActivity extends ToolbarActivity {
     public void openVirtualTour(View view) {
         Intent intent = new Intent(this, PanoramaActivity.class);
         intent.putStringArrayListExtra(Intents.INTENT_PANORAMA_PICTURES,
-                panoramasReferences);
+                panoramasReferences.first);
         intent.putExtra(Intents.INTENT_AD_ID, adId);
+        intent.putExtra("isLocalExtra", panoramasReferences.second);
         startActivity(intent);
     }
 

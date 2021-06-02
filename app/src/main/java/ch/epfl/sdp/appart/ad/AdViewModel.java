@@ -42,7 +42,7 @@ public class AdViewModel extends ViewModel {
             new MutableLiveData<>();
     private final MutableLiveData<Pair<List<String>, Boolean>> adPhotosReferences =
             new MutableLiveData<>();
-    private final MutableLiveData<List<String>> panoramasReferences =
+    private final MutableLiveData<Pair<List<String>, Boolean>> panoramasReferences =
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> hasVTour = new MutableLiveData<>();
     private final MutableLiveData<Boolean> hasLoaded = new MutableLiveData<>();
@@ -71,7 +71,7 @@ public class AdViewModel extends ViewModel {
 
     public <T> void observePanoramasReferences(LifecycleOwner owner,
                                                @NonNull Observer<?
-                                                       super List<String>> observer) {
+                                                       super Pair<List<String>, Boolean>> observer) {
         panoramasReferences.observe(owner, observer);
     }
 
@@ -171,7 +171,7 @@ public class AdViewModel extends ViewModel {
             this.adAdvertiserName.setValue(ad.getAdvertiserName());
             this.adAdvertiserId.setValue(ad.getAdvertiserId());
             this.adPhotosReferences.setValue(new Pair(ad.getPhotosRefs(), isLocal));
-            this.panoramasReferences.setValue(ad.getPanoramaReferences());
+            this.panoramasReferences.setValue(new Pair(ad.getPanoramaReferences(), isLocal));
             /*
                 This is not exactly set as the equivalent of the hasVRTour
                 attribute. However, this modification prevent some crashes in

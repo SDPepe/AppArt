@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,6 +46,7 @@ public class PanoramaActivity extends AppCompatActivity {
     ImageButton rightButton;
     private Bitmap bitmap;
     private String currentAdId;
+    private boolean isLocal;
 
 
     //only meant for testing and should be used a single time !
@@ -59,8 +61,11 @@ public class PanoramaActivity extends AppCompatActivity {
         if (extras != null && extras.containsKey(AdActivity.Intents.INTENT_PANORAMA_PICTURES)
                 && extras.containsKey(AdActivity.Intents.INTENT_AD_ID))  {
             images = extras.getStringArrayList(AdActivity.Intents.INTENT_PANORAMA_PICTURES);
+            //This is needed to remove double / in paths : data//file --> data/file
+            images.stream().map(imagePath -> imagePath.replaceAll("/+", "/"));
             Collections.sort(images, new FirebaseIndexedImagesComparator());
             currentAdId = extras.getString(AdActivity.Intents.INTENT_AD_ID);
+            isLocal = extras.getBoolean("isLocalExtra");
         }
 
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
@@ -143,13 +148,17 @@ public class PanoramaActivity extends AppCompatActivity {
         PLSphericalPanorama panorama = new PLSphericalPanorama();
 
         CompletableFuture<Bitmap> bitmapFuture = new CompletableFuture<>();
+        if(isLocal) {
+            Bitmap bitmap = BitmapFactory.decodeFile(images.get(currImage));
+            bitmapFuture.complete(bitmap);
+        } else {
+            String imagePath = new StoragePathBuilder()
+                    .toAdsStorageDirectory()
+                    .toDirectory(currentAdId)
+                    .withFile(images.get(currImage));
 
-        String imagePath = new StoragePathBuilder()
-                .toAdsStorageDirectory()
-                .toDirectory(currentAdId)
-                .withFile(images.get(currImage));
-
-        database.accept(new GlideBitmapLoader(this, bitmapFuture, imagePath));
+            database.accept(new GlideBitmapLoader(this, bitmapFuture, imagePath));
+        }
 
         bitmapFuture.thenApply(bitmap -> {
             hasCurrentImageLoadingFailed.complete(true);
