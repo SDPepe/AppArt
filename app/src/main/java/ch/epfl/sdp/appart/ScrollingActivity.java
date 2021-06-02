@@ -68,6 +68,7 @@ public class ScrollingActivity extends ToolbarActivity {
         builder.setPositiveButton(R.string.scrollingActivityAlertDialogPositiveButton, (dialogInterface, i) -> {
             loginService.signOut();
             localdb.cleanFavorites();
+            
             SharedPreferencesHelper.clearSavedUserForAutoLogin(this);
 
             /*
