@@ -235,6 +235,25 @@ public class DatabaseTest {
         assertThrows(IllegalArgumentException.class, () -> db.deleteImage(null).get());
     }
 
+    public void addingDeletingAd() {
+        db.getCards().thenAccept(ls -> {
+            int initSize = ls.size();
+            Ad newAd = new Ad("", 0, PricePeriod.MONTH, "", "", "", "", "", List.of(), List.of(), false);
+            db.putAd(newAd, List.of(), List.of()).thenAccept(adId -> {
+                db.getCards().thenAccept(newLs -> {
+                    String cardId = "";
+                    for (Card c : newLs) if (c.getAdId().equals(adId))
+                        cardId = c.getId();
+
+                    db.deleteAd(adId, cardId).thenAccept(s -> {
+                        assertThat(s, is(true));
+                        db.getCards().thenAccept(finalLs -> assertThat(finalLs.size(), is(initSize)));
+                    });
+                });
+            });
+        });
+    }
+
     @Test
     public void databaseTest() throws IOException {
         addingUsersAndUpdateTest();
@@ -243,6 +262,7 @@ public class DatabaseTest {
         getCardsFilterTest();
         putImageThrowsOnNullParameters();
         deleteImageThrowsOnNullPathAndName();
+        addingDeletingAd();
 
         loginService.signOut();
     }

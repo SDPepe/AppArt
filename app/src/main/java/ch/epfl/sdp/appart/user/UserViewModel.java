@@ -138,7 +138,14 @@ public class UserViewModel extends ViewModel {
      */
     public CompletableFuture<Void> getCurrentUser() {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        User currentUser = localdb.getCurrentUser();
+        User currentUser;
+        try {
+            currentUser = localdb.getCurrentUser();
+        } catch (IllegalStateException e){
+            e.printStackTrace();
+            currentUser = null;
+        }
+
         if (currentUser != null)
             mUser.setValue(currentUser);
 

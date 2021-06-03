@@ -20,7 +20,7 @@ public interface LocalDatabaseService {
      * @return the current user if it manages to find one, throws
      * {@link IllegalStateException} otherwise.
      */
-    User getCurrentUser();
+    User getCurrentUser() throws IllegalStateException;
 
     /**
      * This function performs the writing of a complete ad into local storage
