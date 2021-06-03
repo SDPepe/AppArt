@@ -50,7 +50,7 @@ import static android.widget.Toast.makeText;
  * This class manages the UI for Scrolling into the add.
  */
 @AndroidEntryPoint
-public class ScrollingActivity extends ToolbarActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ScrollingActivity extends ToolbarActivity {
 
     ScrollingViewModel mViewModel;
 
@@ -94,6 +94,8 @@ public class ScrollingActivity extends ToolbarActivity implements NavigationView
         onBackPressed = builder.create();
 
         navigationView = findViewById(R.id.nav_view);
+        //if something is pressed return the result of the real toolbar
+        navigationView.setNavigationItemSelectedListener(this::onOptionsItemSelected);
         drawerLayout = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
@@ -219,8 +221,4 @@ public class ScrollingActivity extends ToolbarActivity implements NavigationView
         onBackPressed.show();
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return true;
-    }
 }
