@@ -21,8 +21,11 @@ import java.util.List;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.ad.PricePeriod;
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.AppUser;
@@ -42,7 +45,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-@UninstallModules(LocalDatabaseModule.class)
+@UninstallModules({LocalDatabaseModule.class, DatabaseModule.class})
 @HiltAndroidTest
 public class LocalDatabaseAndroidTest {
     final List<User> users = Arrays.asList(new AppUser("user1", "test0@appart" +
@@ -66,6 +69,9 @@ public class LocalDatabaseAndroidTest {
             "panorama_4.jpg",
             "panorama_5.jpg"
     );
+
+    @BindValue
+    DatabaseService db = new MockDatabaseService();
 
     final User currentUser = new AppUser("currentUser", "fakemail@testappart" +
             ".ch");

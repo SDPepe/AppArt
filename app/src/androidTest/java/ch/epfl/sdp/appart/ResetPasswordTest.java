@@ -17,7 +17,10 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
 import ch.epfl.sdp.appart.database.preferences.SharedPreferencesHelper;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.LoginService;
 import ch.epfl.sdp.appart.login.MockLoginService;
@@ -41,7 +44,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.junit.Assert.assertNull;
 
-@UninstallModules(LoginModule.class)
+@UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
 public class ResetPasswordTest {
 
@@ -54,6 +57,9 @@ public class ResetPasswordTest {
     @BindValue
     final
     LoginService loginService = new MockLoginService();
+
+    @BindValue
+    DatabaseService db = new MockDatabaseService();
 
     @Before
     public void init() {
