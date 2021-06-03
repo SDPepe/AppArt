@@ -162,12 +162,13 @@ public class PanoramaActivity extends AppCompatActivity {
         }
 
         bitmapFuture.thenApply(bitmap -> {
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 2048, 2048, false);
             hasCurrentImageLoadingFailed.complete(true);
-            panorama.setImage(new PLImage(bitmap, true));
+            panorama.setImage(new PLImage(resizedBitmap, true));
             panorama.getCamera().lookAtAndZoomFactor(30.0f, 90.0f, 0.5f, false);
             plManager.setPanorama(panorama);
-            this.bitmap = bitmap;
-            return bitmap;
+            this.bitmap = resizedBitmap;
+            return resizedBitmap;
         });
 
         bitmapFuture.exceptionally(e -> {

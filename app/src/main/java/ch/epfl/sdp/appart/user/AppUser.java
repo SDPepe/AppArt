@@ -296,4 +296,17 @@ public class AppUser implements User {
         return this.userId.equals(other.userId);
     }
 
+    public AppUser(User user) {
+        this.userId = user.getUserId();
+        this.email = user.getUserEmail();
+        this.name = user.getName();
+        this.phoneNumber = user.getPhoneNumber();
+        this.age = user.getAge();
+        this.gender = Gender.valueOf(user.getGender());
+        this.profileImagePathAndName = user.getProfileImagePathAndName();
+        this.adsIds = new ArrayList<>(user.getAdsIds());
+        this.favoritesIds = new HashSet<>(user.getFavoritesIds());
+        this.hasDefaultProfileImage = user.hasDefaultProfileImage();
+    }
+
 }

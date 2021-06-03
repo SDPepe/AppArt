@@ -19,11 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -35,7 +35,6 @@ import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.AdViewModel;
 import ch.epfl.sdp.appart.database.DatabaseService;
-import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
@@ -171,7 +170,8 @@ public class AdActivity extends ToolbarActivity {
             if (isLocal) {
                 fullRef = references.get(i);
                 Bitmap bitmap = BitmapFactory.decodeFile(fullRef);
-                photo.setImageBitmap(bitmap);
+                Glide.with(this).load(bitmap)
+                        .into(photo);
             } else {
                 fullRef =
                         FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
@@ -285,8 +285,9 @@ public class AdActivity extends ToolbarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_favorite) {
-            if(!DatabaseSync.areWeOnline(this)) {
-                makeText(this, "You can't add or remove favorites while offline !", Toast.LENGTH_SHORT).show();
+            if (!DatabaseSync.areWeOnline(this)) {
+                makeText(this, "You can't add or remove favorites while " +
+                        "offline !", Toast.LENGTH_SHORT).show();
                 return true;
             }
 
@@ -296,8 +297,8 @@ public class AdActivity extends ToolbarActivity {
                 return null;
             });
             addRes.thenAccept(res -> {
-                    setBookmarkIcon(!res);
-                }
+                        setBookmarkIcon(!res);
+                    }
             );
             return true;
         }
@@ -334,10 +335,10 @@ public class AdActivity extends ToolbarActivity {
         boolean alreadyAdded = user.getFavoritesIds().contains(adId);
         CompletableFuture<List<Card>> futureCards = database.getCards();
         CompletableFuture<Card> futureLocalUpdate;
-        if(alreadyAdded) {
+        if (alreadyAdded) {
             futureLocalUpdate = futureCards.thenApply(cards -> {
                 Card card = getMatchingCard(cards);
-                if(card == null) {
+                if (card == null) {
                     return card;
                 }
                 localdb.removeCard(card.getId());
@@ -347,7 +348,7 @@ public class AdActivity extends ToolbarActivity {
         } else {
             futureLocalUpdate = futureCards.thenApply(cards -> {
                 Card card = getMatchingCard(cards);
-                if(card == null) {
+                if (card == null) {
                     return card;
                 }
                 DatabaseSync.writeAd(database, card, this, localdb);
@@ -355,14 +356,15 @@ public class AdActivity extends ToolbarActivity {
                 return card;
             });
         }
-        CompletableFuture<Boolean> updateRes = futureLocalUpdate.thenCompose( card -> database.updateUser(user).exceptionally(e -> {
-            if(alreadyAdded) {
-                user.addFavorite(adId);
-            } else {
-                user.removeFavorite(adId);
-            }
-            return null;
-        }));
+        CompletableFuture<Boolean> updateRes =
+                futureLocalUpdate.thenCompose(card -> database.updateUser(user).exceptionally(e -> {
+                    if (alreadyAdded) {
+                        user.addFavorite(adId);
+                    } else {
+                        user.removeFavorite(adId);
+                    }
+                    return null;
+                }));
         updateRes.exceptionally(e -> {
             Log.d("AD", "failed to update user");
             result.completeExceptionally(e);
@@ -370,13 +372,14 @@ public class AdActivity extends ToolbarActivity {
         });
         updateRes.thenAccept(res -> {
             Log.d("AD", "user updated");
+            localdb.setCurrentUser(user, BitmapFactory.decodeFile(user.getProfileImagePathAndName()));
             result.complete(alreadyAdded);
         });
     }
 
     private Card getMatchingCard(List<Card> cards) {
-        for(Card card : cards) {
-            if(card.getAdId().equals(adId)) {
+        for (Card card : cards) {
+            if (card.getAdId().equals(adId)) {
                 return card;
             }
         }
@@ -391,29 +394,55 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateBookmarkIconState() {
+
+
         User currentUser = login.getCurrentUser();
-        if(currentUser == null) {
+        if (currentUser == null) {
             currentUser = localdb.getCurrentUser();
         }
-        database.getUser(currentUser.getUserId()).thenAccept(user -> {
-            setBookmarkIcon(user.getFavoritesIds().contains(adId));
-        }).exceptionally(e -> {
-            localdb.getCards().thenAccept(cards -> {
-                cards.forEach(card -> {
-                    setBookmarkIcon(card.getAdId().equals(adId));
-                });
+
+
+         /*
+                This is really slow if we don't check for connectivity.
+          */
+        if (DatabaseSync.areWeOnline(this)) {
+            User finalCurrentUser = currentUser;
+            database.getUser(currentUser.getUserId()).thenAccept(user -> {
+                setBookmarkIcon(user.getFavoritesIds().contains(adId));
+            }).exceptionally(e -> {
+                e.printStackTrace();
+                updateBookmarkLocalDatabase(finalCurrentUser);
+                return null;
             });
-            return null;
-        });
+        } else {
+            updateBookmarkLocalDatabase(currentUser);
+        }
+    }
+
+    private void updateBookmarkLocalDatabase(User currentUser) {
+        /*localdb.getCards().thenAcceptAsync(cards -> {
+            cards.forEach(card -> {
+                if (card.getAdId().equals(adId)) {
+                    setBookmarkIcon(card.getAdId().equals(adId));
+                    return;
+                }
+            });
+        });*/
+        /*localdb.getCurrentUser().thenAcceptAsync(user -> {
+            setBookmarkIcon(user.getFavoritesIds().contains(adId));
+        });*/
+        setBookmarkIcon(currentUser.getFavoritesIds().contains(adId));
 
     }
 
     private void setBookmarkIcon(boolean filled) {
-        if(filled) {
-            addFavoriteItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bookmark_filled, null));
-        } else {
-            addFavoriteItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bookmark, null));
-        }
+        runOnUiThread(() -> {
+            if (filled) {
+                addFavoriteItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bookmark_filled, null));
+            } else {
+                addFavoriteItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bookmark, null));
+            }
+        });
     }
 
 }

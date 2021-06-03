@@ -314,7 +314,8 @@ public class LocalDatabase implements LocalDatabaseService {
         if (this.firstLoad) {
             return CompletableFuture.completedFuture(returnFunc.get());
         }
-        //TODO: I don't know why I have a threading issue here, this needs to be investigated
+        //TODO: I don't know why I have a threading issue here, this needs to
+        // be investigated
         //Basically we reach this point even though firstLoad is true
         clearMemory();
 
@@ -323,7 +324,7 @@ public class LocalDatabase implements LocalDatabaseService {
 
         try {
             currentUser = getCurrentUser();
-        } catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             e.printStackTrace();
             futureData.completeExceptionally(e);
             return futureData;
@@ -439,7 +440,8 @@ public class LocalDatabase implements LocalDatabaseService {
             this.userIds.remove(userId);
             this.idsToUser.remove(userId);
             String userPath =
-                    LocalDatabasePaths.userFolder(currentUser.getUserId(), userId);
+                    LocalDatabasePaths.userFolder(currentUser.getUserId(),
+                            userId);
             FileIO.deleteDirectory(new File(userPath));
         }
     }
@@ -467,20 +469,8 @@ public class LocalDatabase implements LocalDatabaseService {
 
         CompletableFuture<Void> futureSuccess = new CompletableFuture<>();
 
-        User currentLocalUser = new AppUser(currentUser.getUserId(),
-                currentUser.getUserEmail());
-        if (currentUser.getPhoneNumber() != null) {
-            currentLocalUser.setPhoneNumber(currentUser.getPhoneNumber());
-        }
-        if (currentUser.getName() != null) {
-            currentLocalUser.setName(currentUser.getName());
-        }
+        User currentLocalUser = new AppUser(currentUser);
 
-        currentLocalUser.setAge(currentUser.getAge());
-
-        if (currentUser.getGender() != null) {
-            currentLocalUser.setGender(currentUser.getGender());
-        }
 
         //Just to make sure we don't keep invalid data
         File oldProfilePic =

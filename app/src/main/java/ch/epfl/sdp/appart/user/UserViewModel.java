@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.user;
 
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -26,7 +27,7 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Boolean> mUpdateUserConfirmed = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mUpdateImageConfirmed = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mDeleteImageConfirmed = new MutableLiveData<>();
-    private final MutableLiveData<User> mUser = new MutableLiveData<>();
+    private final MutableLiveData<Pair<User, Boolean>> mUser = new MutableLiveData<>();
 
     private Uri profileImageUri;
 
@@ -122,7 +123,7 @@ public class UserViewModel extends ViewModel {
             return null;
         });
         localUserRes.thenAccept(u -> {
-            if (u != null) mUser.setValue(u);
+            if (u != null) mUser.setValue(new Pair<>(u, true));
             getFromDBAndSetUser(userId, result);
         });
         return result;
@@ -147,7 +148,7 @@ public class UserViewModel extends ViewModel {
         }
 
         if (currentUser != null)
-            mUser.setValue(currentUser);
+            mUser.setValue(new Pair<>(currentUser, true));
 
         currentUser = ls.getCurrentUser();
         if (currentUser != null) {
@@ -166,7 +167,7 @@ public class UserViewModel extends ViewModel {
             return null;
         });
         userRes.thenAccept(cu -> {
-            mUser.setValue(cu);
+            mUser.setValue(new Pair<>(cu, false));
             result.complete(null);
         });
     }
@@ -190,7 +191,7 @@ public class UserViewModel extends ViewModel {
         return mDeleteImageConfirmed;
     }
 
-    public MutableLiveData<User> getUser() {
+    public MutableLiveData<Pair<User, Boolean>> getUser() {
         return mUser;
     }
 
