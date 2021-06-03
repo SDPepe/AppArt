@@ -72,31 +72,6 @@ public class PanoramaUITest {
     }
 
     @Test
-    public void buttonVisibilityTest() {
-        onView(withId(leftButtonID)).check(matches(not(isDisplayed())));
-        onView(withId(rightButtonID)).check(matches(isDisplayed()));
-
-        onView(withId(rightButtonID)).perform(click());
-        onView(withId(leftButtonID)).check(matches(isDisplayed()));
-        onView(withId(rightButtonID)).check(matches(not(isDisplayed())));
-
-        onView(withId(leftButtonID)).perform(click());
-        onView(withId(leftButtonID)).check(matches(not(isDisplayed())));
-        onView(withId(rightButtonID)).check(matches(isDisplayed()));
-
-    }
-
-    /**
-     * This test does nothing but allows to increase coverage over an internal method of
-     * panoramagl
-     */
-    @Test
-    public void scrollTest() {
-        swipeDown();
-    }
-
-
-    @Test
     public void checkLoadImageSucceed() {
         panoramaActivityRule.getScenario().onActivity(activity -> {
             activity.hasCurrentImageLoadingFailed().thenAccept(s -> assertThat(s, is(false)));
