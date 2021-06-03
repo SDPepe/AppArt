@@ -35,6 +35,10 @@ public class ScrollingViewModel extends ViewModel {
     public void initHome() {
         CompletableFuture<List<Card>> queriedCards = db.getCards();
         queriedCards.thenAccept(mCards::setValue);
+        queriedCards.exceptionally(e -> {
+            e.printStackTrace();
+            return null;
+        });
     }
 
     public void filter(String location){
