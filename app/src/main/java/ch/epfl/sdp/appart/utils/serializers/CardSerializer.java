@@ -19,6 +19,7 @@ public class CardSerializer {
         docData.put(CardLayout.PRICE, data.getPrice());
         docData.put(CardLayout.IMAGE, data.getImageUrl());
         docData.put(CardLayout.AD_ID, data.getAdId());
+        docData.put(CardLayout.HAS_VTOUR, data.hasVRTour());
         return docData;
     }
 
@@ -29,6 +30,7 @@ public class CardSerializer {
                 (String) serializedData.get(CardLayout.USER_ID),
                 (String) serializedData.get(CardLayout.CITY),
                 (long) serializedData.get(CardLayout.PRICE),
-                (String) serializedData.get(CardLayout.IMAGE));
+                (String) serializedData.get(CardLayout.IMAGE),
+                (Boolean) serializedData.get(CardLayout.HAS_VTOUR));
     }
 }
