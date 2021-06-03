@@ -1,10 +1,12 @@
 package ch.epfl.sdp.appart;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,6 +82,12 @@ public class LoginActivity extends AppCompatActivity {
     public void logIn(View view) {
         EditText emailView = findViewById(R.id.email_Login_editText);
         EditText passwordView = findViewById(R.id.password_Login_editText);
+
+        // close the keyboard so that the user get input feedback on button and login
+        InputMethodManager imm =
+                (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
@@ -105,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
     private void saveCurrentUserToLocalDB(String userID) {
         CompletableFuture<Void> saveRes =
                 DatabaseSync.saveCurrentUserToLocalDB(this,
-                database, localdb, userID);
+                        database, localdb, userID);
         saveRes.exceptionally(e -> {
             Log.d("LOGIN", "Failed to save user locally");
             startScrollingActivity();
