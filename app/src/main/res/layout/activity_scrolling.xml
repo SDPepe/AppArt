@@ -6,85 +6,137 @@
   android:layout_height="match_parent"
   tools:context=".ScrollingActivity">
 
-    <LinearLayout
-      android:id="@+id/columnLayout_Scrolling_LinearLayout"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:orientation="vertical"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/guideline8"
-      app:layout_constraintStart_toStartOf="@+id/guideline7"
-      app:layout_constraintTop_toBottomOf="@+id/login_Scrolling_toolbar">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="390dp"
+        android:layout_marginBottom="731dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="@dimen/vertical_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="411dp"
+        android:layout_marginBottom="731dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="@dimen/vertical_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
+
         <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="16dp"
-          android:layout_marginTop="16dp"
+            android:id="@+id/columnLayout_Scrolling_LinearLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
 
 
-          android:orientation="horizontal">
+                android:orientation="horizontal">
 
-            <EditText
-              android:id="@+id/search_bar_Scrolling_editText"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:layout_gravity="center_vertical"
-              android:background="@drawable/edit_text_default"
-              android:drawablePadding="@dimen/ic_padding"
-              android:drawableStart="@drawable/ic_search"
-              android:hint="@string/searchDescription_Scrolling"
-              android:importantForAutofill="no"
-              android:inputType="text" />
-            <Space
-              android:layout_width="10dp"
-              android:layout_height="match_parent" />
-            <Button
-              android:id="@+id/filter_Scrolling_button"
-              android:layout_width="56dp"
-              android:layout_height="40dp"
-              android:layout_marginEnd="@dimen/margin_button"
-              android:layout_gravity="center_vertical"
-              android:background="@drawable/style_secondary"
-              android:drawableTop="@drawable/ic_filter"
-              android:gravity="center" />
+                <EditText
+                    android:id="@+id/search_bar_Scrolling_editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_text_default"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="@dimen/ic_padding"
+                    android:hint="@string/searchDescription_Scrolling"
+                    android:importantForAutofill="no"
+                    android:inputType="text" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <Button
+                    android:id="@+id/filter_Scrolling_button"
+                    android:layout_width="56dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_button"
+                    android:background="@drawable/style_secondary"
+                    android:drawableTop="@drawable/ic_filter"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_Scrolling_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:scrollbars="vertical"
+                app:layoutManager="LinearLayoutManager">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/recycler_Scrolling_recyclerView"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:defaultNavHost="true"
+            tools:visibility="visible" />
+        <!--app:navGraph="@navigation/mobile_navigation"-->
+        <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            android:visibility="visible"
+            app:headerLayout="@layout/activity_drawer_header"
+            app:menu="@menu/actions_toolbar" />
 
-          android:scrollbars="vertical"
-          app:layoutManager="LinearLayoutManager" />
-    </LinearLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
     <androidx.appcompat.widget.Toolbar
-      android:id="@+id/login_Scrolling_toolbar"
-      android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"
-      android:background="?attr/colorPrimary"
-      android:elevation="4dp"
-      android:theme="@style/ThemeOverlay.AppCompat.Light"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-      app:subtitleTextColor="#FFFFFF "
-      app:titleTextColor="@android:color/white"/>
-
-    <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline7"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      app:layout_constraintGuide_percent="@dimen/vertical_1" />
-    <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline8"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      app:layout_constraintGuide_percent="@dimen/vertical_2" />
+        android:id="@+id/login_Scrolling_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Light"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:subtitleTextColor="#FFFFFF "
+        app:titleTextColor="@android:color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
       android:id="@+id/newAd_Scrolling_floatingActionButton"

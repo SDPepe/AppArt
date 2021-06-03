@@ -1,11 +1,18 @@
 package ch.epfl.sdp.appart;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
 
@@ -22,11 +29,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public abstract class ToolbarActivity extends AppCompatActivity {
 
-
     @Inject
     LoginService loginService;
     @Inject
     LocalDatabaseService localdb;
+
+
 
     /**
      * Sets the toolbar as the main menu
@@ -92,5 +100,6 @@ public abstract class ToolbarActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
 }

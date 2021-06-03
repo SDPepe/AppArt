@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -56,6 +57,7 @@ public class AdActivity extends ToolbarActivity {
                 "panoramas_pictures_references";
         public static final String INTENT_AD_ID = "adId";
     }
+
 
     private String advertiserId;
     private ArrayList<String> panoramasReferences;

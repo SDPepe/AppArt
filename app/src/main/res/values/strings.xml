@@ -190,5 +190,7 @@
     <string name="resetFilter">Remove all</string>
     <string name="card_edit">Edit Ad</string>
     <string name="card_delete">Delete Ad</string>
+    <string name="action_bar_open">open</string>
+    <string name="action_bar_close">close</string>
 
 </resources>
