@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -19,6 +21,7 @@ import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.favorites.FavoriteViewModel;
 import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.scrolling.card.CardAdapter;
+import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.DatabaseSync;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -50,12 +53,18 @@ public class FavoriteActivity extends ToolbarActivity {
         // not change
         mViewModel.getFavorites().observe(this, this::updateList);
 
-        CompletableFuture<Void> initRes = mViewModel.initHome();
-        initRes.exceptionally(e -> {
-            Log.d("FAVORITES", "Failed to init");
+        removeStaleAds().thenAccept(arg -> {
+            CompletableFuture<Void> initRes = mViewModel.initHome();
+            initRes.exceptionally(e -> {
+                Log.d("FAVORITES", "Failed to init");
+                return null;
+            });
+            initRes.thenAccept(res -> updateFavsLocally());
+        }).exceptionally(e -> {
+            e.printStackTrace();
             return null;
         });
-        initRes.thenAccept(res -> updateFavsLocally());
+
     }
 
     /**
@@ -95,6 +104,59 @@ public class FavoriteActivity extends ToolbarActivity {
             Card card = favs.get(i);
             DatabaseSync.writeAd(database, card, this, localdb);
         }
+    }
+
+    private CompletableFuture<Void> removeStaleAds() {
+
+        if (!DatabaseSync.areWeOnline(this)) {
+            return CompletableFuture.completedFuture(null);
+        }
+        CompletableFuture<Void> futureRemove = new CompletableFuture<>();
+        //This should never be null as this will be called only if we are online
+        User currentUser = loginService.getCurrentUser();
+
+
+        database.getUser(currentUser.getUserId())
+                .thenCompose(currentDBUser -> database.getCards().thenApply(cards -> new Pair(currentDBUser,
+                        cards)))
+                .thenAccept(dbUserAndCards -> {
+                    User currentDBUser = (User) dbUserAndCards.first;
+                    List<Card> cards = (List<Card>) dbUserAndCards.second;
+                    Set<String> userFavIds = currentDBUser.getFavoritesIds();
+                    List<String> adIds =
+                            cards.parallelStream().map(card -> card.getAdId()).collect(Collectors.toList());
+                    CompletableFuture<List<Card>> futureLocalCards =
+                            localdb.getCards();
+                    futureLocalCards.thenAccept(localCards -> {
+                        for (String adId : userFavIds) {
+                            if (!adIds.contains(adId)) {
+                                //Update user
+                                currentDBUser.removeFavorite(adId);
+
+                                //Update local db
+                                for (Card localCard : localCards) {
+                                    if (localCard.getAdId().equals(adId)) {
+                                        localdb.removeCard(localCard.getId());
+                                    }
+                                }
+                            }
+                        }
+                        database.updateUser(currentDBUser).thenAccept(arg -> futureRemove.complete(null)).exceptionally(e -> {
+                            e.printStackTrace();
+                            futureRemove.completeExceptionally(e);
+                            return null;
+                        });
+                    }).exceptionally(e -> {
+                        futureRemove.completeExceptionally(e);
+                        e.printStackTrace();
+                        return null;
+                    });
+                }).exceptionally(e -> {
+            e.printStackTrace();
+            futureRemove.completeExceptionally(e);
+            return null;
+        });
+        return futureRemove;
     }
 
 

@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
@@ -313,7 +315,7 @@ public class UserProfileActivity extends AppCompatActivity {
         boolean isLocal = this.sessionUser.second;
         if(isLocal) {
             Bitmap profilePic = BitmapFactory.decodeFile(this.sessionUser.first.getProfileImagePathAndName());
-            imageView.setImageBitmap(profilePic);
+            Glide.with(this).load(profilePic).into(imageView);
         } else {
             database.accept(new GlideImageViewLoader(this, imageView,
                     this.sessionUser.first.getProfileImagePathAndName()));

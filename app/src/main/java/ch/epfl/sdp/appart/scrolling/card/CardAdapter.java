@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -117,7 +119,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         String sep = FirebaseLayout.SEPARATOR;
         if(isLocal) {
             Bitmap bitmap = BitmapFactory.decodeFile(card.getImageUrl());
-            holder.cardImageView.setImageBitmap(bitmap);
+            Glide.with(context).load(bitmap).into(holder.cardImageView);
         }
         else {
             database.accept(new GlideImageViewLoader(context, holder.cardImageView,

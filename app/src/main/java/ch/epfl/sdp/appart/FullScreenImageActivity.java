@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.ad.ResizableImageView;
@@ -33,7 +35,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
         boolean isLocal = getIntent().getBooleanExtra("isLocalExtra", false);
         if(isLocal) {
             Bitmap bitmap = BitmapFactory.decodeFile(fullRef);
-            photo.setImageBitmap(bitmap);
+            Glide.with(this).load(bitmap).into(photo);
         } else {
             db.accept(new GlideImageViewLoader(this, photo, fullRef));
         }
