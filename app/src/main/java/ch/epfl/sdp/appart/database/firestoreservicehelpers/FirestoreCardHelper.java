@@ -41,10 +41,7 @@ public class FirestoreCardHelper {
         //ask firebase async to get the cards objects and notify the future
         //when they have been fetched
         db.collection(FirebaseLayout.CARDS_DIRECTORY).get().addOnCompleteListener(
-                task -> {
-                    getAndCheckCards(task,  result);
-                }
-        );
+                task -> getAndCheckCards(task,  result));
         return result;
     }
 
@@ -57,11 +54,7 @@ public class FirestoreCardHelper {
         db.collection(FirebaseLayout.CARDS_DIRECTORY)
                 .whereGreaterThanOrEqualTo("city",  location)
                 .whereLessThanOrEqualTo("city", location+"\uF7FF").get().addOnCompleteListener(
-                task -> {
-                    getAndCheckCards(task,  result);
-                }
-        );
-
+                task -> getAndCheckCards(task,  result));
         return result;
     }
     @NotNull
@@ -71,10 +64,7 @@ public class FirestoreCardHelper {
         db.collection(FirebaseLayout.CARDS_DIRECTORY)
             .whereGreaterThanOrEqualTo(CardLayout.PRICE,  min)
             .whereLessThanOrEqualTo(CardLayout.PRICE, max).get().addOnCompleteListener(
-            task -> {
-                getAndCheckCards(task,  result);
-            }
-        );
+            task -> getAndCheckCards(task,  result));
         return result;
     }
 
@@ -120,10 +110,14 @@ public class FirestoreCardHelper {
 
     @NotNull
     @NonNull
-    public CompletableFuture<Boolean> putCard(Card card, DocumentReference path) {
-        CompletableFuture<Boolean> result = new CompletableFuture<>();
+    public CompletableFuture<Void> putCard(Card card, DocumentReference path) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
         path.set(CardSerializer.serialize(card)).addOnCompleteListener(task -> {
-            result.complete(task.isSuccessful());
+            if (task.isSuccessful()) {
+                result.complete(null);
+            } else {
+                result.completeExceptionally(new DatabaseServiceException(task.getException().getMessage()));
+            }
         });
         return result;
     }
