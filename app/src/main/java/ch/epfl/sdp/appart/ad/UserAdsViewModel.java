@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.ad;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,7 +30,14 @@ public class UserAdsViewModel extends ViewModel {
     }
 
     public void initHome() {
-        CompletableFuture<User> user = database.getUser(loginService.getCurrentUser().getUserId());
+        User currUser = loginService.getCurrentUser();
+        if (currUser == null) {
+            lUserAds.setValue(new ArrayList<>());
+            Log.d("USER_ADS", "Current user is null!");
+            return;
+        }
+
+        CompletableFuture<User> user = database.getUser(currUser.getUserId());
         user.exceptionally(e -> {
             Log.d("EXCEPTION_DB", e.getMessage());
             return null;

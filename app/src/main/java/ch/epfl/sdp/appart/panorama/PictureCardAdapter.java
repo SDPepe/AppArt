@@ -49,19 +49,6 @@ public class PictureCardAdapter extends RecyclerView.Adapter<PictureCardAdapter.
         holder.bindPictureCard(picture);
         holder.sphericalImageView.setImageURI(picture.getImageUri());
         holder.cardIndexTextView.setText(Integer.toString(picture.getIndex()));
-        /*
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (CardViewHolder h : viewHolders) {
-                    h.itemView.getBackground().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.DARKEN);
-                }
-                selectedIndex = picture.getIndex() - 1;
-                v.getBackground().setColorFilter(Color.parseColor("#6A9EF6"), PorterDuff.Mode.DARKEN);
-                notifyDataSetChanged();
-            }
-        });
-         */
     }
 
     /**

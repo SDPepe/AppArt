@@ -157,6 +157,9 @@ public class MapActivity extends AppCompatActivity {
                             currentLocation, mapService, card);
                 });
 
+            }).exceptionally(e -> {
+                Log.d("MAP", "Failed to retrieve cards and current lcoation");
+                return null;
             });
         };
     }
