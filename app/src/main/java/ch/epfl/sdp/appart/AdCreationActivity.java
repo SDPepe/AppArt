@@ -21,6 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import ch.epfl.sdp.appart.location.place.address.Address;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -100,30 +102,44 @@ public class AdCreationActivity extends AppCompatActivity {
         }
 
         // set values to viewmodel
-        setVMValues();
-        findViewById(R.id.confirm_AdCreation_button).setEnabled(false);
+        if(setVMValues()) {
+            findViewById(R.id.confirm_AdCreation_button).setEnabled(false);
+            // confirm creation and elaborate result
+            CompletableFuture<Void> result = mViewModel.confirmCreation();
+            result.thenAccept(r -> {
+                Intent intent = new Intent(this, ScrollingActivity.class);
+                startActivity(intent);
 
-        // confirm creation and elaborate result
-        CompletableFuture<Void> result = mViewModel.confirmCreation();
-        result.thenAccept(r -> {
-            Intent intent = new Intent(this, ScrollingActivity.class);
-            startActivity(intent);
-
-        });
-        result.exceptionally(e -> {
-            e.printStackTrace();
-            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+            });
+            result.exceptionally(e -> {
+                e.printStackTrace();
+                Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
                     getResources().getText(R.string.snackbarFailed_AdCreation),
                     Snackbar.LENGTH_LONG).show();
-            findViewById(R.id.confirm_AdCreation_button).setEnabled(true);
-            return null;
-        });
+                findViewById(R.id.confirm_AdCreation_button).setEnabled(true);
+                return null;
+            });
+        } else {
+            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                getResources().getText(R.string.snackbarFailedLocation_AdCreation),
+                Snackbar.LENGTH_LONG).show();
+        }
     }
 
     /**
      * Takes the values from the EditTexts of the activity and sets the values in the ViewModel
      */
-    private void setVMValues() {
+    private boolean setVMValues() {
+        try{
+            AddressFactory.makeAddress(
+                joinStrings(
+                    R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText),
+                getContentOfEditText(R.id.npa_AdCreation_editText),
+                getContentOfEditText(R.id.city_AdCreation_editText)
+                );
+        } catch (Exception e){
+            return false;
+        }
         mViewModel.setTitle(getContentOfEditText(R.id.title_AdCreation_editText));
         mViewModel.setStreet(joinStrings(
                 R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText));
@@ -139,6 +155,7 @@ public class AdCreationActivity extends AppCompatActivity {
         // TODO modify when logic for adding vrtour is added
         mViewModel.setVRTourEnable(false);
         mViewModel.setUri(picturesUris);
+        return true;
     }
 
     private String joinStrings(int id1, int id2) {
