@@ -22,6 +22,8 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 @UninstallModules({LoginModule.class, DatabaseModule.class})
@@ -55,13 +57,13 @@ public class AdCreationVMTest {
     @Test
     public void confirmCreationWorksForGoodValues() throws ExecutionException, InterruptedException {
         vm.setTitle("title");
-        assertTrue(vm.confirmCreation().get());
+        assertNull(vm.confirmCreation().get());
     }
 
     @Test
-    public void confirmCreationCompletesExceptionally() throws ExecutionException, InterruptedException {
+    public void confirmCreationCompletesExceptionally() {
         vm.setTitle("failing");
-        assertFalse(vm.confirmCreation().get());
+        assertThrows(ExecutionException.class, () -> vm.confirmCreation().get());
     }
 
 }

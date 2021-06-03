@@ -95,28 +95,28 @@ public class AdCreationActivity extends AppCompatActivity {
             Resources resources = getApplicationContext().getResources();
             picturesUris.add(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                     resources.getResourcePackageName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR +
-                    resources.getResourceTypeName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR  +   
+                    resources.getResourceTypeName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR +
                     resources.getResourceEntryName(R.drawable.blank_ad)));
         }
 
         // set values to viewmodel
         setVMValues();
+        findViewById(R.id.confirm_AdCreation_button).setEnabled(false);
 
         // confirm creation and elaborate result
-        // TODO show a loading box and disable modifiying field / click buttons -> maybe a loading screen?
-        CompletableFuture<Boolean> result = mViewModel.confirmCreation();
-        result.thenAccept(completed -> {
-            if (completed) {
-                // TODO switch back when user is synced with firestore
-                Intent intent = new Intent(this, ScrollingActivity.class);
-                //intent.putExtra("fromAdCreation", true);
-                startActivity(intent);
+        CompletableFuture<Void> result = mViewModel.confirmCreation();
+        result.thenAccept(r -> {
+            Intent intent = new Intent(this, ScrollingActivity.class);
+            startActivity(intent);
 
-            } else {
-                Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
-                        getResources().getText(R.string.snackbarFailed_AdCreation),
-                        Snackbar.LENGTH_LONG).show();
-            }
+        });
+        result.exceptionally(e -> {
+            e.printStackTrace();
+            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                    getResources().getText(R.string.snackbarFailed_AdCreation),
+                    Snackbar.LENGTH_LONG).show();
+            findViewById(R.id.confirm_AdCreation_button).setEnabled(true);
+            return null;
         });
     }
 
@@ -188,19 +188,20 @@ public class AdCreationActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     private void takePhoto() {
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.AD_CREATION_ACTIVITY);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME,
+                ActivityCommunicationLayout.AD_CREATION_ACTIVITY);
         startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
+        if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 int size = data.getIntExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
                 List<Uri> listUri = new ArrayList<>();
-                for(int i = 0; i< size; i++){
-                 listUri.add(data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI + i));
+                for (int i = 0; i < size; i++) {
+                    listUri.add(data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI + i));
                 }
                 picturesUris = listUri;
                 fillHorizontalViewWithPictures(findViewById(R.id.pictures_AdCreation_linearLayout), listUri);
