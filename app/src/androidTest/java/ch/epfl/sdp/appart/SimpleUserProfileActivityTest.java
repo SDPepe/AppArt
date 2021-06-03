@@ -15,6 +15,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,9 @@ import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
+import ch.epfl.sdp.appart.hilt.LoginModule;
+import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.login.MockLoginService;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -52,7 +56,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
-@UninstallModules({DatabaseModule.class, LocalDatabaseModule.class})
+@UninstallModules({DatabaseModule.class, LocalDatabaseModule.class, LoginModule.class})
 @HiltAndroidTest
 public class SimpleUserProfileActivityTest {
     @Rule(order = 0)
@@ -65,6 +69,14 @@ public class SimpleUserProfileActivityTest {
     DatabaseService database = new MockDatabaseService();
     @BindValue
     LocalDatabaseService localdb = new MockLocalDatabase();
+
+    @BindValue
+    final static LoginService login = new MockLoginService();
+
+    @BeforeClass
+    public static void initClass() {
+        login.loginWithEmail("antoine@epfl.ch", "1111").join();
+    }
 
     @Before
     public void init() {
