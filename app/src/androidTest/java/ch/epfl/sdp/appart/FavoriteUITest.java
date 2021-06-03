@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -18,6 +19,8 @@ import org.junit.runner.RunWith;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -51,6 +54,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -124,9 +128,16 @@ public class FavoriteUITest {
 
         login.loginWithEmail("emilien@epfl.ch", "5555");
 
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        //openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
 
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.action_favorite));
+
+        /*
         ViewInteraction appCompatTextView = onView(
                 allOf(withId(R.id.title), withText("Favorites"),
                         childAtPosition(
@@ -136,6 +147,7 @@ public class FavoriteUITest {
                                 0),
                         isDisplayed()));
         appCompatTextView.perform(click());
+         */
 
         ViewInteraction recyclerView = onView(
                 allOf(withId(R.id.recycler_favorites),

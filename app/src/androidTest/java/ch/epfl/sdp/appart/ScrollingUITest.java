@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -7,6 +8,8 @@ import android.view.ViewParent;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -37,6 +40,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -128,31 +132,19 @@ public class ScrollingUITest {
     @Test
     public void toolbarTest() {
 
-        ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        ViewUtils.childAtPosition(
-                                ViewUtils.childAtPosition(
-                                        withId(R.id.login_Scrolling_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        overflowMenuButton.perform(click());
-        
-        ViewInteraction appCompatTextView3 = onView(
-                allOf(withId(R.id.title), withText("Log Out"),
-                        ViewUtils.childAtPosition(
-                                ViewUtils.childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatTextView3.perform(click());
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
+                .perform(DrawerActions.open());
+
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.action_logout));
 
         ViewInteraction button = onView(
                 allOf(withId(R.id.login_Login_button), withText("Log In!"),
                         withParent(withParent(withId(android.R.id.content))),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
+
     }
 
     @Test
