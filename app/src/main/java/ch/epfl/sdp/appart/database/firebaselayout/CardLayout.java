@@ -38,5 +38,10 @@ public final class CardLayout {
      */
     public final static String IMAGE = "picture_id"; //imageUrl
 
+    /**
+     * @apiNote : boolean on Firestore
+     */
+    public static final String HAS_VTOUR = "has_vr_tour";
+
     public static final String ID = "ID";
 }

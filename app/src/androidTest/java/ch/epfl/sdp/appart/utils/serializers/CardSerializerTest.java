@@ -41,6 +41,7 @@ public class CardSerializerTest {
             serializedCard.put(CardLayout.IMAGE, generateRandomString(10, random));
             serializedCard.put(CardLayout.PRICE, (long) random.nextInt(1000));
             serializedCard.put(CardLayout.USER_ID, generateRandomString(10, random));
+            serializedCard.put(CardLayout.HAS_VTOUR, random.nextBoolean());
 
             Card card = CardSerializer.deserialize("", serializedCard);
 
@@ -49,6 +50,7 @@ public class CardSerializerTest {
             Assert.assertEquals(serializedCard.get(CardLayout.IMAGE), card.getImageUrl());
             Assert.assertEquals(serializedCard.get(CardLayout.PRICE), card.getPrice());
             Assert.assertEquals(serializedCard.get(CardLayout.USER_ID), card.getUserId());
+            Assert.assertEquals(serializedCard.get(CardLayout.HAS_VTOUR), card.hasVRTour());
         }
     }
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -56,6 +57,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     private TextView uniAccountClaimer;
     private TextView emailTextView;
     private ImageView imageView;
+    private Button contactButton;
 
     private final static int PHONE_CALL_PERMISSION_CODE = 123;
 
@@ -76,7 +78,9 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
         this.genderText = findViewById(R.id.gender_SimpleUserProfile_editText);
         this.uniAccountClaimer = findViewById(R.id.uniAccountClaimer_SimpleUserProfile_textView);
         this.imageView = findViewById(R.id.profilePicture_SimpleUserProfile_imageView);
+        contactButton = findViewById(R.id.contact_SimpleUserProfile_button);
 
+        contactButton.setVisibility(View.INVISIBLE);
         String advertiserId =
                 getIntent().getStringExtra(ActivityCommunicationLayout.PROVIDING_USER_ID);
 
@@ -151,7 +155,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      */
     private void setAdUserToLocal(User user) {
         this.advertiserUser = user;
-
+        contactButton.setVisibility(View.VISIBLE);
         /* set attributes of session user to the UI components */
         getAndSetCurrentAttributes();
     }
