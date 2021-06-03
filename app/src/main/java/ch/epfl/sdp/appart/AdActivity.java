@@ -19,7 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -37,8 +39,10 @@ import ch.epfl.sdp.appart.database.exceptions.DatabaseServiceException;
 import ch.epfl.sdp.appart.database.firebaselayout.FirebaseLayout;
 import ch.epfl.sdp.appart.glide.visitor.GlideImageViewLoader;
 import ch.epfl.sdp.appart.login.LoginService;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.User;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import ch.epfl.sdp.appart.utils.DatabaseSync;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import static android.widget.Toast.makeText;
@@ -70,11 +74,14 @@ public class AdActivity extends ToolbarActivity {
     private Button contactButton;
     private Button seeLocationButton;
     private Button seeNearbyPlacesButton;
+    private MenuItem addFavoriteItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
+
+        addFavoriteItem = findViewById(R.id.action_add_favorite);
 
         /**
          * Retrieve buttons
@@ -121,7 +128,7 @@ public class AdActivity extends ToolbarActivity {
                     return null;
                 });
 
-
+        //updateBookmarkIconState();
     }
 
     public void noInformationOnClickListener(View view) {
@@ -142,7 +149,7 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateHasVTourButton(Boolean hasVTour) {
-        if(hasVTour) {
+        if (hasVTour) {
             panoramaButton.setVisibility(View.VISIBLE);
         }
     }
@@ -161,25 +168,28 @@ public class AdActivity extends ToolbarActivity {
                     (ViewGroup) null);
             ImageView photo = myView.findViewById(R.id.photo_Photo_imageView);
             String fullRef;
-            if(isLocal) {
+            if (isLocal) {
                 fullRef = references.get(i);
                 Bitmap bitmap = BitmapFactory.decodeFile(fullRef);
                 photo.setImageBitmap(bitmap);
             } else {
-                fullRef =  FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
+                fullRef =
+                        FirebaseLayout.ADS_DIRECTORY + sep + adId + sep + references.get(i);
                 database.accept(new GlideImageViewLoader(this, photo, fullRef));
             }
             horizontalLayout.addView(myView);
 
             // open image fullscreen on tap
-            myView.setOnClickListener(e -> openImageFullscreen(fullRef, isLocal));
+            myView.setOnClickListener(e -> openImageFullscreen(fullRef,
+                    isLocal));
         }
     }
 
     private void updatePanoramasReferences(Pair<List<String>, Boolean> references) {
         panoramasReferences.first.clear();
         panoramasReferences.first.addAll(references.first);
-        panoramasReferences = new Pair<>(panoramasReferences.first, references.second);
+        panoramasReferences = new Pair<>(panoramasReferences.first,
+                references.second);
     }
 
     private void updateAddress(String address) {
@@ -264,6 +274,8 @@ public class AdActivity extends ToolbarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.ad_toolbar, menu);
+        addFavoriteItem = menu.getItem(0);
+        updateBookmarkIconState();
         return true;
     }
 
@@ -273,14 +285,19 @@ public class AdActivity extends ToolbarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_favorite) {
-            CompletableFuture<Void> addRes = addNewFavorite();
+            if(!DatabaseSync.areWeOnline(this)) {
+                makeText(this, "You can't add or remove favorites while offline !", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            CompletableFuture<Boolean> addRes = addNewFavorite();
             addRes.exceptionally(e -> {
                 Log.d("AD", "Failed to add to favorites");
                 return null;
             });
-            addRes.thenAccept(res ->
-                    makeText(this, R.string.favSuccess_Ad,
-                            Toast.LENGTH_SHORT).show()
+            addRes.thenAccept(res -> {
+                    setBookmarkIcon(!res);
+                }
             );
             return true;
         }
@@ -290,8 +307,8 @@ public class AdActivity extends ToolbarActivity {
     /**
      * Check if user is logged in and add new favorite ad to user
      */
-    private CompletableFuture<Void> addNewFavorite() {
-        CompletableFuture<Void> result = new CompletableFuture<>();
+    private CompletableFuture<Boolean> addNewFavorite() {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
         // check that the user is logged in
         User user = login.getCurrentUser();
         if (user == null) {
@@ -313,9 +330,39 @@ public class AdActivity extends ToolbarActivity {
      * Adds the ad id to the list of favorites of the user and update the
      * user in the server.
      */
-    private void saveFavorite(CompletableFuture<Void> result, User user) {
-        user.addFavorite(adId);
-        CompletableFuture<Boolean> updateRes = database.updateUser(user);
+    private void saveFavorite(CompletableFuture<Boolean> result, User user) {
+        boolean alreadyAdded = user.getFavoritesIds().contains(adId);
+        CompletableFuture<List<Card>> futureCards = database.getCards();
+        CompletableFuture<Card> futureLocalUpdate;
+        if(alreadyAdded) {
+            futureLocalUpdate = futureCards.thenApply(cards -> {
+                Card card = getMatchingCard(cards);
+                if(card == null) {
+                    return card;
+                }
+                localdb.removeCard(card.getId());
+                user.removeFavorite(adId);
+                return card;
+            });
+        } else {
+            futureLocalUpdate = futureCards.thenApply(cards -> {
+                Card card = getMatchingCard(cards);
+                if(card == null) {
+                    return card;
+                }
+                DatabaseSync.writeAd(database, card, this, localdb);
+                user.addFavorite(adId);
+                return card;
+            });
+        }
+        CompletableFuture<Boolean> updateRes = futureLocalUpdate.thenCompose( card -> database.updateUser(user).exceptionally(e -> {
+            if(alreadyAdded) {
+                user.addFavorite(adId);
+            } else {
+                user.removeFavorite(adId);
+            }
+            return null;
+        }));
         updateRes.exceptionally(e -> {
             Log.d("AD", "failed to update user");
             result.completeExceptionally(
@@ -325,8 +372,17 @@ public class AdActivity extends ToolbarActivity {
         });
         updateRes.thenAccept(res -> {
             Log.d("AD", "user updated");
-            result.complete(null);
+            result.complete(alreadyAdded);
         });
+    }
+
+    private Card getMatchingCard(List<Card> cards) {
+        for(Card card : cards) {
+            if(card.getAdId().equals(adId)) {
+                return card;
+            }
+        }
+        return null;
     }
 
     public void onNearbyPlacesClick(View view) {
@@ -334,6 +390,32 @@ public class AdActivity extends ToolbarActivity {
         intent.putExtra(ActivityCommunicationLayout.AD_ADDRESS,
                 mViewModel.getAddress().getValue());
         startActivity(intent);
+    }
+
+    private void updateBookmarkIconState() {
+        User currentUser = login.getCurrentUser();
+        if(currentUser == null) {
+            currentUser = localdb.getCurrentUser();
+        }
+        database.getUser(currentUser.getUserId()).thenAccept(user -> {
+            setBookmarkIcon(user.getFavoritesIds().contains(adId));
+        }).exceptionally(e -> {
+            localdb.getCards().thenAccept(cards -> {
+                cards.forEach(card -> {
+                    setBookmarkIcon(card.getAdId().equals(adId));
+                });
+            });
+            return null;
+        });
+
+    }
+
+    private void setBookmarkIcon(boolean filled) {
+        if(filled) {
+            addFavoriteItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bookmark_filled, null));
+        } else {
+            addFavoriteItem.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bookmark, null));
+        }
     }
 
 }

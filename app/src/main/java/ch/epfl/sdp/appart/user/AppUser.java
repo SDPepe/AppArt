@@ -244,6 +244,11 @@ public class AppUser implements User {
             favoritesIds.remove(id);
     }
 
+    @Override
+    public void removeFavorite(String id) {
+        this.favoritesIds.remove(id);
+    }
+
     /**
      *
      * @return the name of the user gender-icon image
