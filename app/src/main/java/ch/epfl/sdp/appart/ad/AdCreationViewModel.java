@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import androidx.lifecycle.ViewModel;
 
+import ch.epfl.sdp.appart.location.place.locality.Locality;
+import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
