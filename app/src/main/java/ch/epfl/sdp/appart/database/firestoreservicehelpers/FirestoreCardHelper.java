@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.database.firestoreservicehelpers;
 
 import androidx.annotation.NonNull;
 
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,13 +58,15 @@ public class FirestoreCardHelper {
                 task -> getAndCheckCards(task,  result));
         return result;
     }
+
     @NotNull
     @NonNull
     public CompletableFuture<List<Card>> getCardsFilterPrice(int min, int max){
         CompletableFuture<List<Card>> result = new CompletableFuture<>();
         db.collection(FirebaseLayout.CARDS_DIRECTORY)
             .whereGreaterThanOrEqualTo(CardLayout.PRICE,  min)
-            .whereLessThanOrEqualTo(CardLayout.PRICE, max).get().addOnCompleteListener(
+            .whereLessThanOrEqualTo(CardLayout.PRICE, max)
+            .whereEqualTo(CardLayout.PERIOD, PricePeriod.MONTH.toString()).get().addOnCompleteListener(
             task -> getAndCheckCards(task,  result));
         return result;
     }

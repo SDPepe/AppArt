@@ -140,9 +140,6 @@ public interface DatabaseService extends DatabaseHostVisitor {
     @NonNull
     public CompletableFuture<Boolean> deleteImage(String imagePathAndName);
 
-
-
-
     CompletableFuture<Void> clearCache();
 
 }
