@@ -105,7 +105,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.addressTextView.setText(card.getCity());
         holder.priceTextView.setText(String.format("%d.-/mo", card.getPrice()));
         if (!card.hasVRTour())
-            holder.vrAvailableImageView.setVisibility(View.INVISIBLE);
+            holder.vrAvailableImageView.setVisibility(View.GONE);
+        else
+            holder.vrAvailableImageView.setVisibility(View.VISIBLE);
 
         // Not the cleanest way of doing it, but it was difficult to do it differently with inheritance
         Log.d("delete_ads", "This card is a UserCardAdapter");
