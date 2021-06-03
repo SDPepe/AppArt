@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.login;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -108,13 +110,11 @@ public class FirebaseLoginService implements LoginService {
             return failedLogin;
         }
 
-
         return setUpFuture(getCurrentFirebaseUser().updateEmail(email), result -> result);
     }
 
     @Override
     public CompletableFuture<Void> updatePassword(String password) {
-        String[] args = {password};
         try {
             fullChecker(password, "when updating the password");
         } catch (Exception e) {
@@ -122,8 +122,6 @@ public class FirebaseLoginService implements LoginService {
             failedLogin.completeExceptionally(new LoginServiceRequestFailedException(e.getMessage()));
             return failedLogin;
         }
-
-
 
         return setUpFuture(getCurrentFirebaseUser().updatePassword(password), result -> result);
     }
@@ -166,8 +164,6 @@ public class FirebaseLoginService implements LoginService {
             return failedLogin;
         }
 
-
-
         return setUpFuture(getCurrentFirebaseUser().reauthenticate(
                 EmailAuthProvider.getCredential(email, password)),
                 result -> result);
@@ -176,7 +172,7 @@ public class FirebaseLoginService implements LoginService {
     @Override
     public void signOut() {
         mAuth.signOut();
-        System.out.println("User signed out");
+        Log.d("LOGIN_SERVICE", "User logged out");
     }
 
     @Override

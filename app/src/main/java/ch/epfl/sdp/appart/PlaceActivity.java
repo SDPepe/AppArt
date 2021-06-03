@@ -62,7 +62,8 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private final List<Pair<PlaceOfInterest, Float>> currentSelectedPlaces =
             new ArrayList<>();
-    private final HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache = new HashMap<>();
+    private final HashMap<String, List<Pair<PlaceOfInterest, Float>>> selectionCache =
+            new HashMap<>();
     private Address adAddress;
     private final PlaceAdapter placeAdapter = new PlaceAdapter(this,
             currentSelectedPlaces);
@@ -113,15 +114,18 @@ public class PlaceActivity extends AppCompatActivity implements AdapterView.OnIt
                 placeService.getNearbyPlacesWithDistances(adAddress, type,
                         5);
 
-        queriedPlaces.thenAccept(pairs -> {
-            selectionCache.put(FIELDS.get(currentSelectedIndex), pairs);
-            currentSelectedPlaces.clear();
-            currentSelectedPlaces.addAll(pairs);
-            this.runOnUiThread(placeAdapter::notifyDataSetChanged);
+        queriedPlaces
+                .thenAccept(pairs -> {
+                    selectionCache.put(FIELDS.get(currentSelectedIndex), pairs);
+                    currentSelectedPlaces.clear();
+                    currentSelectedPlaces.addAll(pairs);
+                    this.runOnUiThread(placeAdapter::notifyDataSetChanged);
 
-        });
-
-        //maybe we don't do anything if the request fail
+                })
+                .exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
 
     }
 

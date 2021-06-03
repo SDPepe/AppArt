@@ -162,7 +162,6 @@ public class DatabaseSync {
         CompletableFuture<Void> writeRes =
                 ldb.writeCompleteAd(adId, cardId, ad, user, images, panoramas, pfp);
         writeRes.thenAccept(res -> {
-            Log.d("DATASYNC", "local write ok");
             result.complete(null);
         });
         writeRes.exceptionally(e -> {
