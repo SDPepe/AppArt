@@ -1,12 +1,14 @@
 package ch.epfl.sdp.appart;
 
 
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import android.widget.Button;
 import androidx.appcompat.app.AlertDialog;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import org.hamcrest.Description;
@@ -31,6 +33,7 @@ import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.database.local.MockLocalDatabase;
 import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LocalDatabaseModule;
+import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
 import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
@@ -55,11 +58,21 @@ import static org.hamcrest.Matchers.allOf;
 @UninstallModules({DatabaseModule.class, LocalDatabaseModule.class})
 @HiltAndroidTest
 public class SimpleUserProfileActivityTest {
+
+    static final String testId = "vetterli-id";
+    static final Intent intent;
+
+    static {
+        intent = new Intent(ApplicationProvider.getApplicationContext(), SimpleUserProfileActivity.class);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_USER_ID, testId);
+    }
+
     @Rule(order = 0)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Rule(order = 1)
-    public ActivityScenarioRule<ScrollingActivity> mActivityTestRule = new ActivityScenarioRule<>(ScrollingActivity.class);
+    public ActivityScenarioRule<ScrollingActivity> mActivityTestRule =
+            new ActivityScenarioRule<>(intent);
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
@@ -92,14 +105,14 @@ public class SimpleUserProfileActivityTest {
 
     @Test
     public void simpleUserProfileActivityTest() {
-        ViewInteraction appCompatImageView = onView(
+        /*ViewInteraction appCompatImageView = onView(
             ViewUtils.withIndex(withId(R.id.place_card_image_CardLayout_imageView),
                 0));
         appCompatImageView.perform(forceClick());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.contact_info_Ad_button), withText("Contact")));
-        appCompatButton.perform(scrollTo(), click());
+        appCompatButton.perform(scrollTo(), click());*/
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.email_SimpleUserProfile_textView), withText("Email"),
