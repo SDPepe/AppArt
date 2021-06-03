@@ -71,11 +71,11 @@ public class LocalDatabaseAndroidTest {
             ".ch");
 
     final List<Card> cards = Arrays.asList(new Card("card1", "ad1", "user1",
-                    "Lausanne", 1000, "card_1.jpeg"),
-            new Card("card2", "ad2", "user2", "Lausanne", 1000, "card_2.jpeg"),
-            new Card("card3", "ad3", "user3", "Lausanne", 1000, "card_3.jpeg"),
-            new Card("card4", "ad4", "user4", "Lausanne", 1000, "card_4.jpeg"),
-            new Card("card5", "ad5", "user5", "Lausanne", 1000, "card_5.jpeg"));
+                    "Lausanne", 1000, PricePeriod.MONTH, "card_1.jpeg"),
+            new Card("card2", "ad2", "user2", "Lausanne", 1000,PricePeriod.MONTH, "card_2.jpeg"),
+            new Card("card3", "ad3", "user3", "Lausanne", 1000, PricePeriod.MONTH, "card_3.jpeg"),
+            new Card("card4", "ad4", "user4", "Lausanne", 1000, PricePeriod.MONTH, "card_4.jpeg"),
+            new Card("card5", "ad5", "user5", "Lausanne", 1000, PricePeriod.MONTH, "card_5.jpeg"));
 
     private Ad.AdBuilder[] getAdBuilders() {
         Ad.AdBuilder adBuilder1 = new Ad.AdBuilder()
@@ -530,14 +530,14 @@ public class LocalDatabaseAndroidTest {
         Ad[] ads = {ad1, ad2, ad3, ad4, ad5};
 
         List<Card> cards = Arrays.asList(new Card("card1", "ad1", "user1",
-                        "Lausanne", 1000, "card_1.jpeg"),
-                new Card("card2", "ad2", "user1", "Lausanne", 1000, "card_2" +
+                        "Lausanne", 1000, PricePeriod.MONTH, "card_1.jpeg"),
+                new Card("card2", "ad2", "user1", "Lausanne", 1000, PricePeriod.MONTH, "card_2" +
                         ".jpeg"),
-                new Card("card3", "ad3", "user1", "Lausanne", 1000, "card_3" +
+                new Card("card3", "ad3", "user1", "Lausanne", 1000, PricePeriod.MONTH, "card_3" +
                         ".jpeg"),
-                new Card("card4", "ad4", "user1", "Lausanne", 1000, "card_4" +
+                new Card("card4", "ad4", "user1", "Lausanne", 1000, PricePeriod.MONTH, "card_4" +
                         ".jpeg"),
-                new Card("card5", "ad5", "user1", "Lausanne", 1000, "card_5" +
+                new Card("card5", "ad5", "user1", "Lausanne", 1000, PricePeriod.MONTH, "card_5" +
                         ".jpeg"));
 
         localDatabase.writeCompleteAd("ad1", "card1", ad1, users.get(0),
