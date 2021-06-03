@@ -133,6 +133,9 @@
     <!-- ScrollingActivity stuff -->
     <string name="searchDescription_Scrolling">Which city?</string>
     <string name="confirmCameraButtonText">Confirm</string>
+    <string name="scrollingActivityAlertDialogMessage">Are you sure you want to log out ?</string>
+    <string name="scrollingActivityAlertDialogPositiveButton">Yes</string>
+    <string name="scrollingActivityAlertDialogNegativeButton">No</string>
 
     <!-- CameraActivity stuff -->
     <string name="canceledNoImage"> "Canceled: you did not upload any image " </string>
