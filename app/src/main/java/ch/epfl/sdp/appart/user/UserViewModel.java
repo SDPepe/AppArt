@@ -122,7 +122,7 @@ public class UserViewModel extends ViewModel {
             return null;
         });
         localUserRes.thenAccept(u -> {
-            mUser.setValue(u);
+            if (u != null) mUser.setValue(u);
             getFromDBAndSetUser(userId, result);
         });
         return result;
