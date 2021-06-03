@@ -365,9 +365,7 @@ public class AdActivity extends ToolbarActivity {
         }));
         updateRes.exceptionally(e -> {
             Log.d("AD", "failed to update user");
-            result.completeExceptionally(
-                    new DatabaseServiceException(
-                            getString(R.string.favFail_Ad)));
+            result.completeExceptionally(e);
             return null;
         });
         updateRes.thenAccept(res -> {
