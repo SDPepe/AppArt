@@ -54,7 +54,7 @@
     app:layout_constraintStart_toStartOf="@+id/guideline29"
     app:layout_constraintTop_toBottomOf="@+id/price_title_Filter_TextView">
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"
       android:orientation="vertical">
@@ -69,7 +69,8 @@
         android:orientation="horizontal">
         <EditText
           android:id="@+id/value_min_price_Filter_editText"
-          android:layout_width="match_parent"
+          android:layout_width="0dp"
+          android:layout_weight="1"
           android:layout_height="wrap_content"
           android:hint="0000"
           android:inputType="number"/>
@@ -82,7 +83,7 @@
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"
       android:orientation="vertical">
@@ -97,7 +98,8 @@
         android:orientation="horizontal">
         <EditText
           android:id="@+id/value_max_price_Filter_editText"
-          android:layout_width="match_parent"
+          android:layout_width="0dp"
+          android:layout_weight="1"
           android:layout_height="wrap_content"
           android:hint="0000"
           android:inputType="number"/>
@@ -130,19 +132,20 @@
     android:orientation="horizontal"
     app:layout_constraintEnd_toStartOf="@+id/guideline30"
     app:layout_constraintStart_toStartOf="@+id/guideline29"
-    app:layout_constraintTop_toBottomOf="@+id/location_title_Filter_textView">
+    app:layout_constraintTop_toBottomOf="@+id/location_title_Filter_textView"
+    app:layout_constraintBottom_toTopOf="@+id/clear_Filter_button">
 
     <EditText
       android:id="@+id/location_Filter_editText"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
+      android:layout_width="0dp"
       android:layout_weight="1"
+      android:layout_height="match_parent"
       android:layout_marginEnd="16dp"
       />
 
     <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
       android:layout_weight="1"
       android:orientation="vertical">
       <TextView
@@ -156,7 +159,8 @@
         android:orientation="horizontal">
         <EditText
           android:id="@+id/value_range_Filter_editText"
-          android:layout_width="match_parent"
+          android:layout_width="0dp"
+          android:layout_weight="1"
           android:layout_height="wrap_content"
           android:hint="0000"
           android:inputType="number"
