@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.map.helper;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -97,8 +99,10 @@ public class MapFrontendHelper {
                     mapService.addMarker(adLoc, card,
                             false, card.getCity());
                 }
+            }).exceptionally(e -> {
+                Log.d("MAP_HELPER", "Failed to get location");
+                return null;
             });
-
         });
     }
 }
