@@ -103,7 +103,7 @@ public class FirestoreAdHelper {
         List<CompletableFuture<Boolean>> imagesUploadFutures = new ArrayList<>();
 
         for (int i = 0; i < uris.size(); i++) {
-            String name = prefix + i + ".jpeg"; // TODO modify to support other extensions
+            String name = prefix + i + ".jpeg";
             references.add(name);
             imagesUploadFutures.add(imageHelper.putImage(uris.get(i), path + name));
         }
@@ -158,7 +158,7 @@ public class FirestoreAdHelper {
 
     private CompletableFuture<List<String>> getAndCheckImagesIds(String adId, String directory) {
         CompletableFuture<List<String>> result = new CompletableFuture<List<String>>();
-        db.collection(adsPath).document(adId).collection(directory/*AdLayout.PICTURES_DIRECTORY*/)
+        db.collection(adsPath).document(adId).collection(directory)
                 .get().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 result.completeExceptionally(new DatabaseServiceException("Failed to get pictures ids."));
@@ -237,12 +237,10 @@ public class FirestoreAdHelper {
                 }
             });
 
-            //CompletableFuture<Void>[] resultsArray = new CompletableFuture[photosIdResults.size()];
-            //photosIdResults.toArray(resultsArray);
-
         }
 
-        CompletableFuture.allOf(photosIdResults).thenAccept(res -> result.complete(null))
+        CompletableFuture.allOf(photosIdResults)
+                .thenAccept(res -> result.complete(null))
                 .exceptionally(e -> {
                     result.completeExceptionally(e);
                     return null;
@@ -284,7 +282,6 @@ public class FirestoreAdHelper {
                                List<String> picturesReferences, List<String> panoramasReferences) {
         CompletableFuture<Void> result = new CompletableFuture<>();
         CompletableFuture<Void> infoUpload = new CompletableFuture<>();
-        CompletableFuture<Void> idsUpload = new CompletableFuture<>();
         //we first set the ad in the database by serializing it and if it fail we squash everything
         adRef.set(AdSerializer.serialize(ad)).addOnCompleteListener(
                 task -> {
@@ -318,10 +315,13 @@ public class FirestoreAdHelper {
         CompletableFuture<Void> result = new CompletableFuture<>();
         Card c = new Card(cardRef.getId(), adRef.getId(), ad.getAdvertiserId(), ad.getCity(),
                 ad.getPrice(), firstImageRef, ad.hasVRTour());
-        cardHelper.putCard(c, cardRef).thenAccept(successful -> {
-            cleanUpIfFailed(successful, result, adRef, cardRef, imagesRef);
-            result.complete(null);
-        });
+        cardHelper.putCard(c, cardRef)
+                .thenAccept(res -> result.complete(null))
+                .exceptionally(e -> {
+                    cleanUpIfFailed(false, result, adRef, cardRef, imagesRef);
+                    result.completeExceptionally(e);
+                    return null;
+                });
         return result;
     }
 
@@ -374,7 +374,6 @@ public class FirestoreAdHelper {
                 }).addOnFailureListener(e -> Log.d("Ad upload", "Failed to cleanup after failed upload"));
             }
 
-            // TODO create exception
             result.completeExceptionally(
                     new DatabaseServiceException("Ad upload failed!"));
         }
