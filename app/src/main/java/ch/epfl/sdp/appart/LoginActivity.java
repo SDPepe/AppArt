@@ -1,10 +1,12 @@
 package ch.epfl.sdp.appart;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,12 +39,17 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseService database;
 
     private View progressBar;
+    private View loginEditText;
+    private View passwordEditText;
+    private View loginButton;
+    private View resetPswdButton;
+    private View createAccountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        progressBar = findViewById(R.id.progress_Login_ProgressBar);
+        setViews();
 
 
         String email = SharedPreferencesHelper.getSavedEmail(this);
@@ -59,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                 saveCurrentUserToLocalDB(u.getUserId());
             });
         } else {
+            showViews();
             setBundleInfo(this.getIntent().getExtras());
         }
     }
@@ -74,6 +82,12 @@ public class LoginActivity extends AppCompatActivity {
     public void logIn(View view) {
         EditText emailView = findViewById(R.id.email_Login_editText);
         EditText passwordView = findViewById(R.id.password_Login_editText);
+
+        // close the keyboard so that the user get input feedback on button and login
+        InputMethodManager imm =
+                (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
         String email = emailView.getText().toString();
         String password = passwordView.getText().toString();
 
@@ -99,13 +113,36 @@ public class LoginActivity extends AppCompatActivity {
     private void saveCurrentUserToLocalDB(String userID) {
         CompletableFuture<Void> saveRes =
                 DatabaseSync.saveCurrentUserToLocalDB(this,
-                database, localdb, userID);
+                        database, localdb, userID);
         saveRes.exceptionally(e -> {
             Log.d("LOGIN", "Failed to save user locally");
             startScrollingActivity();
             return null;
         });
         saveRes.thenAccept(r -> startScrollingActivity());
+    }
+
+    private void setViews(){
+        progressBar = findViewById(R.id.progress_Login_ProgressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+        loginEditText = findViewById(R.id.email_Login_editText);
+        loginEditText.setVisibility(View.INVISIBLE);
+        passwordEditText = findViewById(R.id.password_Login_editText);
+        passwordEditText.setVisibility(View.INVISIBLE);
+        loginButton = findViewById(R.id.login_Login_button);
+        loginButton.setVisibility(View.INVISIBLE);
+        resetPswdButton = findViewById(R.id.reset_password_Login_button);
+        resetPswdButton.setVisibility(View.INVISIBLE);
+        createAccountButton = findViewById(R.id.create_account_Login_button);
+        createAccountButton.setVisibility(View.INVISIBLE);
+    }
+
+    private void showViews(){
+        loginEditText.setVisibility(View.VISIBLE);
+        passwordEditText.setVisibility(View.VISIBLE);
+        loginButton.setVisibility(View.VISIBLE);
+        resetPswdButton.setVisibility(View.VISIBLE);
+        createAccountButton.setVisibility(View.VISIBLE);
     }
 
     /**

@@ -21,6 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import ch.epfl.sdp.appart.location.place.address.Address;
+import ch.epfl.sdp.appart.location.place.address.AddressFactory;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -95,35 +97,49 @@ public class AdCreationActivity extends AppCompatActivity {
             Resources resources = getApplicationContext().getResources();
             picturesUris.add(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                     resources.getResourcePackageName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR +
-                    resources.getResourceTypeName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR  +   
+                    resources.getResourceTypeName(R.drawable.blank_ad) + FirebaseLayout.SEPARATOR +
                     resources.getResourceEntryName(R.drawable.blank_ad)));
         }
 
         // set values to viewmodel
-        setVMValues();
-
-        // confirm creation and elaborate result
-        // TODO show a loading box and disable modifiying field / click buttons -> maybe a loading screen?
-        CompletableFuture<Boolean> result = mViewModel.confirmCreation();
-        result.thenAccept(completed -> {
-            if (completed) {
-                // TODO switch back when user is synced with firestore
+        if(setVMValues()) {
+            findViewById(R.id.confirm_AdCreation_button).setEnabled(false);
+            // confirm creation and elaborate result
+            CompletableFuture<Void> result = mViewModel.confirmCreation();
+            result.thenAccept(r -> {
                 Intent intent = new Intent(this, ScrollingActivity.class);
-                //intent.putExtra("fromAdCreation", true);
                 startActivity(intent);
 
-            } else {
+            });
+            result.exceptionally(e -> {
+                e.printStackTrace();
                 Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
-                        getResources().getText(R.string.snackbarFailed_AdCreation),
-                        Snackbar.LENGTH_LONG).show();
-            }
-        });
+                    getResources().getText(R.string.snackbarFailed_AdCreation),
+                    Snackbar.LENGTH_LONG).show();
+                findViewById(R.id.confirm_AdCreation_button).setEnabled(true);
+                return null;
+            });
+        } else {
+            Snackbar.make(findViewById(R.id.horizontal_AdCreation_scrollView),
+                getResources().getText(R.string.snackbarFailedLocation_AdCreation),
+                Snackbar.LENGTH_LONG).show();
+        }
     }
 
     /**
      * Takes the values from the EditTexts of the activity and sets the values in the ViewModel
      */
-    private void setVMValues() {
+    private boolean setVMValues() {
+        try{
+            AddressFactory.makeAddress(
+                joinStrings(
+                    R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText),
+                getContentOfEditText(R.id.npa_AdCreation_editText),
+                getContentOfEditText(R.id.city_AdCreation_editText)
+                );
+        } catch (Exception e){
+            return false;
+        }
         mViewModel.setTitle(getContentOfEditText(R.id.title_AdCreation_editText));
         mViewModel.setStreet(joinStrings(
                 R.id.street_AdCreation_editText, R.id.number_AdCreation_ediText));
@@ -139,6 +155,7 @@ public class AdCreationActivity extends AppCompatActivity {
         // TODO modify when logic for adding vrtour is added
         mViewModel.setVRTourEnable(false);
         mViewModel.setUri(picturesUris);
+        return true;
     }
 
     private String joinStrings(int id1, int id2) {
@@ -188,19 +205,20 @@ public class AdCreationActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     private void takePhoto() {
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME, ActivityCommunicationLayout.AD_CREATION_ACTIVITY);
+        intent.putExtra(ActivityCommunicationLayout.PROVIDING_ACTIVITY_NAME,
+                ActivityCommunicationLayout.AD_CREATION_ACTIVITY);
         startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
+        if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 int size = data.getIntExtra(ActivityCommunicationLayout.PROVIDING_SIZE, 0);
                 List<Uri> listUri = new ArrayList<>();
-                for(int i = 0; i< size; i++){
-                 listUri.add(data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI + i));
+                for (int i = 0; i < size; i++) {
+                    listUri.add(data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI + i));
                 }
                 picturesUris = listUri;
                 fillHorizontalViewWithPictures(findViewById(R.id.pictures_AdCreation_linearLayout), listUri);

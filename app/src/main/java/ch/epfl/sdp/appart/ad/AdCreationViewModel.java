@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import androidx.lifecycle.ViewModel;
 
+import ch.epfl.sdp.appart.location.place.locality.Locality;
+import ch.epfl.sdp.appart.location.place.locality.LocalityFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -47,10 +49,10 @@ public class AdCreationViewModel extends ViewModel {
     /**
      * function to use when confirming the creation of the ad
      *
-     * @return a completable future with true if the ad has been successfully added to the database,
-     * false if an exception was thrown
+     * @return a completable future that completes normally if the creation is successful, and
+     * exceptionally otherwise
      */
-    public CompletableFuture<Boolean> confirmCreation() {
+    public CompletableFuture<Void> confirmCreation() {
         User user = ls.getCurrentUser();
         Ad ad = new Ad(title, price, pricePeriod, street, city, user.getName(), user.getUserId(), description,
                 new ArrayList<>(), new ArrayList<>(), VRTourEnable);
@@ -58,9 +60,8 @@ public class AdCreationViewModel extends ViewModel {
 
         return result.thenApply(s -> {
             user.addAdId(s);
-            return true;
-        }).exceptionally(e -> false);
-
+            return null;
+        });
     }
 
     //getters

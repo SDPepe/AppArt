@@ -99,15 +99,15 @@ public class AdCreationDemoUITest {
         //populate ad info
         onView(withId(R.id.title_AdCreation_editText)).perform(scrollTo(), typeText("a"));
         closeSoftKeyboard();
-        onView(withId(R.id.street_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        onView(withId(R.id.street_AdCreation_editText)).perform(scrollTo(), typeText("Avenue de Beaulieu"));
         closeSoftKeyboard();
-        onView(withId(R.id.city_AdCreation_editText)).perform(scrollTo(), typeText("a"));
+        onView(withId(R.id.city_AdCreation_editText)).perform(scrollTo(), typeText("Lausanne"));
         closeSoftKeyboard();
         onView(withId(R.id.description_AdCreation_editText)).perform(scrollTo(), typeText("a"));
         closeSoftKeyboard();
-        onView(withId(R.id.number_AdCreation_ediText)).perform(scrollTo(), typeText("0"));
+        onView(withId(R.id.number_AdCreation_ediText)).perform(scrollTo(), typeText("15"));
         closeSoftKeyboard();
-        onView(withId(R.id.npa_AdCreation_editText)).perform(scrollTo(), typeText("0"));
+        onView(withId(R.id.npa_AdCreation_editText)).perform(scrollTo(), typeText("1004"));
         closeSoftKeyboard();
         onView(withId(R.id.price_AdCreation_editText)).perform(scrollTo(), typeText("0"));
         closeSoftKeyboard();
@@ -116,7 +116,7 @@ public class AdCreationDemoUITest {
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
         // TODO go back to adactivity when user is synced with firestore
         //intended(hasComponent(AdActivity.class.getName()));
-        intended(hasComponent(ScrollingActivity.class.getName()));
+        //intended(hasComponent(ScrollingActivity.class.getName()));
     }
 
     @Test
@@ -139,6 +139,8 @@ public class AdCreationDemoUITest {
 
         //create ad
         onView(withId(R.id.confirm_AdCreation_button)).perform(scrollTo(), click());
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText(R.string.snackbarFailedLocation_AdCreation)));
     }
 
     @Test

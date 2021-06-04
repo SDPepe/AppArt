@@ -100,7 +100,6 @@
                 app:layoutManager="LinearLayoutManager">
 
             </androidx.recyclerview.widget.RecyclerView>
-
         </LinearLayout>
 
         <androidx.fragment.app.FragmentContainerView

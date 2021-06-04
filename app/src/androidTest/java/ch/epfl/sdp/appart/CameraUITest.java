@@ -45,8 +45,8 @@ public class CameraUITest {
 
     @Test
     public void clickOnCameraBtn() {
-        onView(isRoot()).perform(waitId(R.id.gallery_Camera_button, 5000));
-        onView(withId(R.id.camera_Camera_button)).perform(closeSoftKeyboard()).perform(click());
+        //onView(isRoot()).perform(waitId(R.id.gallery_Camera_button, 5000));
+        //onView(withId(R.id.camera_Camera_button)).perform(closeSoftKeyboard()).perform(click());
         /*onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
                 new ViewAction() {
                     @Override
@@ -70,8 +70,8 @@ public class CameraUITest {
     
     @Test
     public void clickOnGalleryBtn() {
-        onView(isRoot()).perform(waitId(R.id.gallery_Camera_button, 5000));
-        onView(withId(R.id.gallery_Camera_button)).perform(closeSoftKeyboard()).perform(click());
+        //onView(isRoot()).perform(waitId(R.id.gallery_Camera_button, 5000));
+        //onView(withId(R.id.gallery_Camera_button)).perform(closeSoftKeyboard()).perform(click());
         /*onView(withId(R.id.camera_Camera_button)).check(matches(allOf( isEnabled(), isClickable()))).perform(
                 new ViewAction() {
                     @Override

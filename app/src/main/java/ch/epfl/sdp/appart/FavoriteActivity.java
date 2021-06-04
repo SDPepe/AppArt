@@ -97,6 +97,10 @@ public class FavoriteActivity extends ToolbarActivity {
                     return null;
                 });
             });
+            adRes.exceptionally(e -> {
+                e.printStackTrace();
+                return null;
+            });
         }
     }
 
