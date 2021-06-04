@@ -126,6 +126,7 @@
     <string name="confirmButtonAdCreation">Post</string>
     <string name="toolbarTitle_AdCreation">Create an ad</string>
     <string name="snackbarFailed_AdCreation">There was an error while posting your ad, please try again later</string>
+    <string name="snackbarFailedLocation_AdCreation">Please check that you put the right location!</string>
     <string name="snackbarNotFilled_AdCreation">Some fields haven\'t been filled!</string>
     <string name="snackbarNoPhotos_AdCreation">Please add at least one image!</string>
     <string name="openAdCreationDescription_Scrolling">Open page for creating an ad</string>
