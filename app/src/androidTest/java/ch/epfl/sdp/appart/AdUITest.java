@@ -1,21 +1,25 @@
 package ch.epfl.sdp.appart;
 
+import android.app.Application;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.InstrumentationRegistry;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.runner.AndroidJUnitRunner;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -70,7 +74,7 @@ public class AdUITest {
     DatabaseService database = new MockDatabaseService();
     @BindValue
     final
-    LoginService login = new MockLoginService();
+    static LoginService login = new MockLoginService();
     @BindValue
     LocalDatabaseService localdb = new MockLocalDatabase();
 
@@ -81,15 +85,18 @@ public class AdUITest {
 
     private View decorView;
 
+    //
+    @BeforeClass
+    public static void initClass() {
+        login.loginWithEmail("antoine@epfl.ch", "1111").join();
+    }
+
     @Before
     public void init() {
         Intents.init();
         hiltRule.inject();
-        adActivityRule.getScenario().onActivity(new ActivityScenario.ActivityAction<AdActivity>() {
-            @Override
-            public void perform(AdActivity ac) {
-                decorView = ac.getWindow().getDecorView();
-            }
+        adActivityRule.getScenario().onActivity(ac -> {
+            decorView = ac.getWindow().getDecorView();
         });
     }
 
@@ -138,7 +145,6 @@ public class AdUITest {
     @After
     public void release() {
         Intents.release();
-        login.signOut();
     }
 
     private static Matcher<View> childAtPosition(

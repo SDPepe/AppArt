@@ -6,6 +6,9 @@ import org.junit.Test;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.LoginModule;
 import ch.epfl.sdp.appart.login.FirebaseEmulatorLoginServiceWrapper;
 import ch.epfl.sdp.appart.login.FirebaseLoginService;
@@ -24,7 +27,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 
-@UninstallModules(LoginModule.class)
+@UninstallModules({LoginModule.class, DatabaseModule.class})
 @HiltAndroidTest
 public class LoginTest {
 
@@ -63,6 +66,9 @@ public class LoginTest {
     final
     LoginService loginService =
             new FirebaseEmulatorLoginServiceWrapper(new FirebaseLoginService());
+
+    @BindValue
+    DatabaseService db = new MockDatabaseService();
 
     /**
      * It is necessary to perform the emulator tests in one single test,

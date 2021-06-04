@@ -2,6 +2,7 @@ package ch.epfl.sdp.appart.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -12,9 +13,13 @@ import java.util.stream.Collectors;
 
 import ch.epfl.sdp.appart.ad.Ad;
 import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.local.LocalDatabase;
 import ch.epfl.sdp.appart.database.local.LocalDatabaseService;
 import ch.epfl.sdp.appart.glide.visitor.GlideBitmapLoader;
+import ch.epfl.sdp.appart.scrolling.card.Card;
 import ch.epfl.sdp.appart.user.User;
+
+import static androidx.core.content.ContextCompat.getSystemService;
 
 /**
  * Util class used for operations commonly needed when dealing with synchronization of the local
@@ -167,6 +172,38 @@ public class DatabaseSync {
         writeRes.exceptionally(e -> {
             result.completeExceptionally(e);
             return null;
+        });
+    }
+
+    public static boolean areWeOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+    public static void writeAd(DatabaseService database, Card card, Context context, LocalDatabaseService localdb) {
+        CompletableFuture<Ad> adRes = database.getAd(card.getAdId());
+        adRes.thenAccept(ad -> {
+            List<CompletableFuture<Bitmap>> imgBitmapRes =
+                    DatabaseSync.fetchImages(context,
+                            database, card.getAdId(), ad.getPhotosRefs());
+            CompletableFuture<Void> allOfImages =
+                    CompletableFuture.allOf(imgBitmapRes
+                            .toArray(new CompletableFuture[imgBitmapRes.size()]));
+            allOfImages.thenAccept(ignoreRes -> {
+                List<Bitmap> imgs = imgBitmapRes.stream()
+                        .map(CompletableFuture::join)
+                        .collect(Collectors.toList());
+                DatabaseSync.saveFavoriteAd(context, database, localdb,
+                        card.getId(),
+                        card.getAdId(), ad, imgs)
+                        .thenAccept(r -> Log.d("FAVORITE", "Ad saved " +
+                                "locally"));
+            });
+            allOfImages.exceptionally(e -> {
+                Log.d("FAVORITE", "Failed to retrieve ad images");
+                return null;
+            });
         });
     }
 

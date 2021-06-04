@@ -17,6 +17,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.location.geocoding.MockGeocodingService;
 import ch.epfl.sdp.appart.location.place.address.Address;
 import ch.epfl.sdp.appart.location.place.address.AddressFactory;
@@ -24,14 +27,17 @@ import ch.epfl.sdp.appart.place.PlaceOfInterest;
 import ch.epfl.sdp.appart.place.PlaceService;
 import ch.epfl.sdp.appart.place.PlaceServiceException;
 import ch.epfl.sdp.appart.place.helper.MockPlaceServiceHelper;
+import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @HiltAndroidTest
+@UninstallModules(DatabaseModule.class)
 public class PlaceServiceTest {
 
     @Rule(order = 0)
@@ -41,6 +47,9 @@ public class PlaceServiceTest {
     private MockPlaceServiceHelper helper;
     private final Address a = AddressFactory.makeAddress("rue du chat 19, " +
             "1328 Renens");
+
+    @BindValue
+    DatabaseService db = new MockDatabaseService();
 
     @Before
     public void init() {

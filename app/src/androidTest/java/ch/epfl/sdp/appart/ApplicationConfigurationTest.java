@@ -11,13 +11,20 @@ import org.junit.Test;
 import javax.inject.Inject;
 
 import ch.epfl.sdp.appart.configuration.ApplicationConfiguration;
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
+import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @HiltAndroidTest
+@UninstallModules(DatabaseModule.class)
 public class ApplicationConfigurationTest {
 
     @Rule(order = 0)
@@ -28,6 +35,9 @@ public class ApplicationConfigurationTest {
 
     @Inject
     public ApplicationConfiguration configuration;
+
+    @BindValue
+    DatabaseService db = new MockDatabaseService();
 
     @Before
     public void init() {
