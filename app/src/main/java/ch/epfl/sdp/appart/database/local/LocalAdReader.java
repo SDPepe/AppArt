@@ -98,8 +98,10 @@ public class LocalAdReader {
      * or not
      */
     static CompletableFuture<Void> readAdDataForAUser(String currentUserID,
-                                                      List<Card> cards, Map<String, Ad> idsToAd,
-                                                      Map<String, List<String>> adIdsToPanoramas) {
+                                                      List<Card> cards,
+                                                      Map<String, Ad> idsToAd,
+                                                      Map<String,
+                                                              List<String>> adIdsToPanoramas) {
         String currentUserFolderPath =
                 LocalDatabasePaths.currentUserFolder(currentUserID);
 
@@ -116,17 +118,21 @@ public class LocalAdReader {
         return CompletableFuture.runAsync(() -> {
 
             File[] folders = favFolder.listFiles(fileFilter);
-            if (folders == null)
-                throw new CompletionException(new LocalDatabaseException("The" +
+
+                /*throw new CompletionException(new LocalDatabaseException
+                ("The" +
                         " ad folder : " + favFolder.getPath() + " doesn't " +
-                        "contain any folders !"));
-            for (File folder : folders) {
-                try {
-                    readAdFolder(folder, cards, idsToAd,
-                            adIdsToPanoramas);
-                } catch (LocalDatabaseException e) {
-                    e.printStackTrace();
-                    throw new CompletionException(e);
+                        "contain any folders !"));*/
+
+            if (folders != null) {
+                for (File folder : folders) {
+                    try {
+                        readAdFolder(folder, cards, idsToAd,
+                                adIdsToPanoramas);
+                    } catch (LocalDatabaseException e) {
+                        e.printStackTrace();
+                        throw new CompletionException(e);
+                    }
                 }
             }
         });
