@@ -53,8 +53,7 @@ public class UserProfileExceptionallyTest {
     /* Used to grant camera permission always */
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
-            GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION);
+            GrantPermissionRule.grant();
 
     @BindValue
     DatabaseService database = new MockDatabaseService();
