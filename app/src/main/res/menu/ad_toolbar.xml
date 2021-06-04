@@ -9,6 +9,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_home_sweet_home"
+        android:icon="@drawable/ic_app_icon"
+        android:title="@string/add_to_favorites"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_account"
         android:title="@string/action_account"
         app:showAsAction="never" />
