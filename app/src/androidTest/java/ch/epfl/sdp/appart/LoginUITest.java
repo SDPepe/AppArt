@@ -131,7 +131,7 @@ public class LoginUITest {
     }
 
     @Test
-    public void successfulAutoLoginTest() {
+    public void successfulAutoLoginTest() throws InterruptedException {
         String email = "test@testappart.ch";
         String password = "password";
         // set login info and recreate the app, so that onCreate is called
@@ -140,7 +140,7 @@ public class LoginUITest {
             SharedPreferencesHelper.saveUserForAutoLogin(ac, email, password);
             ac.recreate();
         });
-
+        Thread.sleep(2000);
         intended(hasComponent(ScrollingActivity.class.getName()));
         loginActivityRule.getScenario().onActivity(SharedPreferencesHelper::clearSavedUserForAutoLogin);
     }
