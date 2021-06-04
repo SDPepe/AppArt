@@ -166,7 +166,7 @@ public class UserAdsActivityTest {
                 .perform(NavigationViewActions.navigateTo(R.id.action_userAds));
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.card_delete_button), withText("Delete Ad"), isDisplayed()));
+                allOf(withId(R.id.card_delete_button), withText("Delete"), isDisplayed()));
         button.check(matches(isDisplayed()));
         button.perform(click());
 
