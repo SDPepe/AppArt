@@ -120,28 +120,7 @@ public class UserAdsActivityTest {
 
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.action_userAds));
-        /*
-        ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.login_Scrolling_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        overflowMenuButton.perform(click());
-         */
-        /*
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Your Ads"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatTextView.perform(click());
-        */
+
         onView(allOf(withIndex(withId(R.id.place_card_image_CardLayout_imageView), 0),isDisplayed()));
     }
 
@@ -179,25 +158,12 @@ public class UserAdsActivityTest {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.login_Scrolling_toolbar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        overflowMenuButton.perform(click());
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
+                .perform(DrawerActions.open());
 
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Your Ads"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatTextView.perform(click());
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.action_userAds));
 
         ViewInteraction button = onView(
                 allOf(withId(R.id.card_delete_button), withText("Delete Ad"), isDisplayed()));
