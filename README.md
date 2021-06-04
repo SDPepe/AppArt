@@ -23,6 +23,14 @@ MAPS_API_KEY=${API_KEY} (without the $ and the braces, you need to put the raw k
 
 Finally, our "free trial" of the google apis end the 20th of July, 2021. After this, we don't know what features are disabled and how the app will behave.
 
+## Important
+
+There is a side menu on the ScrollingActivity (the activity after the login) that can be opened by a slide from left to right. It is a bit difficult to open on a real phone.
+
+https://user-images.githubusercontent.com/47746747/120856615-696a6c00-c580-11eb-8891-ecf756b1dcd1.mp4
+
+
+
 
 ## Badges
 [![Build Status](https://api.cirrus-ci.com/github/SDPepe/AppArt.svg)](https://cirrus-ci.com/github/SDPepe/AppArt)
