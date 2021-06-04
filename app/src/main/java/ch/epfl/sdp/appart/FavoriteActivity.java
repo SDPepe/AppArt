@@ -1,3 +1,4 @@
+
 package ch.epfl.sdp.appart;
 
 import android.os.Bundle;
@@ -158,6 +159,5 @@ public class FavoriteActivity extends ToolbarActivity {
         });
         return futureRemove;
     }
-
 
 }

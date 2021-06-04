@@ -57,6 +57,8 @@
           android:id="@+id/card_delete_button"
           android:layout_width="100dp"
           android:layout_height="30dp"
+          android:layout_marginStart="20dp"
+          android:layout_marginBottom="20dp"
           android:background="@drawable/style_primary"
           android:text="@string/card_delete"
           android:textAllCaps="false"
