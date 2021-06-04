@@ -422,17 +422,6 @@ public class AdActivity extends ToolbarActivity {
     }
 
     private void updateBookmarkLocalDatabase(User currentUser) {
-        /*localdb.getCards().thenAcceptAsync(cards -> {
-            cards.forEach(card -> {
-                if (card.getAdId().equals(adId)) {
-                    setBookmarkIcon(card.getAdId().equals(adId));
-                    return;
-                }
-            });
-        });*/
-        /*localdb.getCurrentUser().thenAcceptAsync(user -> {
-            setBookmarkIcon(user.getFavoritesIds().contains(adId));
-        });*/
         setBookmarkIcon(currentUser.getFavoritesIds().contains(adId));
 
     }

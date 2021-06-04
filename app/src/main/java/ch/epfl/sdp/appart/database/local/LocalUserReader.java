@@ -2,7 +2,6 @@ package ch.epfl.sdp.appart.database.local;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -22,7 +21,7 @@ public class LocalUserReader {
      * @param userFile a file pointing to the user's directory
      */
     private static void readUserFolder(File userFile,
-                                          Map<String, User> idsToUser
+                                       Map<String, User> idsToUser
             , Set<String> userIds) throws LocalDatabaseException {
 
         String dataPath =
@@ -46,8 +45,8 @@ public class LocalUserReader {
      * folders in the users folder. The reading on disk happens asynchronously.
      *
      * @param currentUserID the current user id
-     * @param idsToUser a map mapping user ids to users
-     * @param userIds a set of user ids
+     * @param idsToUser     a map mapping user ids to users
+     * @param userIds       a set of user ids
      * @return a completable future that indicates if the operation succeeded
      * or not
      */
@@ -58,15 +57,19 @@ public class LocalUserReader {
                 LocalDatabasePaths.usersFolder(currentUserID);
         File userFolder = new File(userPath);
         return CompletableFuture.runAsync(() -> {
-            for (File folder :
-                    Objects.requireNonNull(userFolder.listFiles(File::isDirectory))) {
-                try {
-                    readUserFolder(folder, idsToUser, userIds);
-                } catch (LocalDatabaseException e) {
-                    e.printStackTrace();
-                    throw new CompletionException(e);
+            File[] files = userFolder.listFiles(File::isDirectory);
+            if (files != null) {
+                for (File folder :
+                        files) {
+                    try {
+                        readUserFolder(folder, idsToUser, userIds);
+                    } catch (LocalDatabaseException e) {
+                        e.printStackTrace();
+                        throw new CompletionException(e);
+                    }
                 }
             }
+
         });
     }
 }

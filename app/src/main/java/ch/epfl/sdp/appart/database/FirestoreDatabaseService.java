@@ -66,13 +66,13 @@ public class FirestoreDatabaseService implements DatabaseService {
             Do we use this or not ?
             If we do, this "overrides" or local DB system. However, we know that the data will
             have the same version that our local db. So maybe, we can think of the local db
-            as a backup for data that can't be cached by firestore.*/
+            as a backup for data that can't be cached by firestore.
 
             db.clearPersistence();
             FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false).build();
             db.setFirestoreSettings(settings);
-        //*/
+        */
         storage = FirebaseStorage.getInstance();
         adHelper = new FirestoreAdHelper();
         imageHelper = new FirestoreImageHelper();

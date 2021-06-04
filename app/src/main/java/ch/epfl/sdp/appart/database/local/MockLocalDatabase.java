@@ -107,6 +107,11 @@ public class MockLocalDatabase implements LocalDatabaseService {
     }
 
     @Override
+    public void cleanFavoritesWithoutCurrentUser() {
+        throw new NotImplementedError();
+    }
+
+    @Override
     public void removeCard(String cardId) {
         throw new NotImplementedError();
     }

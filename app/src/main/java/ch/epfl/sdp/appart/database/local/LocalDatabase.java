@@ -369,9 +369,21 @@ public class LocalDatabase implements LocalDatabaseService {
      * contains. Useful for testing or if we reached illegal state.
      */
     public void cleanFavorites() {
-        File favoritesDir =
-                new File(LocalDatabasePaths.favoritesFolder());
-        FileIO.deleteDirectory(favoritesDir);
+        cleanFolder(new File(LocalDatabasePaths.favoritesFolder()));
+    }
+
+    /**
+     * This completely removes the favorites folder except the current user
+     * data.
+     * It is useful when loading the favorites page.
+     */
+    @Override
+    public void cleanFavoritesWithoutCurrentUser() {
+        cleanFolder(new File(LocalDatabasePaths.currentUserFolder(getCurrentUser().getUserId())));
+    }
+
+    private void cleanFolder(File folder) {
+        FileIO.deleteDirectory(folder);
         clearMemory();
     }
 
