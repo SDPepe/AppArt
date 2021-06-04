@@ -60,8 +60,8 @@ public class MockLocalDatabase implements LocalDatabaseService {
                 .hasVRTour(false)
                 .build();
 
-        cards.add(new Card("1111", "unknown", "unknown", "Lausanne", 1000, "apart_fake_image_1.jpeg"));
-        cards.add(new Card("2222", "unknown2", "vetterli-id", "Lausanne", 1000,
+        cards.add(new Card("1111", "unknown", "unknown", "Lausanne", 1000, PricePeriod.MONTH , "apart_fake_image_1.jpeg"));
+        cards.add(new Card("2222", "unknown2", "vetterli-id", "Lausanne", 1000, PricePeriod.MONTH,
                 "apart_fake_image_1" +
                 ".jpeg"));
     }

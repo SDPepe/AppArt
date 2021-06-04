@@ -23,6 +23,15 @@ public enum PricePeriod {
         this.name = name;
     }
 
+    public static PricePeriod fromString(String text) {
+        for (PricePeriod b : ALL) {
+            if (b.toString().equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
+
     @NotNull
     public String toString() {
         return name;

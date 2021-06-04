@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.scrolling.card;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +17,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import com.bumptech.glide.Glide;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -126,7 +127,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                     CardLayout.IMAGE_DIRECTORY + sep + card.getAdId() + sep + card.getImageUrl()));
         }
         holder.addressTextView.setText(card.getCity());
-        holder.priceTextView.setText(String.format("%d.-/mo", card.getPrice()));
+        String price;
+        //TODO Remove if when finish clean up of the add
+        if(card.getPricePeriod() != null) {
+            price = card.getPrice() + ".- / " + card.getPricePeriod().toString();
+            holder.priceTextView.setText(price);
+        } else {
+            price = card.getPrice() + ".- / " + "not set in database";
+            holder.priceTextView.setText(price);
+        }
         if (!card.hasVRTour())
             holder.vrAvailableImageView.setVisibility(View.GONE);
         else

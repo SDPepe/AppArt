@@ -34,6 +34,11 @@ public final class CardLayout {
     public final static String PRICE = "price";
 
     /**
+     * @apiNote : string on Firestore
+     */
+    public final static String PERIOD = "period";
+
+    /**
      * @apiNote : String on Firestore
      */
     public final static String IMAGE = "picture_id"; //imageUrl

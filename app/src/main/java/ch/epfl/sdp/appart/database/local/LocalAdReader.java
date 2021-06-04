@@ -40,8 +40,7 @@ public class LocalAdReader {
         }
 
         return new Card(cardID, adID, userID, ad.getCity(),
-                ad.getPrice(), imageUrl,
-                ad.hasVRTour());
+                ad.getPrice(), ad.getPricePeriod(), imageUrl, ad.hasVRTour());
     }
 
     /**

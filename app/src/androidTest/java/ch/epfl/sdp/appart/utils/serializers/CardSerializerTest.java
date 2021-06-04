@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart.utils.serializers;
 
 
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class CardSerializerTest {
         Random random = new Random();
         for (int i = 0; i < 1000; ++i) {
             Card card = new Card(generateRandomString(10, random), generateRandomString(10, random),
-                    generateRandomString(10, random), generateRandomString(10, random), random.nextInt(1000),
+                    generateRandomString(10, random), generateRandomString(10, random), random.nextInt(1000), PricePeriod.MONTH,
                     generateRandomString(10, random), random.nextBoolean());
             Map<String, Object> serializedCard = CardSerializer.serialize(card);
             Assert.assertEquals(serializedCard.get(CardLayout.AD_ID), card.getAdId());
@@ -59,7 +60,7 @@ public class CardSerializerTest {
         Random random = new Random();
         for (int i = 0; i < 1000; ++i) {
             Card card = new Card(generateRandomString(10, random), generateRandomString(10, random),
-                    generateRandomString(10, random), generateRandomString(10, random), random.nextInt(1000),
+                    generateRandomString(10, random), generateRandomString(10, random), random.nextInt(1000), PricePeriod.MONTH,
                     generateRandomString(10, random), random.nextBoolean());
             Map<String, Object> serializedCard = CardSerializer.serialize(card);
             Card deserializedCard = CardSerializer.deserialize("", serializedCard);

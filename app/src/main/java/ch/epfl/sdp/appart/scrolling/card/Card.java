@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.scrolling.card;
 
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import javax.annotation.Nullable;
 
 /**
@@ -14,6 +15,7 @@ public class Card {
     private final String ownerId;
     private String city;
     private long price;
+    private PricePeriod period;
     private String imageUrl;
     private boolean hasVRTour;
 
@@ -30,7 +32,7 @@ public class Card {
      * @param imageUrl  the reference to the Firebase Storage image of this card
      * @param hasVRTour whether the apartment this card refers to offers a virtual tour
      */
-    public Card(@Nullable String id, String adId, String ownerId, String city, long price, String imageUrl,
+    public Card(@Nullable String id, String adId, String ownerId, String city, long price, PricePeriod period, String imageUrl,
                 boolean hasVRTour) {
         if (ownerId == null || city == null || imageUrl == null || adId == null)
             throw new IllegalArgumentException("Argument is null!");
@@ -42,10 +44,11 @@ public class Card {
         this.imageUrl = imageUrl;
         this.hasVRTour = hasVRTour;
         this.adId = adId;
+        this.period = period;
     }
 
-    public Card(@Nullable String id, String adId, String ownerId, String city, long price, String imageUrl) {
-        this(id, adId, ownerId, city, price, imageUrl, false);
+    public Card(@Nullable String id, String adId, String ownerId, String city, long price, PricePeriod period, String imageUrl) {
+        this(id, adId, ownerId, city, price, period, imageUrl, false);
     }
 
     // Getters
@@ -74,6 +77,10 @@ public class Card {
         return adId;
     }
 
+    public PricePeriod getPricePeriod() {
+        return period;
+    }
+
     public boolean hasVRTour() {
         return hasVRTour;
     }
@@ -86,6 +93,10 @@ public class Card {
 
     public void setPrice(long price) {
         this.price = price;
+    }
+
+    public void setPricePeriod(PricePeriod period) {
+        this.period = period;
     }
 
     public void setImageUrl(String imageUrl) {

@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart.utils.serializers;
 
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class CardSerializer {
         docData.put(CardLayout.USER_ID, data.getUserId());
         docData.put(CardLayout.CITY, data.getCity());
         docData.put(CardLayout.PRICE, data.getPrice());
+        docData.put(CardLayout.PERIOD, data.getPricePeriod().toString());
         docData.put(CardLayout.IMAGE, data.getImageUrl());
         docData.put(CardLayout.AD_ID, data.getAdId());
         docData.put(CardLayout.HAS_VTOUR, data.hasVRTour());
@@ -30,6 +32,7 @@ public class CardSerializer {
                 (String) serializedData.get(CardLayout.USER_ID),
                 (String) serializedData.get(CardLayout.CITY),
                 (long) serializedData.get(CardLayout.PRICE),
+                PricePeriod.fromString((String) serializedData.get(CardLayout.PERIOD)),
                 (String) serializedData.get(CardLayout.IMAGE),
                 (Boolean) serializedData.get(CardLayout.HAS_VTOUR));
     }

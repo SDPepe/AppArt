@@ -314,7 +314,7 @@ public class FirestoreAdHelper {
                                  String firstImageRef) {
         CompletableFuture<Void> result = new CompletableFuture<>();
         Card c = new Card(cardRef.getId(), adRef.getId(), ad.getAdvertiserId(), ad.getCity(),
-                ad.getPrice(), firstImageRef, ad.hasVRTour());
+                ad.getPrice(),ad.getPricePeriod(), firstImageRef, ad.hasVRTour());
         cardHelper.putCard(c, cardRef)
                 .thenAccept(res -> result.complete(null))
                 .exceptionally(e -> {
