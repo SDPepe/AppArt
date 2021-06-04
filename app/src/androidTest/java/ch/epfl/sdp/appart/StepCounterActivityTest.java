@@ -58,9 +58,9 @@ public class StepCounterActivityTest {
     DatabaseService db = new MockDatabaseService();
 
     /* Used to grant permission always */
-    @Rule
+    /*@Rule
     public GrantPermissionRule mRuntimePermissionRule =
-            GrantPermissionRule.grant(Manifest.permission.ACTIVITY_RECOGNITION);
+            GrantPermissionRule.grant(Manifest.permission.ACTIVITY_RECOGNITION);*/
 
     @Test
     public void stepCounterActivityTest() {

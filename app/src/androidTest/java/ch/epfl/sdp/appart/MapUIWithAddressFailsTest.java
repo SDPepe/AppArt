@@ -50,14 +50,14 @@ public class MapUIWithAddressFailsTest {
         intent.putExtra(InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.intentLocationForMap), intentExtra);
     }
 
-    @Rule(order = 0)
+    @Rule(order = 1)
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
-    @Rule(order = 1)
+    @Rule(order = 2)
     public ActivityScenarioRule<MapActivity> mapActivityRule =
             new ActivityScenarioRule<>(intent);
 
-    @Rule(order = 2)
+    @Rule(order = 0)
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET);
 

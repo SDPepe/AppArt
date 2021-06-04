@@ -7,7 +7,7 @@ The main feature which distinguishes this idea from a basic apartment market pla
 
 How to use :
 
-We strongly suggest you use an emulator with the google-apis (not the google playstore), with API level 29. This is what we have on cirrus, and some tests are built around this.
+We strongly suggest you use an emulator with the google-apis (not the google playstore), with API level 29. This is what we have on cirrus, and some tests are built around this. Indeed, the StepCounterActivityTest only works on API 29.
 
 This app doesn't need any particular installation to run. However, if you want to be able to run the LoginTest and the DatabaseTest java classes, you will need the firebase emulators.
 
