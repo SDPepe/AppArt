@@ -1,5 +1,6 @@
 package ch.epfl.sdp.appart;
 
+import ch.epfl.sdp.appart.ad.PricePeriod;
 import org.junit.Test;
 
 import ch.epfl.sdp.appart.scrolling.card.Card;
@@ -15,8 +16,8 @@ public class CardUnitTest {
 
     @Test
     public void gettersTest() {
-        Card card = new Card(null, "id", "user", "Lausanne", 900,
-                "assets/img1.jpg", true);
+        Card card = new Card(null, "id", "user", "Lausanne", 900, PricePeriod.MONTH,
+                "assets/img1.jpg",  true);
         assertNull(card.getId());
         assertEquals("Lausanne", card.getCity());
         assertEquals(900, card.getPrice());
@@ -28,7 +29,7 @@ public class CardUnitTest {
 
     @Test
     public void settersTest() {
-        Card card = new Card(null, "id", "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, "id", "user", "Lausanne", 900,PricePeriod.MONTH, "assets/img1.jpg");
         card.setCity("Morges");
         assertEquals("Morges", card.getCity());
         card.setPrice(850);
@@ -42,43 +43,43 @@ public class CardUnitTest {
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest1() {
         Card c = new Card(null, "id", null, "",
-                0, "");
+                0,PricePeriod.MONTH, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest2() {
-        Card c = new Card(null, "id", "user", null, 0, "");
+        Card c = new Card(null, "id", "user", null, 0,PricePeriod.MONTH, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest3() {
-        Card c = new Card(null, "id", "user", "Lausanne", 0, null);
+        Card c = new Card(null, "id", "user", "Lausanne", 0,PricePeriod.MONTH, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsConstructorTest4() {
-        Card c = new Card(null, null, "user", "Lausanne", 0, "url");
+        Card c = new Card(null, null, "user", "Lausanne", 0,PricePeriod.MONTH, "url");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsSetCityTest() {
-        Card card = new Card(null, "id", "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, "id", "user", "Lausanne", 900,PricePeriod.MONTH, "assets/img1.jpg");
         card.setCity(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullArgumentsSetImageTest() {
-        Card card = new Card(null, "id", "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, "id", "user", "Lausanne", 900,PricePeriod.MONTH, "assets/img1.jpg");
         card.setImageUrl(null);
     }
 
     @Test
     public void equalsTest() {
-        Card card = new Card(null, "id", "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card = new Card(null, "id", "user", "Lausanne", 900,PricePeriod.MONTH, "assets/img1.jpg");
         assertNotEquals(null, card);
-        Card card2 = new Card("1", "ad1", "user", "Lausanne", 900, "assets/img1.jpg");
-        Card card3 = new Card("1", "ad1", "user", "Lausanne", 900, "assets/img1.jpg");
-        Card card4 = new Card("2", "ad2", "user", "Lausanne", 900, "assets/img1.jpg");
+        Card card2 = new Card("1", "ad1", "user", "Lausanne", 900,PricePeriod.MONTH, "assets/img1.jpg");
+        Card card3 = new Card("1", "ad1", "user", "Lausanne", 900,PricePeriod.MONTH, "assets/img1.jpg");
+        Card card4 = new Card("2", "ad2", "user", "Lausanne", 900,PricePeriod.MONTH, "assets/img1.jpg");
         assertEquals(card2, card3);
         assertNotEquals(card2, card4);
         User user = mock(User.class);
