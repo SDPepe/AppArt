@@ -21,7 +21,7 @@ To run the app you will need to put the Google API key in the local.properties f
 
 MAPS_API_KEY=${API_KEY} (without the $ and the braces, you need to put the raw key)
 
-Finally, our "free trial" of the google apis end the 20th of July, 2021. After this, we don't know what features are disabled and how the app will behave.
+Finally, our "free trial" of the google apis ends the 20th of July, 2021. After this, we don't know what features are disabled and how the app will behave.
 
 ## Important
 
