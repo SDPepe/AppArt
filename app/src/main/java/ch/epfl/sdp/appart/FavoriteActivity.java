@@ -4,6 +4,8 @@ package ch.epfl.sdp.appart;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -36,6 +38,15 @@ public class FavoriteActivity extends ToolbarActivity {
 
     private RecyclerView recyclerView;
     private FavoriteViewModel mViewModel;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuItem item = menu.findItem(R.id.action_favorite);
+        item.setVisible(false);
+        invalidateOptionsMenu();
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -36,7 +36,6 @@ public abstract class ToolbarActivity extends AppCompatActivity {
     LocalDatabaseService localdb;
 
 
-
     /**
      * Sets the toolbar as the main menu
      *
@@ -95,7 +94,10 @@ public abstract class ToolbarActivity extends AppCompatActivity {
                 Intent intentStepCounter = new Intent(this, StepCounterActivity.class);
                 startActivity(intentStepCounter);
                 return true;
-
+            case R.id.action_home_sweet_home:
+                Intent scrollingActivity = new Intent(this, ScrollingActivity.class);
+                startActivity(scrollingActivity);
+                return true;
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
             default:
