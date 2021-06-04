@@ -98,8 +98,11 @@ public class FavoriteActivity extends ToolbarActivity {
             Adding a clean favorites as a preparation for the possibility to
             remove favorites. However, this should not clean the currentUser
             data, which it currently  does.
+
+            Update : Now, this is fixed. We actually have this clean for
+            safety. In case one part of the synchronization does not work.
          */
-        //localdb.cleanFavorites();
+        localdb.cleanFavoritesWithoutCurrentUser();
         List<Card> favs = mViewModel.getFavorites().getValue().first;
         for (int i = 0; i < favs.size(); i++) {
             Card card = favs.get(i);
