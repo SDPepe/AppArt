@@ -130,6 +130,8 @@ public interface User {
      */
     void addFavorite(String id);
 
+    void removeFavorite(String id);
+
     /**
      * sets default user-icon uri
      */

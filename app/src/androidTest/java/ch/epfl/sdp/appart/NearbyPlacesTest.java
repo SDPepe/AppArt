@@ -14,6 +14,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.hilt.PlaceModule;
 import ch.epfl.sdp.appart.location.geocoding.MockGeocodingService;
 import ch.epfl.sdp.appart.place.PlaceService;
@@ -45,7 +48,7 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.Until;
 
 @HiltAndroidTest
-@UninstallModules({PlaceModule.class})
+@UninstallModules({PlaceModule.class, DatabaseModule.class})
 public class NearbyPlacesTest {
 
     @Rule(order = 0)
@@ -64,6 +67,9 @@ public class NearbyPlacesTest {
 
     @BindValue
     public final PlaceService placeService = new PlaceService(new MockPlaceServiceHelper(context), new MockGeocodingService());
+
+    @BindValue
+    DatabaseService db = new MockDatabaseService();
 
     @Before
     public void init() {

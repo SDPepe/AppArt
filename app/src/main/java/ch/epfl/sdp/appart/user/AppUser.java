@@ -244,6 +244,11 @@ public class AppUser implements User {
             favoritesIds.remove(id);
     }
 
+    @Override
+    public void removeFavorite(String id) {
+        this.favoritesIds.remove(id);
+    }
+
     /**
      *
      * @return the name of the user gender-icon image
@@ -289,6 +294,19 @@ public class AppUser implements User {
         if (!(o instanceof AppUser)) return false;
         AppUser other = (AppUser) o;
         return this.userId.equals(other.userId);
+    }
+
+    public AppUser(User user) {
+        this.userId = user.getUserId();
+        this.email = user.getUserEmail();
+        this.name = user.getName();
+        this.phoneNumber = user.getPhoneNumber();
+        this.age = user.getAge();
+        this.gender = Gender.valueOf(user.getGender());
+        this.profileImagePathAndName = user.getProfileImagePathAndName();
+        this.adsIds = new ArrayList<>(user.getAdsIds());
+        this.favoritesIds = new HashSet<>(user.getFavoritesIds());
+        this.hasDefaultProfileImage = user.hasDefaultProfileImage();
     }
 
 }

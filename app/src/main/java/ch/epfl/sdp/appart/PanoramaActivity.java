@@ -1,6 +1,7 @@
 package ch.epfl.sdp.appart;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.panoramagl.PLImage;
 import com.panoramagl.PLManager;
 import com.panoramagl.PLSphericalPanorama;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +47,7 @@ public class PanoramaActivity extends AppCompatActivity {
     ImageButton rightButton;
     private Bitmap bitmap;
     private String currentAdId;
+    private boolean isLocal;
 
 
     //only meant for testing and should be used a single time !
@@ -59,8 +62,11 @@ public class PanoramaActivity extends AppCompatActivity {
         if (extras != null && extras.containsKey(AdActivity.Intents.INTENT_PANORAMA_PICTURES)
                 && extras.containsKey(AdActivity.Intents.INTENT_AD_ID))  {
             images = extras.getStringArrayList(AdActivity.Intents.INTENT_PANORAMA_PICTURES);
+            //This is needed to remove double / in paths : data//file --> data/file
+            isLocal = extras.getBoolean("isLocalExtra");
             Collections.sort(images, new FirebaseIndexedImagesComparator());
             currentAdId = extras.getString(AdActivity.Intents.INTENT_AD_ID);
+
         }
 
         leftButton = (ImageButton) findViewById(R.id.leftImage_Panorama_imageButton);
@@ -143,21 +149,26 @@ public class PanoramaActivity extends AppCompatActivity {
         PLSphericalPanorama panorama = new PLSphericalPanorama();
 
         CompletableFuture<Bitmap> bitmapFuture = new CompletableFuture<>();
+        if(isLocal) {
+            Bitmap bitmap = BitmapFactory.decodeFile(images.get(currImage));
+            bitmapFuture.complete(bitmap);
+        } else {
+            String imagePath = new StoragePathBuilder()
+                    .toAdsStorageDirectory()
+                    .toDirectory(currentAdId)
+                    .withFile(images.get(currImage));
 
-        String imagePath = new StoragePathBuilder()
-                .toAdsStorageDirectory()
-                .toDirectory(currentAdId)
-                .withFile(images.get(currImage));
-
-        database.accept(new GlideBitmapLoader(this, bitmapFuture, imagePath));
+            database.accept(new GlideBitmapLoader(this, bitmapFuture, imagePath));
+        }
 
         bitmapFuture.thenApply(bitmap -> {
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 2048, 2048, false);
             hasCurrentImageLoadingFailed.complete(true);
-            panorama.setImage(new PLImage(bitmap, true));
+            panorama.setImage(new PLImage(resizedBitmap, true));
             panorama.getCamera().lookAtAndZoomFactor(30.0f, 90.0f, 0.5f, false);
             plManager.setPanorama(panorama);
-            this.bitmap = bitmap;
-            return bitmap;
+            this.bitmap = resizedBitmap;
+            return resizedBitmap;
         });
 
         bitmapFuture.exceptionally(e -> {

@@ -6,8 +6,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -28,6 +31,8 @@ import javax.inject.Inject;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import ch.epfl.sdp.appart.database.DatabaseService;
@@ -42,7 +47,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class SimpleUserProfileActivity extends AppCompatActivity {
 
     /* temporary user */
-    private User advertiserUser;
+    private Pair<User, Boolean> advertiserUser;
 
     /* User ViewModel */
     UserViewModel mViewModel;
@@ -100,7 +105,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      * Contact announcer.
      */
     public void openEmailOrPhone(View view){
-        if(!advertiserUser.getPhoneNumber().isEmpty()) {
+        if(!advertiserUser.first.getPhoneNumber().isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("How did you prefer contact the announcer ?");
             builder.setPositiveButton("Contact via Email", (dialog, which) -> onEmail());
@@ -117,7 +122,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
 
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:"));
-        intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{advertiserUser.getUserEmail()});
+        intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{advertiserUser.first.getUserEmail()});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Rent apartment");
         try {
             startActivity(intent);
@@ -133,7 +138,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
                 new String[]{Manifest.permission.CALL_PHONE},
                     PHONE_CALL_PERMISSION_CODE);
         } else {
-            startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:"+advertiserUser.getPhoneNumber())));
+            startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:"+advertiserUser.first.getPhoneNumber())));
         }
     }
 
@@ -157,7 +162,7 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
     /**
      * @param user sets the value of the current user to the session user object
      */
-    private void setAdUserToLocal(User user) {
+    private void setAdUserToLocal(Pair<User, Boolean> user) {
         this.advertiserUser = user;
         contactButton.setVisibility(View.VISIBLE);
         /* set attributes of session user to the UI components */
@@ -168,18 +173,21 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      * sets the current session User attributes to the UI components
      */
     private void getAndSetCurrentAttributes() {
-        this.nameText.setText(this.advertiserUser.getName());
-        this.emailTextView.setText(this.advertiserUser.getUserEmail());
-        this.uniAccountClaimer.setText((this.advertiserUser.hasUniversityEmail() ?
+
+        User user = this.advertiserUser.first;
+
+        this.nameText.setText(user.getName());
+        this.emailTextView.setText(user.getUserEmail());
+        this.uniAccountClaimer.setText((user.hasUniversityEmail() ?
                 getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
-        if (this.advertiserUser.getAge() != 0) {
-            this.ageText.setText(String.valueOf(this.advertiserUser.getAge()));
+        if (user.getAge() != 0) {
+            this.ageText.setText(String.valueOf(user.getAge()));
         }
-        if (this.advertiserUser.getPhoneNumber() != null) {
-            this.phoneNumberText.setText(this.advertiserUser.getPhoneNumber());
+        if (user.getPhoneNumber() != null) {
+            this.phoneNumberText.setText(user.getPhoneNumber());
         }
-        if (this.advertiserUser.getGender() != null) {
-            this.genderText.setText(this.advertiserUser.getGender());
+        if (user.getGender() != null) {
+            this.genderText.setText(user.getGender());
         }
         setPictureToImageComponent();
     }
@@ -188,8 +196,16 @@ public class SimpleUserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        database.accept(new GlideImageViewLoader(this, imageView,
-                this.advertiserUser.getProfileImagePathAndName()));
+
+
+        boolean isLocal = this.advertiserUser.second;
+        if(isLocal) {
+            Bitmap profilePic = BitmapFactory.decodeFile(this.advertiserUser.first.getProfileImagePathAndName());
+            Glide.with(this).load(profilePic).into(imageView);
+        } else {
+            database.accept(new GlideImageViewLoader(this, imageView,
+                    this.advertiserUser.first.getProfileImagePathAndName()));
+        }
     }
 
 }

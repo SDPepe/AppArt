@@ -43,6 +43,7 @@ public abstract class ToolbarActivity extends AppCompatActivity {
      * @param menu the menu that was just created
      * @return true if no exception was thrown
      */
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.actions_toolbar, menu);

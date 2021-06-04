@@ -79,8 +79,8 @@ public class GlideBitmapLoader extends GlideVisitor implements GlideBitmapLoader
         @Override
         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
             //PanoramaGl wants a bitmap with a max size, for now we scale it to 2048*2048
-            Bitmap result = Bitmap.createScaledBitmap(resource, 2048, 2048, false);
-            targetFuture.complete(result.copy(result.getConfig(), false));
+            //The rescale has been moved to the PanoramaActivity
+            targetFuture.complete(resource.copy(resource.getConfig(), false));
         }
 
         @Override

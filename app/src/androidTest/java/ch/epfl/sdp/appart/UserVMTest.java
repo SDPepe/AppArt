@@ -41,7 +41,7 @@ public class UserVMTest {
         vm.putUser(user);
         assertTrue(vm.getPutUserConfirmed().getValue());
         vm.getUser("vetterli-id");
-        assertEquals(user, vm.getUser().getValue());
+        assertEquals(user, vm.getUser().getValue().first);
     }
 
     @Test

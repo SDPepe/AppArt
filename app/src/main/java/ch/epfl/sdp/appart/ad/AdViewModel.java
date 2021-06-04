@@ -1,5 +1,7 @@
 package ch.epfl.sdp.appart.ad;
 
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
@@ -38,9 +40,9 @@ public class AdViewModel extends ViewModel {
             new MutableLiveData<>();
     private final MutableLiveData<String> adAdvertiserId =
             new MutableLiveData<>();
-    private final MutableLiveData<List<String>> adPhotosReferences =
+    private final MutableLiveData<Pair<List<String>, Boolean>> adPhotosReferences =
             new MutableLiveData<>();
-    private final MutableLiveData<List<String>> panoramasReferences =
+    private final MutableLiveData<Pair<List<String>, Boolean>> panoramasReferences =
             new MutableLiveData<>();
     private final MutableLiveData<Boolean> hasVTour = new MutableLiveData<>();
     private final MutableLiveData<Boolean> hasLoaded = new MutableLiveData<>();
@@ -69,7 +71,7 @@ public class AdViewModel extends ViewModel {
 
     public <T> void observePanoramasReferences(LifecycleOwner owner,
                                                @NonNull Observer<?
-                                                       super List<String>> observer) {
+                                                       super Pair<List<String>, Boolean>> observer) {
         panoramasReferences.observe(owner, observer);
     }
 
@@ -78,7 +80,7 @@ public class AdViewModel extends ViewModel {
         return adTitle;
     }
 
-    public LiveData<List<String>> getPhotosRefs() {
+    public LiveData<Pair<List<String>, Boolean>> getPhotosRefs() {
         return adPhotosReferences;
     }
 
@@ -105,6 +107,7 @@ public class AdViewModel extends ViewModel {
     public LiveData<Boolean> getHasVTour() {
         return hasVTour;
     }
+
     public LiveData<Boolean> getHasLoaded() {
         return hasLoaded;
     }
@@ -120,7 +123,7 @@ public class AdViewModel extends ViewModel {
      */
     private CompletableFuture<Void> localLoad(String adId) {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        setAdValues(result, localdb.getAd(adId));
+        setAdValues(result, localdb.getAd(adId), true);
         return result;
     }
 
@@ -128,14 +131,14 @@ public class AdViewModel extends ViewModel {
      * Fetches ad data from the server
      */
     private void fetchAndSet(CompletableFuture<Void> result, String adId) {
-        setAdValues(result, db.getAd(adId));
+        setAdValues(result, db.getAd(adId), false);
     }
 
     /**
      * Helper to set values from an ad
      */
     private void setAdValues(CompletableFuture<Void> result,
-                             CompletableFuture<Ad> adRes) {
+                             CompletableFuture<Ad> adRes, boolean isLocal) {
         adRes.exceptionally(e -> {
             result.completeExceptionally(e);
             return null;
@@ -161,15 +164,22 @@ public class AdViewModel extends ViewModel {
                 return;
             }
             this.ad = ad;
-            this.adAddress.setValue(addressFrom(ad.getStreet(), ad.getCity()));
-            this.adTitle.setValue(ad.getTitle());
-            this.adPrice.setValue(priceFrom(ad.getPrice(),
+
+            /*
+                We need to use postValue because setValue only works from the
+                 main thread. However, this lambda ban be called from a
+                 background thread.
+             */
+            this.adAddress.postValue(addressFrom(ad.getStreet(), ad.getCity()));
+            this.adTitle.postValue(ad.getTitle());
+            this.adPrice.postValue(priceFrom(ad.getPrice(),
                     ad.getPricePeriod()));
-            this.adDescription.setValue(ad.getDescription());
-            this.adAdvertiserName.setValue(ad.getAdvertiserName());
-            this.adAdvertiserId.setValue(ad.getAdvertiserId());
-            this.adPhotosReferences.setValue(ad.getPhotosRefs());
-            this.panoramasReferences.setValue(ad.getPanoramaReferences());
+            this.adDescription.postValue(ad.getDescription());
+            this.adAdvertiserName.postValue(ad.getAdvertiserName());
+            this.adAdvertiserId.postValue(ad.getAdvertiserId());
+            this.adPhotosReferences.postValue(new Pair(ad.getPhotosRefs(),
+                    isLocal));
+            this.panoramasReferences.postValue(new Pair(ad.getPanoramaReferences(), isLocal));
             /*
                 This is not exactly set as the equivalent of the hasVRTour
                 attribute. However, this modification prevent some crashes in
@@ -180,8 +190,8 @@ public class AdViewModel extends ViewModel {
                  explicitly set the hasVTour and this can be forgotten.
                  Maybe here we can only rely on the panoramaReferences size.
              */
-            this.hasVTour.setValue(ad.getPanoramaReferences().size() > 0);
-            this.hasLoaded.setValue(true);
+            this.hasVTour.postValue(ad.getPanoramaReferences().size() > 0);
+            this.hasLoaded.postValue(true);
             result.complete(null);
         });
     }
