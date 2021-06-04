@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -69,6 +70,16 @@ public class ScrollingActivity extends ToolbarActivity {
     private AlertDialog onBackPressed;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuItem item = menu.findItem(R.id.action_home_sweet_home);
+        item.setEnabled(false);
+        item.setVisible(false);
+        invalidateOptionsMenu();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
@@ -97,6 +108,7 @@ public class ScrollingActivity extends ToolbarActivity {
         //if something is pressed return the result of the real toolbar
         navigationView.setNavigationItemSelectedListener(this::onOptionsItemSelected);
         drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView.getMenu().findItem(R.id.action_home_sweet_home).setVisible(false);
         Toolbar toolbar = findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
 
