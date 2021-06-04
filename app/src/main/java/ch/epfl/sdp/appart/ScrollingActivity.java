@@ -8,18 +8,23 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +53,10 @@ import static android.widget.Toast.makeText;
 public class ScrollingActivity extends ToolbarActivity {
 
     ScrollingViewModel mViewModel;
+
+    ActionBarDrawerToggle actionBar;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
 
     @Inject
     DatabaseService database;
@@ -84,8 +93,17 @@ public class ScrollingActivity extends ToolbarActivity {
         });
         onBackPressed = builder.create();
 
+        navigationView = findViewById(R.id.nav_view);
+        //if something is pressed return the result of the real toolbar
+        navigationView.setNavigationItemSelectedListener(this::onOptionsItemSelected);
+        drawerLayout = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.login_Scrolling_toolbar);
         setSupportActionBar(toolbar);
+
+        actionBar = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_bar_open, R.string.action_bar_close);
+        drawerLayout.addDrawerListener(actionBar);
+        actionBar.setDrawerIndicatorEnabled(true);
+        actionBar.syncState();
 
         mViewModel = new ViewModelProvider(this).get(ScrollingViewModel.class);
         mViewModel.initHome();

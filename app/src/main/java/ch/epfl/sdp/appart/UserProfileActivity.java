@@ -2,9 +2,11 @@ package ch.epfl.sdp.appart;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +21,8 @@ import javax.inject.Inject;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.bumptech.glide.Glide;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -44,7 +48,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class UserProfileActivity extends AppCompatActivity {
 
     /* temporary user */
-    private User sessionUser;
+    private Pair<User, Boolean> sessionUser;
 
     /* User ViewModel */
     UserViewModel mViewModel;
@@ -88,7 +92,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
         userRes.thenAccept(res ->
                 DatabaseSync.saveCurrentUserToLocalDB(this, database, localdb,
-                        mViewModel.getUser().getValue().getUserId()));
+                        mViewModel.getUser().getValue().first.getUserId()));
         mViewModel.getUser().observe(this, this::setSessionUserToLocal);
     }
 
@@ -118,7 +122,7 @@ public class UserProfileActivity extends AppCompatActivity {
         this.modifyButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
         this.changeImageButton.setVisibility(View.VISIBLE);
-        if (!this.sessionUser.hasDefaultProfileImage()) {
+        if (!this.sessionUser.first.hasDefaultProfileImage()) {
             this.removeImageButton.setVisibility(View.VISIBLE);
         } else {
             this.removeImageButton.setVisibility(View.INVISIBLE);
@@ -133,8 +137,8 @@ public class UserProfileActivity extends AppCompatActivity {
      * called by the remove button under imageView
      */
     public void removeProfileImage(View view) {
-        mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
-        this.sessionUser.setDefaultProfileImage();
+        mViewModel.deleteImage(this.sessionUser.first.getProfileImagePathAndName());
+        this.sessionUser.first.setDefaultProfileImage();
         imageView.setImageResource(android.R.color.transparent);
         this.removeImageButton.setVisibility(View.INVISIBLE);
     }
@@ -165,21 +169,21 @@ public class UserProfileActivity extends AppCompatActivity {
                         data.getParcelableExtra(ActivityCommunicationLayout.PROVIDING_IMAGE_URI);
                 mViewModel.setUri(profileUri);
                 imageView.setImageURI(profileUri);
-                mViewModel.deleteImage(this.sessionUser.getProfileImagePathAndName());
+                mViewModel.deleteImage(this.sessionUser.first.getProfileImagePathAndName());
 
                 StringBuilder imagePathInDb = new StringBuilder();
                 imagePathInDb
                         .append(FirebaseLayout.USERS_DIRECTORY)
                         .append(FirebaseLayout.SEPARATOR)
-                        .append(this.sessionUser.getUserId())
+                        .append(this.sessionUser.first.getUserId())
                         .append(FirebaseLayout.SEPARATOR)
                         .append(FirebaseLayout.PROFILE_IMAGE_NAME)
                         .append(System.currentTimeMillis())
                         .append(FirebaseLayout.JPEG);
                 // TODO: support more image formats
 
-                this.sessionUser.setProfileImagePathAndName(imagePathInDb.toString());
-                mViewModel.updateImage(this.sessionUser.getUserId());
+                this.sessionUser.first.setProfileImagePathAndName(imagePathInDb.toString());
+                mViewModel.updateImage(this.sessionUser.first.getUserId());
                 mViewModel.getUpdateImageConfirmed().observe(this, this::imageUpdateResult);
             }
         }
@@ -206,7 +210,7 @@ public class UserProfileActivity extends AppCompatActivity {
     /**
      * @param user sets the value of the current user to the session user object
      */
-    private void setSessionUserToLocal(User user) {
+    private void setSessionUserToLocal(Pair<User, Boolean> user) {
         this.sessionUser = user;
         modifyButton.setVisibility(View.VISIBLE);
 
@@ -218,9 +222,9 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the updated user information to the firestore database and to the local database
      */
     private void setSessionUserToDatabase(View view) {
-        mViewModel.updateUser(this.sessionUser);
+        mViewModel.updateUser(this.sessionUser.first);
         CompletableFuture<Void> saveRes = DatabaseSync.saveCurrentUserToLocalDB(this, database,
-                localdb, mViewModel.getUser().getValue().getUserId());
+                localdb, mViewModel.getUser().getValue().first.getUserId());
         saveRes.exceptionally(e -> {
             Log.d("USER", "Failed to save user locally");
             return null;
@@ -263,21 +267,21 @@ public class UserProfileActivity extends AppCompatActivity {
         String ageString =
                 ((EditText) findViewById(R.id.age_UserProfile_editText)).getText().toString().trim();
         if (!ageString.equals("")) {
-            this.sessionUser.setAge(Integer.parseInt(ageString));
+            this.sessionUser.first.setAge(Integer.parseInt(ageString));
         } else {
-            this.sessionUser.setAge(0);
+            this.sessionUser.first.setAge(0);
         }
 
-        this.sessionUser.setName(((TextView) findViewById(R.id.name_UserProfile_editText)).getText().toString());
-        this.sessionUser.setPhoneNumber(((EditText) findViewById(R.id.phoneNumber_UserProfile_editText)).getText().toString().trim());
+        this.sessionUser.first.setName(((TextView) findViewById(R.id.name_UserProfile_editText)).getText().toString());
+        this.sessionUser.first.setPhoneNumber(((EditText) findViewById(R.id.phoneNumber_UserProfile_editText)).getText().toString().trim());
 
-        this.sessionUser.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
+        this.sessionUser.first.setGender(Gender.ALL.get(((Spinner) findViewById(R.id.gender_UserProfile_spinner)).getSelectedItemPosition()).name());
 
         /* LOOKS USELESS because of method naming: in case the user changed gender
            gender the gender is locally updated above. This method then updates the correct
            correct default user icon accordingly to the newly selected gender */
-        if (this.sessionUser.hasDefaultProfileImage()) {
-            this.sessionUser.setDefaultProfileImage();
+        if (this.sessionUser.first.hasDefaultProfileImage()) {
+            this.sessionUser.first.setDefaultProfileImage();
         }
     }
 
@@ -285,18 +289,21 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the current session User attributes to the UI components
      */
     private void getAndSetCurrentAttributes() {
-        this.nameEditText.setText(this.sessionUser.getName());
-        this.emailTextView.setText(this.sessionUser.getUserEmail());
-        this.uniAccountClaimer.setText((this.sessionUser.hasUniversityEmail() ?
+
+        User user = this.sessionUser.first;
+
+        this.nameEditText.setText(user.getName());
+        this.emailTextView.setText(user.getUserEmail());
+        this.uniAccountClaimer.setText((user.hasUniversityEmail() ?
                 getString(R.string.uniAccountClaimer) : getString(R.string.nonUniAccountClaimer)));
-        if (this.sessionUser.getAge() != 0) {
-            this.ageEditText.setText(String.valueOf(this.sessionUser.getAge()));
+        if (user.getAge() != 0) {
+            this.ageEditText.setText(String.valueOf(user.getAge()));
         }
-        if (this.sessionUser.getPhoneNumber() != null) {
-            this.phoneNumberEditText.setText(this.sessionUser.getPhoneNumber());
+        if (user.getPhoneNumber() != null) {
+            this.phoneNumberEditText.setText(user.getPhoneNumber());
         }
-        if (this.sessionUser.getGender() != null) {
-            this.genderSpinner.setSelection(Gender.valueOf(this.sessionUser.getGender()).ordinal());
+        if (user.getGender() != null) {
+            this.genderSpinner.setSelection(Gender.valueOf(user.getGender()).ordinal());
         }
         setPictureToImageComponent();
     }
@@ -305,8 +312,17 @@ public class UserProfileActivity extends AppCompatActivity {
      * sets the user profile picture (or default gender picture) to the ImageView component
      */
     private void setPictureToImageComponent() {
-        database.accept(new GlideImageViewLoader(this, imageView,
-                this.sessionUser.getProfileImagePathAndName()));
+        boolean isLocal = this.sessionUser.second;
+        if(isLocal) {
+            Bitmap profilePic = BitmapFactory.decodeFile(this.sessionUser.first.getProfileImagePathAndName());
+            Glide.with(this).load(profilePic).into(imageView);
+        } else {
+            database.accept(new GlideImageViewLoader(this, imageView,
+                    this.sessionUser.first.getProfileImagePathAndName()));
+        }
+
+
+
     }
 
 }

@@ -17,7 +17,7 @@ public class FirebaseIndexedImagesComparator implements Comparator<String> {
     //a dot and its file extension
     private final Pattern pattern = Pattern.compile("^[a-zA-Z_]+\\d+\\.[a-zA-Z]+$");
     //this pattern aims to extract the index inside the string
-    private final Pattern numberPattern = Pattern.compile("\\d+");
+    private final Pattern numberPattern = Pattern.compile("([a-zA-Z_]+)(\\d+)(\\.)([a-zA-Z_]+)$");
 
     @Override
     public int compare(String o1, String o2) {
@@ -33,12 +33,12 @@ public class FirebaseIndexedImagesComparator implements Comparator<String> {
      * @return int the index
      */
     private int getIndex(String s) {
-        checkFirebaseConventionFormat(s);
+        //checkFirebaseConventionFormat(s);
         Matcher matcher = numberPattern.matcher(s);
         if (!matcher.find()) {
             throw new IllegalStateException("failed to match over normally well formed string");
         }
-        String index = matcher.group();
+        String index = matcher.group(2);
         return Integer.parseInt(index);
     }
 

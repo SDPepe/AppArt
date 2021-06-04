@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -61,6 +62,17 @@ public class FirestoreDatabaseService implements DatabaseService {
     @Inject
     public FirestoreDatabaseService() {
         db = FirebaseFirestore.getInstance();
+        /*
+            Do we use this or not ?
+            If we do, this "overrides" or local DB system. However, we know that the data will
+            have the same version that our local db. So maybe, we can think of the local db
+            as a backup for data that can't be cached by firestore.*/
+
+            db.clearPersistence();
+            FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false).build();
+            db.setFirestoreSettings(settings);
+        //*/
         storage = FirebaseStorage.getInstance();
         adHelper = new FirestoreAdHelper();
         imageHelper = new FirestoreImageHelper();

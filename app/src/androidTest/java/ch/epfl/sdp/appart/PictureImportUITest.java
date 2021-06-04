@@ -17,9 +17,14 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.panorama.SwapNotifiable;
+import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -31,6 +36,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 
 @HiltAndroidTest
+@UninstallModules(DatabaseModule.class)
 public class PictureImportUITest {
 
     @Rule(order = 0)
@@ -41,6 +47,9 @@ public class PictureImportUITest {
 
     @Rule(order = 2)
     public ActivityScenarioRule<PicturesImportActivity> pictureImportActivityRule = new ActivityScenarioRule<>(PicturesImportActivity.class);
+
+    @BindValue
+    DatabaseService db = new MockDatabaseService();
 
     @Before
     public void init() {

@@ -20,9 +20,15 @@ import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
+
+import ch.epfl.sdp.appart.database.DatabaseService;
+import ch.epfl.sdp.appart.database.MockDatabaseService;
+import ch.epfl.sdp.appart.hilt.DatabaseModule;
 import ch.epfl.sdp.appart.utils.ActivityCommunicationLayout;
+import dagger.hilt.android.testing.BindValue;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.UninstallModules;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,6 +45,7 @@ import static org.hamcrest.Matchers.is;
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner.class)
 @HiltAndroidTest
+@UninstallModules(DatabaseModule.class)
 public class StepCounterActivityTest {
 
     @Rule(order = 0)
@@ -46,6 +53,9 @@ public class StepCounterActivityTest {
 
     @Rule(order = 1)
     public ActivityTestRule<StepCounterActivity> mActivityTestRule = new ActivityTestRule<>(StepCounterActivity.class, false, false);
+
+    @BindValue
+    DatabaseService db = new MockDatabaseService();
 
     /* Used to grant permission always */
     @Rule
