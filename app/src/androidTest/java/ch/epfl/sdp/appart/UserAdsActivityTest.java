@@ -111,8 +111,7 @@ public class UserAdsActivityTest {
         appCompatButton.perform(click());
 
 
-        //to continue tomorrow => on debug/release mode without breakpoints it crashes but with break points
-        //it does not
+    
         
         onView(withId(R.id.drawer_layout))
                 .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
