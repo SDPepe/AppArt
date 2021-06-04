@@ -7,6 +7,8 @@ The main feature which distinguishes this idea from a basic apartment market pla
 
 How to use :
 
+We strongly suggest you use an emulator with the google apis (not the google-playstore), and the API level 29. This is what we have on cirrus, and some tests and parts of the app are built around this.
+
 This app doesn't need any particular installation to run. However, if you want to be able to run the LoginTest and the DatabaseTest java classes, you will need the firebase emulators.
 
 You can go to this link to install the emulator : https://firebase.google.com/docs/cli
