@@ -80,6 +80,13 @@ public interface LocalDatabaseService {
     void cleanFavorites();
 
     /**
+     * This completely removes the favorites folder except the current user
+     * data.
+     * It is useful when loading the favorites page.
+     */
+    void cleanFavoritesWithoutCurrentUser();
+
+    /**
      * Removes a card with id cardId. The user associated with this card is
      * removed only if it isn't referenced by any other card.
      *
